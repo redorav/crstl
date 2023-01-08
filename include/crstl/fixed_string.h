@@ -81,6 +81,20 @@ namespace crstl
 		return (const wchar_t*)wmemchr(string, c, n);
 	}
 
+	template<typename T>
+	const T* string_rfind_char(const T* string, T c, size_t n)
+	{
+		for (const T* ptr = string; ptr != string - n; --ptr)
+		{
+			if (*ptr == c)
+			{
+				return ptr;
+			}
+		}
+
+		return nullptr;
+	}
+
 	inline crstl_constexpr void fill_char(char* destination, size_t n, char c)
 	{
 		if (n)
@@ -383,16 +397,15 @@ namespace crstl
 		// Find a character
 		size_t find(value_type c, size_t pos = 0) const crstl_noexcept
 		{
-			const_pointer ptr = (const_pointer)string_find_char(m_data + pos, c, m_length);
+			crstl_assert(pos < m_length);
+			const_pointer ptr = (const_pointer)string_find_char(m_data + pos, c, m_length - pos);
 			return ptr ? (size_t)(ptr - m_data) : npos;
 		}
 
 		// Find a const char* string with an offset and a length
-		size_t find(const_pointer needle_string, size_t pos, size_t n) const crstl_noexcept
+		size_t find(const_pointer needle_string, size_t pos, size_t needle_length) const crstl_noexcept
 		{
-			size_t needle_length = n;
-
-			if (needle_length > m_length || pos > m_length - needle_length)
+			if (needle_string == nullptr || needle_length > m_length || pos > (m_length - needle_length))
 			{
 				return npos;
 			}
@@ -406,7 +419,9 @@ namespace crstl
 			// No point searching if length of needle is longer than the final characters of the string
 			const_pointer search_end = m_data + (m_length - needle_length) + 1;
 			const_pointer string_end = m_data + m_length;
-			for (const_pointer search_start = m_data + pos;; ++search_start)
+			const_pointer search_start = m_data + pos;
+
+			while(search_start)
 			{
 				search_start = string_find_char(search_start, *needle_string, (size_t)(search_end - search_start));
 
@@ -416,10 +431,12 @@ namespace crstl
 				}
 
 				// If we matched the first character
-				if (string_compare(search_start, (size_t)(string_end - search_start), needle_string, needle_length) == 0)
+				if (string_compare(search_start, needle_length, needle_string, needle_length) == 0)
 				{
 					return (size_t)(search_start - m_data);
 				}
+
+				++search_start;
 			}
 
 			return npos;
@@ -430,9 +447,9 @@ namespace crstl
 			return find(needle_string, pos, string_length(needle_string));
 		}
 
-		size_t find(const basic_fixed_string& string, size_t pos = 0) const crstl_noexcept
+		size_t find(const basic_fixed_string& needle_string, size_t pos = 0) const crstl_noexcept
 		{
-			return find(string.m_data, pos, string.m_length);
+			return find(needle_string.m_data, pos, needle_string.m_length);
 		}
 
 		crstl_constexpr reference front() crstl_noexcept { m_data[0]; }
@@ -494,6 +511,69 @@ namespace crstl
 		crstl_constexpr basic_fixed_string& replace(const_pointer begin, const_pointer end, const basic_fixed_string& replace_string) crstl_noexcept
 		{
 			return replace(begin, (size_t)(end - begin), replace_string.m_data, replace_string.m_length);
+		}
+
+		//-----
+		// rfind
+		//-----
+
+		size_t rfind(value_type c, size_t pos = npos) const crstl_noexcept
+		{
+			pos = pos < m_length ? pos : m_length;
+			const_pointer ptr = (const_pointer)string_rfind_char(m_data + pos, c, m_length - pos);
+			return ptr ? (size_t)(ptr - m_data) : npos;
+		}
+
+		// Find a const char* string with an offset and a length
+		size_t rfind(const_pointer needle_string, size_t pos, size_t needle_length) const crstl_noexcept
+		{
+			if (needle_string == nullptr || needle_length > m_length || pos < needle_length)
+			{
+				return npos;
+			}
+
+			// If we have an empty string, return the offset
+			if (needle_length == 0)
+			{
+				return pos;
+			}
+
+			pos = pos < m_length ? pos : m_length;
+
+			// No point searching if length of needle is longer than the final characters of the string
+			const_pointer search_end = m_data + (m_length - needle_length) + 1;
+			const_pointer string_end = m_data + m_length;
+			const_pointer search_start = m_data + pos;
+
+			while(search_start != m_data)
+			{
+				search_start = string_rfind_char(search_start, *needle_string, (size_t)(search_end - search_start));
+
+				if (!search_start)
+				{
+					return npos;
+				}
+
+				// If we matched the first character
+				if (string_compare(search_start, needle_length, needle_string, needle_length) == 0)
+				{
+					return (size_t)(search_start - m_data);
+				}
+
+				search_start--;
+			}
+
+			return npos;
+		}
+
+		size_t rfind(const_pointer needle_string, size_t pos = npos) const crstl_noexcept
+		{
+			return rfind(needle_string, pos, string_length(needle_string));
+		}
+
+		size_t rfind(const basic_fixed_string& needle_string, size_t pos = npos) const crstl_noexcept
+		{
+			return rfind(needle_string.m_data, pos, needle_string.m_length);
 		}
 
 		crstl_constexpr size_t size() const crstl_noexcept { return length(); }

@@ -23,11 +23,17 @@ void RunUnitTestsString()
 	const char* mystdc_str = mystds.c_str();
 	const char* myfsc_str = myfs32.c_str();
 
-	const auto stdfindc = mystds.find('S', 2);
-	const auto fsfindc = myfs32.find('S', 2);
+	const auto stdfindc = mystds.find('S', 0);
+	const auto fsfindc = myfs32.find('S', 0);
 
-	const auto stdfind = mystds.find("ring", 2);
-	const auto fsfind = myfs32.find("ring", 2);
+	const auto stdfind = mystds.find("rin", 2);
+	const auto fsfind = myfs32.find("rin", 2);
+
+	const auto stdfindcr = mystds.rfind('S', 6);
+	const auto fsfindcr = myfs32.rfind('S', 6);
+
+	const auto stdfindr = mystds.rfind("ing");
+	const auto fsfindr = myfs32.rfind("ing");
 
 	myfs32 = "Hello String";
 	myfs32.replace(4, 3, "foo", 3);
