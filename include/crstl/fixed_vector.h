@@ -2,11 +2,11 @@
 
 #include "config.h"
 
+#include "config_fwd.h"
+
 #include "type_utils.h"
 
 #include <stdint.h>
-
-#include <string.h>
 
 namespace crstl
 {
@@ -105,7 +105,7 @@ namespace crstl
 			crstl_assert(m_currentSize < NumElements);
 			::new((void*)&m_data[m_currentSize]) T();
 			m_currentSize++;
-			return m_data[m_currentSize - 1];
+			return back();
 		}
 
 		reference push_back_uninitialized()

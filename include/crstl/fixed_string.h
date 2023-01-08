@@ -2,24 +2,9 @@
 
 #include "config.h"
 
+#include "config_fwd.h"
+
 #include <stdint.h>
-
-// Forward declaration of utility functions. These functions live in
-// <string.h
-// <wchar.h>
-extern "C"
-{
-	size_t strlen(const char* str);
-	__declspec(dllimport) size_t wcslen(const wchar_t* str);
-	
-	void* memset(void* dst, int val, size_t size);
-	wchar_t* wmemset(wchar_t* ptr, wchar_t wc, size_t num);
-
-	const void* memchr(const void* ptr, int value, size_t num);
-	const wchar_t* wmemchr(const wchar_t* ptr, wchar_t wc, size_t num);
-
-	void* memcpy(void* dst, void const* src, size_t size);
-}
 
 namespace crstl
 {
@@ -164,7 +149,7 @@ namespace crstl
 			assign(string);
 		}
 
-		template<size_t NumElementsOther>
+		template<int NumElementsOther>
 		basic_fixed_string(const basic_fixed_string<T, NumElements>& string1, const basic_fixed_string<T, NumElementsOther>& string2) crstl_noexcept
 		{
 			assign(string1);
@@ -462,7 +447,7 @@ namespace crstl
 
 		crstl_constexpr void pop_back() crstl_noexcept { crstl_assert(m_length > 0); m_length--; }
 
-		crstl_constexpr size_t push_back(value_type c) { append(1, c); }
+		crstl_constexpr reference push_back(value_type c) { append(1, c); return back(); }
 
 		//--------
 		// replace
@@ -667,7 +652,7 @@ namespace crstl
 	};
 
 	// Return the concatenation of two equally-sized strings
-	template<typename T, size_t NumElements>
+	template<typename T, int NumElements>
 	basic_fixed_string<T, NumElements> operator + (const basic_fixed_string<T, NumElements>& string1, const basic_fixed_string<T, NumElements>& string2)
 	{
 		return basic_fixed_string<T, NumElements>(string1, string2);
@@ -675,7 +660,7 @@ namespace crstl
 
 	// Return the concatenation of differently-sized strings. As we have to choose a size for the return string, we'll select the largest one,
 	// on the assumption that it is the most likely to hold the sum of the two values
-	template<typename T, size_t NumElements, size_t NumElementsOther>
+	template<typename T, int NumElements, int NumElementsOther>
 	basic_fixed_string<T, (NumElements > NumElementsOther ? NumElements : NumElementsOther)> operator + (const basic_fixed_string<T, NumElements>& string1, const basic_fixed_string<T, NumElementsOther>& string2)
 	{
 		return basic_fixed_string<T, (NumElements > NumElementsOther ? NumElements : NumElementsOther)>(string1, string2);
