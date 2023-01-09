@@ -6,8 +6,6 @@
 
 namespace crstl
 {
-	
-
 	template<typename T, int NumElements>
 	class basic_fixed_string
 	{

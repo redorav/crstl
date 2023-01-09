@@ -4,6 +4,8 @@
 
 #include "config_fwd.h"
 
+#include <stdint.h>
+
 namespace crstl
 {
 	inline size_t string_length(const char* str)
