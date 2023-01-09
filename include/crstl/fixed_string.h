@@ -326,6 +326,7 @@ namespace crstl
 
 		crstl_constexpr void clear() crstl_noexcept
 		{
+			m_data[0] = '\0';
 			m_length = 0;
 		}
 
