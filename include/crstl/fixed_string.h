@@ -138,7 +138,7 @@ namespace crstl
 			assign(begin, end);
 		}
 
-		template<size_t NumElementsOther>
+		template<int NumElementsOther>
 		basic_fixed_string(const basic_fixed_string<T, NumElementsOther>& string) crstl_noexcept
 		{
 			assign(string);
