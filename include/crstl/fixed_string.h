@@ -116,7 +116,7 @@ namespace crstl
 			return *this;
 		}
 
-		template<size_t NumElementsOther>
+		template<int NumElementsOther>
 		crstl_constexpr basic_fixed_string& append(const basic_fixed_string<T, NumElementsOther>& string) crstl_noexcept
 		{
 			append(string.m_data, string.m_length);
@@ -171,7 +171,7 @@ namespace crstl
 			return *this;
 		}
 
-		template<size_t NumElementsOther>
+		template<int NumElementsOther>
 		crstl_constexpr basic_fixed_string& assign(const basic_fixed_string<T, NumElementsOther>& string) crstl_noexcept
 		{
 			m_length = 0;
