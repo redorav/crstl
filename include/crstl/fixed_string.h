@@ -48,8 +48,8 @@ namespace crstl
 			assign(begin, end);
 		}
 
-		template<int NumElementsOther>
-		basic_fixed_string(const basic_fixed_string<T, NumElementsOther>& string) crstl_noexcept
+		template<int OtherNumElements>
+		basic_fixed_string(const basic_fixed_string<T, OtherNumElements>& string) crstl_noexcept
 		{
 			assign(string);
 		}
@@ -59,8 +59,8 @@ namespace crstl
 			assign(string);
 		}
 
-		template<int NumElementsOther>
-		basic_fixed_string(const basic_fixed_string<T, NumElements>& string1, const basic_fixed_string<T, NumElementsOther>& string2) crstl_noexcept
+		template<int OtherNumElements>
+		basic_fixed_string(const basic_fixed_string<T, NumElements>& string1, const basic_fixed_string<T, OtherNumElements>& string2) crstl_noexcept
 		{
 			assign(string1);
 			append(string2);
@@ -116,8 +116,8 @@ namespace crstl
 			return *this;
 		}
 
-		template<int NumElementsOther>
-		crstl_constexpr basic_fixed_string& append(const basic_fixed_string<T, NumElementsOther>& string) crstl_noexcept
+		template<int OtherNumElements>
+		crstl_constexpr basic_fixed_string& append(const basic_fixed_string<T, OtherNumElements>& string) crstl_noexcept
 		{
 			append(string.m_data, string.m_length);
 			return *this;
@@ -146,6 +146,31 @@ namespace crstl
 			return *this;
 		}
 
+		//---------------
+		// append_convert
+		//---------------
+
+		template<typename OtherCharacterType>
+		crstl_constexpr basic_fixed_string& append_convert(const OtherCharacterType* string, size_t length) crstl_noexcept
+		{
+			const OtherCharacterType* stringEnd = string + length;
+			value_type* dataStart = m_data + m_length;
+
+			size_t sizeBytes = 0;
+			bool success = decode_chunk(dataStart, dataStart + (kNumElementsWithZero - m_length), string, stringEnd, sizeBytes);
+			crstl_assert(success);
+
+			m_length += (uint32_t)sizeBytes;
+			m_data[m_length] = '\0';
+
+			return *this;
+		}
+
+		crstl_constexpr basic_fixed_string& append_convert(const_pointer string, size_t length) crstl_noexcept
+		{
+			append(string, length);
+		}
+
 		//-------
 		// assign
 		//-------
@@ -171,8 +196,8 @@ namespace crstl
 			return *this;
 		}
 
-		template<int NumElementsOther>
-		crstl_constexpr basic_fixed_string& assign(const basic_fixed_string<T, NumElementsOther>& string) crstl_noexcept
+		template<int OtherNumElements>
+		crstl_constexpr basic_fixed_string& assign(const basic_fixed_string<T, OtherNumElements>& string) crstl_noexcept
 		{
 			m_length = 0;
 			append(string);
@@ -571,9 +596,9 @@ namespace crstl
 
 	// Return the concatenation of differently-sized strings. As we have to choose a size for the return string, we'll select the largest one,
 	// on the assumption that it is the most likely to hold the sum of the two values
-	template<typename T, int NumElements, int NumElementsOther>
-	basic_fixed_string<T, (NumElements > NumElementsOther ? NumElements : NumElementsOther)> operator + (const basic_fixed_string<T, NumElements>& string1, const basic_fixed_string<T, NumElementsOther>& string2)
+	template<typename T, int NumElements, int OtherNumElements>
+	basic_fixed_string<T, (NumElements > OtherNumElements ? NumElements : OtherNumElements)> operator + (const basic_fixed_string<T, NumElements>& string1, const basic_fixed_string<T, OtherNumElements>& string2)
 	{
-		return basic_fixed_string<T, (NumElements > NumElementsOther ? NumElements : NumElementsOther)>(string1, string2);
+		return basic_fixed_string<T, (NumElements > OtherNumElements ? NumElements : OtherNumElements)>(string1, string2);
 	}
 }

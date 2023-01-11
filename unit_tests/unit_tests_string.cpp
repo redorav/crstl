@@ -3,6 +3,9 @@
 
 void RunUnitTestsString()
 {
+	const char* MyCharString = u8"Hello String汉字";
+	const wchar_t* MyWCharString = L"Hello String汉字";
+
 	std::string mystds;
 	crstl::basic_fixed_string<char, 32> myfs32;
 	crstl::basic_fixed_string<char, 32> myfs32_2("String");
@@ -60,4 +63,16 @@ void RunUnitTestsString()
 	myfs32 = myfs32_foo + myfs32_bar;
 	myfs32 = myfs8_foo + myfs8_bar;
 	myfs32 = myfs8_foo + myfs32_bar;
+
+	const char* u1 = u8"a";
+	const char* u2 = u8"\u03EA";
+	const char* u3 = u8"\u27c1";
+	const char* u4 = u8"\U00010CFF";
+
+	size_t utf8Offset = 0;
+	crstl::codepoint_t cp = crstl::decode_utf8((const uint8_t*)u4, strlen((const char*)u4), utf8Offset);
+
+	myfs32.append_convert(MyWCharString, crstl::string_length(MyWCharString));
+
+	mywfs32.append_convert(MyCharString, crstl::string_length(MyCharString));
 }
