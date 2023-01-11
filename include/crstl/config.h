@@ -39,7 +39,7 @@ inline void crstl_assert_impl(bool condition)
 {
 	if (!condition)
 	{
-		unsigned int* p = (unsigned int*)0xDEADBEEF;
+		int* p = (int*)(int)(0xDEADBEEF);
 		*p = 0;
 	}
 }
