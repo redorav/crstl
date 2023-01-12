@@ -10,7 +10,15 @@
 
 #endif
 
-#define crstl_noexcept noexcept
+#if defined(_MSC_VER) && _MSC_VER < 1900
+
+	#define crstl_noexcept
+
+#else
+
+	#define crstl_noexcept noexcept
+
+#endif
 
 #define crstl_nodiscard [[nodiscard]]
 

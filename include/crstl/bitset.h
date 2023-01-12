@@ -24,21 +24,18 @@ namespace crstl
 
 		typedef WordType word_type;
 
-		enum : word_type
-		{
-			kNumBits = NumBits,
-			kBitsPerWord = sizeof(word_type) * 8,
-			kBitsPerWordMask = kBitsPerWord - 1, // Used as modulo for words
-			kBitsPerWordShift =                  // How many bits to shift for this word type
+		static const word_type kNumBits = NumBits;
+		static const word_type kBitsPerWord = sizeof(word_type) * 8;		
+		static const word_type kBitsPerWordMask = kBitsPerWord - 1; // Used as modulo for words
+		static const word_type kBitsPerWordShift =                  // How many bits to shift for this word type
 			(kBitsPerWord == 8) ? 3 :
 			(kBitsPerWord == 16) ? 4 :
 			(kBitsPerWord == 32) ? 5 :
-			(kBitsPerWord == 64) ? 6 : 7,
-			kMaxWordValue = word_type(~word_type(0)),                          // Maximum value of this word type
-			kNumWords = (NumBits + kBitsPerWord - 1) / kBitsPerWord,          // How many words we need to store the number of bits
-			kLastWordBits = kNumBits - (kNumWords - 1) * kBitsPerWord,         // How many bits in the last word
-			kLastWordBitMask = kMaxWordValue >> (kBitsPerWord - kLastWordBits) // Mask for those "leftover" bits in the last word
-		};
+			(kBitsPerWord == 64) ? 6 : 7;
+		static const word_type kMaxWordValue = word_type(~word_type(0));                           // Maximum value of this word type
+		static const word_type kNumWords = (NumBits + kBitsPerWord - 1) / kBitsPerWord;            // How many words we need to store the number of bits
+		static const word_type kLastWordBits = kNumBits - (kNumWords - 1) * kBitsPerWord;          // How many bits in the last word
+		static const word_type kLastWordBitMask = kMaxWordValue >> (kBitsPerWord - kLastWordBits); // Mask for those "leftover" bits in the last word
 
 		// Hold reference to a bit, so that we can do the [ ] operator
 		struct bit_reference
@@ -84,10 +81,15 @@ namespace crstl
 			}
 		};
 
-		bitset() {}
+		bitset()
+		{
+			memset(m_data, 0, sizeof(m_data));
+		}
 
 		bitset(word_type v)
 		{
+			memset(m_data, 0, sizeof(m_data));
+
 			m_data[0] = v;
 
 			// Set bits in last word to 0 if necessary
@@ -230,6 +232,6 @@ namespace crstl
 
 	private:
 
-		word_type m_data[kNumWords] = {};
+		word_type m_data[kNumWords];
 	};
 };
