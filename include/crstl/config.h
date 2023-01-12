@@ -1,6 +1,14 @@
 #pragma once
 
-#define crstl_constexpr constexpr
+#if defined(__cpp_if_constexpr)
+
+	#define crstl_constexpr constexpr
+
+#else
+
+	#define crstl_constexpr
+
+#endif
 
 #define crstl_noexcept noexcept
 
