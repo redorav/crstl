@@ -2,6 +2,7 @@ void RunUnitTestsArray();
 void RunUnitTestsBitset();
 void RunUnitTestsString();
 void RunUnitTestsVector();
+void RunUnitTestsFunction();
 
 int main()
 {
@@ -9,4 +10,5 @@ int main()
 	RunUnitTestsBitset();
 	RunUnitTestsString();
 	RunUnitTestsVector();
+	RunUnitTestsFunction();
 }
