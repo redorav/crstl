@@ -24,7 +24,7 @@ namespace crstl
 
 	// Swap for standard values
 	template <typename T>
-	crstl_constexpr static void swap(T& a, T& b)
+	crstl_constexpr static void swap(T& a, T& b) crstl_noexcept
 	{
 		T temp(crstl::move(a));
 		a = crstl::move(b);
@@ -32,14 +32,14 @@ namespace crstl
 	}
 
 	template <class Iter1, class Iter2>
-	crstl_constexpr void iter_swap(Iter1 left, Iter2 right)
+	crstl_constexpr void iter_swap(Iter1 left, Iter2 right) crstl_noexcept
 	{
 		swap(*left, *right);
 	}
 
 	// This swap is specific for arrays
 	template<typename T, int N>
-	crstl_constexpr void swap(T(&left)[N], T(&right)[N])
+	crstl_constexpr void swap(T(&left)[N], T(&right)[N]) crstl_noexcept
 	{
 		if (&left != &right)
 		{
