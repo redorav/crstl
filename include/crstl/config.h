@@ -48,6 +48,9 @@
 #endif
 
 #define CRSTL_ENABLE_ASSERT
+#if __cplusplus == 201402L || _MSVC_LANG == 201402L
+	#define CRSTL_VARIADIC_TEMPLATES
+#endif
 
 #if defined(CRSTL_ENABLE_ASSERT)
 
