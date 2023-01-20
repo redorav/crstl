@@ -3,6 +3,7 @@ void RunUnitTestsBitset();
 void RunUnitTestsString();
 void RunUnitTestsVector();
 void RunUnitTestsFunction();
+void RunUnitTestsSmartPtr();
 
 int main()
 {
@@ -11,4 +12,5 @@ int main()
 	RunUnitTestsString();
 	RunUnitTestsVector();
 	RunUnitTestsFunction();
+	RunUnitTestsSmartPtr();
 }
