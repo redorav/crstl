@@ -53,7 +53,7 @@ namespace crstl
 			return m_ptr;
 		}
 
-		crstl_constexpr ~unique_ptr() crstl_noexcept
+		~unique_ptr() crstl_noexcept
 		{
 			destroy();
 		}
