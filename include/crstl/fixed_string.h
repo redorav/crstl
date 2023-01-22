@@ -11,13 +11,13 @@ namespace crstl
 	{
 	public:
 
-		typedef T                                  value_type;
-		typedef T&                                 reference;
-		typedef const T&                           const_reference;
-		typedef T*                                 pointer;
-		typedef const T*                           const_pointer;
-		typedef T*                                 iterator;
-		typedef const T*                           const_iterator;
+		typedef T        value_type;
+		typedef T&       reference;
+		typedef const T& const_reference;
+		typedef T*       pointer;
+		typedef const T* const_pointer;
+		typedef T*       iterator;
+		typedef const T* const_iterator;
 		
 		enum
 		{
@@ -71,13 +71,13 @@ namespace crstl
 			assign(string, subpos, sublen);
 		}
 
-		crstl_constexpr T& at(size_t i) crstl_noexcept
+		crstl_constexpr reference at(size_t i) crstl_noexcept
 		{
 			crstl_assert(i < m_length);
 			return m_data[i];
 		}
 
-		crstl_constexpr const T& at(size_t i) const crstl_noexcept
+		crstl_constexpr const_reference at(size_t i) const crstl_noexcept
 		{
 			crstl_assert(i < m_length);
 			return m_data[i];
@@ -225,13 +225,13 @@ namespace crstl
 			return *this;
 		}
 
-		crstl_constexpr T& back() crstl_noexcept
+		crstl_constexpr reference back() crstl_noexcept
 		{
 			crstl_assert(m_length > 0);
 			return m_data[m_length - 1];
 		}
 
-		crstl_constexpr const T& back() const crstl_noexcept
+		crstl_constexpr const_reference back() const crstl_noexcept
 		{
 			crstl_assert(m_length > 0);
 			return m_data[m_length - 1];
@@ -499,6 +499,23 @@ namespace crstl
 
 		crstl_constexpr size_t size() const crstl_noexcept { return length(); }
 
+		crstl_constexpr bool starts_with(value_type c) const crstl_noexcept { return find(c, 0) == 0; }
+
+		crstl_constexpr size_t starts_with(const_pointer needle_string, size_t needle_length) const crstl_noexcept
+		{
+			return find(needle_string, 0, needle_length) == 0;
+		}
+
+		crstl_constexpr size_t starts_with(const_pointer needle_string) const crstl_noexcept
+		{
+			return find(needle_string, 0, string_length(needle_string)) == 0;
+		}
+
+		crstl_constexpr size_t starts_with(const basic_fixed_string& needle_string) const crstl_noexcept
+		{
+			return find(needle_string.m_data, 0, needle_string.m_length) == 0;
+		}
+
 		crstl_constexpr basic_fixed_string substr(size_t pos, size_t length = npos) const crstl_noexcept
 		{
 			return basic_fixed_string(*this, pos, length);
@@ -508,13 +525,13 @@ namespace crstl
 		// Operators
 		//----------
 
-		crstl_constexpr T& operator [](size_t i)
+		crstl_constexpr reference operator [](size_t i)
 		{
 			crstl_assert(i < m_length);
 			return m_data[i];
 		}
 
-		crstl_constexpr const T& operator [](size_t i) const crstl_noexcept
+		crstl_constexpr const_reference operator [](size_t i) const crstl_noexcept
 		{
 			crstl_assert(i < m_length);
 			return m_data[i];
