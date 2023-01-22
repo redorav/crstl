@@ -2,6 +2,8 @@
 
 #include "config.h"
 
+#include <stddef.h>
+
 namespace crstl
 {
 	template<typename T>
@@ -26,7 +28,7 @@ namespace crstl
 
 		basic_string_view(const_pointer ptr, size_type size) : m_data(ptr), m_length(size) {}
 
-		basic_string_view(const_pointer begin, const_pointer end) : m_data(ptr), m_length(end - begin) {}
+		basic_string_view(const_pointer begin, const_pointer end) : m_data(begin), m_length(end - begin) {}
 
 		crstl_constexpr reference at(size_type i) crstl_noexcept
 		{
