@@ -1,5 +1,11 @@
+#include "crstl/string_view.h"
 #include "crstl/fixed_string.h"
+
 #include <string>
+
+#if crstl_cppversion >= 201703L
+#include <string_view>
+#endif
 
 void RunUnitTestsString()
 {
@@ -68,11 +74,50 @@ void RunUnitTestsString()
 	const char* u2 = u8"\u03EA";
 	const char* u3 = u8"\u27c1";
 	const char* u4 = u8"\U00010CFF";
-
+	
 	size_t utf8Offset = 0;
 	crstl::codepoint_t cp = crstl::decode_utf8((const uint8_t*)u4, strlen((const char*)u4), utf8Offset);
-
+	
 	myfs32.append_convert(MyWCharString, crstl::string_length(MyWCharString));
-
+	
 	mywfs32.append_convert(MyCharString, crstl::string_length(MyCharString));
+
+	// string_view
+
+	crstl::string_view crStringViewEmpty;
+
+	crstl::string_view crStringViewConstChar("String View");
+
+	for (char c : crStringViewConstChar)
+	{
+		printf("%c ", c);
+	}
+
+	printf("\n");
+
+	if (crStringViewConstChar.substr(1, 5) == "tring")
+	{
+		printf("String was equal\n");
+	}
+
+	if (crStringViewConstChar.starts_with('S'))
+	{
+		printf("Starts with letter S\n");
+	}
+
+	if (crStringViewConstChar.ends_with('w'))
+	{
+		printf("Ends with letter w\n");
+	}
+
+	if (crStringViewConstChar.ends_with("View"))
+	{
+		printf("Ends with View\n");
+	}
+
+#if crstl_cppversion >= 201703L
+	std::basic_string_view<char> stdStringViewEmpty;
+
+	std::basic_string_view<char> stdStringViewConstChar("String View");
+#endif
 }
