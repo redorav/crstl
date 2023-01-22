@@ -166,8 +166,8 @@ project (UnitTestProject)
 		kind("sharedlib")
 		files
 		{
-			"src/android/android_native_app_glue.h",
-			"src/android/android_native_app_glue.c",
+			srcDir.."/android/android_native_app_glue.h",
+			srcDir.."/android/android_native_app_glue.c",
 		}
 		
 	filter{}
@@ -187,9 +187,9 @@ project (AndroidProject)
 	androidapplibname(UnitTestProject)
 	files
 	{
-		"src/android/AndroidManifest.xml",
-		"src/android/build.xml",
-		"src/android/project.properties",
-		"src/android/res/values/strings.xml",
+		srcDir.."/android/AndroidManifest.xml",
+		srcDir.."/android/build.xml",
+		srcDir.."/android/project.properties",
+		srcDir.."/android/res/values/strings.xml",
 	}
 end
