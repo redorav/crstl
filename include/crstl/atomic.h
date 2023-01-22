@@ -127,76 +127,78 @@ namespace crstl
 	template<> struct atomic_type<4> { typedef int32_t type; };
 	template<> struct atomic_type<8> { typedef int64_t type; };
 
-	template<typename storage_type>
+	template<typename T>
 	class atomic
 	{
 	public:
 
-		typedef typename atomic_type<sizeof(storage_type)>::type operation_type;
+		typedef T value_type;
+
+		typedef typename atomic_type<sizeof(value_type)>::type operation_type;
 
 		atomic() : m_value(0) {}
 
-		atomic(const storage_type& value)
+		atomic(const value_type& value)
 		{
 			atomic_store((operation_type*)&m_value, value);
 		}
 
-		atomic& operator += (const storage_type& value)
+		atomic& operator += (const value_type& value)
 		{
 			atomic_add((operation_type*)&m_value, value); return *this;
 		}
 
-		atomic& operator -= (const storage_type& value)
+		atomic& operator -= (const value_type& value)
 		{
 			atomic_add((operation_type*)&m_value, -(operation_type)value); return *this;
 		}
 
-		atomic& operator &= (const storage_type& value)
+		atomic& operator &= (const value_type& value)
 		{
 			atomic_and((operation_type*)&m_value, value); return *this;
 		}
 
-		atomic& operator |= (const storage_type& value)
+		atomic& operator |= (const value_type& value)
 		{
 			atomic_or((operation_type*)&m_value, value); return *this;
 		}
 
-		atomic& operator ^= (const storage_type& value)
+		atomic& operator ^= (const value_type& value)
 		{
 			atomic_xor((operation_type*)& m_value, value); return *this;
 		}
 
 		// Pre-increment
-		storage_type operator ++ ()
+		value_type operator ++ ()
 		{
 			return atomic_add((operation_type*)&m_value, 1) + 1;
 		}
 
 		// Post-increment
-		storage_type operator ++ (int)
+		value_type operator ++ (int)
 		{
 			return atomic_add((operation_type*)&m_value, 1);
 		}
 
 		// Pre-decrement
-		storage_type operator -- ()
+		value_type operator -- ()
 		{
 			return atomic_add((operation_type*)&m_value, -1) - 1;
 		}
 
 		// Post-derement
-		storage_type operator -- (int)
+		value_type operator -- (int)
 		{
 			return atomic_add((operation_type*)&m_value, -1);
 		}
 
-		operator storage_type() const
+		operator value_type() const
 		{
 			return m_value;
 		}
 
 	protected:
 
-		storage_type m_value;
+		value_type m_value;
 	};
 };
