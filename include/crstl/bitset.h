@@ -2,7 +2,9 @@
 
 #include "config.h"
 
-#include "stdint.h"
+#include "config_fwd.h"
+
+#include "crstldef.h"
 
 namespace crstl
 {

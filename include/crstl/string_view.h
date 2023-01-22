@@ -2,7 +2,9 @@
 
 #include "config.h"
 
-#include <stddef.h>
+#include "crstldef.h"
+
+#include "string_common.h"
 
 namespace crstl
 {

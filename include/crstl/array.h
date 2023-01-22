@@ -2,6 +2,8 @@
 
 #include "config.h"
 
+#include "crstldef.h"
+
 namespace crstl
 {
 	template<typename T, size_t N = 1>

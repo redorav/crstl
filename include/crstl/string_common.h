@@ -4,7 +4,7 @@
 
 #include "config_fwd.h"
 
-#include <stdint.h>
+#include "crstldef.h"
 
 namespace crstl
 {

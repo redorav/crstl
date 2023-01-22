@@ -6,7 +6,7 @@
 
 #include "type_utils.h"
 
-#include <stdint.h>
+#include "crstldef.h"
 
 namespace crstl
 {

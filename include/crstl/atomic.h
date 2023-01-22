@@ -2,7 +2,7 @@
 
 #include "config.h"
 
-#include "stdint.h"
+#include "crstldef.h"
 
 #if defined(_WIN32)
 #include "atomic_win32.h"
