@@ -7,15 +7,15 @@ void RunUnitTestsString()
 	const wchar_t* MyWCharString = L"Hello String汉字";
 
 	std::string mystds;
-	crstl::fixed_string<char, 32> myfs32;
-	crstl::fixed_string<char, 32> myfs32_2("String");
-	crstl::fixed_string<char, 32> myfs32_foo("foo");
-	crstl::fixed_string<char, 32> myfs32_bar("bar");
+	crstl::fixed_string32 myfs32;
+	crstl::fixed_string32 myfs32_2("String");
+	crstl::fixed_string32 myfs32_foo("foo");
+	crstl::fixed_string32 myfs32_bar("bar");
 
-	crstl::fixed_string<char, 8> myfs8_foo("foo");
-	crstl::fixed_string<char, 8> myfs8_bar("bar");
+	crstl::fixed_string8 myfs8_foo("foo");
+	crstl::fixed_string8 myfs8_bar("bar");
 
-	crstl::fixed_string<wchar_t, 32> mywfs32;
+	crstl::fixed_wstring32 mywfs32;
 
 	mystds = "Hello String";
 	myfs32 = "Hello String";
