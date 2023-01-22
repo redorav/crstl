@@ -5,7 +5,20 @@ void RunUnitTestsVector();
 void RunUnitTestsFunction();
 void RunUnitTestsSmartPtr();
 
-int main()
+#if defined(__ANDROID__)
+
+#if defined(__cplusplus)
+extern "C"
+{
+#endif
+
+	void android_main(struct android_app* app)
+
+#else
+
+	int main()
+
+#endif
 {
 	RunUnitTestsArray();
 	RunUnitTestsBitset();
@@ -14,3 +27,7 @@ int main()
 	RunUnitTestsFunction();
 	RunUnitTestsSmartPtr();
 }
+
+#if defined(__ANDROID__)
+}
+#endif
