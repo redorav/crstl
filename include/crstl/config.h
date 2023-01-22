@@ -1,5 +1,25 @@
 #pragma once
 
+#if defined(_MSVC_LANG)
+
+	#define crstl_cppversion _MSVC_LANG
+
+#elif defined(__cplusplus)
+
+	#define crstl_cppversion __cplusplus
+
+#endif
+
+#if defined(__clang__) || defined(__GNUG__)
+
+	#define crstl_finline inline __attribute__((always_inline))
+
+#elif defined(_MSC_VER)
+
+	#define crstl_finline __forceinline
+
+#endif
+
 #if defined(__cpp_if_constexpr)
 
 	#define crstl_constexpr constexpr
@@ -47,10 +67,11 @@
 
 #endif
 
-#define CRSTL_ENABLE_ASSERT
-#if __cplusplus == 201402L || _MSVC_LANG == 201402L
+#if crstl_cppversion == 201402L
 	#define CRSTL_VARIADIC_TEMPLATES
 #endif
+
+#define CRSTL_ENABLE_ASSERT
 
 #if defined(CRSTL_ENABLE_ASSERT)
 
