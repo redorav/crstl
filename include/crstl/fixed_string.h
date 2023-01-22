@@ -326,41 +326,18 @@ namespace crstl
 		// Find a const char* string with an offset and a length
 		size_t find(const_pointer needle_string, size_t pos, size_t needle_length) const crstl_noexcept
 		{
-			if (needle_string == nullptr || needle_length > m_length || pos > (m_length - needle_length))
+			crstl_assert(pos < m_length);
+
+			const_pointer found_string = string_find(m_data + pos, m_length - pos, needle_string, needle_length);
+
+			if (found_string)
+			{
+				return (size_t)(found_string - m_data);
+			}
+			else
 			{
 				return npos;
 			}
-
-			// If we have an empty string, return the offset
-			if (needle_length == 0)
-			{
-				return pos;
-			}
-
-			// No point searching if length of needle is longer than the final characters of the string
-			const_pointer search_end = m_data + (m_length - needle_length) + 1;
-			const_pointer string_end = m_data + m_length;
-			const_pointer search_start = m_data + pos;
-
-			while(search_start)
-			{
-				search_start = string_find_char(search_start, *needle_string, (size_t)(search_end - search_start));
-
-				if (!search_start)
-				{
-					return npos;
-				}
-
-				// If we matched the first character
-				if (string_compare(search_start, needle_length, needle_string, needle_length) == 0)
-				{
-					return (size_t)(search_start - m_data);
-				}
-
-				++search_start;
-			}
-
-			return npos;
 		}
 
 		size_t find(const_pointer needle_string, size_t pos = 0) const crstl_noexcept
