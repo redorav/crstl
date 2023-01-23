@@ -368,14 +368,14 @@ namespace crstl
 
 		basic_fixed_string& replace(size_t pos, size_t length, const_pointer replace_string, size_t replace_length)
 		{
-			replace_common(pos, length, replace_length);
+			crstl::replace_common(pos, length, replace_length);
 			memcpy(m_data + pos, replace_string, replace_length * kCharSize);
 			return *this;
 		}
 
 		basic_fixed_string& replace(size_t pos, size_t length, size_t n, value_type c)
 		{
-			replace_common(pos, length, n);
+			crstl::replace_common(pos, length, n);
 			crstl::fill_char(m_data + pos, n, c);
 			return *this;
 		}
