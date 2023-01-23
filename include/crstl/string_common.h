@@ -56,14 +56,18 @@ namespace crstl
 		return length > maxLength - pos ? maxLength - pos : length;
 	}
 
-	inline const char* string_find_char(const char* string, char c, size_t n)
+	template<typename T>
+	inline const char* string_find_char(const T* string, T c, size_t n)
 	{
-		return (const char*)memchr(string, c, n);
-	}
+		for(const T* ptr = string; ptr != string + n; ++ptr)
+		{
+			if (*ptr == c)
+			{
+				return ptr;
+			}
+		}
 
-	inline const wchar_t* string_find_char(const wchar_t* string, wchar_t c, size_t n)
-	{
-		return (const wchar_t*)wmemchr(string, c, n);
+		return nullptr;
 	}
 
 	template<typename T>
