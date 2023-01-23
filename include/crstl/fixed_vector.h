@@ -32,7 +32,7 @@ namespace crstl
 		// invoking the default constructor of T. We don't want to change it to some raw type like char as it becomes hard to
 		// debug later on and would rely on a natvis to properly visualize it
 
-		fixed_vector() crstl_noexcept : m_currentSize(0) {}
+		fixed_vector() crstl_noexcept : m_length(0) {}
 		~fixed_vector() crstl_noexcept {}
 		fixed_vector(const this_type& v) { *this = v; }
 		fixed_vector(this_type&& v) crstl_noexcept { *this = v; }
@@ -45,16 +45,16 @@ namespace crstl
 
 		this_type& operator = (this_type&& v) crstl_noexcept
 		{
-			crstl::swap(m_currentSize, v.m_currentSize);
+			crstl::swap(m_length, v.m_currentSize);
 			crstl::swap(m_data, v.m_data);
 			return *this;
 		}
 
-		reference at(size_t i) { crstl_assert(i < m_currentSize); return m_data[i]; }
-		const_reference at(size_t i) const { crstl_assert(i < m_currentSize); return m_data[i]; }
+		reference at(size_t i) { crstl_assert(i < m_length); return m_data[i]; }
+		const_reference at(size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
 
-		reference back() { crstl_assert(m_currentSize > 0); return m_data[m_currentSize - 1]; }
-		const_reference back() const { crstl_assert(m_currentSize > 0); return m_data[m_currentSize - 1]; }
+		reference back() { crstl_assert(m_length > 0); return m_data[m_length - 1]; }
+		const_reference back() const { crstl_assert(m_length > 0); return m_data[m_length - 1]; }
 
 		iterator begin() { return &m_data[0]; }
 		const_iterator begin() const { return &m_data[0]; }
@@ -64,12 +64,12 @@ namespace crstl
 
 		void clear()
 		{
-			for (size_t i = 0; i < m_currentSize; ++i)
+			for (size_t i = 0; i < m_length; ++i)
 			{
 				m_data[i].~T();
 			}
 
-			m_currentSize = 0;
+			m_length = 0;
 		}
 
 		pointer data() { return &m_data[0]; }
@@ -79,147 +79,147 @@ namespace crstl
 		template<class... Args>
 		reference emplace_back(Args&&... args)
 		{
-			crstl_assert(m_currentSize < NumElements);
-			::new((void*)&m_data[m_currentSize]) T(crstl::forward<Args>(args)...);
-			m_currentSize++;
+			crstl_assert(m_length < NumElements);
+			::new((void*)&m_data[m_length]) T(crstl::forward<Args>(args)...);
+			m_length++;
 			return back();
 		}
 #else
 		template<typename Arg0> reference emplace_back(Arg0&& arg0)
 		{
-			crstl_assert(m_currentSize < NumElements); ::new((void*)&m_data[m_currentSize]) T(crstl::forward<Arg0>(arg0)); m_currentSize++; return back();
+			crstl_assert(m_length < NumElements); ::new((void*)&m_data[m_length]) T(crstl::forward<Arg0>(arg0)); m_length++; return back();
 		}
 		
 		template<typename Arg0, typename Arg1> reference emplace_back(Arg0&& arg0, Arg1&& arg1)
 		{
-			crstl_assert(m_currentSize < NumElements); ::new((void*)&m_data[m_currentSize]) T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1)); m_currentSize++; return back();
+			crstl_assert(m_length < NumElements); ::new((void*)&m_data[m_length]) T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1)); m_length++; return back();
 		}
 		
 		template<typename Arg0, typename Arg1, typename Arg2> reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2)
 		{
-			crstl_assert(m_currentSize < NumElements); ::new((void*)&m_data[m_currentSize]) T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2)); m_currentSize++; return back();
+			crstl_assert(m_length < NumElements); ::new((void*)&m_data[m_length]) T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2)); m_length++; return back();
 		}
 
 		template<typename Arg0, typename Arg1, typename Arg2, typename Arg3> reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2, Arg3&& arg3)
 		{
-			crstl_assert(m_currentSize < NumElements); ::new((void*)&m_data[m_currentSize]) T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3));
-			m_currentSize++; return back();
+			crstl_assert(m_length < NumElements); ::new((void*)&m_data[m_length]) T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3));
+			m_length++; return back();
 		}
 
 		template<typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4> reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2, Arg3&& arg3, Arg4&& arg4)
 		{
-			crstl_assert(m_currentSize < NumElements); ::new((void*)&m_data[m_currentSize]) 
+			crstl_assert(m_length < NumElements); ::new((void*)&m_data[m_length]) 
 				T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3), crstl::forward<Arg4>(arg4));
-			m_currentSize++; return back();
+			m_length++; return back();
 		}
 
 		template<typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5> reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2, Arg3&& arg3, Arg4&& arg4, Arg5&& arg5)
 		{
-			crstl_assert(m_currentSize < NumElements); ::new((void*)&m_data[m_currentSize]) 
+			crstl_assert(m_length < NumElements); ::new((void*)&m_data[m_length]) 
 				T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3), crstl::forward<Arg4>(arg4), crstl::forward<Arg5>(arg5));
-			m_currentSize++; return back();
+			m_length++; return back();
 		}
 
 		template<typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6>
 		reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2, Arg3&& arg3, Arg4&& arg4, Arg5&& arg5, Arg6&& arg6)
 		{
-			crstl_assert(m_currentSize < NumElements); ::new((void*)&m_data[m_currentSize]) 
+			crstl_assert(m_length < NumElements); ::new((void*)&m_data[m_length]) 
 				T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3), crstl::forward<Arg4>(arg4), crstl::forward<Arg5>(arg5), crstl::forward<Arg6>(arg6));
-			m_currentSize++; return back();
+			m_length++; return back();
 		}
 
 		template<typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6, typename Arg7>
 		reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2, Arg3&& arg3, Arg4&& arg4, Arg5&& arg5, Arg6&& arg6, Arg7&& arg7)
 		{
-			crstl_assert(m_currentSize < NumElements); ::new((void*)&m_data[m_currentSize]) 
+			crstl_assert(m_length < NumElements); ::new((void*)&m_data[m_length]) 
 				T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3), crstl::forward<Arg4>(arg4), 
 				crstl::forward<Arg5>(arg5), crstl::forward<Arg6>(arg6), crstl::forward<Arg7>(arg7));
-			m_currentSize++; return back();
+			m_length++; return back();
 		}
 
 		template<typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6, typename Arg7, typename Arg8>
 		reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2, Arg3&& arg3, Arg4&& arg4, Arg5&& arg5, Arg6&& arg6, Arg7&& arg7, Arg8&& arg8)
 		{
-			crstl_assert(m_currentSize < NumElements); ::new((void*)&m_data[m_currentSize]) 
+			crstl_assert(m_length < NumElements); ::new((void*)&m_data[m_length]) 
 				T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3), crstl::forward<Arg4>(arg4), 
 				crstl::forward<Arg5>(arg5), crstl::forward<Arg6>(arg6), crstl::forward<Arg7>(arg7), crstl::forward<Arg8>(arg8));
-			m_currentSize++; return back();
+			m_length++; return back();
 		}
 
 		template<typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6, typename Arg7, typename Arg8, typename Arg9>
 		reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2, Arg3&& arg3, Arg4&& arg4, Arg5&& arg5, Arg6&& arg6, Arg7&& arg7, Arg8&& arg8, Arg9&& arg9)
 		{
-			crstl_assert(m_currentSize < NumElements); ::new((void*)&m_data[m_currentSize]) 
+			crstl_assert(m_length < NumElements); ::new((void*)&m_data[m_length]) 
 				T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3), crstl::forward<Arg4>(arg4), 
 				crstl::forward<Arg5>(arg5), crstl::forward<Arg6>(arg6), crstl::forward<Arg7>(arg7), crstl::forward<Arg8>(arg8), crstl::forward<Arg9>(arg9));
-			m_currentSize++; return back();
+			m_length++; return back();
 		}
 
 #endif
 
-		bool empty() const { return m_currentSize == 0; }
+		bool empty() const { return m_length == 0; }
 
-		iterator end() { return &m_data[0] + m_currentSize; }
-		const_iterator end() const { return &m_data[0] + m_currentSize; }
-		const_iterator cend() const { return &m_data[0] + m_currentSize; }
+		iterator end() { return &m_data[0] + m_length; }
+		const_iterator end() const { return &m_data[0] + m_length; }
+		const_iterator cend() const { return &m_data[0] + m_length; }
 
 		reference front() { m_data[0]; }
 		const_reference front() const { m_data[0]; }
 
 		void pop_back()
 		{
-			crstl_assert(m_currentSize > 0);
+			crstl_assert(m_length > 0);
 			back().~T();
-			m_currentSize--;
+			m_length--;
 		}
 
 		reference push_back()
 		{
-			crstl_assert(m_currentSize < NumElements);
-			::new((void*)&m_data[m_currentSize]) T();
-			m_currentSize++;
+			crstl_assert(m_length < NumElements);
+			::new((void*)&m_data[m_length]) T();
+			m_length++;
 			return back();
 		}
 
 		reference push_back_uninitialized()
 		{
-			m_currentSize++;
+			m_length++;
 			return back();
 		}
 
 		void push_back(const T& v)
 		{
-			::new((void*)&m_data[m_currentSize]) T(crstl::move(v));
-			m_currentSize++;
+			::new((void*)&m_data[m_length]) T(crstl::move(v));
+			m_length++;
 		}
 
 		void push_back(T&& v)
 		{
-			::new((void*)&m_data[m_currentSize]) T(crstl::move(v));
-			m_currentSize++;
+			::new((void*)&m_data[m_length]) T(crstl::move(v));
+			m_length++;
 		}
 
 		void resize(size_t s)
 		{
-			if (s > (size_t)m_currentSize)
+			if (s > (size_t)m_length)
 			{
 				for (uint64_t i = 0; i < s; ++i)
 				{
 					::new((void*)&m_data[i]) T();
 				}
 			}
-			else if (s < (size_t)m_currentSize)
+			else if (s < (size_t)m_length)
 			{
-				for (uint64_t i = s; s < m_currentSize; ++i)
+				for (uint64_t i = s; s < m_length; ++i)
 				{
 					m_data[i].~T();
 				}
 			}
 
-			m_currentSize = (uint32_t)s;
+			m_length = (uint32_t)s;
 		}
 
-		size_t size() const { return m_currentSize; }
+		size_t size() const { return m_length; }
 
 		void swap(this_type& v)
 		{
@@ -257,9 +257,9 @@ namespace crstl
 			}
 		}
 
-		reference operator [] (size_t i) { crstl_assert(i < m_currentSize); return m_data[i]; }
+		reference operator [] (size_t i) { crstl_assert(i < m_length); return m_data[i]; }
 
-		const_reference operator [] (size_t i) const { crstl_assert(i < m_currentSize); return m_data[i]; }
+		const_reference operator [] (size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
 
 	private:
 
@@ -272,6 +272,6 @@ namespace crstl
 			struct { T m_data[NumElements ? NumElements : 1]; };
 		};
 
-		uint32_t m_currentSize;
+		uint32_t m_length;
 	};
 };
