@@ -10,6 +10,20 @@
 
 #endif
 
+#if defined(__clang__)
+
+	#define CRSTL_CLANG
+
+#elif defined(__GNUG__)
+
+	#define CRSTL_GCC
+
+#elif defined(_MSC_VER)
+
+	#define CRSTL_MSVC
+
+#endif
+
 #if defined(__clang__) || defined(__GNUG__)
 
 	#define crstl_finline inline __attribute__((always_inline))
@@ -89,5 +103,21 @@ inline void crstl_assert_impl(bool condition)
 #else
 
 #define crstl_assert(x)
+
+#endif
+
+#if defined(_M_ARM) || defined(__arm__) || defined(_M_ARM64) || defined(__aarch64__)
+
+	#define CRSTL_ARM
+
+#endif
+
+#if defined(_WIN32)
+
+	#define CRSTL_WINDOWS
+
+#elif defined(__linux__)
+
+	#define CRSTL_LINUX
 
 #endif
