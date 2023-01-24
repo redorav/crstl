@@ -110,6 +110,10 @@ inline void crstl_assert_impl(bool condition)
 
 	#define CRSTL_ARM
 
+#elif defined(_WIN32)
+
+	#define CRSTL_X86_64
+
 #endif
 
 #if defined(_WIN32)
