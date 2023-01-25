@@ -8,6 +8,8 @@
 
 #include "crstldef.h"
 
+#include "span.h"
+
 namespace crstl
 {
 	template<typename T, uint64_t NumElements>
@@ -45,7 +47,7 @@ namespace crstl
 
 		this_type& operator = (this_type&& v) crstl_noexcept
 		{
-			crstl::swap(m_length, v.m_currentSize);
+			crstl::swap(m_length, v.m_length);
 			crstl::swap(m_data, v.m_data);
 			return *this;
 		}
@@ -260,6 +262,11 @@ namespace crstl
 		reference operator [] (size_t i) { crstl_assert(i < m_length); return m_data[i]; }
 
 		const_reference operator [] (size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
+
+		operator span<T>() const
+		{
+			return span<T>((T*)m_data, (size_t)m_length);
+		}
 
 	private:
 

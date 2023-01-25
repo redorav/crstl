@@ -1,0 +1,74 @@
+#pragma once
+
+#include "config.h"
+
+#include "type_utils.h"
+
+namespace crstl
+{
+	template<typename T>
+	class span
+	{
+	public:
+
+		typedef T                            element_type;
+		typedef typename remove_cv<T>:: type value_type;
+		typedef size_t                       size_type;
+		typedef T&                           reference;
+		typedef const T&                     const_reference;
+		typedef T*                           pointer;
+		typedef const T*                     const_pointer;
+		typedef T*                           iterator;
+		typedef const T*                     const_iterator;
+
+		span() : m_data(nullptr), m_length(0) {}
+
+		span(T* data, size_t length) : m_data(data), m_length(length) {}
+
+		reference at(size_t i) { crstl_assert(i < m_length); return m_data[i]; }
+		const_reference at(size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
+
+		reference back() { crstl_assert(m_length > 0); return m_data[m_length - 1]; }
+		const_reference back() const { crstl_assert(m_length > 0); return m_data[m_length - 1]; }
+
+		iterator begin() { return &m_data[0]; }
+		const_iterator begin() const { return &m_data[0]; }
+		const_iterator cbegin() const { return &m_data[0]; }
+
+		pointer data() { return &m_data[0]; }
+		const_pointer data() const { return &m_data[0]; }
+
+		bool empty() const { return m_length == 0; }
+
+		iterator end() { return &m_data[0] + m_length; }
+		const_iterator end() const { return &m_data[0] + m_length; }
+		const_iterator cend() const { return &m_data[0] + m_length; }
+
+		span first(size_t length) { crstl_assert(length < m_length); return subspan(m_data + length, m_length - length); }
+
+		reference front() { m_data[0]; }
+		const_reference front() const { m_data[0]; }
+
+		span last(size_t length) { crstl_assert(length < m_length); return subspan(m_data + (m_length - length), length); }
+
+		size_t size() const { return m_length; }
+
+		size_t size_bytes() const { return m_length * sizeof(T); }
+
+		span subspan(size_t offset, size_t length)
+		{
+			crstl_assert(offset < m_length);
+			return span(m_data + offset, length);
+		}
+
+		reference operator [] (size_t i) { crstl_assert(i < m_length); return m_data[i]; }
+
+		const_reference operator [] (size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
+
+	private:
+
+		T* m_data;
+
+		size_t m_length;
+	};
+};

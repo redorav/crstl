@@ -2,6 +2,8 @@
 
 #include "config.h"
 
+#include "crstldef.h"
+
 namespace crstl
 {
 	template <typename T> struct remove_reference { typedef T type; };
@@ -9,6 +11,18 @@ namespace crstl
 	template <typename T> struct remove_reference<T&> { typedef T type; };
 
 	template <typename T> struct remove_reference<T&&> { typedef T type; };
+
+	template <typename T>           struct remove_const { typedef T type; };
+	template <typename T>           struct remove_const<const T> { typedef T type; };
+	template <typename T>           struct remove_const<const T[]> { typedef T type[]; };
+	template <typename T, size_t N> struct remove_const<const T[N]> { typedef T type[N]; };
+
+	template <typename T>           struct remove_volatile { typedef T type; };
+	template <typename T>           struct remove_volatile<volatile T> { typedef T type; };
+	template <typename T>           struct remove_volatile<volatile T[]> { typedef T type[]; };
+	template <typename T, size_t N> struct remove_volatile<volatile T[N]> { typedef T type[N]; };
+
+	template <typename T> struct remove_cv { typedef typename crstl::remove_volatile<typename crstl::remove_const<T>::type>::type type; };
 
 	template <typename T>
 	crstl_constexpr T&& forward(typename crstl::remove_reference<T>::type& x) crstl_noexcept
