@@ -49,10 +49,7 @@ namespace crstl
 
 		~fixed_vector() crstl_noexcept
 		{
-			for (size_t i = 0; i < m_length; ++i)
-			{
-				m_data[i].~T();
-			}
+			clear();
 		}
 
 		this_type& operator = (const this_type& v) crstl_noexcept
