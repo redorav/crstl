@@ -35,9 +35,25 @@ namespace crstl
 		// debug later on and would rely on a natvis to properly visualize it
 
 		fixed_vector() crstl_noexcept : m_length(0) {}
-		~fixed_vector() crstl_noexcept {}
+		fixed_vector(size_t initialLength) : m_length(0)
+		{
+			crstl_assert(initialLength < NumElements);
+			for (size_t i = 0; i < initialLength; ++i)
+			{
+				push_back();
+			}
+		}
+
 		fixed_vector(const this_type& v) { *this = v; }
 		fixed_vector(this_type&& v) crstl_noexcept { *this = v; }
+
+		~fixed_vector() crstl_noexcept
+		{
+			for (size_t i = 0; i < m_length; ++i)
+			{
+				m_data[i].~T();
+			}
+		}
 
 		this_type& operator = (const this_type& v) crstl_noexcept
 		{
