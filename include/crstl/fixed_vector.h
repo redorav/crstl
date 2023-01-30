@@ -10,9 +10,11 @@
 
 #include "span.h"
 
+#include <stdint.h>
+
 namespace crstl
 {
-	template<typename T, uint64_t NumElements>
+	template<typename T, size_t NumElements>
 	class fixed_vector
 	{
 	public:

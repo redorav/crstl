@@ -2,8 +2,6 @@
 
 #include "config.h"
 
-#include <stdint.h>
-
 namespace crstl
 {
 	typedef decltype(nullptr)   nullptr_t;

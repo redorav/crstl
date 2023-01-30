@@ -10,7 +10,7 @@ namespace crstl
 {
 	// http://graphics.stanford.edu/~seander/bithacks.html#CountBitsSetParallel
 	template<typename T>
-	uint64_t count_bits(T v)
+	size_t count_bits(T v)
 	{
 		v = v - ((v >> 1) & (T)~(T)0 / 3);
 		v = (v & (T)~(T)0 / 15 * 3) + ((v >> 2) & (T)~(T)0 / 15 * 3);
@@ -123,7 +123,7 @@ namespace crstl
 		{
 			size_t n = 0;
 
-			for (uint64_t i = 0; i < kNumWords; ++i)
+			for (size_t i = 0; i < kNumWords; ++i)
 			{
 				#if defined(__GNUG__) || defined(__clang__)
                 n += __builtin_popcountll(m_data[i]);
