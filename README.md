@@ -1,9 +1,11 @@
 # CRSTL
-An alternative or complementary STL that focuses on fast compiles and runtime, often focusing on fixed size alternatives for containers and functionality. Some of the guiding principles are:
+An alternative or complementary STL that focuses on fast compiles and runtime, often focusing on fixed size alternatives for containers and functionality. Some of the guiding goals are:
 
 - No RTTI
 - No exceptions thrown or exception handling
-- No external includes
-- Containers that avoid heap allocations
+- Fast to compile: The only dependency will be stdint.h
+- Containers that avoid heap allocations (called fixed)
+- Containers that can use the stack
 - Simple C++ code as clear and unobfuscated as possible
+- Will add functionality from newer standards, in a C++11 compatible way
 - 
