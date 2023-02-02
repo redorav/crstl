@@ -8,8 +8,6 @@
 #include "atomic_win32.h"
 #endif
 
-#include <stdint.h>
-
 namespace crstl
 {
 	// atomic_store: store value to variable pointed by target, and return its previous value

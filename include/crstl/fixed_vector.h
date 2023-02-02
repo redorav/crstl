@@ -10,8 +10,6 @@
 
 #include "span.h"
 
-#include <stdint.h>
-
 namespace crstl
 {
 	template<typename T, size_t NumElements>
