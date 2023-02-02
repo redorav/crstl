@@ -204,7 +204,7 @@ namespace crstl
 
 		void push_back(const T& v)
 		{
-			::new((void*)&m_data[m_length]) T(crstl::move(v));
+			::new((void*)&m_data[m_length]) T(v);
 			m_length++;
 		}
 
