@@ -45,6 +45,7 @@ namespace crstl
 		b = crstl::move(temp);
 	}
 
+	// Swap for iterators
 	template <class Iter1, class Iter2>
 	crstl_constexpr void iter_swap(Iter1 left, Iter2 right) crstl_noexcept
 	{
