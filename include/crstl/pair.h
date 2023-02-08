@@ -34,7 +34,7 @@ namespace crstl
 
 		crstl_constexpr bool operator == (const pair& other) const { return first == other.first && second == other.second; }
 		crstl_constexpr bool operator != (const pair& other) const { return !(*this == other); }
-		crstl_constexpr bool operator < (const pair& other) const { return first < other.first || !(first < other.first) && second < other.second; }
+		crstl_constexpr bool operator < (const pair& other) const { return first < other.first || (!(first < other.first) && second < other.second); }
 		crstl_constexpr bool operator <= (const pair& other) const { return !(other < *this); }
 		crstl_constexpr bool operator > (const pair& other) const { return other < *this; }
 		crstl_constexpr bool operator >= (const pair& other) const { return !(*this < other); }
