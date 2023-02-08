@@ -4,8 +4,10 @@
 
 #include "crstldef.h"
 
-#if defined(_WIN32)
-#include "atomic_win32.h"
+#if defined(CRSTL_WINDOWS)
+#include "crstl/platform/atomic_win32.h"
+#elif defined(CRSTL_ARM)
+#include "crstl/platform/atomic_arm.h"
 #endif
 
 namespace crstl
