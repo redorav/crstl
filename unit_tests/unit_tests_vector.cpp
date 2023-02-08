@@ -2,6 +2,7 @@
 #include "crstl/span.h"
 
 #include <vector>
+#include <stdio.h>
 
 #if crstl_cppversion >= 202002L
 #include <span>
