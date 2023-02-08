@@ -3,7 +3,7 @@ An alternative or complementary STL that focuses on fast compiles and runtime, o
 
 - No RTTI
 - No exceptions thrown or exception handling
-- Fast to compile: The only dependency will be stdint.h
+- Fast to compile: there are no dependencies on external headers
 - Containers that don't do heap allocations (called fixed)
 - Containers that only use the stack (called stack)
 - Simple C++ code as clear and unobfuscated as possible
