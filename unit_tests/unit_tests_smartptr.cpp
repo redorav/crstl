@@ -1,3 +1,5 @@
+#include "unit_tests.h"
+
 #include "crstl/unique_ptr.h"
 #include "crstl/intrusive_ptr.h"
 

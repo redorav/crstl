@@ -1,3 +1,5 @@
+#include "unit_tests.h"
+
 #include "crstl/fixed_function.h"
 
 #include <functional>
