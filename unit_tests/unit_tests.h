@@ -10,7 +10,7 @@
 
 namespace crstl_unit
 {
-	void begin_test(const char* name);
+	void begin_test_impl(const char* name);
 
 	void end_test();
 
@@ -18,6 +18,8 @@ namespace crstl_unit
 		begin_test_case(#x, __LINE__, __FILE__); \
 		check_condition(x); \
 		end_test_case();
+
+	#define begin_test(x)
 	
 	void begin_test_case(const char* functionString, int lineNumber, const char* file);
 

@@ -41,31 +41,33 @@ void RunUnitTestsVector()
 {
 	using namespace crstl_unit;
 
-	int initialVectorSize = 5;
+	begin_test("Fixed Vector");
+	{
+		int initialVectorSize = 5;
 
-	int so = sizeof(crstl::fixed_vector<Dummy, 32>);
+		crstl::fixed_vector<Dummy, 32> crFixedVector(initialVectorSize);
+		std::vector<Dummy> stdVector(initialVectorSize);
 
-	crstl::fixed_vector<Dummy, 32> crFixedVector(initialVectorSize);
-	std::vector<Dummy> stdVector(initialVectorSize);
+		crstl_check(crFixedVector.size() == stdVector.size());
 
-	crstl_check(crFixedVector.size() == stdVector.size());
+		crFixedVector.push_back();
+		stdVector.push_back(Dummy());
 
-	crFixedVector.push_back();
-	stdVector.push_back(Dummy());
+		crstl_check(crFixedVector.size() == stdVector.size());
 
-	crstl_check(crFixedVector.size() == stdVector.size());
+		crFixedVector.pop_back();
+		stdVector.pop_back();
 
-	crFixedVector.pop_back();
-	stdVector.pop_back();
+		crFixedVector.emplace_back(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+		stdVector.emplace_back(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+		crstl_check(crFixedVector.size() == stdVector.size());
 
-	crFixedVector.emplace_back(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
-	stdVector.emplace_back(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
-	crstl_check(crFixedVector.size() == stdVector.size());
+		crFixedVector.clear();
+		stdVector.clear();
 
-	crFixedVector.clear();
-	stdVector.clear();
+		crstl_check(crFixedVector.size() == stdVector.size());
 
-	crstl_check(crFixedVector.size() == stdVector.size());
-
-	LoopOverSpan(crFixedVector);
+		LoopOverSpan(crFixedVector);
+	}
+	end_test();
 }

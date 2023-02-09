@@ -3,9 +3,9 @@
 
 namespace crstl_unit
 {
-	void begin_test(const char* name)
+	void begin_test_impl(const char* name, const char* filename)
 	{
-		printf("%s\n", name);
+		printf("%s, %s\n", name, filename);
 	}
 
 	void end_test()
@@ -23,6 +23,11 @@ namespace crstl_unit
 	{
 		if (condition)
 		{
+			
+		}
+		else
+		{
+			assert(false);
 		}
 	}
 
