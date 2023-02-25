@@ -44,24 +44,24 @@ namespace crstl
 			}
 		}
 
-		fixed_vector(const this_type& v) { *this = v; }
-		fixed_vector(this_type&& v) crstl_noexcept { *this = v; }
+		fixed_vector(const this_type& other) { *this = other; }
+		fixed_vector(this_type&& other) crstl_noexcept { *this = other; }
 
 		~fixed_vector() crstl_noexcept
 		{
 			clear();
 		}
 
-		this_type& operator = (const this_type& v) crstl_noexcept
+		this_type& operator = (const this_type& other) crstl_noexcept
 		{
-			memcpy(m_data, v.m_data, sizeof(m_data));
+			memcpy(this, &other, sizeof(other));
 			return *this;
 		}
 
-		this_type& operator = (this_type&& v) crstl_noexcept
+		this_type& operator = (this_type&& other) crstl_noexcept
 		{
-			crstl::swap(m_length, v.m_length);
-			crstl::swap(m_data, v.m_data);
+			crstl::swap(m_length, other.m_length);
+			crstl::swap(m_data, other.m_data);
 			return *this;
 		}
 
@@ -91,7 +91,7 @@ namespace crstl
 		const_pointer data() const { return &m_data[0]; }
 
 #if defined(CRSTL_VARIADIC_TEMPLATES)
-		template<class... Args>
+		template<typename... Args>
 		reference emplace_back(Args&&... args)
 		{
 			crstl_assert(m_length < NumElements);
