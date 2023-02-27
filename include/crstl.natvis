@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+	<Type Name="crstl::array&lt;*,*&gt;">
+		<DisplayString Condition="$T2 == 0">[{$T2}] {{}}</DisplayString>
+		<DisplayString Condition="$T2 == 1">[{$T2}] {{ {*m_data} }}</DisplayString>
+		<DisplayString Condition="$T2 == 2">[{$T2}] {{ {*m_data}, {*(m_data+1)} }}</DisplayString>
+		<DisplayString Condition="$T2 == 3">[{$T2}] {{ {*m_data}, {*(m_data+1)}, {*(m_data+2)} }}</DisplayString>
+		<DisplayString Condition="$T2 == 4">[{$T2}] {{ {*m_data}, {*(m_data+1)}, {*(m_data+2)}, {*(m_data+3)} }}</DisplayString>
+		<DisplayString Condition="$T2 == 5">[{$T2}] {{ {*m_data}, {*(m_data+1)}, {*(m_data+2)}, {*(m_data+3)}, {*(m_data+4)} }}</DisplayString>
+		<DisplayString Condition="$T2 == 6">[{$T2}] {{ {*m_data}, {*(m_data+1)}, {*(m_data+2)}, {*(m_data+3)}, {*(m_data+4)}, {*(m_data+5)} }}</DisplayString>
+		<DisplayString Condition="$T2 &gt; 6">[{$T2}] {{ {*m_data}, {*(m_data+1)}, {*(m_data+2)}, {*(m_data+3)}, {*(m_data+4)}, {*(m_data+5)}, ... }}</DisplayString>
+		<Expand>
+			<Item Name="[size]">$T2</Item>
+			<ArrayItems>
+				<Size>$T2</Size>
+				<ValuePointer>m_data</ValuePointer>
+			</ArrayItems>
+		</Expand>
+	</Type>
+
+	<Type Name="crstl::fixed_vector&lt;*,*&gt;">
+		<DisplayString>[size = {m_length}]</DisplayString>
+
+		<Expand>
+			<Item Name="[capacity]">$T2</Item>
+			<Item Name="[size]">m_length</Item>
+			<ArrayItems>
+				<Size>m_length</Size>
+				<ValuePointer>m_data</ValuePointer>
+			</ArrayItems>
+		</Expand>
+	</Type>
+
+</AutoVisualizer>
