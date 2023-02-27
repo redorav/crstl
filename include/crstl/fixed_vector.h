@@ -214,44 +214,44 @@ namespace crstl
 			m_length++;
 		}
 
-		void resize(size_t s)
+		void resize(size_t length)
 		{
-			if (s > (size_t)m_length)
+			if (length > (size_t)m_length)
 			{
-				for (size_t i = 0; i < s; ++i)
+				for (size_t i = 0; i < length; ++i)
 				{
 					::new((void*)&m_data[i]) T();
 				}
 			}
-			else if (s < (size_t)m_length)
+			else if (length < (size_t)m_length)
 			{
-				for (size_t i = s; s < m_length; ++i)
+				for (size_t i = length; i < m_length; ++i)
 				{
 					m_data[i].~T();
 				}
 			}
 
-			m_length = (uint32_t)s;
+			m_length = (uint32_t)length;
 		}
 
-		void resize(size_t s, const T& value)
+		void resize(size_t length, const T& value)
 		{
-			if (s > (size_t)m_length)
+			if (length > (size_t)m_length)
 			{
-				for (size_t i = 0; i < s; ++i)
+				for (size_t i = 0; i < length; ++i)
 				{
 					::new((void*)&m_data[i]) T(value);
 				}
 			}
-			else if (s < (size_t)m_length)
+			else if (length < (size_t)m_length)
 			{
-				for (size_t i = s; s < m_length; ++i)
+				for (size_t i = length; i < m_length; ++i)
 				{
 					m_data[i].~T();
 				}
 			}
 
-			m_length = (uint32_t)s;
+			m_length = (uint32_t)length;
 		}
 
 		size_t size() const { return m_length; }
