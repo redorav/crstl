@@ -218,14 +218,34 @@ namespace crstl
 		{
 			if (s > (size_t)m_length)
 			{
-				for (uint64_t i = 0; i < s; ++i)
+				for (size_t i = 0; i < s; ++i)
 				{
 					::new((void*)&m_data[i]) T();
 				}
 			}
 			else if (s < (size_t)m_length)
 			{
-				for (uint64_t i = s; s < m_length; ++i)
+				for (size_t i = s; s < m_length; ++i)
+				{
+					m_data[i].~T();
+				}
+			}
+
+			m_length = (uint32_t)s;
+		}
+
+		void resize(size_t s, const T& value)
+		{
+			if (s > (size_t)m_length)
+			{
+				for (size_t i = 0; i < s; ++i)
+				{
+					::new((void*)&m_data[i]) T(value);
+				}
+			}
+			else if (s < (size_t)m_length)
+			{
+				for (size_t i = s; s < m_length; ++i)
 				{
 					m_data[i].~T();
 				}
@@ -247,25 +267,25 @@ namespace crstl
 			}
 			else // Otherwise copy it in chunks, all on the stack
 			{
-				uint64_t chunks   = (sizeof(this_type) + kMaxStack - 1) / kMaxStack;
+				size_t chunks   = (sizeof(this_type) + kMaxStack - 1) / kMaxStack;
 				uint8_t* vData    = reinterpret_cast<uint8_t*>(&v);
 				uint8_t* thisData = reinterpret_cast<uint8_t*>(this);
 
 				for (uint32_t c = 0; c < chunks - 1; ++c)
 				{
 					uint8_t chunkData[kMaxStack];
-					uint64_t chunkOffset = c * kMaxStack;
+					size_t chunkOffset = c * kMaxStack;
 					memcpy(chunkData, vData + chunkOffset, kMaxStack);
 					memcpy(vData + chunkOffset, thisData + chunkOffset, kMaxStack);
 					memcpy(thisData + chunkOffset, chunkData, kMaxStack);
 				}
 
-				static const uint64_t kChunkCount = (sizeof(this_type) + kMaxStack - 1) / kMaxStack;
-				static const uint64_t kChunkRemaining = sizeof(this_type) - (kChunkCount - 1) * kMaxStack;
+				static const size_t kChunkCount = (sizeof(this_type) + kMaxStack - 1) / kMaxStack;
+				static const size_t kChunkRemaining = sizeof(this_type) - (kChunkCount - 1) * kMaxStack;
 
 				// Copy last chunk
 				uint8_t chunkData[kMaxStack];
-				uint64_t chunkOffset = (chunks - 1) * kMaxStack;
+				size_t chunkOffset = (chunks - 1) * kMaxStack;
 				memcpy(chunkData, vData + chunkOffset, kChunkRemaining);
 				memcpy(vData + chunkOffset, thisData + chunkOffset, kChunkRemaining);
 				memcpy(thisData + chunkOffset, chunkData, kChunkRemaining);
