@@ -223,7 +223,7 @@ namespace crstl
 		{ 0xF8, 0xF0 }  // 11110xxx
 	};
 
-	inline int utf8_bytes(codepoint_t codepoint)
+	inline size_t utf8_bytes(codepoint_t codepoint)
 	{
 		if (codepoint <= UTF8_1_Max)
 			return 1;
@@ -293,7 +293,7 @@ namespace crstl
 			offset++;
 		}
 
-		int size_bytes = utf8_bytes(codepoint);
+		size_t size_bytes = utf8_bytes(codepoint);
 
 		// Incorrect length used 
 		if(size_bytes != encoding_length || codepoint > UnicodeMax)
@@ -357,7 +357,7 @@ namespace crstl
 
 	inline size_t encode_utf8(codepoint_t codepoint, utf8_t* utf8, size_t length, size_t offset)
 	{
-		int size_bytes = utf8_bytes(codepoint);
+		size_t size_bytes = utf8_bytes(codepoint);
 
 		// Not enough space
 		if (offset + size_bytes > length)
@@ -366,9 +366,9 @@ namespace crstl
 		}
 
 		// Write the continuation bytes in reverse order first
-		for (int i = size_bytes - 1; i > 0; i--)
+		for (size_t i = size_bytes - 1; i > 0; i--)
 		{
-			utf8_t cont = codepoint & ~ContinuationMask;
+			utf8_t cont = (utf8_t)(codepoint & ~ContinuationMask);
 			cont |= ContinuationValue;
 
 			utf8[offset + i] = cont;
@@ -396,7 +396,7 @@ namespace crstl
 
 		if (codepoint <= BasicMultilingualPlaneEnd)
 		{
-			utf16[offset] = codepoint;
+			utf16[offset] = (utf16_t)codepoint;
 			return 1;
 		}
 
