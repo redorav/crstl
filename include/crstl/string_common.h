@@ -51,7 +51,33 @@ namespace crstl
 		}
 	}
 
-	size_t string_clamp_length(size_t maxLength, size_t pos, size_t length)
+	template<typename T>
+	inline crstl_constexpr int string_comparei(const T* string1, size_t length1, const T* string2, size_t length2)
+	{
+		if (length1 == length2)
+		{
+			while (length1 != 0)
+			{
+				T char1 = (T)tolower(*string1), char2 = (T)tolower(*string2);
+				if (char1 != char2)
+				{
+					return char1 < char2 ? -1 : 1;
+				}
+
+				string1++;
+				string2++;
+				length1--;
+			}
+
+			return 0;
+		}
+		else
+		{
+			return length1 < length2 ? -1 : 1;
+		}
+	}
+
+	inline size_t string_clamp_length(size_t maxLength, size_t pos, size_t length)
 	{
 		return length > maxLength - pos ? maxLength - pos : length;
 	}
@@ -461,7 +487,7 @@ namespace crstl
 	// Return value is success
 	// Number of bytes written goes into sizeBytes
 
-	bool decode_chunk(char*& dstStart, const char* dstEnd, const wchar_t*& srcStart, const wchar_t* srcEnd, size_t& sizeBytes)
+	inline bool decode_chunk(char*& dstStart, const char* dstEnd, const wchar_t*& srcStart, const wchar_t* srcEnd, size_t& sizeBytes)
 	{
 		size_t srcSize = (size_t)(srcEnd - srcStart);
 		size_t dstSize = (size_t)(dstEnd - dstStart);
@@ -482,7 +508,7 @@ namespace crstl
 		return utf16Offset == srcSize;
 	}
 
-	bool decode_chunk(wchar_t*& dstStart, const wchar_t* dstEnd, const char*& srcStart, const char* srcEnd, size_t& sizeBytes)
+	inline bool decode_chunk(wchar_t*& dstStart, const wchar_t* dstEnd, const char*& srcStart, const char* srcEnd, size_t& sizeBytes)
 	{
 		size_t srcSize = (size_t)(srcEnd - srcStart);
 		size_t dstSize = (size_t)(dstEnd - dstStart);
