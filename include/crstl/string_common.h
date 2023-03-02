@@ -57,7 +57,7 @@ namespace crstl
 	}
 
 	template<typename T>
-	inline const char* string_find_char(const T* string, T c, size_t n)
+	inline const T* string_find_char(const T* string, T c, size_t n)
 	{
 		for(const T* ptr = string; ptr != string + n; ++ptr)
 		{
@@ -85,6 +85,40 @@ namespace crstl
 	}
 
 	template<typename T>
+	const T* string_find_of(const T* string, size_t n, const T* needles, size_t needle_length)
+	{
+		for (const T* ptr = string; ptr != string + n; ++ptr)
+		{
+			for (const T* ptr2 = needles; ptr2 != needles + needle_length; ++ptr2)
+			{
+				if (*ptr == *ptr2)
+				{
+					return ptr;
+				}
+			}
+		}
+
+		return nullptr;
+	}
+
+	template<typename T>
+	const T* string_rfind_of(const T* string, size_t n, const T* needles, size_t needle_length)
+	{
+		for (const T* ptr = string; ptr != string - n; --ptr)
+		{
+			for (const T* ptr2 = needles; ptr2 != needles + needle_length; ++ptr2)
+			{
+				if (*ptr == *ptr2)
+				{
+					return ptr;
+				}
+			}
+		}
+
+		return nullptr;
+	}
+
+	template<typename T>
 	inline const T* string_find(const T* string, size_t length, const T* needle_string, size_t needle_length)
 	{
 		if (needle_string == nullptr || needle_length > length)
@@ -100,7 +134,6 @@ namespace crstl
 
 		// No point searching if length of needle is longer than the final characters of the string
 		const T* search_end = string + (length - needle_length) + 1;
-		const T* string_end = string + length;
 		const T* search_start = string;
 
 		while (search_start)

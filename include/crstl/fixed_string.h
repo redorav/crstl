@@ -316,7 +316,7 @@ namespace crstl
 		//-----
 
 		// Find a character
-		size_t find(value_type c, size_t pos = 0) const crstl_noexcept
+		crstl_constexpr size_t find(value_type c, size_t pos = 0) const crstl_noexcept
 		{
 			crstl_assert(pos < m_length);
 			const_pointer ptr = (const_pointer)string_find_char(m_data + pos, c, m_length - pos);
@@ -324,30 +324,75 @@ namespace crstl
 		}
 
 		// Find a const char* string with an offset and a length
-		size_t find(const_pointer needle_string, size_t pos, size_t needle_length) const crstl_noexcept
+		crstl_constexpr size_t find(const_pointer needle_string, size_t pos, size_t needle_length) const crstl_noexcept
 		{
 			crstl_assert(pos < m_length);
 
 			const_pointer found_string = string_find(m_data + pos, m_length - pos, needle_string, needle_length);
 
-			if (found_string)
-			{
-				return (size_t)(found_string - m_data);
-			}
-			else
-			{
-				return npos;
-			}
+			return found_string ? (size_t)(found_string - m_data) : npos;
 		}
 
-		size_t find(const_pointer needle_string, size_t pos = 0) const crstl_noexcept
+		crstl_constexpr size_t find(const_pointer needle_string, size_t pos = 0) const crstl_noexcept
 		{
 			return find(needle_string, pos, string_length(needle_string));
 		}
 
-		size_t find(const basic_fixed_string& needle_string, size_t pos = 0) const crstl_noexcept
+		crstl_constexpr size_t find(const basic_fixed_string& needle_string, size_t pos = 0) const crstl_noexcept
 		{
 			return find(needle_string.m_data, pos, needle_string.m_length);
+		}
+
+		//--------------
+		// find_first_of
+		//--------------
+
+		crstl_constexpr size_t find_first_of(const_pointer needle_string, size_t pos, size_t needle_length) const crstl_noexcept
+		{
+			crstl_assert(pos < m_length);
+			const_pointer found_string = string_find_of(m_data + pos, m_length - pos, needle_string, needle_length);
+			return found_string ? (size_t)(found_string - m_data) : npos;
+		}
+
+		crstl_constexpr size_t find_first_of(const_pointer needle_string, size_t pos = 0) const crstl_noexcept
+		{
+			return find_first_of(needle_string, pos, string_length(needle_string));
+		}
+
+		crstl_constexpr size_t find_first_of(const basic_fixed_string& needle_string, size_t pos = 0) const crstl_noexcept
+		{
+			return find_first_of(needle_string.c_str(), pos, needle_string.length());
+		}
+
+		crstl_constexpr size_t find_first_of(value_type c, size_t pos = 0) const crstl_noexcept
+		{
+			return find(c, pos);
+		}
+
+		//-------------
+		// find_last_of
+		//-------------
+
+		crstl_constexpr size_t find_last_of(const_pointer needle_string, size_t pos, size_t needle_length) const crstl_noexcept
+		{
+			crstl_assert(pos < m_length);
+			const_pointer found_string = string_rfind_of(m_data + pos, m_length - pos, needle_string, needle_length);
+			return found_string ? (size_t)(found_string - m_data) : npos;
+		}
+
+		crstl_constexpr size_t find_last_of(const_pointer needle_string, size_t pos = 0) const crstl_noexcept
+		{
+			return find_last_of(needle_string, pos, string_length(needle_string));
+		}
+
+		crstl_constexpr size_t find_last_of(const basic_fixed_string& needle_string, size_t pos = 0) const crstl_noexcept
+		{
+			return find_last_of(needle_string.c_str(), pos, needle_string.length());
+		}
+
+		crstl_constexpr size_t find_last_of(value_type c, size_t pos = 0) const crstl_noexcept
+		{
+			return rfind(c, pos);
 		}
 
 		crstl_constexpr reference front() crstl_noexcept { m_data[0]; }
@@ -440,7 +485,6 @@ namespace crstl
 
 			// No point searching if length of needle is longer than the final characters of the string
 			const_pointer search_end = m_data + (m_length - needle_length) + 1;
-			const_pointer string_end = m_data + m_length;
 			const_pointer search_start = m_data + pos;
 
 			while(search_start != m_data)
@@ -526,22 +570,22 @@ namespace crstl
 			return *this;
 		}
 
-		crstl_constexpr bool operator == (const_pointer string) crstl_noexcept
+		crstl_constexpr bool operator == (const_pointer string) const crstl_noexcept
 		{
 			return compare(string) == 0;
 		}
 
-		crstl_constexpr bool operator != (const_pointer string) crstl_noexcept
+		crstl_constexpr bool operator != (const_pointer string) const crstl_noexcept
 		{
 			return compare(string) != 0;
 		}
 
-		crstl_constexpr bool operator == (const basic_fixed_string& string) crstl_noexcept
+		crstl_constexpr bool operator == (const basic_fixed_string& string) const crstl_noexcept
 		{
 			return compare(string) == 0;
 		}
 
-		crstl_constexpr bool operator != (const basic_fixed_string& string) crstl_noexcept
+		crstl_constexpr bool operator != (const basic_fixed_string& string) const crstl_noexcept
 		{
 			return compare(string) != 0;
 		}
