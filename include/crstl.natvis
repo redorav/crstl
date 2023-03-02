@@ -19,6 +19,16 @@
 		</Expand>
 	</Type>
 
+	<Type Name="crstl::basic_fixed_string&lt;*&gt;">
+		<DisplayString>[length = {m_length}]</DisplayString>
+
+		<Expand>
+			<Item Name="[capacity]">$T2</Item>
+			<Item Name="[size]">m_length</Item>
+			<Item Name="[value]">m_data</Item>
+		</Expand>
+	</Type>
+
 	<Type Name="crstl::fixed_vector&lt;*,*&gt;">
 		<DisplayString>[size = {m_length}]</DisplayString>
 
