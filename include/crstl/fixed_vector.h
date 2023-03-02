@@ -188,6 +188,10 @@ namespace crstl
 			m_length--;
 		}
 
+		//----------
+		// push_back
+		//----------
+
 		reference push_back()
 		{
 			crstl_assert(m_length < NumElements);
@@ -213,6 +217,10 @@ namespace crstl
 			::new((void*)&m_data[m_length]) T(crstl::move(v));
 			m_length++;
 		}
+
+		//-------
+		// resize
+		//-------
 
 		void resize(size_t length)
 		{
