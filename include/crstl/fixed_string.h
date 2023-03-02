@@ -477,6 +477,8 @@ namespace crstl
 				{
 					m_data[i] = 0;
 				}
+
+				m_data[length] = 0;
 			}
 
 			m_length = (uint32_t)length;
@@ -493,6 +495,8 @@ namespace crstl
 				{
 					m_data[i] = c;
 				}
+
+				m_data[length] = 0;
 			}
 
 			m_length = (uint32_t)length;
