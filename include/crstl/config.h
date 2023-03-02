@@ -81,7 +81,7 @@
 
 #endif
 
-#if crstl_cppversion == 201402L
+#if crstl_cppversion >= 201402L
 	#define CRSTL_VARIADIC_TEMPLATES
 #endif
 
