@@ -20,7 +20,7 @@
 	</Type>
 
 	<Type Name="crstl::basic_fixed_string&lt;*&gt;">
-		<DisplayString>[length = {m_length}]</DisplayString>
+		<DisplayString>{m_data} [length = {m_length}]</DisplayString>
 
 		<Expand>
 			<Item Name="[capacity]">$T2</Item>
