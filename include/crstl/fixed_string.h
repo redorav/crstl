@@ -462,6 +462,42 @@ namespace crstl
 			return replace((size_t)(begin - m_data), (size_t)(end - begin), replace_string.m_data, (size_t)replace_string.m_length);
 		}
 
+		//-------
+		// resize
+		//-------
+
+		crstl_constexpr void resize(size_t length)
+		{
+			crstl_assert(length < NumElements);
+
+			// If length is larger than current length, initialize new characters to 0
+			if ((size_t)m_length < length)
+			{
+				for (size_t i = m_length; i < length; ++i)
+				{
+					m_data[i] = 0;
+				}
+			}
+
+			m_length = (uint32_t)length;
+		}
+
+		crstl_constexpr void resize(size_t length, T c)
+		{
+			crstl_assert(length < NumElements);
+
+			// If length is larger than current length, initialize new characters to c
+			if ((size_t)m_length < length)
+			{
+				for (size_t i = m_length; i < length; ++i)
+				{
+					m_data[i] = c;
+				}
+			}
+
+			m_length = (uint32_t)length;
+		}
+
 		//-----
 		// rfind
 		//-----
@@ -526,6 +562,10 @@ namespace crstl
 
 		crstl_constexpr size_t size() const crstl_noexcept { return length(); }
 
+		//------------
+		// starts_with
+		//------------
+		
 		crstl_constexpr bool starts_with(value_type c) const crstl_noexcept { return find(c, 0) == 0; }
 
 		crstl_constexpr size_t starts_with(const_pointer needle_string, size_t needle_length) const crstl_noexcept

@@ -216,14 +216,14 @@ namespace crstl
 
 		void resize(size_t length)
 		{
-			if (length > (size_t)m_length)
+			if ((size_t)m_length < length)
 			{
-				for (size_t i = 0; i < length; ++i)
+				for (size_t i = m_length; i < length; ++i)
 				{
 					::new((void*)&m_data[i]) T();
 				}
 			}
-			else if (length < (size_t)m_length)
+			else if ((size_t)m_length > length)
 			{
 				for (size_t i = length; i < m_length; ++i)
 				{
@@ -236,14 +236,14 @@ namespace crstl
 
 		void resize(size_t length, const T& value)
 		{
-			if (length > (size_t)m_length)
+			if ((size_t)m_length < length)
 			{
-				for (size_t i = 0; i < length; ++i)
+				for (size_t i = m_length; i < length; ++i)
 				{
 					::new((void*)&m_data[i]) T(value);
 				}
 			}
-			else if (length < (size_t)m_length)
+			else if ((size_t)m_length > length)
 			{
 				for (size_t i = length; i < m_length; ++i)
 				{
