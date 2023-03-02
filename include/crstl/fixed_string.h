@@ -169,6 +169,7 @@ namespace crstl
 		crstl_constexpr basic_fixed_string& append_convert(const_pointer string, size_t length) crstl_noexcept
 		{
 			append(string, length);
+			return *this;
 		}
 
 		//-------
@@ -395,15 +396,20 @@ namespace crstl
 			return rfind(c, pos);
 		}
 
-		crstl_constexpr reference front() crstl_noexcept { m_data[0]; }
-		crstl_constexpr const_reference front() const crstl_noexcept { m_data[0]; }
+		crstl_constexpr reference front() crstl_noexcept { return m_data[0]; }
+		crstl_constexpr const_reference front() const crstl_noexcept { return m_data[0]; }
 
 		// Returns the length of the string, in terms of number of characters
 		crstl_constexpr size_t length() const crstl_noexcept { return m_length; }
 
 		crstl_constexpr size_t max_size() const crstl_noexcept { return kNumElements; }
 
-		crstl_constexpr void pop_back() crstl_noexcept { crstl_assert(m_length > 0); m_length--; }
+		crstl_constexpr void pop_back() crstl_noexcept
+		{
+			crstl_assert(m_length > 0);
+			m_data[m_length - 1].~T();
+			m_length--;
+		}
 
 		crstl_constexpr reference push_back(value_type c) { append(1, c); return back(); }
 
@@ -443,17 +449,17 @@ namespace crstl
 
 		crstl_constexpr basic_fixed_string& replace(const_pointer begin, const_pointer end, const_pointer replace_string) crstl_noexcept
 		{
-			return replace(begin, (size_t)(end - begin), replace_string, crstl::string_length(replace_string));
+			return replace((size_t)(begin - m_data), (size_t)(end - begin), replace_string, crstl::string_length(replace_string));
 		}
 
 		crstl_constexpr basic_fixed_string& replace(const_pointer begin, const_pointer end, const_pointer replace_string, size_t replace_length) crstl_noexcept
 		{
-			return replace(begin, (size_t)(end - begin), replace_string, replace_length);
+			return replace((size_t)(begin - m_data), (size_t)(end - begin), replace_string, replace_length);
 		}
 
 		crstl_constexpr basic_fixed_string& replace(const_pointer begin, const_pointer end, const basic_fixed_string& replace_string) crstl_noexcept
 		{
-			return replace(begin, (size_t)(end - begin), replace_string.m_data, replace_string.m_length);
+			return replace((size_t)(begin - m_data), (size_t)(end - begin), replace_string.m_data, (size_t)replace_string.m_length);
 		}
 
 		//-----
