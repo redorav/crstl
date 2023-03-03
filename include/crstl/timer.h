@@ -10,8 +10,17 @@
 
 namespace crstl
 {
-	// TODO Make this initialize only once
-	static uint64_t TicksPerSecond = ticks_per_second();
+	template<typename=void>
+	struct timer_globals
+	{
+		static uint64_t TicksPerSecond;
+	};
+
+	template<>
+	uint64_t timer_globals<>::TicksPerSecond = ticks_per_second();
+
+	// This only gets initialized once. See https://youtu.be/xVT1y0xWgww?t=1320 for the trick
+	static uint64_t TicksPerSecond = timer_globals<>::TicksPerSecond;
 
 	class time
 	{
