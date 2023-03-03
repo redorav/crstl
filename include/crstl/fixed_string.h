@@ -427,7 +427,6 @@ namespace crstl
 
 		crstl_constexpr size_t find_last_of(const_pointer needle_string, size_t pos, size_t needle_length) const crstl_noexcept
 		{
-			crstl_assert(pos <= m_length);
 			pos = pos < m_length ? pos : m_length;
 			const_pointer found_string = string_rfind_of(m_data + pos, pos, needle_string, needle_length);
 			return found_string ? (size_t)(found_string - m_data) : npos;
