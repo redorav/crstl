@@ -172,6 +172,14 @@ namespace crstl
 			return append_convert(string, crstl::string_length(string));
 		}
 
+		template<typename OtherCharacterType, int OtherN>
+		crstl_constexpr basic_fixed_string& append_convert(const basic_fixed_string<OtherCharacterType, OtherN>& string) crstl_noexcept
+		{
+			append_convert(string.c_str(), string.length());
+			return *this;
+		}
+
+		// If we append_convert with our own type, just use append, no need for conversion
 		crstl_constexpr basic_fixed_string& append_convert(const_pointer string, size_t length) crstl_noexcept
 		{
 			append(string, length);
