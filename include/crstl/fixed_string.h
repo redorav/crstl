@@ -21,9 +21,9 @@ namespace crstl
 		
 		enum
 		{
-			kNumElementsWithZero = NumElements,     // Number of elements, including terminating zero
-			kNumElements         = NumElements - 1, // Number of usable characters
-			kCharSize            = sizeof(T)
+			kCharacterCapacityWithZero = NumElements,     // Number of elements, including terminating zero
+			kCharacterCapacity         = NumElements - 1, // Number of usable characters
+			kCharSize                  = sizeof(T)
 		};
 
 		static const crstl_constexpr size_t npos = (size_t)-1;
@@ -92,7 +92,7 @@ namespace crstl
 		{
 			if (length)
 			{
-				crstl_assert(m_length + length < kNumElementsWithZero);
+				crstl_assert(m_length + length < kCharacterCapacityWithZero);
 				memcpy(m_data + m_length, string, length * kCharSize);
 				m_length += (uint32_t)length;
 				m_data[m_length] = '\0';
@@ -133,7 +133,7 @@ namespace crstl
 		// Append a substring of a fixed string
 		crstl_constexpr basic_fixed_string& append(const basic_fixed_string& string, size_t subpos, size_t sublen = npos) crstl_noexcept
 		{
-			crstl_assert(string.length() + subpos + sublen < basic_fixed_string::kNumElementsWithZero);
+			crstl_assert(string.length() + subpos + sublen < basic_fixed_string::kCharacterCapacityWithZero);
 			append(string.m_data + subpos, sublen);
 			return *this;
 		}
@@ -141,7 +141,7 @@ namespace crstl
 		// Append n copies of character c
 		crstl_constexpr basic_fixed_string& append(size_t n, value_type c) crstl_noexcept
 		{
-			crstl_assert(m_length + n < kNumElementsWithZero);
+			crstl_assert(m_length + n < kCharacterCapacityWithZero);
 			crstl::fill_char(&m_data[m_length], n, c);
 			return *this;
 		}
@@ -157,7 +157,7 @@ namespace crstl
 			value_type* dataStart = m_data + m_length;
 
 			size_t sizeBytes = 0;
-			bool success = decode_chunk(dataStart, dataStart + (kNumElementsWithZero - m_length), string, stringEnd, sizeBytes);
+			bool success = decode_chunk(dataStart, dataStart + (kCharacterCapacityWithZero - m_length), string, stringEnd, sizeBytes);
 			crstl_assert(success);
 
 			m_length += (uint32_t)sizeBytes;
@@ -183,6 +183,34 @@ namespace crstl
 		crstl_constexpr basic_fixed_string& append_convert(const_pointer string, size_t length) crstl_noexcept
 		{
 			append(string, length);
+			return *this;
+		}
+
+		//---------------
+		// append_sprintf
+		//---------------
+
+		// Append a const char* string with a provided length
+		crstl_constexpr basic_fixed_string& append_sprintf(const_pointer format, ...) crstl_noexcept
+		{
+			va_list va_arguments;
+			va_start(va_arguments, format);
+
+			size_t remaining_length = kCharacterCapacityWithZero - m_length;
+
+			// Try to copy, limiting the number of characters to what we have available
+			int char_count = vsnprintf(m_data + m_length, remaining_length, format, va_arguments);
+
+			// If we have asserts enabled make sure we notify
+			crstl_assert(char_count < remaining_length);
+
+			size_t copied_length = char_count < remaining_length ? char_count : remaining_length;
+			m_length += (uint32_t)copied_length;
+
+			m_data[m_length] = '\0';
+
+			va_end(va_arguments);
+
 			return *this;
 		}
 
@@ -268,7 +296,7 @@ namespace crstl
 		// Returns the maximum size of this container, in bytes
 		crstl_constexpr size_t capacity() const crstl_noexcept
 		{
-			return kNumElementsWithZero * kCharSize;
+			return kCharacterCapacityWithZero * kCharSize;
 		}
 
 		crstl_constexpr const_iterator cbegin() const crstl_noexcept { return &m_data[0]; }
@@ -453,7 +481,7 @@ namespace crstl
 		// Returns the length of the string, in terms of number of characters
 		crstl_constexpr size_t length() const crstl_noexcept { return m_length; }
 
-		crstl_constexpr size_t max_size() const crstl_noexcept { return kNumElements; }
+		crstl_constexpr size_t max_size() const crstl_noexcept { return kCharacterCapacity; }
 
 		crstl_constexpr void pop_back() crstl_noexcept
 		{
@@ -704,7 +732,7 @@ namespace crstl
 
 			if (replace_length > length)
 			{
-				crstl_assert(m_length + replace_difference < kNumElementsWithZero);
+				crstl_assert(m_length + replace_difference < kCharacterCapacityWithZero);
 			}
 
 			// Move the parts that would be stomped or leave gaps, including the null terminator

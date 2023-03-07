@@ -6,6 +6,15 @@
 
 #include "crstldef.h"
 
+// This include is very cheap in compile times and hard
+// to get right outside of its actual implementation
+#include <stdarg.h>
+
+extern "C"
+{
+	int vsnprintf(char* s, crstl::size_t n, const char* format, va_list arg);
+}
+
 namespace crstl
 {
 	inline size_t string_length(const char* str)
