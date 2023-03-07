@@ -11,8 +11,20 @@
 
 #if defined(_MSC_VER)
 	#define crstl_dllimport __declspec(dllimport)
+
+	#if _MSC_VER <= 1600
+	#define crstl_1600_dllimport __declspec(dllimport)
+	#endif
 #else
 	#define crstl_dllimport
+#endif
+
+#if !defined(crstl_dllimport)
+	#define crstl_dllimport
+#endif
+
+#if !defined(crstl_1600_dllimport)
+	#define crstl_1600_dllimport
 #endif
 
 extern "C"
@@ -25,10 +37,7 @@ extern "C"
 
 	wchar_t* wmemset(wchar_t* ptr, wchar_t wc, crstl::size_t num);
 
-#if defined(_MSC_VER) && _MSC_VER <= 1600
-	__declspec(dllimport)
-#endif
-	void* memmove(void* destination, const void* source, crstl::size_t num);
+	crstl_1600_dllimport void* memmove(void* destination, const void* source, crstl::size_t num);
 
 	crstl_dllimport int tolower(int c);
 	crstl_dllimport int toupper(int c);
