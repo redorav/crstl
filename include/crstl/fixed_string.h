@@ -157,7 +157,7 @@ namespace crstl
 			value_type* dataStart = m_data + m_length;
 
 			size_t sizeBytes = 0;
-			bool success = decode_chunk(dataStart, dataStart + (kCharacterCapacityWithZero - m_length), string, stringEnd, sizeBytes);
+			bool success = decode_chunk(dataStart, dataStart + (kCharacterCapacity - m_length), string, stringEnd, sizeBytes);
 			crstl_assert(success);
 
 			m_length += (uint32_t)sizeBytes;
@@ -265,6 +265,38 @@ namespace crstl
 		{
 			m_length = 0;
 			append(n, c);
+			return *this;
+		}
+
+		//---------------
+		// assign_convert
+		//---------------
+
+		template<typename OtherCharacterType>
+		crstl_constexpr basic_fixed_string& assign_convert(const OtherCharacterType* string, size_t length) crstl_noexcept
+		{
+			clear();
+			append_convert(string, length);
+			return *this;
+		}
+
+		template<typename OtherCharacterType>
+		crstl_constexpr basic_fixed_string& assign_convert(const OtherCharacterType* string) crstl_noexcept
+		{
+			return assign_convert(string, crstl::string_length(string));
+		}
+
+		template<typename OtherCharacterType, int OtherN>
+		crstl_constexpr basic_fixed_string& assign_convert(const basic_fixed_string<OtherCharacterType, OtherN>& string) crstl_noexcept
+		{
+			assign_convert(string.c_str(), string.length());
+			return *this;
+		}
+
+		// If we append_convert with our own type, just use append, no need for conversion
+		crstl_constexpr basic_fixed_string& assign_convert(const_pointer string, size_t length) crstl_noexcept
+		{
+			assign(string, length);
 			return *this;
 		}
 
