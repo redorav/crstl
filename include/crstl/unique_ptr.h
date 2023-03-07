@@ -53,9 +53,27 @@ namespace crstl
 			return m_ptr;
 		}
 
+		bool operator!() const crstl_noexcept
+		{
+			return (m_ptr == nullptr);
+		}
+
 		~unique_ptr() crstl_noexcept
 		{
 			destroy();
+		}
+
+		typedef T* (unique_ptr<T>::* boolean)() const;
+
+		operator boolean() const crstl_noexcept
+		{
+			// Return anything that isn't easily castable but is guaranteed to be non-null, such as the get function pointer
+			return m_ptr ? &unique_ptr<T>::get : nullptr;
+		}
+
+		T* get() const
+		{
+			return m_ptr;
 		}
 
 	private:
