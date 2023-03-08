@@ -4,6 +4,8 @@
 
 #include "crstldef.h"
 
+#include "type_utils.h"
+
 // unique_ptr
 //
 // This is a simple replacement for std::unique_ptr, functionally the same
@@ -16,32 +18,33 @@
 
 namespace crstl
 {
-	template<typename T>
-	class unique_ptr
+	template<typename UniquePtr, typename T>
+	class unique_ptr_base
 	{
 	public:
 
 		typedef T element_type;
+		typedef T* pointer;
 
-		crstl_constexpr unique_ptr() crstl_noexcept : m_ptr(nullptr) {}
+		crstl_constexpr unique_ptr_base() crstl_noexcept : m_ptr(nullptr) {}
 
-		crstl_constexpr explicit unique_ptr(T* ptr) crstl_noexcept : m_ptr(ptr) {}
+		crstl_constexpr explicit unique_ptr_base(T* ptr) crstl_noexcept : m_ptr(ptr) {}
 
-		crstl_constexpr unique_ptr(crstl::nullptr_t) crstl_noexcept : m_ptr(nullptr) {}
+		crstl_constexpr unique_ptr_base(crstl::nullptr_t) crstl_noexcept : m_ptr(nullptr) {}
 
-		crstl_constexpr unique_ptr(unique_ptr&& uptr) crstl_noexcept
+		crstl_constexpr unique_ptr_base(unique_ptr_base&& uptr) crstl_noexcept
 		{
 			m_ptr = uptr.m_ptr;
 			uptr.m_ptr = nullptr;
 		}
 
-		crstl_constexpr unique_ptr& operator = (crstl::nullptr_t) crstl_noexcept
+		crstl_constexpr unique_ptr_base& operator = (crstl::nullptr_t) crstl_noexcept
 		{
-			destroy();
+			static_cast<UniquePtr&>(*this).reset(nullptr);
 			return *this;
 		}
 
-		crstl_constexpr unique_ptr& operator = (unique_ptr&& uptr) crstl_noexcept
+		crstl_constexpr unique_ptr_base& operator = (unique_ptr_base&& uptr) crstl_noexcept
 		{
 			m_ptr = uptr.m_ptr;
 			uptr.m_ptr = nullptr;
@@ -58,17 +61,17 @@ namespace crstl
 			return (m_ptr == nullptr);
 		}
 
-		~unique_ptr() crstl_noexcept
+		~unique_ptr_base() crstl_noexcept
 		{
-			destroy();
+			static_cast<UniquePtr&>(*this).reset(nullptr);
 		}
 
-		typedef T* (unique_ptr<T>::* boolean)() const;
+		typedef T* (unique_ptr_base<UniquePtr, T>::* boolean)() const;
 
 		operator boolean() const crstl_noexcept
 		{
 			// Return anything that isn't easily castable but is guaranteed to be non-null, such as the get function pointer
-			return m_ptr ? &unique_ptr<T>::get : nullptr;
+			return m_ptr ? &unique_ptr_base<UniquePtr, T>::get : nullptr;
 		}
 
 		T* get() const
@@ -76,21 +79,103 @@ namespace crstl
 			return m_ptr;
 		}
 
+		bool operator == (const unique_ptr_base& other) { return m_ptr == other.m_ptr; }
+		bool operator != (const unique_ptr_base& other) { return m_ptr != other.m_ptr; }
+		bool operator <  (const unique_ptr_base& other) { return m_ptr <  other.m_ptr; }
+		bool operator <= (const unique_ptr_base& other) { return m_ptr <= other.m_ptr; }
+		bool operator >  (const unique_ptr_base& other) { return m_ptr >  other.m_ptr; }
+		bool operator >= (const unique_ptr_base& other) { return m_ptr >= other.m_ptr; }
+
+		bool operator == (pointer ptr) { return m_ptr == ptr; }
+		bool operator != (pointer ptr) { return m_ptr != ptr; }
+		bool operator <  (pointer ptr) { return m_ptr <  ptr; }
+		bool operator <= (pointer ptr) { return m_ptr <= ptr; }
+		bool operator >  (pointer ptr) { return m_ptr >  ptr; }
+		bool operator >= (pointer ptr) { return m_ptr >= ptr; }
+
+		bool operator == (crstl::nullptr_t) { return m_ptr == nullptr; }
+		bool operator != (crstl::nullptr_t) { return m_ptr != nullptr; }
+		bool operator <  (crstl::nullptr_t) { return m_ptr <  nullptr; }
+		bool operator <= (crstl::nullptr_t) { return m_ptr <= nullptr; }
+		bool operator >  (crstl::nullptr_t) { return m_ptr >  nullptr; }
+		bool operator >= (crstl::nullptr_t) { return m_ptr >= nullptr; }
+
+	protected:
+
+		pointer m_ptr;
+
 	private:
 
-		crstl_constexpr unique_ptr(const unique_ptr& uptr) crstl_noexcept;
-		crstl_constexpr unique_ptr& operator = (const unique_ptr& uptr) crstl_noexcept;
-		crstl_constexpr unique_ptr& operator = (T* ptr) crstl_noexcept;
+		crstl_constexpr unique_ptr_base(const unique_ptr_base& uptr) crstl_noexcept;
+		crstl_constexpr unique_ptr_base& operator = (const unique_ptr_base& uptr) crstl_noexcept;
+		crstl_constexpr unique_ptr_base& operator = (T* ptr) crstl_noexcept;
+	};
 
-		void destroy() crstl_noexcept
+	// unique_ptr for scalar types
+
+	template<typename T>
+	class unique_ptr : public unique_ptr_base<unique_ptr<T>, T>
+	{
+	public:
+
+		typedef unique_ptr_base<unique_ptr<T>, T> base;
+
+		crstl_constexpr unique_ptr() crstl_noexcept : base() {}
+
+		crstl_constexpr explicit unique_ptr(T* ptr) crstl_noexcept : base(ptr) {}
+
+		crstl_constexpr unique_ptr(crstl::nullptr_t) crstl_noexcept : base(nullptr) {}
+
+		crstl_constexpr unique_ptr(unique_ptr&& uptr) crstl_noexcept : base(crstl::move(uptr)) {}
+
+		crstl_constexpr unique_ptr& operator = (crstl::nullptr_t) crstl_noexcept { base::operator = (nullptr); return *this; }
+
+		crstl_constexpr unique_ptr& operator = (unique_ptr&& uptr) crstl_noexcept { base::operator = (crstl::move(uptr)); return *this; }
+
+		crstl_constexpr void reset(crstl::nullptr_t) crstl_noexcept
 		{
-			if (m_ptr)
-			{
-				delete m_ptr;
-				m_ptr = nullptr;
-			}
+			delete base::m_ptr;
+			base::m_ptr = nullptr;
 		}
 
-		T* m_ptr;
+		crstl_constexpr void reset(typename base::pointer ptr = base::pointer()) crstl_noexcept
+		{
+			delete base::m_ptr;
+			base::m_ptr = ptr;
+		}
+	};
+
+	// unique_ptr for arrays
+
+	template<typename T>
+	class unique_ptr<T[]> : public unique_ptr_base<unique_ptr<T[]>, T>
+	{
+	public:
+
+		typedef unique_ptr_base<unique_ptr<T[]>, T> base;
+
+		crstl_constexpr unique_ptr() crstl_noexcept : base() {}
+
+		crstl_constexpr explicit unique_ptr(T* ptr) crstl_noexcept : base(ptr) {}
+
+		crstl_constexpr unique_ptr(crstl::nullptr_t) crstl_noexcept : base(nullptr) {}
+
+		crstl_constexpr unique_ptr(unique_ptr&& uptr) crstl_noexcept : base(crstl::move(uptr)) {}
+
+		crstl_constexpr unique_ptr& operator = (crstl::nullptr_t) crstl_noexcept { base::operator = (nullptr); return *this; }
+
+		crstl_constexpr unique_ptr& operator = (unique_ptr&& uptr) crstl_noexcept { base::operator = (crstl::move(uptr)); return *this; }
+
+		crstl_constexpr void reset(crstl::nullptr_t) crstl_noexcept
+		{
+			delete[] base::m_ptr;
+			base::m_ptr = nullptr;
+		}
+
+		crstl_constexpr void reset(typename base::pointer ptr = base::pointer()) crstl_noexcept
+		{
+			delete[] base::m_ptr;
+			base::m_ptr = ptr;
+		}
 	};
 };
