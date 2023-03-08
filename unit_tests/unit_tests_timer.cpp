@@ -28,5 +28,5 @@ void RunUnitTestsTimer()
 
 	}
 
-	//printf("Ticks elapsed: %llu\n", crCycleTimer.elapsed());
+	printf("Ticks elapsed: %llu\n", crCycleTimer.elapsed());
 }
