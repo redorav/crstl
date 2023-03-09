@@ -12,7 +12,7 @@
 
 extern "C"
 {
-	crstl_1600_dllimport int vsnprintf(char* s, crstl::size_t n, const char* format, va_list arg);
+	crstl_1600_dllimport int vsnprintf(char* s, crstl::size_t n, const char* format, va_list arg) wthrow;
 }
 
 namespace crstl
