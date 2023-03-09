@@ -27,7 +27,7 @@
 	#define crstl_1600_dllimport
 #endif
 
-#if defined(CRSTL_GCC) || defined(CRSTL_CLANG)
+#if defined(CRSTL_LINUX)
 #define wthrow throw()
 #else
 #define wthrow
