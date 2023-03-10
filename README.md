@@ -4,8 +4,8 @@ An alternative or complementary STL that focuses on fast compiles and runtime, f
 - No RTTI
 - No exceptions thrown or exception handling
 - Fast to compile: there are no dependencies on external headers
-- Containers that don't do heap allocations (called fixed)
-- Containers that only use the stack (called stack)
+- Containers that don't do heap allocations (prefixed fixed)
+- Containers that only use the stack (prefixed stack)
 - Simple C++ code as clear and unobfuscated as possible
 - Will add functionality from newer standards, in a C++11 compatible way
 
