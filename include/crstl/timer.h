@@ -6,6 +6,8 @@
 
 #if defined(CRSTL_WINDOWS)
 #include "crstl/platform/timer_win32.h"
+#elif defined(CRSTL_LINUX)
+#include "crstl/platform/timer_posix.h"
 #endif
 
 namespace crstl
@@ -178,7 +180,7 @@ namespace crstl
 
 		static clock_cycle_t now()
 		{
-			return clock_cycle_count();
+			return begin_cycle_count();
 		}
 
 		void reset()
@@ -188,12 +190,12 @@ namespace crstl
 
 		void start()
 		{
-			m_start = clock_cycle_count();
+			m_start = begin_cycle_count();
 		}
 
 		clock_cycle_t elapsed()
 		{
-			return clock_cycle_count() - m_start;
+			return end_cycle_count() - m_start;
 		}
 
 	private:

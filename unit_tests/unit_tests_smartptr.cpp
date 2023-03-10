@@ -43,8 +43,6 @@ std::vector<crstl::unique_ptr<MyObject>> crUniqueVector;
 
 void RunUnitTestsSmartPtr()
 {
-	crstl::intrusive_ptr<MyRefCountObject> objectHandle = new MyRefCountObject();
-
 	// Unique pointer
 
 	std::unique_ptr<MyObject> stdUniquePtr = std::unique_ptr<MyObject>(new MyObject());
@@ -65,4 +63,21 @@ void RunUnitTestsSmartPtr()
 	crstl::unique_ptr<MyObject> crNullUniquePtr = nullptr;
 	crNullUniquePtr = crstl::unique_ptr<MyObject>(new MyObject());
 	crNullUniquePtr = nullptr;
+
+	if (crUniquePtr) {}
+	if (crUniquePtr != nullptr) {}
+	if (crUniquePtr != crNullUniquePtr.get()) {}
+
+	crstl::unique_ptr<char[]> crArrayUniquePtr(new char[32]);
+	std::unique_ptr<char[]> stdArrayUniquePtr(new char[32]);
+
+	crArrayUniquePtr = nullptr;
+
+	// Intrusive pointer
+	crstl::intrusive_ptr<MyRefCountObject> objectHandle = new MyRefCountObject();
+
+	if (objectHandle)
+	{
+
+	}
 }

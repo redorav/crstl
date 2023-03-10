@@ -26,7 +26,12 @@ namespace crstl
 		return (uint64_t)ticks;
 	}
 
-	inline uint64_t clock_cycle_count()
+	inline uint64_t begin_cycle_count()
+	{
+		return __rdtsc();
+	}
+
+	inline uint64_t end_cycle_count()
 	{
 		return __rdtsc();
 	}

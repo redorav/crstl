@@ -10,7 +10,7 @@ void RunUnitTestsTimer()
 
 	crstl::time start_time = crTimer.elapsed();
 
-	for (int i = 0; i < 1000; ++i)
+	for (int i = 0; i < 100000; ++i)
 	{
 
 	}
@@ -22,11 +22,11 @@ void RunUnitTestsTimer()
 	printf("Timer Start: %f End: %f Elapsed: %f\n", start_time.milliseconds(), end_time.milliseconds(), elapsed.milliseconds());
 
 	crstl::cycle_timer crCycleTimer;
-
-	for (int i = 0; i < 2000; ++i)
+	
+	for (int i = 0; i < 100000; ++i)
 	{
 
 	}
 
-	//printf("Ticks elapsed: %llu\n", crCycleTimer.elapsed());
+	printf("Ticks elapsed: %llu\n", (long long unsigned int)crCycleTimer.elapsed());
 }

@@ -27,18 +27,24 @@
 	#define crstl_1600_dllimport
 #endif
 
+#if defined(CRSTL_LINUX)
+#define wthrow throw()
+#else
+#define wthrow
+#endif
+
 extern "C"
 {
 	crstl::size_t strlen(const char* str);
 	void* memset(void* dst, int val, crstl::size_t size);
 	void* memcpy(void* destination, void const* source, crstl::size_t size);
 
-	crstl_dllimport crstl::size_t wcslen(const wchar_t* str);
+	crstl_dllimport crstl::size_t wcslen(const wchar_t* str) wthrow;
 
-	wchar_t* wmemset(wchar_t* ptr, wchar_t wc, crstl::size_t num);
+	wchar_t* wmemset(wchar_t* ptr, wchar_t wc, crstl::size_t num) wthrow;
 
 	crstl_1600_dllimport void* memmove(void* destination, const void* source, crstl::size_t num);
 
-	crstl_dllimport int tolower(int c);
-	crstl_dllimport int toupper(int c);
+	crstl_dllimport int tolower(int c) wthrow;
+	crstl_dllimport int toupper(int c) wthrow;
 }
