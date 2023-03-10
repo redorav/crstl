@@ -428,6 +428,7 @@ namespace crstl
 		crstl_constexpr pointer data() crstl_noexcept { return c_str(); }
 		crstl_constexpr const_pointer data() const crstl_noexcept { return c_str(); }
 
+		crstl_nodiscard
 		crstl_constexpr bool empty() const crstl_noexcept { return m_length == 0; }
 
 		crstl_constexpr iterator end() crstl_noexcept { return &m_data[0] + m_length; }

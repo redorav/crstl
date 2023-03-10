@@ -172,7 +172,8 @@ namespace crstl
 
 #endif
 
-		bool empty() const { return m_length == 0; }
+		crstl_nodiscard
+		crstl_constexpr bool empty() const { return m_length == 0; }
 
 		iterator end() { return &m_data[0] + m_length; }
 		const_iterator end() const { return &m_data[0] + m_length; }

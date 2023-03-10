@@ -54,7 +54,7 @@
 
 #endif
 
-#if crstl_cppversion >= 201702L)
+#if crstl_cppversion >= 201702L
 	#define crstl_nodiscard [[nodiscard]]
 #else
 	#define crstl_nodiscard

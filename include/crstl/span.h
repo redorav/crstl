@@ -38,24 +38,25 @@ namespace crstl
 		pointer data() { return &m_data[0]; }
 		const_pointer data() const { return &m_data[0]; }
 
-		bool empty() const { return m_length == 0; }
+		crstl_nodiscard
+		crstl_constexpr bool empty() const { return m_length == 0; }
 
 		iterator end() { return &m_data[0] + m_length; }
 		const_iterator end() const { return &m_data[0] + m_length; }
 		const_iterator cend() const { return &m_data[0] + m_length; }
 
-		span first(size_t length) { crstl_assert(length < m_length); return subspan(m_data + length, m_length - length); }
+		span first(size_t length) const { crstl_assert(length < m_length); return subspan(m_data + length, m_length - length); }
 
 		reference front() { m_data[0]; }
 		const_reference front() const { m_data[0]; }
 
-		span last(size_t length) { crstl_assert(length < m_length); return subspan(m_data + (m_length - length), length); }
+		span last(size_t length) const { crstl_assert(length < m_length); return subspan(m_data + (m_length - length), length); }
 
 		size_t size() const { return m_length; }
 
 		size_t size_bytes() const { return m_length * sizeof(T); }
 
-		span subspan(size_t offset, size_t length)
+		span subspan(size_t offset, size_t length) const
 		{
 			crstl_assert(offset < m_length);
 			return span(m_data + offset, length);

@@ -19,7 +19,9 @@ namespace crstl
 		crstl_constexpr const T* end() const { return m_data + N; }
 		crstl_constexpr const T* cend() const { return m_data + N; }
 
+		crstl_nodiscard
 		crstl_constexpr bool empty() const { return N == 0; }
+
 		crstl_constexpr size_t size() const { return N; }
 		crstl_constexpr size_t max_size() const { return N; }
 
