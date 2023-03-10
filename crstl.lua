@@ -30,6 +30,7 @@ includeDir = "include"
 workspace("crstl")
 	configurations { "Debug", "Release" }
 	location (Workspace)
+	warnings('extra')
 	
 	flags
 	{
