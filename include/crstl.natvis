@@ -24,7 +24,7 @@
 
 		<Expand>
 			<Item Name="[capacity]">$T2</Item>
-			<Item Name="[size]">m_length</Item>
+			<Item Name="[length]">m_length</Item>
 			<Item Name="[value]">m_data</Item>
 		</Expand>
 	</Type>
