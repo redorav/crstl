@@ -32,10 +32,18 @@ workspace("crstl")
 	location (Workspace)
 	warnings('extra')
 	
-	flags
-	{
-		"multiprocessorcompile", -- /MP
-	}
+	filter('toolset:msc*')
+		flags
+		{
+			"multiprocessorcompile",
+		}
+
+		buildoptions
+		{
+			'/permissive-'
+		}
+
+	filter {}
 	
 	includedirs
 	{
