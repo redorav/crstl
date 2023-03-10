@@ -9,4 +9,6 @@ An alternative or complementary STL that focuses on fast compiles and runtime, o
 - Simple C++ code as clear and unobfuscated as possible
 - Will add functionality from newer standards, in a C++11 compatible way
 
+There is a different include philosophy as well. Where possible, we forward declare dependencies. It is the user's responsibility to include everything necessary for their usage. For example, vector can be implicitly cast to span, but we don't include span in vector. The compile error will suggest that span is needed. If this behavior is desired, one can create a new header where both are included and include that.
+
 This is a work in progress and will be for the time being
