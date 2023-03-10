@@ -206,10 +206,12 @@ namespace crstl
 
 			if(char_count >= 0)
 			{
-				// If we have asserts enabled make sure we notify
-				crstl_assert((size_t)char_count < remaining_length);
+				size_t sz_char_count =(size_t)char_count;
 
-				size_t copied_length = char_count < remaining_length ? char_count : remaining_length;
+				// If we have asserts enabled make sure we notify
+				crstl_assert(sz_char_count < remaining_length);
+
+				size_t copied_length = sz_char_count < remaining_length ? sz_char_count : remaining_length;
 				m_length += (uint32_t)copied_length;
 
 				m_data[m_length] = '\0';
