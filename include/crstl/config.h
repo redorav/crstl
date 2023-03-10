@@ -54,7 +54,11 @@
 
 #endif
 
-#define crstl_nodiscard [[nodiscard]]
+#if crstl_cppversion >= 201702L)
+	#define crstl_nodiscard [[nodiscard]]
+#else
+	#define crstl_nodiscard
+#endif
 
 #if defined(__cpp_if_constexpr)
 
