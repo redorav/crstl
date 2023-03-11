@@ -8,6 +8,17 @@
 
 #include "crstldef.h"
 
+// fixed_vector
+//
+// This is a fixed replacement for std::vector
+//
+// fixed_vector doesn't allocate memory, instead manages an internal array
+// 
+// - The number of elements is specified at compile time
+// - resize() is only used to initialize or destroy objects. It is
+//   an error to call it with a value > NumElements
+// - 
+
 namespace crstl
 {
 	// We forward include all the uses of span, so we don't need to always include it
@@ -26,6 +37,7 @@ namespace crstl
 		typedef const T*                     const_pointer;
 		typedef T*                           iterator;
 		typedef const T*                     const_iterator;
+		typedef uint32_t                     length_type;
 
 		enum
 		{
@@ -49,6 +61,22 @@ namespace crstl
 		fixed_vector(const this_type& other) { *this = other; }
 		fixed_vector(this_type&& other) crstl_noexcept { *this = other; }
 
+		template<typename Iterator>
+		fixed_vector(Iterator iter1, Iterator iter2)
+		{
+			crstl_assert(iter1 != nullptr && iter2 != nullptr);
+			crstl_assert(iter2 >= iter1);
+
+			size_t iter_length = iter2 - iter1;
+			crstl_assert(iter_length < NumElements);
+
+			for (size_t i = 0; i < iter_length; ++i)
+			{
+				::new((void*)&m_data[i]) T(iter1[i]);
+			}
+
+			m_length = (length_type)iter_length;
+		}
 		~fixed_vector() crstl_noexcept
 		{
 			clear();
@@ -56,7 +84,12 @@ namespace crstl
 
 		this_type& operator = (const this_type& other) crstl_noexcept
 		{
-			memcpy(this, &other, sizeof(other));
+			for (size_t i = 0; i < other.m_length; ++i)
+			{
+				::new((void*)&m_data[i]) T(other.m_data[i]);
+			}
+
+			m_length = other.m_length;
 			return *this;
 		}
 
@@ -242,7 +275,7 @@ namespace crstl
 				}
 			}
 
-			m_length = (uint32_t)length;
+			m_length = (length_type)length;
 		}
 
 		void resize(size_t length, const T& value)
@@ -262,7 +295,7 @@ namespace crstl
 				}
 			}
 
-			m_length = (uint32_t)length;
+			m_length = (length_type)length;
 		}
 
 		size_t size() const { return m_length; }
@@ -320,7 +353,7 @@ namespace crstl
 			struct { T m_data[NumElements ? NumElements : 1]; };
 		};
 
-		uint32_t m_length;
+		length_type m_length;
 	};
 
 	template<typename T, size_t NumElements>
