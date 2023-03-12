@@ -49,7 +49,7 @@ namespace crstl
 		// debug later on and would rely on a natvis to properly visualize it
 
 		fixed_vector() crstl_noexcept : m_length(0) {}
-		fixed_vector(size_t initialLength) : m_length(0)
+		fixed_vector(size_t initialLength) crstl_noexcept : m_length(0)
 		{
 			crstl_assert(initialLength < NumElements);
 			for (size_t i = 0; i < initialLength; ++i)
@@ -57,8 +57,9 @@ namespace crstl
 				push_back();
 			}
 		}
+		fixed_vector(int initialLength) crstl_noexcept : fixed_vector((size_t)initialLength) {}
 
-		fixed_vector(const this_type& other) { *this = other; }
+		fixed_vector(const this_type& other) crstl_noexcept { *this = other; }
 		fixed_vector(this_type&& other) crstl_noexcept { *this = other; }
 
 		template<typename Iterator>
@@ -77,6 +78,37 @@ namespace crstl
 
 			m_length = (length_type)iter_length;
 		}
+
+		fixed_vector(const T& e) crstl_noexcept : m_length(0)
+		{
+			push_back(e);
+		}
+
+		// Function with two parameters to disambiguate between this one and the one that takes two iterators
+		template<typename... Tv>
+		fixed_vector(const T& e0, const T& e1, const Tv&... elements) : m_length(0)
+		{
+			// We manually push back the first two elements, then expand the rest
+			push_back(e0);
+			push_back(e1);
+			expand_type{ 0, (push_back(elements), 0)... };
+		}
+
+		fixed_vector(T&& e) crstl_noexcept : m_length(0)
+		{
+			push_back(crstl::move(e));
+		}
+
+		// Function with two parameters to disambiguate between this one and the one that takes two iterators
+		template<typename... Tv>
+		fixed_vector(T&& e0, T&& e1, Tv&&... elements) : m_length(0)
+		{
+			// We manually push back the first two elements, then expand the rest
+			push_back(crstl::move(e0));
+			push_back(crstl::move(e1));
+			expand_type { 0, (push_back(crstl::move(elements)), 0)... };
+		}
+
 		~fixed_vector() crstl_noexcept
 		{
 			clear();
