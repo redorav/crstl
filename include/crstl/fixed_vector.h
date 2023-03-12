@@ -94,6 +94,8 @@ namespace crstl
 		template<typename... Tv>
 		fixed_vector(const T& e0, const T& e1, const Tv&... elements) : m_length(0)
 		{
+			crstl_assert((2 + sizeof...(elements)) <= NumElements);
+
 			// We manually push back the first two elements, then expand the rest
 			push_back(e0);
 			push_back(e1);
@@ -104,6 +106,8 @@ namespace crstl
 		template<typename... Tv>
 		fixed_vector(T&& e0, T&& e1, Tv&&... elements) : m_length(0)
 		{
+			crstl_assert((2 + sizeof...(elements)) <= NumElements);
+
 			// We manually push back the first two elements, then expand the rest
 			push_back(crstl::move(e0));
 			push_back(crstl::move(e1));
