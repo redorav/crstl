@@ -10,8 +10,16 @@
 
 #include "allocator.h"
 
+// vector
+//
+// This is a replacement for std::vector
+//
+
 namespace crstl
 {
+	template<typename T>
+	class span;
+
 	template<typename T, typename Allocator = crstl::allocator<T>>
 	class vector
 	{
@@ -24,12 +32,13 @@ namespace crstl
 		typedef const T*               const_pointer;
 		typedef T*                     iterator;
 		typedef const T*               const_iterator;
+		typedef uint32_t               length_type;
 
-		vector() crstl_noexcept : m_length(0), m_capacity(0), m_data(nullptr) {}
-		vector(size_t initialLength) : m_length(0), m_capacity(0)
+		vector() crstl_noexcept : m_data(nullptr), m_length(0), m_capacity(0) {}
+
+		vector(size_t initialLength) : m_length(0), m_capacity(initialLength)
 		{
 			m_data = m_allocator.allocate(initialLength);
-			m_capacity = initialLength;
 
 			for (size_t i = 0; i < initialLength; ++i)
 			{
@@ -37,8 +46,91 @@ namespace crstl
 			}
 		}
 
-		vector(const this_type& other) { *this = other; }
-		vector(this_type&& other) crstl_noexcept { *this = other; }
+		vector(const this_type& other) crstl_noexcept
+		{
+			m_data = m_allocator.allocate(other.m_length);
+			m_capacity = other.m_length;
+
+			// Copy the incoming objects through their copy constructor
+			for (size_t i = 0; i < other.m_length; ++i)
+			{
+				::new((void*)&m_data[i]) T(other.m_data[i]);
+			}
+
+			m_length = other.m_length;
+		}
+
+		vector(this_type&& other) crstl_noexcept
+		{
+			m_data = m_allocator.allocate(other.m_length);
+			m_capacity = other.m_length;
+
+			// Copy the incoming objects through their copy constructor
+			for (size_t i = 0; i < other.m_length; ++i)
+			{
+				::new((void*)&m_data[i]) T(crstl::move(other.m_data[i]));
+			}
+
+			m_length = other.m_length;
+		}
+
+		template<typename Iterator>
+		vector(Iterator iter1, Iterator iter2)
+		{
+			crstl_assert(iter1 != nullptr && iter2 != nullptr);
+			crstl_assert(iter2 >= iter1);
+
+			size_t iter_length = iter2 - iter1;
+			m_data = m_allocator.allocate(iter_length);
+
+			for (size_t i = 0; i < iter_length; ++i)
+			{
+				::new((void*)&m_data[i]) T(iter1[i]);
+			}
+
+			m_capacity = iter_length;
+			m_length = (length_type)iter_length;
+		}
+
+		vector(const T& e) crstl_noexcept : m_length(0), m_capacity(0)
+		{
+			m_data = m_allocator.allocate(1);
+			push_back(e);
+		}
+
+		vector(T&& e) crstl_noexcept : m_length(0), m_capacity(0)
+		{
+			m_data = m_allocator.allocate(1);
+			push_back(crstl::move(e));
+		}
+
+#if defined(CRSTL_VARIADIC_TEMPLATES)
+
+		// Function with two parameters to disambiguate between this one and the one that takes two iterators
+		template<typename... Tv>
+		vector(const T& e0, const T& e1, const Tv&... elements) : m_length(0), m_capacity(0)
+		{
+			m_data = m_allocator.allocate(2 + sizeof...(elements));
+
+			// We manually push back the first two elements, then expand the rest
+			push_back(e0);
+			push_back(e1);
+			expand_type{ 0, (push_back(elements), 0)... };
+		}
+
+		// Function with two parameters to disambiguate between this one and the one that takes two iterators
+		template<typename... Tv>
+		vector(T&& e0, T&& e1, Tv&&... elements) : m_length(0), m_capacity(0)
+		{
+			m_data = m_allocator.allocate(2 + sizeof...(elements));
+
+			// We manually push back the first two elements, then expand the rest
+			push_back(crstl::move(e0));
+			push_back(crstl::move(e1));
+			expand_type{ 0, (push_back(crstl::move(elements)), 0)... };
+		}
+
+#endif
 
 		~vector() crstl_noexcept
 		{
@@ -49,14 +141,15 @@ namespace crstl
 
 		this_type& operator = (const this_type& other) crstl_noexcept
 		{
+			// Call destructors for all existing objects
+			for (size_t i = 0; i < m_length; ++i)
+			{
+				m_data[i].~T();
+			}
+
+			// If we don't have enough capacity, create more space
 			if (m_capacity < other.m_length)
 			{
-				// Call destructors
-				for (size_t i = 0; i < m_length; ++i)
-				{
-					m_data[i].~T();
-				}
-
 				// Deallocate the memory
 				m_allocator.deallocate(m_data, m_capacity);
 
@@ -65,13 +158,13 @@ namespace crstl
 				m_capacity = other.m_length;
 			}
 
-			// TODO Destroy last objects
-
 			// Copy the incoming objects through their copy constructor
-			for (size_t i = 0; i < m_length; ++i)
+			for (size_t i = 0; i < other.m_length; ++i)
 			{
 				::new((void*)&m_data[i]) T(other.m_data[i]);
 			}
+
+			m_length = other.m_length;
 
 			return *this;
 		}
@@ -205,12 +298,42 @@ namespace crstl
 		{
 			if (m_length == m_capacity)
 			{
-				reallocate_larger(m_capacity * 2);
+				reallocate_larger(compute_new_capacity());
 			}
 
 			::new((void*)&m_data[m_length]) T();
 			m_length++;
 			return back();
+		}
+
+		void push_back(const T& v)
+		{
+			if (m_length == m_capacity)
+			{
+				reallocate_larger(compute_new_capacity());
+			}
+
+			::new((void*)&m_data[m_length]) T(v);
+			m_length++;
+		}
+
+		void push_back(T&& v)
+		{
+			if (m_length == m_capacity)
+			{
+				reallocate_larger(compute_new_capacity());
+			}
+
+			::new((void*)&m_data[m_length]) T(crstl::move(v));
+			m_length++;
+		}
+
+		void reserve(size_t length)
+		{
+			if (length > (size_t)m_length)
+			{
+				reallocate_larger(length);
+			}
 		}
 
 		void resize(size_t length)
@@ -232,7 +355,7 @@ namespace crstl
 				}
 			}
 
-			m_length = (uint32_t)length;
+			m_length = (length_type)length;
 		}
 
 		void resize(size_t length, const T& value)
@@ -254,12 +377,23 @@ namespace crstl
 				}
 			}
 
-			m_length = (uint32_t)length;
+			m_length = (length_type)length;
 		}
 
 		size_t size() const { return m_length; }
 
+		reference operator [] (size_t i) { crstl_assert(i < m_length); return m_data[i]; }
+
+		const_reference operator [] (size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
+
+		operator span<T>() const;
+
 	private:
+
+		size_t compute_new_capacity()
+		{
+			return 1 + m_capacity * 2;
+		}
 
 		// Reallocate vector to a quantity larger than the current one, or the capacity adjusted
 		// with the growth factor, whichever is larger
@@ -272,6 +406,7 @@ namespace crstl
 
 			T* temp = m_allocator.allocate(new_capacity);
 
+			// Copy existing data
 			for (size_t i = 0; i < m_length; ++i)
 			{
 				::new((void*)&temp[i]) T(m_data[i]);
@@ -284,10 +419,16 @@ namespace crstl
 
 		T* m_data;
 
-		size_t m_length;
+		length_type m_length;
 
 		size_t m_capacity;
 
 		Allocator m_allocator;
 	};
+
+	template<typename T, typename Allocator>
+	vector<T, Allocator>::operator span<T>() const
+	{
+		return span<T>((T*)m_data, (size_t)m_length);
+	}
 };
