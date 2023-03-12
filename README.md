@@ -8,7 +8,7 @@ An alternative or complementary STL that focuses on fast compile times and runti
 - Containers that don't do heap allocations (**fixed_**)
 - Containers that only use the stack (**stack_**)
 - Simple C++ code as clear and unobfuscated as possible
-- Will add functionality from newer standards, in a C++11 compatible way
+- Will add functionality from newer standards, in a C++11 compatible way. Detect availability of new language features and use
 
 ## Additional Design Goals
 
