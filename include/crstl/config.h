@@ -55,9 +55,13 @@
 #endif
 
 #if crstl_cppversion >= 201702L
+
 	#define crstl_nodiscard [[nodiscard]]
+
 #else
+
 	#define crstl_nodiscard
+
 #endif
 
 #if defined(__cpp_if_constexpr)
@@ -85,8 +89,10 @@
 
 #endif
 
-#if crstl_cppversion >= 201402L
+#if crstl_cppversion >= 201103L
+
 	#define CRSTL_VARIADIC_TEMPLATES
+
 #endif
 
 #define CRSTL_ENABLE_ASSERT
