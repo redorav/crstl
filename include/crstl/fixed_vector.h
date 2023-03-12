@@ -57,7 +57,6 @@ namespace crstl
 				push_back();
 			}
 		}
-		fixed_vector(int initialLength) crstl_noexcept : fixed_vector((size_t)initialLength) {}
 
 		fixed_vector(const this_type& other) crstl_noexcept { *this = other; }
 		fixed_vector(this_type&& other) crstl_noexcept { *this = other; }
@@ -84,6 +83,13 @@ namespace crstl
 			push_back(e);
 		}
 
+		fixed_vector(T&& e) crstl_noexcept : m_length(0)
+		{
+			push_back(crstl::move(e));
+		}
+
+#if defined(CRSTL_VARIADIC_TEMPLATES)
+
 		// Function with two parameters to disambiguate between this one and the one that takes two iterators
 		template<typename... Tv>
 		fixed_vector(const T& e0, const T& e1, const Tv&... elements) : m_length(0)
@@ -92,11 +98,6 @@ namespace crstl
 			push_back(e0);
 			push_back(e1);
 			expand_type{ 0, (push_back(elements), 0)... };
-		}
-
-		fixed_vector(T&& e) crstl_noexcept : m_length(0)
-		{
-			push_back(crstl::move(e));
 		}
 
 		// Function with two parameters to disambiguate between this one and the one that takes two iterators
@@ -108,6 +109,8 @@ namespace crstl
 			push_back(crstl::move(e1));
 			expand_type { 0, (push_back(crstl::move(elements)), 0)... };
 		}
+
+#endif
 
 		~fixed_vector() crstl_noexcept
 		{

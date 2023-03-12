@@ -50,6 +50,24 @@ namespace crstl
 	template<typename T, size_t N> struct is_array<T[N]> : true_type {};
 	template<typename T> struct is_array<T[]> : true_type {};
 
+	// is_same
+	template<typename, typename> struct is_same : false_type {};
+	template<typename T> struct is_same<T, T> : true_type {};
+
+#if defined(CRSTL_VARIADIC_TEMPLATES)
+
+	// Used for variadic template parameter pack iteration, when fold expressions are not available
+	// Useful for braced initialization of vector, etc.
+	// The magic behind this technique is explained here https://stackoverflow.com/questions/1579719/variable-number-of-parameters-in-function-in-c
+
+	struct expand_type
+	{
+		template<typename... T>
+		expand_type(T&&...) {}
+	};
+
+#endif
+
 	template <typename T>
 	crstl_constexpr T&& forward(typename crstl::remove_reference<T>::type& x) crstl_noexcept
 	{
