@@ -82,7 +82,7 @@ namespace crstl
 
 	// Swap for standard values
 	template <typename T>
-	crstl_constexpr static void swap(T& a, T& b) crstl_noexcept
+	crstl_constexpr void swap(T& a, T& b) crstl_noexcept
 	{
 		T temp(crstl::move(a));
 		a = crstl::move(b);
