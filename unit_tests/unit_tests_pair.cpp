@@ -7,7 +7,7 @@ void RunUnitTestsPair()
 {
 	struct DummyC
 	{
-		DummyC() {}
+		DummyC() : i(0), f(0.0f) {}
 
 		int i;
 		float f;
@@ -17,7 +17,7 @@ void RunUnitTestsPair()
 	{
 		DummyA() { i = 0; }
 		DummyA(int k) : i(k) {}
-		DummyA(DummyC dc) {}
+		DummyA(DummyC dc) : i(dc.i) {}
 
 		int i;
 	};

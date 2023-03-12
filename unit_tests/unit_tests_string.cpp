@@ -1,3 +1,5 @@
+#include <ctype.h>
+
 #include "unit_tests.h"
 
 #include "crstl/fixed_string.h"
@@ -11,7 +13,7 @@
 
 void RunUnitTestsString()
 {
-	const char* MyCharString = u8"Hello String汉字";
+	const char* MyCharString = (const char*)u8"Hello String汉字";
 	const wchar_t* MyWCharString = L"Hello String汉字";
 
 	std::string mystds;
@@ -72,17 +74,16 @@ void RunUnitTestsString()
 	myfs32 = myfs8_foo + myfs8_bar;
 	myfs32 = myfs8_foo + myfs32_bar;
 
-	const char* u1 = u8"a";
-	const char* u2 = u8"\u03EA";
-	const char* u3 = u8"\u27c1";
-	const char* u4 = u8"\U00010CFF";
-	
+	const char* u1 = (const char*)u8"a";
+	const char* u2 = (const char*)u8"\u03EA";
+	const char* u3 = (const char*)u8"\u27c1";
+	const char* u4 = (const char*)u8"\U00010CFF";
+
 	size_t utf8Offset = 0;
 	crstl::codepoint_t cp = crstl::decode_utf8((const uint8_t*)u4, strlen((const char*)u4), utf8Offset);
-	
-	myfs32.append_convert(MyWCharString, crstl::string_length(MyWCharString));
-	
-	mywfs32.append_convert(MyCharString, crstl::string_length(MyCharString));
+
+	myfs32.assign_convert(MyWCharString, crstl::string_length(MyWCharString));
+	mywfs32.assign_convert(MyCharString, crstl::string_length(MyCharString));
 
 	// string_view
 
@@ -116,6 +117,11 @@ void RunUnitTestsString()
 	{
 		printf("Ends with View\n");
 	}
+
+	myfs32.clear();
+	myfs32.append_sprintf("Hello %i", 3);
+
+	char cu = toupper('k');
 
 #if crstl_cppversion >= 201703L
 	std::basic_string_view<char> stdStringViewEmpty;

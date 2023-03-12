@@ -3,65 +3,35 @@
 #include "crstl/unique_ptr.h"
 #include "crstl/intrusive_ptr.h"
 
+#include <vector>
 #include <memory>
 #include <stdio.h>
-#include <vector>
 
-class MyRefCountObject : public crstl::intrusive_ptr_interface_delete
-{
-public:
+std::vector<std::unique_ptr<Dummy>> stdUniqueVector;
 
-	void PrintName()
-	{
-		printf("MyRefCountObject\n");
-	}
-
-	~MyRefCountObject()
-	{
-		printf("MyRefCountObject destroyed\n");
-	}
-};
-
-class MyObject
-{
-public:
-
-	void PrintName()
-	{
-		printf("MyObject\n");
-	}
-
-	~MyObject()
-	{
-		printf("MyObject destroyed\n");
-	}
-};
-
-std::vector<std::unique_ptr<MyObject>> stdUniqueVector;
-
-std::vector<crstl::unique_ptr<MyObject>> crUniqueVector;
+std::vector<crstl::unique_ptr<Dummy>> crUniqueVector;
 
 void RunUnitTestsSmartPtr()
 {
 	// Unique pointer
 
-	std::unique_ptr<MyObject> stdUniquePtr = std::unique_ptr<MyObject>(new MyObject());
+	std::unique_ptr<Dummy> stdUniquePtr = std::unique_ptr<Dummy>(new Dummy());
 	stdUniquePtr->PrintName();
 	stdUniquePtr = nullptr;
 
-	crstl::unique_ptr<MyObject> crUniquePtr = crstl::unique_ptr<MyObject>(new MyObject());
+	crstl::unique_ptr<Dummy> crUniquePtr = crstl::unique_ptr<Dummy>(new Dummy());
 	crUniquePtr->PrintName();
 	crUniquePtr = nullptr;
 
-	stdUniqueVector.push_back(std::unique_ptr<MyObject>(new MyObject()));
-	crUniqueVector.push_back(crstl::unique_ptr<MyObject>(new MyObject()));
+	stdUniqueVector.push_back(std::unique_ptr<Dummy>(new Dummy()));
+	crUniqueVector.push_back(crstl::unique_ptr<Dummy>(new Dummy()));
 
-	std::unique_ptr<MyObject> stdNullUniquePtr = nullptr;
-	stdNullUniquePtr = std::unique_ptr<MyObject>(new MyObject());
+	std::unique_ptr<Dummy> stdNullUniquePtr = nullptr;
+	stdNullUniquePtr = std::unique_ptr<Dummy>(new Dummy());
 	stdNullUniquePtr = nullptr;
 
-	crstl::unique_ptr<MyObject> crNullUniquePtr = nullptr;
-	crNullUniquePtr = crstl::unique_ptr<MyObject>(new MyObject());
+	crstl::unique_ptr<Dummy> crNullUniquePtr = nullptr;
+	crNullUniquePtr = crstl::unique_ptr<Dummy>(new Dummy());
 	crNullUniquePtr = nullptr;
 
 	if (crUniquePtr) {}
@@ -74,7 +44,7 @@ void RunUnitTestsSmartPtr()
 	crArrayUniquePtr = nullptr;
 
 	// Intrusive pointer
-	crstl::intrusive_ptr<MyRefCountObject> objectHandle = new MyRefCountObject();
+	crstl::intrusive_ptr<RefCountDummy> objectHandle = new RefCountDummy();
 
 	if (objectHandle)
 	{
