@@ -89,6 +89,12 @@
 
 #endif
 
+#define crstl_warning_anonymous_struct_union_begin \
+	__pragma(warning(push)) \
+	__pragma(warning(disable : 4201))
+
+#define crstl_warning_anonymous_struct_union_end __pragma(warning(pop))
+
 #if crstl_cppversion >= 201103L
 
 	#define CRSTL_VARIADIC_TEMPLATES

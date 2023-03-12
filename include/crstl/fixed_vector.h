@@ -387,10 +387,12 @@ namespace crstl
 		// The alternative is to have a uint8_t buffer that we reinterpret through the interface, which is
 		// hard to debug and would certainly need custom visualizers. This alternative works with any C++11
 		// conforming compiler
+		crstl_warning_anonymous_struct_union_begin
 		union
 		{
 			struct { T m_data[NumElements ? NumElements : 1]; };
 		};
+		crstl_warning_anonymous_struct_union_end
 
 		length_type m_length;
 	};
