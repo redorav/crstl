@@ -12,7 +12,7 @@
 #include "crstl/platform/atomic_linux.h"
 #endif
 
-namespace crstl
+crstl_module_export namespace crstl
 {
 	// atomic_store: store value to variable pointed by target, and return its previous value
 

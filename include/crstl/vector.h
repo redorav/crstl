@@ -15,7 +15,7 @@
 // This is a replacement for std::vector
 //
 
-namespace crstl
+crstl_module_export namespace crstl
 {
 	template<typename T>
 	class span;

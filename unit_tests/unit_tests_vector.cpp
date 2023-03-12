@@ -1,14 +1,18 @@
 #include "unit_tests.h"
 
+#if defined(CRSTL_UNIT_MODULES)
+import crstl;
+#else
 #include "crstl/fixed_vector.h"
 #include "crstl/vector.h"
 #include "crstl/span.h"
+#endif
 
 #include <vector>
 #include <stdio.h>
 
 #if crstl_cppversion >= 202002L
-#include <span>
+	#include <span>
 #endif
 
 void LoopOverSpan(const crstl::span<Dummy>& dummySpan)

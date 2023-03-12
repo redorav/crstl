@@ -11,7 +11,7 @@
 // - The storage is used to locally copy or instantiate functors
 // - fixed_function will static assert if storage is not enough to hold functor
 
-namespace crstl
+crstl_module_export namespace crstl
 {
 	template<typename Signature, int SizeBytes>
 	class fixed_function;

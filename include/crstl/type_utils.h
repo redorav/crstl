@@ -4,7 +4,7 @@
 
 #include "crstldef.h"
 
-namespace crstl
+crstl_module_export namespace crstl
 {
 	// true_type/false_type
 

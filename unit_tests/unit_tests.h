@@ -8,7 +8,13 @@
 #define CRSTL_UNIT_UNICODE_LITERALS
 
 // Using curly brackets for initializing vectors, etc
-#define CRSTL_UNIFORM_INITIALIZATION
+#define CRSTL_UNIT_UNIFORM_INITIALIZATION
+#endif
+
+#if defined(__cpp_modules)
+
+	#define CRSTL_UNIT_MODULES
+
 #endif
 
 #include "crstl/config.h"

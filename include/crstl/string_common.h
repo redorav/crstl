@@ -15,7 +15,7 @@ extern "C"
 	crstl_1600_dllimport int vsnprintf(char* s, crstl::size_t n, const char* format, va_list arg) wthrow;
 }
 
-namespace crstl
+crstl_module_export namespace crstl
 {
 	inline size_t string_length(const char* str)
 	{
@@ -221,55 +221,55 @@ namespace crstl
 	typedef uint16_t utf16_t;
 
 	// The basic multilingual plane is equivalent to UCS2
-	static const codepoint_t BasicMultilingualPlaneEnd = 0xffff;
+	const codepoint_t BasicMultilingualPlaneEnd = 0xffff;
 
 	// Maximum Unicode codepoint (21 bits) although not all are valid
-	static const codepoint_t UnicodeMax = 0x10ffff;
+	const codepoint_t UnicodeMax = 0x10ffff;
 
 	// Unicode value to use as 'invalid'
-	static const codepoint_t UnicodeInvalid = 0xfffd;
+	const codepoint_t UnicodeInvalid = 0xfffd;
 
 	// If a masked character equals this value, it is a surrogate and needs further decoding
-	static const uint32_t GenericSurrogateValue = 0xd800;
+	const uint32_t GenericSurrogateValue = 0xd800;
 
 	// Mask to check for surrogates
-	static const uint32_t GenericSurrogateMask = 0xf800;
+	const uint32_t GenericSurrogateMask = 0xf800;
 
 	// If character masked with surrogate mask equals this value, it is a high surrogate
-	static const uint32_t HighSurrogateValue = 0xd800;
+	const uint32_t HighSurrogateValue = 0xd800;
 
 	// If character masked with surrogate mask equals this value, it is a low surrogate
-	static const uint32_t LowSurrogateValue = 0xdc00;
+	const uint32_t LowSurrogateValue = 0xdc00;
 
 	// Mask to check for low or high surrogates
-	static const uint32_t SurrogateMask = 0xfc00;
+	const uint32_t SurrogateMask = 0xfc00;
 
 	// The value subtracted from a codepoint before encoding it in a surrogate pair
-	static const uint32_t SurrogateCodepointOffset = 0x10000;
+	const uint32_t SurrogateCodepointOffset = 0x10000;
 
 	// A mask applied to a surrogate to extract the codepoint value
-	static const uint32_t SurrogateCodepointMask = 0x03FF;
+	const uint32_t SurrogateCodepointMask = 0x03FF;
 
 	// Number of bits of SurrogateCodepointMask
-	static const uint32_t SurrogateCodepointBits = 10;
+	const uint32_t SurrogateCodepointBits = 10;
 
 	// Maximum value that can be encoded in utf-8 given a number of bits
-	static const uint32_t UTF8_1_Max = 0x7f;
+	const uint32_t UTF8_1_Max = 0x7f;
 
-	static const uint32_t UTF8_2_Max = 0x7ff;
+	const uint32_t UTF8_2_Max = 0x7ff;
 
-	static const uint32_t UTF8_3_Max = 0xffff;
+	const uint32_t UTF8_3_Max = 0xffff;
 
-	static const uint32_t UTF8_4_Max = 0x10ffff;
+	const uint32_t UTF8_4_Max = 0x10ffff;
 
 	// Marks a continuation byte
-	static const uint32_t ContinuationValue = 0x80;
+	const uint32_t ContinuationValue = 0x80;
 
 	// Mask incoming byte with this mask to check for a continuation byte
-	static const uint32_t ContinuationMask = 0xc0;
+	const uint32_t ContinuationMask = 0xc0;
 
 	// Number of bits contained in a utf-8 continuation byte
-	static const uint32_t ContinuationCodepointBits = 6;
+	const uint32_t ContinuationCodepointBits = 6;
 
 	struct utf8_pattern
 	{
@@ -283,7 +283,7 @@ namespace crstl
 	// The patterns for leading bytes of a UTF-8 codepoint encoding
 	// Each pattern represents the leading byte for a character encoded with N UTF-8 bytes,
 	// where N is the index + 1
-	static const utf8_pattern utf8_leading_patterns[] =
+	const utf8_pattern utf8_leading_patterns[] =
 	{
 		{ 0x80, 0x00 }, // 0xxxxxxx
 		{ 0xE0, 0xC0 }, // 110xxxxx

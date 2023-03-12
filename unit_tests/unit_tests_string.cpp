@@ -1,10 +1,13 @@
-#include <ctype.h>
-
 #include "unit_tests.h"
 
+#if defined(CRSTL_UNIT_MODULES)
+import crstl;
+#else
 #include "crstl/fixed_string.h"
 #include "crstl/string_view.h"
+#endif
 
+#include <ctype.h>
 #include <string>
 
 #if crstl_cppversion >= 201703L

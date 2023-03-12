@@ -4,7 +4,7 @@
 
 #include "crstldef.h"
 
-namespace crstl
+crstl_module_export namespace crstl
 {
 	template<typename T, int NumElements>
 	class basic_fixed_string

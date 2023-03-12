@@ -6,7 +6,7 @@
 
 #include "string_common.h"
 
-namespace crstl
+crstl_module_export namespace crstl
 {
 	template<typename T>
 	class basic_string_view

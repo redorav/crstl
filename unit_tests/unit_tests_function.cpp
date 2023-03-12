@@ -1,6 +1,10 @@
 #include "unit_tests.h"
 
+#if defined(CRSTL_UNIT_MODULES)
+import crstl;
+#else
 #include "crstl/fixed_function.h"
+#endif
 
 #include <functional>
 

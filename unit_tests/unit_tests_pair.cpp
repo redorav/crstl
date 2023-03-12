@@ -1,7 +1,12 @@
 #include "unit_tests.h"
 
-#include <utility>
+#if defined(CRSTL_UNIT_MODULES)
+import crstl;
+#else
 #include "crstl/pair.h"
+#endif
+
+#include <utility>
 
 void RunUnitTestsPair()
 {

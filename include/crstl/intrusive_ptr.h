@@ -6,7 +6,7 @@
 
 #include "atomic.h"
 
-namespace crstl
+crstl_module_export namespace crstl
 {
 	template<typename T>
 	void intrusive_ptr_add_ref(T* ptr)

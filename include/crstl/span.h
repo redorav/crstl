@@ -4,7 +4,7 @@
 
 #include "type_utils.h"
 
-namespace crstl
+crstl_module_export namespace crstl
 {
 	template<typename T>
 	class span

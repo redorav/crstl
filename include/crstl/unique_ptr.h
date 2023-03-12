@@ -16,7 +16,7 @@
 // but it does deallocate memory, so care has to be take to allocate and 
 // deallocate in a consistent manner
 
-namespace crstl
+crstl_module_export namespace crstl
 {
 	template<typename UniquePtr, typename T>
 	class unique_ptr_base

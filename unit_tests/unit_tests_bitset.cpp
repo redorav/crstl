@@ -1,6 +1,11 @@
 #include "unit_tests.h"
 
+#if defined(CRSTL_UNIT_MODULES)
+import crstl;
+#else
 #include "crstl/bitset.h"
+#endif
+
 #include <bitset>
 
 void RunUnitTestsBitset()

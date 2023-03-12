@@ -19,7 +19,7 @@
 //   an error to call it with a value > NumElements
 // - 
 
-namespace crstl
+crstl_module_export namespace crstl
 {
 	// We forward include all the uses of span, so we don't need to always include it
 	template<typename T>

@@ -141,3 +141,13 @@ inline void crstl_assert_impl(bool condition)
 	#define CRSTL_LINUX
 
 #endif
+
+#if defined(CRSTL_MODULE_DECLARATION)
+
+	#define crstl_module_export export
+
+#else
+
+	#define crstl_module_export
+
+#endif

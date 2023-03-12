@@ -6,7 +6,7 @@
 
 #include "crstldef.h"
 
-namespace crstl
+crstl_module_export namespace crstl
 {
 	// http://graphics.stanford.edu/~seander/bithacks.html#CountBitsSetParallel
 	template<typename T>
