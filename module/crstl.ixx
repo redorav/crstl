@@ -4,7 +4,7 @@ export module crstl;
 #include "crstl/array.h"
 #include "crstl/bitset.h"
 #include "crstl/fixed_function.h"
-//#include "crstl/fixed_string.h"
+#include "crstl/fixed_string.h"
 #include "crstl/fixed_vector.h"
 #include "crstl/intrusive_ptr.h"
 #include "crstl/pair.h"
