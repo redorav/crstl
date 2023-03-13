@@ -101,7 +101,7 @@ void RunUnitTestsVector()
 		crstl::fixed_vector<Dummy*, 32> crFixedVectorPointer;
 		crFixedVectorPointer.push_back(new DummyChild());
 
-#if defined(CRSTL_UNIFORM_INITIALIZATION)
+#if defined(CRSTL_UNIT_UNIFORM_INITIALIZATION)
 
 		crFixedVector = { Dummy(), Dummy(), Dummy() };
 		stdVector = { Dummy(), Dummy(), Dummy() };
