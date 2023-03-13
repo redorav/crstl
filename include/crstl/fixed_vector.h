@@ -62,7 +62,7 @@ crstl_module_export namespace crstl
 		fixed_vector(this_type&& other) crstl_noexcept { *this = other; }
 
 		template<typename Iterator>
-		fixed_vector(Iterator iter1, Iterator iter2)
+		fixed_vector(Iterator iter1, Iterator iter2) crstl_noexcept
 		{
 			crstl_assert(iter1 != nullptr && iter2 != nullptr);
 			crstl_assert(iter2 >= iter1);
