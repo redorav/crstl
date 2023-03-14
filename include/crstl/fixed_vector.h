@@ -8,6 +8,8 @@
 
 #include "crstldef.h"
 
+#include <initializer_list>
+
 // fixed_vector
 //
 // This is a fixed replacement for std::vector
@@ -48,8 +50,9 @@ crstl_module_export namespace crstl
 		// invoking the default constructor of T. We don't want to change it to some raw type like char as it becomes hard to
 		// debug later on and would rely on a natvis to properly visualize it
 
-		fixed_vector() crstl_noexcept : m_length(0) {}
-		fixed_vector(size_t initialLength) crstl_noexcept : m_length(0)
+		crstl_constexpr fixed_vector() crstl_noexcept : m_length(0) {}
+
+		crstl_constexpr fixed_vector(size_t initialLength) crstl_noexcept : m_length(0)
 		{
 			crstl_assert(initialLength < NumElements);
 			for (size_t i = 0; i < initialLength; ++i)
@@ -58,11 +61,12 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		fixed_vector(const this_type& other) crstl_noexcept { *this = other; }
-		fixed_vector(this_type&& other) crstl_noexcept { *this = other; }
+		crstl_constexpr fixed_vector(const this_type& other) crstl_noexcept { *this = other; }
+
+		crstl_constexpr fixed_vector(this_type&& other) crstl_noexcept { *this = other; }
 
 		template<typename Iterator>
-		fixed_vector(Iterator iter1, Iterator iter2) crstl_noexcept
+		crstl_constexpr fixed_vector(Iterator iter1, Iterator iter2) crstl_noexcept
 		{
 			crstl_assert(iter1 != nullptr && iter2 != nullptr);
 			crstl_assert(iter2 >= iter1);
@@ -78,43 +82,13 @@ crstl_module_export namespace crstl
 			m_length = (length_type)iter_length;
 		}
 
-		fixed_vector(const T& e) crstl_noexcept : m_length(0)
+		crstl_constexpr fixed_vector(std::initializer_list<T> ilist) : m_length(0)
 		{
-			push_back(e);
+			for (const T *ptr = ilist.begin(), *end = ilist.end(); ptr != end; ++ptr)
+			{
+				push_back(*ptr);
+			}
 		}
-
-		fixed_vector(T&& e) crstl_noexcept : m_length(0)
-		{
-			push_back(crstl::move(e));
-		}
-
-#if defined(CRSTL_VARIADIC_TEMPLATES)
-
-		// Function with two parameters to disambiguate between this one and the one that takes two iterators
-		template<typename... Tv>
-		fixed_vector(const T& e0, const T& e1, const Tv&... elements) : m_length(0)
-		{
-			crstl_assert((2 + sizeof...(elements)) <= NumElements);
-
-			// We manually push back the first two elements, then expand the rest
-			push_back(e0);
-			push_back(e1);
-			expand_type{ 0, (push_back(elements), 0)... };
-		}
-
-		// Function with two parameters to disambiguate between this one and the one that takes two iterators
-		template<typename... Tv>
-		fixed_vector(T&& e0, T&& e1, Tv&&... elements) : m_length(0)
-		{
-			crstl_assert((2 + sizeof...(elements)) <= NumElements);
-
-			// We manually push back the first two elements, then expand the rest
-			push_back(crstl::move(e0));
-			push_back(crstl::move(e1));
-			expand_type { 0, (push_back(crstl::move(elements)), 0)... };
-		}
-
-#endif
 
 		~fixed_vector() crstl_noexcept
 		{
