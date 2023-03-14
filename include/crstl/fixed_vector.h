@@ -84,6 +84,8 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr fixed_vector(std::initializer_list<T> ilist) : m_length(0)
 		{
+			crstl_assert((ilist.end() - ilist.begin()) <= NumElements);
+
 			for (const T *ptr = ilist.begin(), *end = ilist.end(); ptr != end; ++ptr)
 			{
 				push_back(*ptr);

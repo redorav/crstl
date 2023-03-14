@@ -10,6 +10,8 @@
 
 #include "allocator.h"
 
+#include <initializer_list>
+
 // vector
 //
 // This is a replacement for std::vector
@@ -34,9 +36,9 @@ crstl_module_export namespace crstl
 		typedef const T*               const_iterator;
 		typedef uint32_t               length_type;
 
-		vector() crstl_noexcept : m_data(nullptr), m_length(0), m_capacity(0) {}
+		crstl_constexpr vector() crstl_noexcept : m_data(nullptr), m_length(0), m_capacity(0) {}
 
-		vector(size_t initialLength) : m_length(0), m_capacity(initialLength)
+		crstl_constexpr vector(size_t initialLength) : m_length(0), m_capacity(initialLength)
 		{
 			m_data = m_allocator.allocate(initialLength);
 
@@ -46,7 +48,7 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		vector(const this_type& other) crstl_noexcept
+		crstl_constexpr vector(const this_type& other) crstl_noexcept
 		{
 			m_data = m_allocator.allocate(other.m_length);
 			m_capacity = other.m_length;
@@ -60,7 +62,7 @@ crstl_module_export namespace crstl
 			m_length = other.m_length;
 		}
 
-		vector(this_type&& other) crstl_noexcept
+		crstl_constexpr vector(this_type&& other) crstl_noexcept
 		{
 			m_data = m_allocator.allocate(other.m_length);
 			m_capacity = other.m_length;
@@ -75,7 +77,7 @@ crstl_module_export namespace crstl
 		}
 
 		template<typename Iterator>
-		vector(Iterator iter1, Iterator iter2)
+		crstl_constexpr vector(Iterator iter1, Iterator iter2) crstl_noexcept
 		{
 			crstl_assert(iter1 != nullptr && iter2 != nullptr);
 			crstl_assert(iter2 >= iter1);
@@ -92,45 +94,19 @@ crstl_module_export namespace crstl
 			m_length = (length_type)iter_length;
 		}
 
-		vector(const T& e) crstl_noexcept : m_length(0), m_capacity(0)
+		crstl_constexpr vector(std::initializer_list<T> ilist) crstl_noexcept : m_length(0)
 		{
-			m_data = m_allocator.allocate(1);
-			push_back(e);
+			crstl_assert(ilist.end() >= ilist.begin());
+
+			size_t ilist_length = ilist.end() - ilist.begin();
+
+			m_data = m_allocator.allocate(ilist_length);
+
+			for (const T* ptr = ilist.begin(), *end = ilist.end(); ptr != end; ++ptr)
+			{
+				push_back(*ptr);
+			}
 		}
-
-		vector(T&& e) crstl_noexcept : m_length(0), m_capacity(0)
-		{
-			m_data = m_allocator.allocate(1);
-			push_back(crstl::move(e));
-		}
-
-#if defined(CRSTL_VARIADIC_TEMPLATES)
-
-		// Function with two parameters to disambiguate between this one and the one that takes two iterators
-		template<typename... Tv>
-		vector(const T& e0, const T& e1, const Tv&... elements) : m_length(0), m_capacity(0)
-		{
-			m_data = m_allocator.allocate(2 + sizeof...(elements));
-
-			// We manually push back the first two elements, then expand the rest
-			push_back(e0);
-			push_back(e1);
-			expand_type{ 0, (push_back(elements), 0)... };
-		}
-
-		// Function with two parameters to disambiguate between this one and the one that takes two iterators
-		template<typename... Tv>
-		vector(T&& e0, T&& e1, Tv&&... elements) : m_length(0), m_capacity(0)
-		{
-			m_data = m_allocator.allocate(2 + sizeof...(elements));
-
-			// We manually push back the first two elements, then expand the rest
-			push_back(crstl::move(e0));
-			push_back(crstl::move(e1));
-			expand_type{ 0, (push_back(crstl::move(elements)), 0)... };
-		}
-
-#endif
 
 		~vector() crstl_noexcept
 		{
