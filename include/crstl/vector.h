@@ -361,7 +361,7 @@ crstl_module_export namespace crstl
 
 		void deallocate()
 		{
-			m_allocator.deallocate(m_capacity, m_capacity);
+			m_allocator.deallocate(m_data, m_capacity);
 			m_capacity = 0;
 			m_data = nullptr;
 		}
