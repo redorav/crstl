@@ -38,9 +38,9 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr vector() crstl_noexcept : m_data(nullptr), m_length(0), m_capacity(0) {}
 
-		crstl_constexpr vector(size_t initialLength) : m_length(0), m_capacity(initialLength)
+		crstl_constexpr vector(size_t initialLength) : m_length(0)
 		{
-			m_data = m_allocator.allocate(initialLength);
+			m_data = allocate(initialLength);
 
 			for (size_t i = 0; i < initialLength; ++i)
 			{
@@ -50,8 +50,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr vector(const this_type& other) crstl_noexcept
 		{
-			m_data = m_allocator.allocate(other.m_length);
-			m_capacity = other.m_length;
+			m_data = allocate(other.m_length);
 
 			// Copy the incoming objects through their copy constructor
 			for (size_t i = 0; i < other.m_length; ++i)
@@ -64,8 +63,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr vector(this_type&& other) crstl_noexcept
 		{
-			m_data = m_allocator.allocate(other.m_length);
-			m_capacity = other.m_length;
+			m_data = allocate(other.m_length);
 
 			// Copy the incoming objects through their copy constructor
 			for (size_t i = 0; i < other.m_length; ++i)
@@ -83,14 +81,13 @@ crstl_module_export namespace crstl
 			crstl_assert(iter2 >= iter1);
 
 			size_t iter_length = iter2 - iter1;
-			m_data = m_allocator.allocate(iter_length);
+			m_data = allocate(iter_length);
 
 			for (size_t i = 0; i < iter_length; ++i)
 			{
 				::new((void*)&m_data[i]) T(iter1[i]);
 			}
 
-			m_capacity = iter_length;
 			m_length = (length_type)iter_length;
 		}
 
@@ -100,7 +97,7 @@ crstl_module_export namespace crstl
 
 			size_t ilist_length = ilist.end() - ilist.begin();
 
-			m_data = m_allocator.allocate(ilist_length);
+			m_data = allocate(ilist_length);
 
 			for (const T* ptr = ilist.begin(), *end = ilist.end(); ptr != end; ++ptr)
 			{
@@ -111,8 +108,7 @@ crstl_module_export namespace crstl
 		~vector() crstl_noexcept
 		{
 			clear();
-
-			m_allocator.deallocate(m_data, m_capacity);
+			deallocate();
 		}
 
 		this_type& operator = (const this_type& other) crstl_noexcept
@@ -127,11 +123,10 @@ crstl_module_export namespace crstl
 			if (m_capacity < other.m_length)
 			{
 				// Deallocate the memory
-				m_allocator.deallocate(m_data, m_capacity);
+				deallocate();
 
 				// Allocate new memory to hold objects
-				m_data = m_allocator.allocate(other.m_length);
-				m_capacity = other.m_length;
+				m_data = allocate(other.m_length);
 			}
 
 			// Copy the incoming objects through their copy constructor
@@ -272,10 +267,7 @@ crstl_module_export namespace crstl
 
 		reference push_back()
 		{
-			if (m_length == m_capacity)
-			{
-				reallocate_larger(compute_new_capacity());
-			}
+			if (m_length == m_capacity) { reallocate_larger(compute_new_capacity()); }
 
 			::new((void*)&m_data[m_length]) T();
 			m_length++;
@@ -284,10 +276,7 @@ crstl_module_export namespace crstl
 
 		void push_back(const T& v)
 		{
-			if (m_length == m_capacity)
-			{
-				reallocate_larger(compute_new_capacity());
-			}
+			if (m_length == m_capacity) { reallocate_larger(compute_new_capacity()); }
 
 			::new((void*)&m_data[m_length]) T(v);
 			m_length++;
@@ -295,10 +284,7 @@ crstl_module_export namespace crstl
 
 		void push_back(T&& v)
 		{
-			if (m_length == m_capacity)
-			{
-				reallocate_larger(compute_new_capacity());
-			}
+			if (m_length == m_capacity) { reallocate_larger(compute_new_capacity()); }
 
 			::new((void*)&m_data[m_length]) T(crstl::move(v));
 			m_length++;
@@ -365,6 +351,20 @@ crstl_module_export namespace crstl
 		operator span<T>() const;
 
 	private:
+
+		T* allocate(size_t capacity)
+		{
+			T* temp = m_allocator.allocate(capacity);
+			m_capacity = capacity;
+			return temp;
+		}
+
+		void deallocate()
+		{
+			m_allocator.deallocate(m_capacity, m_capacity);
+			m_capacity = 0;
+			m_data = nullptr;
+		}
 
 		size_t compute_new_capacity()
 		{
