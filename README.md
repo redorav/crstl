@@ -21,7 +21,6 @@ An alternative or complementary STL that focuses on fast compile times and runti
 - The STL, Boost and other libraries aim to be as generic as possible and offer a wide range of functionality. Their codebases are large and complicated to try to achieve that. CRSTL does not have that aim. Instead, uses as little template code as it can get away with, and tries to use simple constructs to achieve it
 - The STL is tied to C++ revisions, which makes upgrading the language and accesing STL features the same operation. CRSTL aims to offer functionality available in later C++ revisions to C++11 compatible compilers. This means codebases can upgrade without upgrading their C++ version
 - Modern language features such as constexpr can be very useful in certain scenarios. CRSTL doesn't shy away from using them as appropriate while providing fallbacks for older compilers
-- Initializer list follows the philosophy that the STL and the language are in many instances coupled together. I strongly disagree with this line of thinking. Initializer list is an implicit construct that is assumed to exist by the compiler to be able to provide things like const auto example = { A, B, C }. Since initializer_list has a lot of problems regarding extra object copies, copyable classes and lifetime issues, CRSTL does not allow them
 
 ## Additional Design Goals
 
