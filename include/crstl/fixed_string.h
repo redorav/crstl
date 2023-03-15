@@ -28,45 +28,45 @@ crstl_module_export namespace crstl
 
 		static const crstl_constexpr size_t npos = (size_t)-1;
 
-		basic_fixed_string() crstl_noexcept : m_length(0)
+		crstl_constexpr basic_fixed_string() crstl_noexcept : m_length(0)
 		{
 			m_data[0] = '\0';
 		}
 
-		basic_fixed_string(const_pointer string) crstl_noexcept
+		crstl_constexpr basic_fixed_string(const_pointer string) crstl_noexcept
 		{
 			assign(string);
 		}
 
-		basic_fixed_string(const_pointer string, size_t length) crstl_noexcept
+		crstl_constexpr basic_fixed_string(const_pointer string, size_t length) crstl_noexcept
 		{
 			assign(string, length);
 		}
 
-		basic_fixed_string(const_pointer begin, const_pointer end) crstl_noexcept
+		crstl_constexpr basic_fixed_string(const_pointer begin, const_pointer end) crstl_noexcept
 		{
 			assign(begin, end);
 		}
 
 		template<int OtherNumElements>
-		basic_fixed_string(const basic_fixed_string<T, OtherNumElements>& string) crstl_noexcept
+		crstl_constexpr basic_fixed_string(const basic_fixed_string<T, OtherNumElements>& string) crstl_noexcept
 		{
 			assign(string);
 		}
 
-		basic_fixed_string(const basic_fixed_string& string) crstl_noexcept
+		crstl_constexpr basic_fixed_string(const basic_fixed_string& string) crstl_noexcept
 		{
 			assign(string);
 		}
 
 		template<int OtherNumElements>
-		basic_fixed_string(const basic_fixed_string<T, NumElements>& string1, const basic_fixed_string<T, OtherNumElements>& string2) crstl_noexcept
+		crstl_constexpr basic_fixed_string(const basic_fixed_string<T, NumElements>& string1, const basic_fixed_string<T, OtherNumElements>& string2) crstl_noexcept
 		{
 			assign(string1);
 			append(string2);
 		}
 
-		basic_fixed_string(const basic_fixed_string& string, size_t subpos, size_t sublen = npos) crstl_noexcept
+		crstl_constexpr basic_fixed_string(const basic_fixed_string& string, size_t subpos, size_t sublen = npos) crstl_noexcept
 		{
 			assign(string, subpos, sublen);
 		}
