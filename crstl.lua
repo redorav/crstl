@@ -4,6 +4,7 @@ Workspace = 'workspace/'.._ACTION
 
 -- x86/x64
 PlatformMSVC64			= 'MSVC 64'
+PlatformMSVC64Modules	= 'MSVC 64 Modules'
 PlatformLLVM64			= 'LLVM 64'
 PlatformOSX64			= 'OSX 64'
 PlatformLinux64_GCC		= 'Linux64_GCC'
@@ -21,26 +22,22 @@ AndroidProject = 'crstl_android'
 isMacBuild = _ACTION == 'xcode4'
 isLinuxBuild = _ACTION == 'gmake2'
 isWindowsBuild = not isMacBuild and not isLinuxBuild
-supportsARMBuild = _ACTION == 'vs2017' or _ACTION == 'vs2019' or _ACTION == 'vs2022'
 
-cppDialect = 'C++20'
+isMSVC2010 = _ACTION == 'vs2010'
+isMSVC2015 = _ACTION == 'vs2015'
+isMSVC2017 = _ACTION == 'vs2017'
+isMSVC2019 = _ACTION == 'vs2019'
+isMSVC2022 = _ACTION == 'vs2022'
+
+supportsARMBuild = isMSVC2017 or isMSVC2019 or isMSVC2022
+supportsModules = isMSVC2022
+
+cppDefaultDialect = 'C++11'
 
 -- Directories
 srcDir = 'unit_tests'
 includeDir = 'include'
 moduleDir = 'module'
-
-function cppDialectSupportsModules(cpp)
-
-	if cpp == 'C++20' then
-		return true;
-	else
-		return false
-	end
-
-end
-
-cppModuleSupport = cppDialectSupportsModules(cppDialect)
 
 workspace('crstl')
 	configurations { 'Debug', 'Release' }
@@ -66,7 +63,7 @@ workspace('crstl')
 	}
 	
 	vectorextensions ('sse4.1')
-	cppdialect(cppDialect)
+	cppdialect(cppDefaultDialects)
 	
 	if(isMacBuild) then
 	
@@ -96,6 +93,17 @@ workspace('crstl')
 			PlatformLLVM64,
 		}
 
+		-- Add modules platform if environment supports them
+		if(supportsModules) then
+
+			platforms
+			{
+				PlatformMSVC64Modules
+			}
+
+		end
+
+		-- Add ARM platform if environment supports them
 		if(supportsARMBuild) then
 
 			platforms
@@ -121,6 +129,13 @@ workspace('crstl')
 		startproject(UnitTestProject)
 
 		filter { 'platforms:'..PlatformMSVC64 }
+			toolset('msc')
+			architecture('x64')
+			vectorextensions('sse4.1')
+			defines { '__SSE4_1__' }
+
+		filter { 'platforms:'..PlatformMSVC64Modules }
+			cppdialect('C++20')
 			toolset('msc')
 			architecture('x64')
 			vectorextensions('sse4.1')
@@ -185,12 +200,13 @@ project (UnitTestProject)
 		srcDir..'/*.h',
 	}
 	
-	if cppModuleSupport then
+	-- Add module as compilation target for any platform that supports modules
+	filter { 'platforms:'..PlatformMSVC64Modules }
+		
 		files
 		{
 			moduleDir..'/*.ixx'
 		}
-	end
 	
 	filter { 'platforms:'..PlatformAndroidARM..' or '.. PlatformAndroidARM64 }
 		kind('sharedlib')
