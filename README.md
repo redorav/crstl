@@ -10,6 +10,7 @@ An alternative or complementary STL that focuses on fast compile times and runti
 - Simple C++ code as clear and unobfuscated as possible
 - Will add functionality from newer standards, compatible with C++11
 - New language features used where available
+- Decoupled and granular. A single include has a small impact
 
 ## Rationale
 
