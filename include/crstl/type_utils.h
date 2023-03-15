@@ -4,6 +4,8 @@
 
 #include "crstldef.h"
 
+#define crstl_is_empty(T) __is_empty(T)
+
 crstl_module_export namespace crstl
 {
 	// true_type/false_type
@@ -13,6 +15,8 @@ crstl_module_export namespace crstl
 
 	typedef integral_constant<bool, true> true_type;
 	typedef integral_constant<bool, false> false_type;
+
+	template <bool B> struct bool_constant : public integral_constant<bool, B> {};
 
 	// remove_x
 
@@ -53,6 +57,8 @@ crstl_module_export namespace crstl
 	// is_same
 	template<typename, typename> struct is_same : false_type {};
 	template<typename T> struct is_same<T, T> : true_type {};
+
+	template <typename T> struct is_empty : bool_constant<crstl_is_empty(T)> {};
 
 #if defined(CRSTL_VARIADIC_TEMPLATES)
 
