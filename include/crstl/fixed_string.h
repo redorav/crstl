@@ -33,14 +33,14 @@ crstl_module_export namespace crstl
 			m_data[0] = '\0';
 		}
 
-		crstl_constexpr basic_fixed_string(const_pointer string) crstl_noexcept
-		{
-			assign(string);
-		}
-
 		crstl_constexpr basic_fixed_string(const_pointer string, size_t length) crstl_noexcept
 		{
 			assign(string, length);
+		}
+
+		crstl_constexpr basic_fixed_string(const_pointer string) crstl_noexcept
+		{
+			assign(string);
 		}
 
 		crstl_constexpr basic_fixed_string(const_pointer begin, const_pointer end) crstl_noexcept
@@ -103,16 +103,14 @@ crstl_module_export namespace crstl
 		// Append a const char* string
 		crstl_constexpr basic_fixed_string& append(const_pointer string) crstl_noexcept
 		{
-			size_t length = string_length(string);
-			append(string, length);
+			append(string, string_length(string));
 			return *this;
 		}
 
 		// Append a const char* string defined by a begin and end
 		crstl_constexpr basic_fixed_string& append(const_pointer begin, const_pointer end) crstl_noexcept
 		{
-			size_t length = (size_t)(end - begin);
-			append(begin, length);
+			append(begin, (size_t)(end - begin));
 			return *this;
 		}
 
@@ -201,7 +199,7 @@ crstl_module_export namespace crstl
 			// Try to copy, limiting the number of characters to what we have available
 			int char_count = vsnprintf(m_data + m_length, remaining_length, format, va_arguments);
 
-			// It is a formatting error to 
+			// It is a formatting error to return a negative number
 			crstl_assert(char_count >= 0);
 
 			if(char_count >= 0)
@@ -682,7 +680,7 @@ crstl_module_export namespace crstl
 			return rfind(needle_string.m_data, pos, needle_string.m_length);
 		}
 
-		crstl_constexpr size_t size() const crstl_noexcept { return length(); }
+		crstl_constexpr size_t size() const crstl_noexcept { return m_length; }
 
 		//------------
 		// starts_with
