@@ -3,7 +3,7 @@ An alternative or complementary STL that focuses on fast compile times and runti
 
 - No RTTI
 - No exceptions thrown or exception handling
-- Fast to compile: no dependencies on external headers
+- Fast to compile: no dependencies on external headers. C++20 module provided as well when available
 - Fast debug code. Avoids deep function nesting so that unoptimized code runs fast
 - Containers that don't do heap allocations (**fixed_**)
 - Containers that only use the stack (**stack_**)
