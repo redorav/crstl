@@ -368,11 +368,6 @@ crstl_module_export namespace crstl
 		crstl_constexpr iterator begin() crstl_noexcept { return &m_data[0]; }
 		crstl_constexpr const_iterator begin() const crstl_noexcept { return &m_data[0]; }
 
-		crstl_constexpr pointer c_str() crstl_noexcept
-		{
-			return m_data;
-		}
-
 		crstl_constexpr const_pointer c_str() const crstl_noexcept
 		{
 			return m_data;
