@@ -134,7 +134,7 @@ crstl_module_export namespace crstl
 		// Append a const char* string
 		crstl_constexpr basic_fixed_string& append(const_char string) crstl_noexcept
 		{
-			append(string, string_length(string));
+			append(string.str, string_length(string.str));
 			return *this;
 		}
 
@@ -800,6 +800,23 @@ crstl_module_export namespace crstl
 		crstl_constexpr bool operator != (const basic_fixed_string& string) const crstl_noexcept
 		{
 			return compare(string) != 0;
+		}
+
+		template<int N>
+		crstl_constexpr basic_fixed_string& operator = (const T(&string_literal)[N]) crstl_noexcept
+		{
+			return assign(string_literal, N - 1);
+		}
+
+		template<int N>
+		crstl_constexpr basic_fixed_string& operator = (T(&char_array)[N]) crstl_noexcept
+		{
+			return assign(char_array);
+		}
+
+		crstl_constexpr basic_fixed_string& operator = (const_char string) crstl_noexcept
+		{
+			return assign(string);
 		}
 
 		T m_data[NumElements];
