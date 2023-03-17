@@ -31,9 +31,19 @@ crstl_module_export namespace crstl
 		return strlen(str);
 	}
 
+	inline size_t string_length(const char* str, size_t max_length)
+	{
+		return strnlen(str, max_length);
+	}
+
 	inline size_t string_length(const wchar_t* str)
 	{
 		return wcslen(str);
+	}
+
+	inline size_t string_length(const wchar_t* str, size_t max_length)
+	{
+		return wcsnlen(str, max_length);
 	}
 
 	// = 0   They compare equal
@@ -325,7 +335,7 @@ crstl_module_export namespace crstl
 		uint32_t encoding_length = 0;
 
 		// The pattern of the leading byte
-		utf8_pattern leading_pattern;
+		utf8_pattern leading_pattern = {};
 
 		// If the leading byte matches the current leading pattern
 		bool matches = false;

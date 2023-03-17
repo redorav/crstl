@@ -45,6 +45,12 @@ crstl_module_export namespace crstl
 			assign(string_literal, N - 1);
 		}
 
+		template<int N>
+		crstl_constexpr basic_fixed_string(T(&char_array)[N]) crstl_noexcept
+		{
+			assign(char_array);
+		}
+
 		crstl_constexpr basic_fixed_string(const_char string) crstl_noexcept
 		{
 			assign(string);
@@ -264,6 +270,14 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
+		template<int N>
+		crstl_constexpr basic_fixed_string assign(T(&char_array)[N]) crstl_noexcept
+		{
+			clear();
+			assign(char_array);
+			return *this;
+		}
+
 		crstl_constexpr basic_fixed_string& assign(const_char string) crstl_noexcept
 		{
 			clear();
@@ -455,7 +469,6 @@ crstl_module_export namespace crstl
 			return crstl::string_comparei(m_data + pos, clamp_length(pos, length), string.m_data + subpos, string.clamp_length(subpos, sublen));
 		}
 
-
 		crstl_constexpr pointer data() crstl_noexcept { return c_str(); }
 		crstl_constexpr const_pointer data() const crstl_noexcept { return c_str(); }
 
@@ -473,7 +486,7 @@ crstl_module_export namespace crstl
 		crstl_constexpr size_t find(value_type c, size_t pos = 0) const crstl_noexcept
 		{
 			crstl_assert(pos <= m_length);
-			const_pointer ptr = (const_pointer)string_find_char(m_data + pos, c, m_length - pos);
+			const_pointer ptr = (const_pointer)crstl::string_find_char(m_data + pos, c, m_length - pos);
 			return ptr ? (size_t)(ptr - m_data) : npos;
 		}
 
@@ -481,13 +494,13 @@ crstl_module_export namespace crstl
 		crstl_constexpr size_t find(const_pointer needle_string, size_t pos, size_t needle_length) const crstl_noexcept
 		{
 			crstl_assert(pos <= m_length);
-			const_pointer found_string = string_find(m_data + pos, m_length - pos, needle_string, needle_length);
+			const_pointer found_string = crstl::string_find(m_data + pos, m_length - pos, needle_string, needle_length);
 			return found_string ? (size_t)(found_string - m_data) : npos;
 		}
 
 		crstl_constexpr size_t find(const_pointer needle_string, size_t pos = 0) const crstl_noexcept
 		{
-			return find(needle_string, pos, string_length(needle_string));
+			return find(needle_string, pos, crstl::string_length(needle_string));
 		}
 
 		crstl_constexpr size_t find(const basic_fixed_string& needle_string, size_t pos = 0) const crstl_noexcept
@@ -502,13 +515,13 @@ crstl_module_export namespace crstl
 		crstl_constexpr size_t find_first_of(const_pointer needle_string, size_t pos, size_t needle_length) const crstl_noexcept
 		{
 			crstl_assert(pos < m_length);
-			const_pointer found_string = string_find_of(m_data + pos, m_length - pos, needle_string, needle_length);
+			const_pointer found_string = crstl::string_find_of(m_data + pos, m_length - pos, needle_string, needle_length);
 			return found_string ? (size_t)(found_string - m_data) : npos;
 		}
 
 		crstl_constexpr size_t find_first_of(const_pointer needle_string, size_t pos = 0) const crstl_noexcept
 		{
-			return find_first_of(needle_string, pos, string_length(needle_string));
+			return find_first_of(needle_string, pos, crstl::string_length(needle_string));
 		}
 
 		crstl_constexpr size_t find_first_of(const basic_fixed_string& needle_string, size_t pos = 0) const crstl_noexcept
@@ -528,13 +541,13 @@ crstl_module_export namespace crstl
 		crstl_constexpr size_t find_last_of(const_pointer needle_string, size_t pos, size_t needle_length) const crstl_noexcept
 		{
 			pos = pos < m_length ? pos : m_length;
-			const_pointer found_string = string_rfind_of(m_data + pos, pos, needle_string, needle_length);
+			const_pointer found_string = crstl::string_rfind_of(m_data + pos, pos, needle_string, needle_length);
 			return found_string ? (size_t)(found_string - m_data) : npos;
 		}
 
 		crstl_constexpr size_t find_last_of(const_pointer needle_string, size_t pos = npos) const crstl_noexcept
 		{
-			return find_last_of(needle_string, pos, string_length(needle_string));
+			return find_last_of(needle_string, pos, crstl::string_length(needle_string));
 		}
 
 		crstl_constexpr size_t find_last_of(const basic_fixed_string& needle_string, size_t pos = npos) const crstl_noexcept
