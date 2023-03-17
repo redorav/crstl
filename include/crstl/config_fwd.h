@@ -36,10 +36,13 @@
 extern "C"
 {
 	crstl::size_t strlen(const char* str);
+	crstl_dllimport crstl::size_t strnlen(const char* str, crstl::size_t max_count);
+
 	void* memset(void* dst, int val, crstl::size_t size);
 	void* memcpy(void* destination, void const* source, crstl::size_t size);
 
 	crstl_dllimport crstl::size_t wcslen(const wchar_t* str) wthrow;
+	crstl_dllimport crstl::size_t wcsnlen(const wchar_t* str, crstl::size_t max_count) wthrow;
 
 	wchar_t* wmemset(wchar_t* ptr, wchar_t wc, crstl::size_t num) wthrow;
 

@@ -115,6 +115,16 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
+		// Char arrays (non-const) are a bit special because we could have used formatting libraries on them
+		// so the length is not necessarily N, only the maximum length
+		template<int N>
+		crstl_constexpr basic_fixed_string& append(T(&char_array)[N]) crstl_noexcept
+		{
+			size_t length = string_length(char_array, N - 1);
+			append(char_array, length);
+			return *this;
+		}
+
 		// Append a const char* string
 		crstl_constexpr basic_fixed_string& append(const_char string) crstl_noexcept
 		{
