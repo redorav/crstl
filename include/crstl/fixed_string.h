@@ -11,13 +11,14 @@ crstl_module_export namespace crstl
 	{
 	public:
 
-		typedef T        value_type;
-		typedef T&       reference;
-		typedef const T& const_reference;
-		typedef T*       pointer;
-		typedef const T* const_pointer;
-		typedef T*       iterator;
-		typedef const T* const_iterator;
+		typedef T                          value_type;
+		typedef T&                         reference;
+		typedef const T&                   const_reference;
+		typedef T*                         pointer;
+		typedef const T*                   const_pointer;
+		typedef T*                         iterator;
+		typedef const T*                   const_iterator;
+		typedef const const_char_proxy<T>& const_char;
 		
 		enum
 		{
@@ -38,7 +39,13 @@ crstl_module_export namespace crstl
 			assign(string, length);
 		}
 
-		crstl_constexpr basic_fixed_string(const_pointer string) crstl_noexcept
+		template<int N>
+		crstl_constexpr basic_fixed_string(const T (&string_literal)[N]) crstl_noexcept
+		{
+			assign(string_literal, N - 1);
+		}
+
+		crstl_constexpr basic_fixed_string(const_char string) crstl_noexcept
 		{
 			assign(string);
 		}
@@ -100,8 +107,16 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
+		// Append a string literal
+		template<int N>
+		crstl_constexpr basic_fixed_string& append(const T (&string_literal)[N]) crstl_noexcept
+		{
+			append(string_literal, N - 1);
+			return *this;
+		}
+
 		// Append a const char* string
-		crstl_constexpr basic_fixed_string& append(const_pointer string) crstl_noexcept
+		crstl_constexpr basic_fixed_string& append(const_char string) crstl_noexcept
 		{
 			append(string, string_length(string));
 			return *this;
@@ -231,7 +246,15 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
-		crstl_constexpr basic_fixed_string& assign(const_pointer string) crstl_noexcept
+		template<int N>
+		crstl_constexpr basic_fixed_string assign(const T (&string_literal)[N]) crstl_noexcept
+		{
+			clear();
+			assign(string_literal, N - 1);
+			return *this;
+		}
+
+		crstl_constexpr basic_fixed_string& assign(const_char string) crstl_noexcept
 		{
 			clear();
 			append(string);

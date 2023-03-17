@@ -17,6 +17,15 @@ extern "C"
 
 crstl_module_export namespace crstl
 {
+	// Use the const_char_proxy to allow functions to accept string literals without conflicting
+	// with the implicit const char* conversions
+	template<typename CharT>
+	struct const_char_proxy
+	{
+		const_char_proxy(const CharT* str) : m_str(str) {}
+		const CharT* m_str;
+	};
+
 	inline size_t string_length(const char* str)
 	{
 		return strlen(str);
