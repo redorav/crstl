@@ -464,8 +464,8 @@ crstl_module_export namespace crstl
 			return crstl::string_comparei(m_data + pos, clamp_length(pos, length), string.m_data + subpos, string.clamp_length(subpos, sublen));
 		}
 
-		crstl_constexpr pointer data() crstl_noexcept { return c_str(); }
-		crstl_constexpr const_pointer data() const crstl_noexcept { return c_str(); }
+		crstl_constexpr pointer data() crstl_noexcept { return m_data; }
+		crstl_constexpr const_pointer data() const crstl_noexcept { return m_data; }
 
 		crstl_nodiscard
 		crstl_constexpr bool empty() const crstl_noexcept { return m_length == 0; }
@@ -800,18 +800,21 @@ crstl_module_export namespace crstl
 		template<int N>
 		crstl_constexpr basic_fixed_string& operator = (const T(&string_literal)[N]) crstl_noexcept
 		{
-			return assign(string_literal, N - 1);
+			assign(string_literal, N - 1);
+			return *this;
 		}
 
 		template<int N>
 		crstl_constexpr basic_fixed_string& operator = (T(&char_array)[N]) crstl_noexcept
 		{
-			return assign(char_array);
+			assign<N>(char_array);
+			return *this;
 		}
 
 		crstl_constexpr basic_fixed_string& operator = (const_char string) crstl_noexcept
 		{
-			return assign(string);
+			assign(string);
+			return *this;
 		}
 
 		T m_data[NumElements];
