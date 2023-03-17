@@ -22,8 +22,8 @@ crstl_module_export namespace crstl
 	template<typename CharT>
 	struct const_char_proxy
 	{
-		const_char_proxy(const CharT* str) : m_str(str) {}
-		const CharT* m_str;
+		const_char_proxy(const CharT* str) : str(str) {}
+		const CharT* str;
 	};
 
 	inline size_t string_length(const char* str)
