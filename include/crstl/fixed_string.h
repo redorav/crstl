@@ -159,7 +159,7 @@ crstl_module_export namespace crstl
 		// Append a const char* string defined by a begin and end
 		crstl_constexpr basic_fixed_string& append(const_pointer begin, const_pointer end) crstl_noexcept
 		{
-			crstl_assert(end > begin);
+			crstl_assert(end >= begin);
 			append(begin, (size_t)(end - begin));
 			return *this;
 		}
