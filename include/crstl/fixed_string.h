@@ -15,6 +15,7 @@
 // - There are extra functions not present in the standard such as
 //   - append_convert: append converting from different characters representations
 //   - assign_convert: assign converting from different characters representations
+//   - append_sprintf: Use sprintf-like formatting to append string
 //   - comparei: compare ignoring case
 //   - 
 
@@ -43,9 +44,13 @@ crstl_module_export namespace crstl
 
 		static const crstl_constexpr size_t npos = (size_t)-1;
 
+		//-------------
+		// Constructors
+		//-------------
+
 		crstl_constexpr basic_fixed_string() crstl_noexcept : m_length(0)
 		{
-			m_data[0] = '\0';
+			m_data[0] = 0;
 		}
 
 		crstl_constexpr basic_fixed_string(const_pointer string, size_t length) crstl_noexcept
@@ -140,8 +145,7 @@ crstl_module_export namespace crstl
 		template<int N>
 		crstl_constexpr basic_fixed_string& append(T(&char_array)[N]) crstl_noexcept
 		{
-			size_t length = string_length(char_array, N - 1);
-			append(char_array, length);
+			append(char_array, string_length(char_array, N - 1));
 			return *this;
 		}
 
@@ -155,6 +159,7 @@ crstl_module_export namespace crstl
 		// Append a const char* string defined by a begin and end
 		crstl_constexpr basic_fixed_string& append(const_pointer begin, const_pointer end) crstl_noexcept
 		{
+			crstl_assert(end > begin);
 			append(begin, (size_t)(end - begin));
 			return *this;
 		}
@@ -271,68 +276,50 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr basic_fixed_string& assign(const_pointer string, size_t length) crstl_noexcept
 		{
-			clear();
-			append(string, length);
-			return *this;
+			clear(); append(string, length); return *this;
 		}
 
 		template<int N>
 		crstl_constexpr basic_fixed_string assign(const T (&string_literal)[N]) crstl_noexcept
 		{
-			clear();
-			assign(string_literal, N - 1);
-			return *this;
+			clear(); assign(string_literal, N - 1); return *this;
 		}
 
 		template<int N>
 		crstl_constexpr basic_fixed_string assign(T(&char_array)[N]) crstl_noexcept
 		{
-			clear();
-			assign(char_array);
-			return *this;
+			clear(); assign(char_array); return *this;
 		}
 
 		crstl_constexpr basic_fixed_string& assign(const_char string) crstl_noexcept
 		{
-			clear();
-			append(string);
-			return *this;
+			clear(); append(string); return *this;
 		}
 
 		crstl_constexpr basic_fixed_string& assign(const_pointer begin, const_pointer end) crstl_noexcept
 		{
-			clear();
-			append(begin, end);
-			return *this;
+			clear(); append(begin, end); return *this;
 		}
 
 		template<int OtherNumElements>
 		crstl_constexpr basic_fixed_string& assign(const basic_fixed_string<T, OtherNumElements>& string) crstl_noexcept
 		{
-			clear();
-			append(string);
-			return *this;
+			clear(); append(string); return *this;
 		}
 
 		crstl_constexpr basic_fixed_string& assign(const basic_fixed_string& string) crstl_noexcept
 		{
-			clear();
-			append(string);
-			return *this;
+			clear(); append(string); return *this;
 		}
 
 		crstl_constexpr basic_fixed_string& assign(const basic_fixed_string& string, size_t subpos, size_t sublen = npos) crstl_noexcept
 		{
-			m_length = 0;
-			append(string, subpos, sublen);
-			return *this;
+			clear(); append(string, subpos, sublen); return *this;
 		}
 
 		crstl_constexpr basic_fixed_string& assign(size_t n, value_type c) crstl_noexcept
 		{
-			m_length = 0;
-			append(n, c);
-			return *this;
+			clear(); append(n, c); return *this;
 		}
 
 		//---------------
@@ -342,9 +329,7 @@ crstl_module_export namespace crstl
 		template<typename OtherCharacterType>
 		crstl_constexpr basic_fixed_string& assign_convert(const OtherCharacterType* string, size_t length) crstl_noexcept
 		{
-			clear();
-			append_convert(string, length);
-			return *this;
+			clear(); append_convert(string, length); return *this;
 		}
 
 		template<typename OtherCharacterType>
@@ -356,15 +341,13 @@ crstl_module_export namespace crstl
 		template<typename OtherCharacterType, int OtherN>
 		crstl_constexpr basic_fixed_string& assign_convert(const basic_fixed_string<OtherCharacterType, OtherN>& string) crstl_noexcept
 		{
-			assign_convert(string.c_str(), string.length());
-			return *this;
+			assign_convert(string.c_str(), string.length()); return *this;
 		}
 
 		// If we append_convert with our own type, just use append, no need for conversion
 		crstl_constexpr basic_fixed_string& assign_convert(const_pointer string, size_t length) crstl_noexcept
 		{
-			assign(string, length);
-			return *this;
+			assign(string, length); return *this;
 		}
 
 		crstl_constexpr reference back() crstl_noexcept
