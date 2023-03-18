@@ -566,7 +566,6 @@ crstl_module_export namespace crstl
 		crstl_constexpr void pop_back() crstl_noexcept
 		{
 			crstl_assert(m_length > 0);
-			m_data[m_length - 1].~T();
 			m_length--;
 		}
 
