@@ -14,7 +14,7 @@ An alternative or complementary STL that focuses on fast compile times and runti
 
 ## Rationale
 
-- I come mainly from a game development background. Exceptions are never used in such an environment because they introduce a lot of complexity, they are restrictive, and ultimately not good for performance. Since this library has performance-oriented patterns as one of its main goals, they are not allowed
+- I come mainly from a game development background. Exceptions are rarely used in such an environment because they introduce a lot of complexity, they are restrictive, and ultimately not good for performance. Since this library has performance-oriented patterns as one of its main goals, they are not allowed
 - Codebases are getting more bloated every day. Whether it's from the include mechanism or template metaprogramming, compilation can take hours on the fastest professional machines the market has to offer. This codebase makes no compromises to achieve a near-perfect avoidance of external dependencies. The code is arguably uglier, but faster to compile
 - Debug code performance is important. Some codebases and the STL itself have deep, nested callstacks that make debug performance worse than is desirable. To that end this codebase will manually expand code or use macros as necessary
 - Fixed containers should be used in many circumstances if the requirements allow it. They will not access the heap at any point and can take advantage of the knowledge of the length to save memory. They impose an upper bound on certain operations so make sure your requirements are clear from the beginning
@@ -27,3 +27,5 @@ An alternative or complementary STL that focuses on fast compile times and runti
 - The include philosophy differs. Where possible, we forward declare dependencies. It is the user's responsibility to include everything necessary for their usage. For example, vector can be implicitly cast to span, but we don't include span in vector. If this automatic behavior is desired, one can create a new header where both are included and use that.
 
 - Template metaprogramming is avoided as much as possible, while acknowledging the fact that there are many instances where it is necessary. For example, unique_ptr for arrays can be done with a single class and enable_if, or with two classes that share functionality. The second approach is preferred in this library.
+
+- The STL in general is well designed. Therefore we maintain an interface similar to it and other libraries such as Boost or EASTL where it makes sense (e.g. function naming such as push_back or size). In many cases we'll include additional useful functions. In other cases we will depart from the standard interface, such as implicit conversions for string which are not allowed
