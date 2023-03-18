@@ -82,7 +82,7 @@ crstl_module_export namespace crstl
 			m_length = (length_type)iter_length;
 		}
 
-		crstl_constexpr fixed_vector(std::initializer_list<T> ilist) : m_length(0)
+		crstl_constexpr fixed_vector(std::initializer_list<T> ilist) crstl_noexcept : m_length(0)
 		{
 			crstl_assert((ilist.end() - ilist.begin()) <= NumElements);
 
