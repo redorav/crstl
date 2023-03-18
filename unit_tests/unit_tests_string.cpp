@@ -60,11 +60,6 @@ void RunUnitTestsString()
 	crFixedString32 = crFixedString32_2;
 	crFixedString32 = crFixedString32_2.c_str();
 
-	// Constructor Assignment
-
-	//crstl::fixed_string32 crFixedString32_5 = crFixedString32.c_str();
-	crstl::fixed_string32 crFixedString32_6(CharArray);
-
 	const auto mystdsub = mystds.substr(3, 5);
 	const auto myfssub = crFixedString32.substr(3, 5);
 
