@@ -4,6 +4,19 @@
 
 #include "crstldef.h"
 
+// fixed_string
+//
+// This is a fixed replacement for std::string
+//
+// fixed_string doesn't allocate memory, instead manages an internal array
+// 
+// - The number of elements is specified at compile time
+// - There are extra functions not present in the standard such as
+//   - append_convert: append converting from different characters representations
+//   - assign_convert: assign converting from different characters representations
+//   - comparei: compare ignoring case
+//   - 
+
 crstl_module_export namespace crstl
 {
 	template<typename T, int NumElements>
@@ -373,10 +386,10 @@ crstl_module_export namespace crstl
 			return m_data;
 		}
 
-		// Returns the maximum size of this container, in bytes
+		// Returns the capacity, in characters
 		crstl_constexpr size_t capacity() const crstl_noexcept
 		{
-			return kCharacterCapacityWithZero * kCharSize;
+			return kCharacterCapacity;
 		}
 
 		crstl_constexpr const_iterator cbegin() const crstl_noexcept { return &m_data[0]; }
