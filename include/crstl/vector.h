@@ -68,15 +68,13 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr vector(this_type&& other) crstl_noexcept
 		{
-			m_data = allocate(other.m_length);
-
-			// Copy the incoming objects through their copy constructor
-			for (size_t i = 0; i < other.m_length; ++i)
-			{
-				::new((void*)&m_data[i]) T(crstl::move(other.m_data[i]));
-			}
-
+			// Swap relevant data
+			m_data = other.m_data;
 			m_length = other.m_length;
+			m_capacity_allocator = other.m_capacity_allocator;
+
+			other.m_data = nullptr;
+			other.m_length = 0;
 		}
 
 		template<typename Iterator>
