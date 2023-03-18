@@ -11,6 +11,7 @@
 // fixed_string doesn't allocate memory, instead manages an internal array
 // 
 // - The number of elements is specified at compile time
+// - Implicit conversions between const char* or string literals are disallowed
 // - There are extra functions not present in the standard such as
 //   - append_convert: append converting from different characters representations
 //   - assign_convert: assign converting from different characters representations
