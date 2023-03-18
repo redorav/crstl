@@ -280,13 +280,13 @@ crstl_module_export namespace crstl
 		}
 
 		template<int N>
-		crstl_constexpr basic_fixed_string assign(const T (&string_literal)[N]) crstl_noexcept
+		crstl_constexpr basic_fixed_string& assign(const T (&string_literal)[N]) crstl_noexcept
 		{
 			clear(); assign(string_literal, N - 1); return *this;
 		}
 
 		template<int N>
-		crstl_constexpr basic_fixed_string assign(T(&char_array)[N]) crstl_noexcept
+		crstl_constexpr basic_fixed_string& assign(T(&char_array)[N]) crstl_noexcept
 		{
 			clear(); assign(char_array); return *this;
 		}
