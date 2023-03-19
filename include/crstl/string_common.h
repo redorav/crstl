@@ -187,8 +187,8 @@ crstl_module_export namespace crstl
 		}
 
 		// No point searching if length of needle is longer than the final characters of the string
-		const T* search_end = string + (length - needle_length) + 1;
 		const T* search_start = string;
+		const T* search_end = string + (length - needle_length) + 1;
 
 		while (search_start)
 		{
@@ -226,12 +226,12 @@ crstl_module_export namespace crstl
 		}
 
 		// No point searching if length of needle is longer than the final characters of the string
-		const T* search_end = string + (length - needle_length) + 1;
 		const T* search_start = string;
+		const T* search_end = string - length;
 
-		while (search_start != string)
+		while (search_start != search_end)
 		{
-			search_start = string_rfind_char(search_start, *needle_string, (size_t)(search_end - search_start));
+			search_start = string_rfind_char(search_start, *needle_string, (size_t)(search_start - search_end));
 
 			if (!search_start)
 			{
