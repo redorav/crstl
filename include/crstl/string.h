@@ -27,7 +27,6 @@ namespace crstl
 		typedef const T*                   const_pointer;
 		typedef T*                         iterator;
 		typedef const T*                   const_iterator;
-		typedef const const_char_proxy<T>& const_char;
 
 		// View of heap-allocated string
 		struct heap_view
@@ -104,9 +103,10 @@ namespace crstl
 			initialize_string(char_array, string_length(char_array, N));
 		}
 
-		crstl_constexpr basic_string(const_char string) crstl_noexcept
+		template<typename T>
+		crstl_constexpr basic_string(T string, crstl_is_char_ptr(T)) crstl_noexcept
 		{
-			initialize_string(string.str, string_length(string.str));
+			initialize_string(string, string_length(string));
 		}
 
 		crstl_constexpr basic_string(const_pointer begin, const_pointer end) crstl_noexcept
@@ -173,9 +173,10 @@ namespace crstl
 			append(char_array, string_length(char_array, N - 1)); return *this;
 		}
 
-		crstl_constexpr basic_string& append(const_char string)
+		template<typename T>
+		crstl_constexpr basic_string& append(T string, crstl_is_char_ptr(T))
 		{
-			return append(string.str, string_length(string.str));
+			return append(string, string_length(string));
 		}
 
 		crstl_constexpr basic_string& append(const_pointer begin, const_pointer end) crstl_noexcept
@@ -291,7 +292,8 @@ namespace crstl
 			clear(); assign(char_array); return *this;
 		}
 
-		crstl_constexpr basic_string& assign(const_char string) crstl_noexcept
+		template<typename T>
+		crstl_constexpr basic_string& assign(T string, crstl_is_char_ptr(T)) crstl_noexcept
 		{
 			clear(); append(string); return *this;
 		}
@@ -662,40 +664,6 @@ namespace crstl
 		crstl_constexpr bool operator != (const_pointer string) const crstl_noexcept { return compare(string) != 0; }
 		crstl_constexpr bool operator == (const basic_string& string) const crstl_noexcept { return compare(string) == 0; }
 		crstl_constexpr bool operator != (const basic_string& string) const crstl_noexcept { return compare(string) != 0; }
-
-		template<int N>
-		crstl_constexpr basic_string& operator = (const T(&string_literal)[N]) crstl_noexcept
-		{
-			assign(string_literal, N - 1);
-			return *this;
-		}
-
-		template<int N>
-		crstl_constexpr basic_string& operator = (T(&char_array)[N]) crstl_noexcept
-		{
-			assign(char_array);
-			return *this;
-		}
-
-		crstl_constexpr basic_string& operator = (const_char string) crstl_noexcept
-		{
-			if (data() != string.data())
-			{
-				assign(string);
-			}
-
-			return *this;
-		}
-
-		crstl_constexpr basic_string& operator = (const basic_string& string) crstl_noexcept
-		{
-			if (data() != string.str)
-			{
-				assign(string);
-			}
-
-			return *this;
-		}
 
 	private:
 

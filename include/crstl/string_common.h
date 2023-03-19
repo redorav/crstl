@@ -17,14 +17,14 @@ extern "C"
 
 crstl_module_export namespace crstl
 {
-	// Use the const_char_proxy to allow functions to accept string literals without conflicting
-	// with the implicit const char* conversions
-	template<typename CharT>
-	struct const_char_proxy
-	{
-		const_char_proxy(const CharT* str) : str(str) {}
-		const CharT* str;
-	};
+	class char_dummy;
+	template<typename T> struct is_char_ptr {};
+	template<> struct is_char_ptr<const char*> { typedef char_dummy* type; };
+	template<> struct is_char_ptr<char*> { typedef char_dummy* type; };
+	template<> struct is_char_ptr<const wchar_t*> { typedef char_dummy* type; };
+	template<> struct is_char_ptr<wchar_t*> { typedef char_dummy* type; };
+
+	#define crstl_is_char_ptr(T) typename crstl::is_char_ptr<T>::type = 0
 
 	inline size_t string_length(const char* str)
 	{

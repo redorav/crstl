@@ -33,7 +33,6 @@ crstl_module_export namespace crstl
 		typedef const T*                   const_pointer;
 		typedef T*                         iterator;
 		typedef const T*                   const_iterator;
-		typedef const const_char_proxy<T>& const_char;
 		
 		enum
 		{
@@ -59,18 +58,19 @@ crstl_module_export namespace crstl
 		}
 
 		template<int N>
-		explicit crstl_constexpr basic_fixed_string(const T (&string_literal)[N]) crstl_noexcept
+		crstl_constexpr basic_fixed_string(const T (&string_literal)[N]) crstl_noexcept
 		{
 			assign(string_literal, N - 1);
 		}
 
 		template<int N>
-		explicit crstl_constexpr basic_fixed_string(T(&char_array)[N]) crstl_noexcept
+		crstl_constexpr basic_fixed_string(T(&char_array)[N]) crstl_noexcept
 		{
 			assign(char_array);
 		}
 
-		crstl_constexpr basic_fixed_string(const_char string) crstl_noexcept
+		template<typename T>
+		crstl_constexpr basic_fixed_string(T string, crstl_is_char_ptr(T)) crstl_noexcept
 		{
 			assign(string);
 		}
@@ -145,9 +145,10 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
-		crstl_constexpr basic_fixed_string& append(const_char string) crstl_noexcept
+		template<typename T>
+		crstl_constexpr basic_fixed_string& append(T string, crstl_is_char_ptr(T)) crstl_noexcept
 		{
-			append(string.str, string_length(string.str));
+			append(string, string_length(string));
 			return *this;
 		}
 
@@ -282,7 +283,8 @@ crstl_module_export namespace crstl
 			clear(); assign(char_array); return *this;
 		}
 
-		crstl_constexpr basic_fixed_string& assign(const_char string) crstl_noexcept
+		template<typename T>
+		crstl_constexpr basic_fixed_string& assign(T string, crstl_is_char_ptr(T)) crstl_noexcept
 		{
 			clear(); append(string); return *this;
 		}
@@ -725,40 +727,6 @@ crstl_module_export namespace crstl
 		crstl_constexpr bool operator != (const_pointer string) const crstl_noexcept { return compare(string) != 0; }
 		crstl_constexpr bool operator == (const basic_fixed_string& string) const crstl_noexcept { return compare(string) == 0; }
 		crstl_constexpr bool operator != (const basic_fixed_string& string) const crstl_noexcept { return compare(string) != 0; }
-
-		template<int N>
-		crstl_constexpr basic_fixed_string& operator = (const T(&string_literal)[N]) crstl_noexcept
-		{
-			assign(string_literal, N - 1);
-			return *this;
-		}
-
-		template<int N>
-		crstl_constexpr basic_fixed_string& operator = (T(&char_array)[N]) crstl_noexcept
-		{
-			assign(char_array);
-			return *this;
-		}
-
-		crstl_constexpr basic_fixed_string& operator = (const_char string) crstl_noexcept
-		{
-			if (m_data != string.str)
-			{
-				assign(string);
-			}
-
-			return *this;
-		}
-
-		crstl_constexpr basic_fixed_string& operator = (const basic_fixed_string& string) crstl_noexcept
-		{
-			if (m_data != string.m_data)
-			{
-				assign(string);
-			}
-
-			return *this;
-		}
 
 		T m_data[NumElements];
 
