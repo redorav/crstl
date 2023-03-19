@@ -363,6 +363,44 @@ namespace crstl
 			}
 		}
 
+		//--------
+		// compare
+		//--------
+
+		crstl_constexpr int compare(const T* string) const crstl_noexcept
+		{
+			return crstl::string_compare(data(), length(), string, string_length(string));
+		}
+
+		crstl_constexpr int compare(size_t pos, size_t length, const T* string) const crstl_noexcept
+		{
+			crstl_assert(pos < basic_string::length());
+			return crstl::string_compare(data() + pos, clamp_length(pos, length), string, string_length(string));
+		}
+
+		crstl_constexpr int compare(size_t pos, size_t length, const T* string, size_t subpos, size_t sublen = npos) const crstl_noexcept
+		{
+			crstl_assert(pos < basic_string::length());
+			return crstl::string_compare(data() + pos, clamp_length(pos, length), string + subpos, crstl::string_clamp_length(string_length(string), subpos, sublen));
+		}
+
+		crstl_constexpr int compare(const basic_string& string) const crstl_noexcept
+		{
+			return crstl::string_compare(data(), length(), string.data(), string.length());
+		}
+
+		crstl_constexpr int compare(size_t pos, size_t length, const basic_string& string) const crstl_noexcept
+		{
+			crstl_assert(pos < basic_string::length());
+			return crstl::string_compare(data() + pos, clamp_length(pos, length), string.data(), string.length());
+		}
+
+		crstl_constexpr int compare(size_t pos, size_t length, const basic_string& string, size_t subpos, size_t sublen = npos) const crstl_noexcept
+		{
+			crstl_assert(pos < basic_string::length());
+			return crstl::string_compare(data() + pos, clamp_length(pos, length), string.data() + subpos, string.clamp_length(subpos, sublen));
+		}
+
 		crstl_constexpr pointer data() crstl_noexcept { return is_sso() ? m_layout_allocator.m_first.m_sso.data : m_layout_allocator.m_first.m_heap.data; }
 		crstl_constexpr const_pointer data() const crstl_noexcept { return is_sso() ? m_layout_allocator.m_first.m_sso.data : m_layout_allocator.m_first.m_heap.data; }
 
@@ -738,6 +776,12 @@ namespace crstl
 				m_layout_allocator.m_first.m_heap.length = length;
 				m_layout_allocator.m_first.m_heap.data[length] = 0;
 			}
+		}
+
+		// Given a position and a length, return the length that fits the string
+		crstl_constexpr size_t clamp_length(size_t pos, size_t length) const crstl_noexcept
+		{
+			return crstl::string_clamp_length(basic_string::length(), pos, length);
 		}
 
 		bool is_sso() const
