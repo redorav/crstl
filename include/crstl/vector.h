@@ -16,8 +16,9 @@
 
 // vector
 //
-// This is a replacement for std::vector
+// Replacement for std::vector
 //
+// - vector of bool is a vector of bool, not a bitvector
 
 crstl_module_export namespace crstl
 {

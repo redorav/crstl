@@ -12,7 +12,7 @@
 
 // fixed_vector
 //
-// This is a fixed replacement for std::vector
+// Fixed replacement for std::vector
 //
 // fixed_vector doesn't allocate memory, instead manages an internal array
 // 

@@ -211,6 +211,45 @@ crstl_module_export namespace crstl
 		return nullptr;
 	}
 
+	template<typename T>
+	inline const T* string_rfind(const T* string, size_t length, const T* needle_string, size_t needle_length)
+	{
+		if (needle_string == nullptr || needle_length > length)
+		{
+			return nullptr;
+		}
+
+		// If we have an empty string, return the offset
+		if (needle_length == 0)
+		{
+			return string;
+		}
+
+		// No point searching if length of needle is longer than the final characters of the string
+		const T* search_end = string + (length - needle_length) + 1;
+		const T* search_start = string;
+
+		while (search_start != string)
+		{
+			search_start = string_rfind_char(search_start, *needle_string, (size_t)(search_end - search_start));
+
+			if (!search_start)
+			{
+				return nullptr;
+			}
+
+			// If we matched the first character
+			if (string_compare(search_start, needle_length, needle_string, needle_length) == 0)
+			{
+				return search_start;
+			}
+
+			search_start--;
+		}
+
+		return nullptr;
+	}
+
 	inline crstl_constexpr void fill_char(char* destination, size_t n, char c)
 	{
 		if (n)

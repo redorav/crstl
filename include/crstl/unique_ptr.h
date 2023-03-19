@@ -8,13 +8,13 @@
 
 // unique_ptr
 //
-// This is a simple replacement for std::unique_ptr, functionally the same
+// Simple replacement for std::unique_ptr, functionally the same
 // but with a very small compile time footprint
 // The move-only semantics remain the same
 //
-// unique_ptr doesn't allocate memory, the pointer is supplied externally
-// but it does deallocate memory, so care has to be take to allocate and 
-// deallocate in a consistent manner
+// - unique_ptr doesn't allocate memory, the pointer is supplied externally
+//   but it does deallocate memory, so care has to be take to allocate and 
+//   deallocate in a consistent manner
 
 crstl_module_export namespace crstl
 {

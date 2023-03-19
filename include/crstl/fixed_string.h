@@ -6,7 +6,7 @@
 
 // fixed_string
 //
-// This is a fixed replacement for std::string
+// Fixed replacement for std::string
 //
 // fixed_string doesn't allocate memory, instead manages an internal array
 // 
@@ -614,19 +614,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr void resize(size_t length)
 		{
-			crstl_assert(length < NumElements);
-
-			// If length is larger than current length, initialize new characters to 0
-			if ((size_t)m_length < length)
-			{
-				for (size_t i = m_length; i < length; ++i)
-				{
-					m_data[i] = 0;
-				}
-			}
-
-			m_data[length] = 0;
-			m_length = (uint32_t)length;
+			resize(length, 0);
 		}
 
 		crstl_constexpr void resize(size_t length, T c)
@@ -660,42 +648,10 @@ crstl_module_export namespace crstl
 		// Find a const char* string with an offset and a length
 		size_t rfind(const_pointer needle_string, size_t pos, size_t needle_length) const crstl_noexcept
 		{
-			if (needle_string == nullptr || needle_length > m_length || pos < needle_length)
-			{
-				return npos;
-			}
-
-			// If we have an empty string, return the offset
-			if (needle_length == 0)
-			{
-				return pos;
-			}
-
+			crstl_assert(pos <= m_length);
 			pos = pos < m_length ? pos : m_length;
-
-			// No point searching if length of needle is longer than the final characters of the string
-			const_pointer search_end = m_data + (m_length - needle_length) + 1;
-			const_pointer search_start = m_data + pos;
-
-			while(search_start != m_data)
-			{
-				search_start = string_rfind_char(search_start, *needle_string, (size_t)(search_end - search_start));
-
-				if (!search_start)
-				{
-					return npos;
-				}
-
-				// If we matched the first character
-				if (string_compare(search_start, needle_length, needle_string, needle_length) == 0)
-				{
-					return (size_t)(search_start - m_data);
-				}
-
-				search_start--;
-			}
-
-			return npos;
+			const_pointer found_string = crstl::string_rfind(m_data + pos, m_length - pos, needle_string, needle_length);
+			return found_string ? (size_t)(found_string - m_data) : npos;
 		}
 
 		size_t rfind(const_pointer needle_string, size_t pos = npos) const crstl_noexcept
@@ -800,7 +756,21 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr basic_fixed_string& operator = (const_char string) crstl_noexcept
 		{
-			assign(string);
+			if (m_data != string.str)
+			{
+				assign(string);
+			}
+
+			return *this;
+		}
+
+		crstl_constexpr basic_fixed_string& operator = (const basic_fixed_string& string) crstl_noexcept
+		{
+			if (m_data != string.m_data)
+			{
+				assign(string);
+			}
+
 			return *this;
 		}
 
