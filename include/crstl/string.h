@@ -103,8 +103,8 @@ namespace crstl
 			initialize_string(char_array, string_length(char_array, N));
 		}
 
-		template<typename T>
-		crstl_constexpr basic_string(T string, crstl_is_char_ptr(T)) crstl_noexcept
+		template<typename Q>
+		crstl_constexpr basic_string(Q string, crstl_is_char_ptr(Q)) crstl_noexcept
 		{
 			initialize_string(string, string_length(string));
 		}
@@ -173,8 +173,8 @@ namespace crstl
 			append(char_array, string_length(char_array, N - 1)); return *this;
 		}
 
-		template<typename T>
-		crstl_constexpr basic_string& append(T string, crstl_is_char_ptr(T))
+		template<typename Q>
+		crstl_constexpr basic_string& append(Q string, crstl_is_char_ptr(Q))
 		{
 			return append(string, string_length(string));
 		}
@@ -292,8 +292,8 @@ namespace crstl
 			clear(); assign(char_array); return *this;
 		}
 
-		template<typename T>
-		crstl_constexpr basic_string& assign(T string, crstl_is_char_ptr(T)) crstl_noexcept
+		template<typename Q>
+		crstl_constexpr basic_string& assign(Q string, crstl_is_char_ptr(Q)) crstl_noexcept
 		{
 			clear(); append(string); return *this;
 		}

@@ -69,8 +69,8 @@ crstl_module_export namespace crstl
 			assign(char_array);
 		}
 
-		template<typename T>
-		crstl_constexpr basic_fixed_string(T string, crstl_is_char_ptr(T)) crstl_noexcept
+		template<typename Q>
+		crstl_constexpr basic_fixed_string(Q string, crstl_is_char_ptr(Q)) crstl_noexcept
 		{
 			assign(string);
 		}
@@ -145,8 +145,8 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
-		template<typename T>
-		crstl_constexpr basic_fixed_string& append(T string, crstl_is_char_ptr(T)) crstl_noexcept
+		template<typename Q>
+		crstl_constexpr basic_fixed_string& append(Q string, crstl_is_char_ptr(Q)) crstl_noexcept
 		{
 			append(string, string_length(string));
 			return *this;
@@ -283,8 +283,8 @@ crstl_module_export namespace crstl
 			clear(); assign(char_array); return *this;
 		}
 
-		template<typename T>
-		crstl_constexpr basic_fixed_string& assign(T string, crstl_is_char_ptr(T)) crstl_noexcept
+		template<typename Q>
+		crstl_constexpr basic_fixed_string& assign(Q string, crstl_is_char_ptr(Q)) crstl_noexcept
 		{
 			clear(); append(string); return *this;
 		}
