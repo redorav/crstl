@@ -86,4 +86,21 @@
 		</Expand>
 	</Type>
 
+	<Type Name="crstl::basic_string&lt;*,*&gt;">
+		<DisplayString Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask) == 0">{m_layout_allocator.m_first.m_sso.data} [{kSSOCapacity - m_layout_allocator.m_first.m_sso.remaining_length.value}] [sso]</DisplayString>
+		<DisplayString Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask) != 0">{m_layout_allocator.m_first.m_heap.data} [{m_layout_allocator.m_first.m_heap.length}] [heap]</DisplayString>
+
+		<Expand>
+			<Item Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask) == 0" Name="[capacity]">kSSOCapacity</Item>
+			<Item Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask) == 0" Name="[length]">kSSOCapacity - m_layout_allocator.m_first.m_sso.remaining_length.value</Item>
+			<Item Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask) == 0" Name="[value]">m_layout_allocator.m_first.m_sso.data</Item>
+			<Item Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask) == 0" Name="[heap]">false</Item>
+
+			<Item Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask) != 0" Name="[capacity]">m_layout_allocator.m_first.m_heap.capacity &amp; kHeapCapacityMask</Item>
+			<Item Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask) != 0" Name="[length]">m_layout_allocator.m_first.m_heap.length</Item>
+			<Item Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask) != 0" Name="[value]">m_layout_allocator.m_first.m_heap.data</Item>
+			<Item Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask) != 0" Name="[heap]">true</Item>
+		</Expand>
+	</Type>
+
 </AutoVisualizer>
