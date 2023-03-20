@@ -713,7 +713,7 @@ namespace crstl
 			}
 			else
 			{
-				// If we're currently in sso mode we assume a capacity 
+				// If we're currently in sso mode we assume a capacity of 0
 				size_t heap_capacity = is_sso() ? 0 : get_capacity_heap();
 
 				// If target length is greater than existing heap capacity, reallocate and copy
