@@ -692,7 +692,7 @@ namespace crstl
 		}
 
 		//----------
-		// Operators
+		// operators
 		//----------
 
 		crstl_constexpr basic_string& operator = (const basic_string& string) crstl_noexcept
