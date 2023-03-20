@@ -123,7 +123,7 @@ namespace crstl
 		crstl_constexpr basic_string(basic_string&& string) crstl_noexcept
 		{
 			m_layout_allocator = string.m_layout_allocator;
-			string.m_layout_allocator = {};
+			string.m_layout_allocator.first().m_heap.data = nullptr; // Don't try to deallocate
 		}
 
 		crstl_constexpr basic_string(ctor_concatenate, const basic_string& string1, const basic_string& string2) crstl_noexcept
