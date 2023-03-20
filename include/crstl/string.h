@@ -13,7 +13,7 @@
 // Replacement for std::string
 //
 
-namespace crstl
+crstl_module_export namespace crstl
 {
 	template<typename T, typename Allocator = crstl::allocator<T>>
 	class basic_string

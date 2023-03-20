@@ -9,6 +9,7 @@ export module crstl;
 #include "crstl/intrusive_ptr.h"
 #include "crstl/pair.h"
 #include "crstl/span.h"
+#include "crstl/string.h"
 #include "crstl/string_view.h"
 #include "crstl/unique_ptr.h"
 #include "crstl/vector.h"
