@@ -4,7 +4,7 @@
 
 #include "crstldef.h"
 
-#define crstl_is_empty(T) __is_empty(T)
+#include "type_builtins.h"
 
 crstl_module_export namespace crstl
 {
