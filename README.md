@@ -28,4 +28,4 @@ An alternative or complementary STL that focuses on fast compile times and runti
 
 - Template metaprogramming is avoided as much as possible, while acknowledging the fact that there are many instances where it is necessary. For example, unique_ptr for arrays can be done with a single class and enable_if, or with two classes that share functionality. The second approach is preferred in this library.
 
-- The STL in general is well designed. Therefore we maintain an interface similar to it and other libraries such as Boost or EASTL where it makes sense (e.g. function naming such as push_back or size). In many cases we'll include additional useful functions. In other cases we will depart from the standard interface, such as implicit conversions for string which are not allowed
+- The STL in general is well designed. Therefore we maintain an interface similar to it and other libraries such as Boost or EASTL where it makes sense (e.g. function naming such as push_back or size). In many cases we'll include additional useful functions
