@@ -20,13 +20,13 @@ namespace crstl
 	{
 	public:
 
-		typedef T                          value_type;
-		typedef T&                         reference;
-		typedef const T&                   const_reference;
-		typedef T*                         pointer;
-		typedef const T*                   const_pointer;
-		typedef T*                         iterator;
-		typedef const T*                   const_iterator;
+		typedef T        value_type;
+		typedef T&       reference;
+		typedef const T& const_reference;
+		typedef T*       pointer;
+		typedef const T* const_pointer;
+		typedef T*       iterator;
+		typedef const T* const_iterator;
 
 		// View of heap-allocated string
 		struct heap_view
@@ -63,15 +63,15 @@ namespace crstl
 
 		static_assert(sizeof(heap_view) == sizeof(sso_view), "Size mismatch");
 
-		static const size_t kCharSize = sizeof(T);
+		static const crstl_constexpr size_t kCharSize = sizeof(T);
 
-		static const size_t kSSOCapacity = sizeof(sso_view) / sizeof(value_type) - 1;
+		static const crstl_constexpr size_t kSSOCapacity = sizeof(sso_view) / sizeof(value_type) - 1;
 
 		// This is valid for little endian machines, where the remaining_length and capacity
 		// share the same space in memory
-		static const size_t kSSOMask = 0x80;
+		static const crstl_constexpr size_t kSSOMask = 0x80;
 
-		static const size_t kHeapCapacityMask = ((size_t)-1) >> 1;
+		static const crstl_constexpr size_t kHeapCapacityMask = ((size_t)-1) >> 1;
 
 		static const crstl_constexpr size_t npos = (size_t)-1;
 
@@ -92,13 +92,13 @@ namespace crstl
 		}
 
 		template<int N>
-		explicit crstl_constexpr basic_string(const T(&string_literal)[N]) crstl_noexcept
+		crstl_constexpr basic_string(const T(&string_literal)[N]) crstl_noexcept
 		{
 			initialize_string(string_literal, N - 1);
 		}
 
 		template<int N>
-		explicit crstl_constexpr basic_string(T(&char_array)[N]) crstl_noexcept
+		crstl_constexpr basic_string(T(&char_array)[N]) crstl_noexcept
 		{
 			initialize_string(char_array, string_length(char_array, N));
 		}
@@ -118,6 +118,53 @@ namespace crstl
 		crstl_constexpr basic_string(const basic_string& string) crstl_noexcept
 		{
 			initialize_string(string.c_str(), string.size());
+		}
+
+		crstl_constexpr basic_string(basic_string&& string) crstl_noexcept
+		{
+			m_layout_allocator = string.m_layout_allocator;
+			string.m_layout_allocator = {};
+		}
+
+		crstl_constexpr basic_string(ctor_concatenate, const basic_string& string1, const basic_string& string2) crstl_noexcept
+		{
+			reserve(string1.size() + string2.size());
+			initialize_string(string1.c_str(), string1.size());
+			append(string2);
+		}
+
+		template<int N>
+		crstl_constexpr basic_string(ctor_concatenate, const basic_string& string, const T(&string_literal)[N]) crstl_noexcept
+		{
+			reserve(string.size() + N);
+			initialize_string(string.c_str(), string.size());
+			append(string_literal);
+		}
+
+		template<int N>
+		crstl_constexpr basic_string(ctor_concatenate, const basic_string& string, T(&char_array)[N]) crstl_noexcept
+		{
+			size_t char_array_length = string_length(char_array, N - 1);
+			reserve(string.size() + char_array_length);
+			initialize_string(string.c_str(), string.size());
+			append(char_array, char_array_length);
+		}
+
+		template<typename Q>
+		crstl_constexpr basic_string(ctor_concatenate, const basic_string& string1, Q string2, crstl_is_char_ptr(Q)) crstl_noexcept
+		{
+			size_t string2_length = string_length(string2);
+			reserve(string1.size() + string2_length);
+			initialize_string(string1.c_str(), string1.size());
+			append(string2, string2_length);
+		}
+
+		crstl_constexpr basic_string(ctor_concatenate, const T* string1, const basic_string& string2) crstl_noexcept
+		{
+			size_t string1_length = string_length(string1);
+			reserve(string1_length + string2.size());
+			initialize_string(string1, string1_length);
+			append(string2);
 		}
 
 		crstl_constexpr basic_string(const basic_string& string, size_t subpos, size_t sublen = npos) crstl_noexcept
@@ -532,6 +579,18 @@ namespace crstl
 		// replace
 		//--------
 
+		//--------
+		// reserve
+		//--------
+
+		crstl_constexpr void reserve(size_t capacity)
+		{
+			if (capacity > basic_string::capacity())
+			{
+				reallocate_heap_larger(capacity);
+			}
+		}
+
 		//-------
 		// resize
 		//-------
@@ -665,6 +724,49 @@ namespace crstl
 		crstl_constexpr bool operator == (const basic_string& string) const crstl_noexcept { return compare(string) == 0; }
 		crstl_constexpr bool operator != (const basic_string& string) const crstl_noexcept { return compare(string) != 0; }
 
+		// operator +
+
+		friend basic_string operator + (const basic_string& string1, const basic_string& string2)
+		{
+			return basic_string(ctor_concatenate(), string1, string2);
+		}
+
+		template<int N>
+		friend basic_string operator + (const basic_string& string, const T(&string_literal)[N])
+		{
+			return basic_string(ctor_concatenate(), string, string_literal);
+		}
+		
+		template<int N>
+		friend basic_string operator + (const basic_string& string, T(&char_array)[N])
+		{
+			return basic_string(ctor_concatenate(), string, char_array);
+		}
+
+		template<typename Q>
+		friend crstl_return_is_char_ptr(Q, basic_string) operator + (const basic_string& string, Q const_char)
+		{
+			return basic_string(ctor_concatenate(), string, const_char);
+		}
+		
+		template<int N>
+		friend basic_string operator + (const T(&string_literal)[N], const basic_string& string)
+		{
+			return basic_string(ctor_concatenate(), string_literal, string);
+		}
+		
+		template<int N>
+		friend basic_string operator + (T(&char_array)[N], const basic_string& string)
+		{
+			return basic_string(ctor_concatenate(), char_array, string);
+		}
+		
+		template<typename Q>
+		friend crstl_return_is_char_ptr(Q, basic_string) operator + (Q const_char, const basic_string& string)
+		{
+			return basic_string(ctor_concatenate(), const_char, string);
+		}
+
 	private:
 
 		size_t compute_new_capacity(size_t capacity)
@@ -678,20 +780,24 @@ namespace crstl
 			// and larger than the existing heap capacity too
 			crstl_assert(new_capacity > capacity());
 
-			T* temp = m_layout_allocator.second().allocate(new_capacity + 1);
+			T* temp = (T*)m_layout_allocator.second().allocate(new_capacity + 1);
+			size_t length = 0;
 
 			// Copy existing data from current source
 			if (is_sso())
 			{
-				memcpy(temp, m_layout_allocator.m_first.m_sso.data, (length_sso() + 1) * kCharSize);
+				length = length_sso();
+				memcpy(temp, m_layout_allocator.m_first.m_sso.data, (length + 1) * kCharSize);
 			}
 			else
 			{
-				memcpy(temp, m_layout_allocator.m_first.m_heap.data, (length_heap() + 1) * kCharSize);
+				length = length_heap();
+				memcpy(temp, m_layout_allocator.m_first.m_heap.data, (length + 1) * kCharSize);
 				m_layout_allocator.second().deallocate(m_layout_allocator.m_first.m_heap.data, get_capacity_heap() + 1);
 			}
 
 			m_layout_allocator.m_first.m_heap.data = temp;
+			m_layout_allocator.m_first.m_heap.length = length;
 			set_capacity_heap(new_capacity);
 		}
 
@@ -795,7 +901,7 @@ namespace crstl
 		// Assume allocate and deallocate always add a +1 for the null terminator
 		T* allocate_heap(size_t capacity)
 		{
-			T* temp = m_layout_allocator.second().allocate(capacity + 1);
+			T* temp = (T*)m_layout_allocator.second().allocate(capacity + 1);
 			set_capacity_heap(capacity);
 			return temp;
 		}

@@ -17,14 +17,26 @@ extern "C"
 
 crstl_module_export namespace crstl
 {
+	// enable_if for strings
+	template<bool Test, typename T = void> struct string_enable_if;
+	template<typename T> struct string_enable_if<true, T> { typedef T type; };
+
+	// We use these to disambiguate between string literals, character arrays and char*/const char*
+	// This is a runtime performance optimization, as we don't need to call strlen on strings we know
+	// the size of at compile time. It's also a security measure, as we can clamp the calculated length
+	// of a char array to its maximum declared size, in case a sprintf went wrong
 	class char_dummy;
 	template<typename T> struct is_char_ptr {};
-	template<> struct is_char_ptr<const char*> { typedef char_dummy* type; };
-	template<> struct is_char_ptr<char*> { typedef char_dummy* type; };
-	template<> struct is_char_ptr<const wchar_t*> { typedef char_dummy* type; };
-	template<> struct is_char_ptr<wchar_t*> { typedef char_dummy* type; };
+	template<> struct is_char_ptr<const char*> { typedef char_dummy* type; static const bool value = true; };
+	template<> struct is_char_ptr<char*> { typedef char_dummy* type; static const bool value = true; };
+	template<> struct is_char_ptr<const wchar_t*> { typedef char_dummy* type; static const bool value = true; };
+	template<> struct is_char_ptr<wchar_t*> { typedef char_dummy* type; static const bool value = true; };
 
-	#define crstl_is_char_ptr(T) typename crstl::is_char_ptr<T>::type = 0
+	#define crstl_is_char_ptr(T) typename crstl::is_char_ptr<T>::type = nullptr
+
+	#define crstl_return_is_char_ptr(Q, T) typename crstl::string_enable_if<crstl::is_char_ptr<Q>::value, T>::type
+
+	struct ctor_concatenate {};
 
 	inline size_t string_length(const char* str)
 	{
