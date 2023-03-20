@@ -69,13 +69,9 @@ crstl_module_export namespace crstl
 
 			return 0;
 		}
-		else if (length1 < length2)
-		{
-			return -1;
-		}
 		else
 		{
-			return 1;
+			return length1 < length2 ? -1 : 1;
 		}
 	}
 
