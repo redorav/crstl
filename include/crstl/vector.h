@@ -358,7 +358,7 @@ crstl_module_export namespace crstl
 
 		T* allocate(size_t capacity)
 		{
-			T* temp = m_capacity_allocator.second().allocate(capacity);
+			T* temp = (T*)m_capacity_allocator.second().allocate(capacity);
 			m_capacity_allocator.m_first = capacity;
 			return temp;
 		}
@@ -384,7 +384,7 @@ crstl_module_export namespace crstl
 			size_t growth_capacity = m_capacity_allocator.m_first * 2; // TODO Growth factor
 			size_t new_capacity = capacity > growth_capacity ? capacity : growth_capacity;
 
-			T* temp = m_capacity_allocator.second().allocate(new_capacity);
+			T* temp = (T*)m_capacity_allocator.second().allocate(new_capacity);
 
 			// Copy existing data
 			for (size_t i = 0; i < m_length; ++i)
