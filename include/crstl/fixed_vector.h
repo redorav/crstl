@@ -110,8 +110,14 @@ crstl_module_export namespace crstl
 
 		this_type& operator = (this_type&& other) crstl_noexcept
 		{
-			crstl::swap(m_length, other.m_length);
-			crstl::swap(m_data, other.m_data);
+			m_length = other.m_length;
+
+			for (size_t i = 0; i < other.m_length; ++i)
+			{
+				::new((void*)&m_data[i]) T(crstl::move(other.m_data[i]));
+			}
+
+			other.m_length = 0;
 			return *this;
 		}
 

@@ -101,22 +101,4 @@ crstl_module_export namespace crstl
 	{
 		swap(*left, *right);
 	}
-
-	// This swap is specific for arrays
-	template<typename T, int N>
-	crstl_constexpr void swap(T(&left)[N], T(&right)[N]) crstl_noexcept
-	{
-		if (&left != &right)
-		{
-			T* iterLeft = left;
-			T* endLeft = left + N;
-			T* iterRight = right;
-			while (iterLeft != endLeft)
-			{
-				crstl::iter_swap(iterLeft, iterRight); // Swap the pointers
-				++iterLeft;
-				++iterRight;
-			}
-		}
-	}
 };
