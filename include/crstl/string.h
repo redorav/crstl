@@ -695,6 +695,20 @@ namespace crstl
 		// Operators
 		//----------
 
+		crstl_constexpr basic_string& operator = (const basic_string& string) crstl_noexcept
+		{
+			clear();
+			append(string);
+			return *this;
+		}
+
+		crstl_constexpr basic_string& operator = (basic_string&& string) crstl_noexcept
+		{
+			m_layout_allocator = string.m_layout_allocator;
+			string.m_layout_allocator.first().m_heap.data = nullptr; // Don't try to deallocate
+			return *this;
+		}
+
 		crstl_constexpr reference operator [](size_t i) crstl_noexcept
 		{
 			crstl_assert(i < length());
