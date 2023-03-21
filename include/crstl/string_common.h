@@ -562,7 +562,7 @@ crstl_module_export namespace crstl
 	// Return value is success
 	// Number of bytes written goes into sizeBytes
 
-	inline bool decode_chunk(char*& dstStart, const char* dstEnd, const wchar_t* srcStart, const wchar_t* srcEnd, size_t& sizeBytes)
+	inline bool decode_chunk(char* dstStart, const char* dstEnd, const wchar_t* srcStart, const wchar_t* srcEnd, size_t& sizeBytes)
 	{
 		size_t srcSize = (size_t)(srcEnd - srcStart);
 		size_t dstSize = (size_t)(dstEnd - dstStart);
@@ -583,7 +583,7 @@ crstl_module_export namespace crstl
 		return utf16Offset == srcSize;
 	}
 
-	inline bool decode_chunk(wchar_t*& dstStart, const wchar_t* dstEnd, const char* srcStart, const char* srcEnd, size_t& sizeBytes)
+	inline bool decode_chunk(wchar_t* dstStart, const wchar_t* dstEnd, const char* srcStart, const char* srcEnd, size_t& sizeBytes)
 	{
 		size_t srcSize = (size_t)(srcEnd - srcStart);
 		size_t dstSize = (size_t)(dstEnd - dstStart);
