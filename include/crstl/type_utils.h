@@ -6,6 +6,8 @@
 
 #include "type_builtins.h"
 
+#include "move_forward.h"
+
 crstl_module_export namespace crstl
 {
 	// true_type/false_type
@@ -18,13 +20,7 @@ crstl_module_export namespace crstl
 
 	template <bool B> struct bool_constant : public integral_constant<bool, B> {};
 
-	// remove_x
-
-	template <typename T> struct remove_reference { typedef T type; };
-
-	template <typename T> struct remove_reference<T&> { typedef T type; };
-
-	template <typename T> struct remove_reference<T&&> { typedef T type; };
+	// remove_cv
 
 	template <typename T>           struct remove_const { typedef T type; };
 	template <typename T>           struct remove_const<const T> { typedef T type; };
@@ -73,32 +69,4 @@ crstl_module_export namespace crstl
 	};
 
 #endif
-
-	template <typename T>
-	crstl_constexpr T&& forward(typename crstl::remove_reference<T>::type& x) crstl_noexcept
-	{
-		return static_cast<T&&>(x);
-	}
-
-	template <typename T>
-	crstl_constexpr typename crstl::remove_reference<T>::type&& move(T&& x) crstl_noexcept
-	{
-		return static_cast<typename crstl::remove_reference<T>::type&&>(x);
-	}
-
-	// Swap for standard values
-	template <typename T>
-	crstl_constexpr void swap(T& a, T& b) crstl_noexcept
-	{
-		T temp(crstl::move(a));
-		a = crstl::move(b);
-		b = crstl::move(temp);
-	}
-
-	// Swap for iterators
-	template <class Iter1, class Iter2>
-	crstl_constexpr void iter_swap(Iter1 left, Iter2 right) crstl_noexcept
-	{
-		swap(*left, *right);
-	}
 };
