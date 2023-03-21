@@ -564,43 +564,43 @@ crstl_module_export namespace crstl
 
 	inline bool decode_chunk(char* dstStart, const char* dstEnd, const wchar_t* srcStart, const wchar_t* srcEnd, size_t& sizeBytes)
 	{
-		size_t srcSize = (size_t)(srcEnd - srcStart);
-		size_t dstSize = (size_t)(dstEnd - dstStart);
+		size_t srcSizeBytes = (size_t)(srcEnd - srcStart);
+		size_t dstSizeBytes = (size_t)(dstEnd - dstStart);
 
-		size_t utf16Offset = 0;
-		size_t utf8Offset = 0;
+		size_t utf16OffsetBytes = 0;
+		size_t utf8OffsetBytes = 0;
 
-		while (utf8Offset < dstSize && utf16Offset < srcSize)
+		while (utf8OffsetBytes < dstSizeBytes && utf16OffsetBytes < srcSizeBytes)
 		{
-			codepoint_t cp = decode_utf16((const utf16_t*)srcStart, srcSize, utf16Offset);
-			size_t utf8Size = encode_utf8(cp, (utf8_t*)dstStart, dstSize, utf8Offset);
-			utf8Offset += utf8Size;
+			codepoint_t cp = decode_utf16((const utf16_t*)srcStart, srcSizeBytes, utf16OffsetBytes);
+			size_t utf8SizeBytes = encode_utf8(cp, (utf8_t*)dstStart, dstSizeBytes, utf8OffsetBytes);
+			utf8OffsetBytes += utf8SizeBytes;
 		}
 
-		sizeBytes = utf8Offset;
+		sizeBytes = utf8OffsetBytes;
 
 		// Return whether we processed the entire utf-16 string
-		return utf16Offset == srcSize;
+		return utf16OffsetBytes == srcSizeBytes;
 	}
 
 	inline bool decode_chunk(wchar_t* dstStart, const wchar_t* dstEnd, const char* srcStart, const char* srcEnd, size_t& sizeBytes)
 	{
-		size_t srcSize = (size_t)(srcEnd - srcStart);
-		size_t dstSize = (size_t)(dstEnd - dstStart);
+		size_t srcSizeBytes = (size_t)(srcEnd - srcStart);
+		size_t dstSizeBytes = (size_t)(dstEnd - dstStart);
 
-		size_t utf16Offset = 0;
-		size_t utf8Offset = 0;
+		size_t utf16OffsetBytes = 0;
+		size_t utf8OffsetBytes = 0;
 
-		while (utf16Offset < dstSize && utf8Offset < srcSize)
+		while (utf16OffsetBytes < dstSizeBytes && utf8OffsetBytes < srcSizeBytes)
 		{
-			codepoint_t cp = decode_utf8((const utf8_t*)srcStart, srcSize, utf8Offset);
-			size_t utf16Size = encode_utf16(cp, (utf16_t*)dstStart, dstSize, utf16Offset);
-			utf16Offset += utf16Size;
+			codepoint_t cp = decode_utf8((const utf8_t*)srcStart, srcSizeBytes, utf8OffsetBytes);
+			size_t utf16SizeBytes = encode_utf16(cp, (utf16_t*)dstStart, dstSizeBytes, utf16OffsetBytes);
+			utf16OffsetBytes += utf16SizeBytes;
 		}
 
-		sizeBytes = utf16Offset;
+		sizeBytes = utf16OffsetBytes;
 
 		// Return whether we processed the entire utf-8 string
-		return utf8Offset == srcSize;
+		return utf8OffsetBytes == srcSizeBytes;
 	}
 };
