@@ -4,7 +4,9 @@
 import crstl;
 #else
 #include "crstl/fixed_string.h"
+#include "crstl/string.h"
 #include "crstl/string_view.h"
+#include "crstl/move_forward.h"
 #endif
 
 #include <ctype.h>
@@ -17,6 +19,324 @@ import crstl;
 void RunUnitTestsString()
 {
 	using namespace crstl_unit;
+
+	const char* HelloString = "Hello String";
+	const wchar_t* WHelloString = L"Hello String";
+	const char* Hello = "Hello";
+	const char* String = "String";
+	
+	char HelloStringArray[64] = {};
+	sprintf(HelloStringArray, HelloString);
+
+	char HelloArray[32] = {};
+	sprintf(HelloArray, Hello);
+
+	char StringArray[32] = {};
+	sprintf(StringArray, String);
+
+	begin_test("fixed_string");
+	{
+
+		// Constructors
+
+		std::string mystds;
+		crstl::fixed_string32 crFixedString32;
+		crstl::fixed_string32 crFixedString32_2("String");
+		crstl::fixed_string32 crFixedString32_3(HelloString);
+		crstl::fixed_string32 crFixedString32_4(crFixedString32_2.c_str());
+		crstl::fixed_string32 crFixedString32_foo("foo");
+		crstl::fixed_string32 crFixedString32_bar("bar");
+
+		crstl::fixed_string8 myfs8_foo("foo");
+		crstl::fixed_string8 myfs8_bar("bar");
+
+		crstl::fixed_wstring32 mywfs32;
+
+		// Assignment
+
+		mystds = "Hello String";
+		mystds = mystds.c_str();
+		crFixedString32 = "Hello String";
+		crFixedString32 = HelloString;
+		crFixedString32 = crFixedString32;
+		crFixedString32 = crFixedString32.c_str();
+
+		const auto myfssub = crFixedString32.substr(3, 5);
+		const auto mystdsub = mystds.substr(3, 5);
+		//crstl_check(myfssub == mystdsub);
+
+		const char* myfsc_str = crFixedString32.c_str();
+		const char* mystdc_str = mystds.c_str();
+
+		const size_t fsfindc = crFixedString32.find('S', 0);
+		const size_t stdfindc = mystds.find('S', 0);
+		crstl_check(fsfindc == stdfindc);
+
+		const size_t fsfind = crFixedString32.find("rin", 2);
+		const size_t stdfind = mystds.find("rin", 2);
+		crstl_check(fsfind == stdfind);
+
+		const size_t fsrfindc = crFixedString32.rfind('S', 6);
+		const size_t stdrfindc = mystds.rfind('S', 6);
+		crstl_check(fsrfindc == stdrfindc);
+
+		const size_t fsfindr = crFixedString32.rfind("ing");
+		const size_t stdfindr = mystds.rfind("ing");
+		crstl_check(fsfindr == stdfindr);
+
+		crFixedString32 = "Hello String";
+		crFixedString32.replace(4, 3, "foo", 3);
+		crFixedString32 = "Hello String";
+		crFixedString32.replace(4, 6, "foo", 3);
+		crFixedString32 = "Hello String";
+		crFixedString32.replace(4, 1, "foo", 3);
+
+		mywfs32 = L"Hello String";
+		mywfs32.replace(4, 3, L"foo", 3);
+		mywfs32 = L"Hello String";
+		mywfs32.replace(4, 6, L"foo", 3);
+		mywfs32 = L"Hello String";
+		mywfs32.replace(4, 1, L"foo", 3);
+
+		mystds.replace(0, 2, "Hello");
+
+		const auto fsfindfs = crFixedString32.find(crFixedString32_2);
+
+		mystds.push_back('a');
+		mystds.pop_back();
+
+		// Operator +
+		crFixedString32 = crFixedString32_foo + crFixedString32_bar;
+		crFixedString32 = myfs8_foo + myfs8_bar;
+		crFixedString32 = myfs8_foo + crFixedString32_bar;
+
+		crFixedString32.assign_convert(WHelloString, crstl::string_length(WHelloString));
+		mywfs32.assign_convert(HelloString, crstl::string_length(HelloString));
+
+		// string_view
+
+		crstl::string_view crStringViewEmpty;
+
+		crstl::string_view crStringViewConstChar("String View");
+
+#if defined(CRSTL_UNIT_RANGED_FOR)
+		for (char c : crStringViewConstChar)
+		{
+			printf("%c ", c);
+		}
+
+#endif
+
+		printf("\n");
+
+		if (crStringViewConstChar.substr(1, 5) == "tring")
+		{
+			printf("String was equal\n");
+		}
+
+		if (crStringViewConstChar.starts_with('S'))
+		{
+			printf("Starts with letter S\n");
+		}
+
+		if (crStringViewConstChar.ends_with('w'))
+		{
+			printf("Ends with letter w\n");
+		}
+
+		if (crStringViewConstChar.ends_with("View"))
+		{
+			printf("Ends with View\n");
+		}
+
+		crFixedString32.clear();
+		crFixedString32.append_sprintf("Hello %i", 3);
+
+#if crstl_cppversion >= 201703L
+		std::basic_string_view<char> stdStringViewEmpty;
+
+		std::basic_string_view<char> stdStringViewConstChar("String View");
+#endif
+	}
+	end_test();
+
+	//-------
+	// string
+	//-------
+
+	begin_test("string");
+	{
+		crstl::string crStringEmpty;
+		crstl::wstring crWstringEmpty;
+		std::string stdStringEmpty;
+		crstl_check(crStringEmpty.size() == stdStringEmpty.size());
+		crstl_check(crWstringEmpty.size() == stdStringEmpty.size());
+
+		if (crStringEmpty.empty())
+		{
+			crStringEmpty.clear();
+		}
+
+		crStringEmpty.reserve(32);
+		stdStringEmpty.reserve(32);
+
+		crstl::string crStringSSO("Hello");
+		crstl::wstring crWstringSSO(L"Hello");
+		std::string stdStringSSO("Hello");
+		crstl_check(crStringSSO.size() == stdStringSSO.size());
+		crstl_check(crWstringSSO.size() == stdStringSSO.size());
+
+		crstl::string crStringHeap("Hello string my old friend");
+		crstl::wstring crWstringHeap(L"Hello string my old friend");
+		std::string stdStringHeap("Hello string my old friend");
+		crstl_check(crStringEmpty.size() == stdStringEmpty.size());
+		crstl_check(crWstringEmpty.size() == stdStringEmpty.size());
+
+		// append
+
+		crstl::string crStringAppend;
+		crstl::wstring crWstringAppend;
+		std::string stdStringAppend;
+
+		stdStringAppend.append("Hello string");
+		stdStringAppend.append(", my old friend");
+		stdStringAppend.append(", when will you");
+		stdStringAppend.append(" allocate?");
+
+		crStringAppend.append("Hello string");
+		crStringAppend.append(", my old friend");
+		crStringAppend.append(", when will you");
+		crStringAppend.append(" allocate?");
+
+		crstl_check(crStringAppend.size() == stdStringAppend.size());
+
+		crWstringAppend.append(L"Hello string");
+		crWstringAppend.append(L", my old friend");
+		crWstringAppend.append(L", when will you");
+		crWstringAppend.append(L" allocate?");
+		
+		crstl_check(crWstringAppend.size() == stdStringAppend.size());
+
+		crStringAppend.append(3, '!');
+		stdStringAppend.append(3, '!');
+		crstl_check(crStringAppend.size() == stdStringAppend.size());
+
+		// append_convert
+
+		crstl::string crStringAppendConvert;
+		crstl::wstring crWStringAppendConvert;
+
+		// Taberu
+		const char* TaberuUtf8 = (const char*)u8"\u98df\u98df\u98df\u98df"; // Correct
+		const wchar_t* TaberuWchar = L"\u98df\u98df\u98df\u98df\u98df\u98df\u98df\u98df"; // Correct
+		const char8_t* TaberuChar8 = (const char8_t*)u8"\u98df\u98df\u98df\u98df"; // Correct
+		const char16_t* TaberuChar16 = u"\u98df\u98df\u98df\u98df"; // Correct
+		const char32_t* TaberuChar32 = U"\u98df\u98df\u98df\u98df"; // Correct
+
+		size_t lengthTaberuUtf8  = strlen((const char*)TaberuUtf8); // Correct
+		size_t lengthTaberuWchar  = wcslen(TaberuWchar); // Correct
+		size_t lengthTaberuChar8  = strlen((const char*)TaberuChar8); // Correct
+		//size_t lengthTaberuChar16 = wcslen(TaberuChar16); // Correct
+		//size_t lengthTaberuChar32 = wcslen(TaberuChar32); // Correct
+
+		// 食
+		const char* TaberuUtf8_lit = (const char*)"食食食食";
+		const wchar_t* TaberuWchar_lit = L"食食食食";
+		const char8_t* TaberuChar8_lit = (const char8_t*)u8"食食食食";
+		const char16_t* TaberuChar16_lit = u"食食食食";
+		const char32_t* TaberuChar32_lit = U"食食食食";
+
+		size_t lengthTaberuUtf8_lit = strlen((const char*)TaberuUtf8_lit); // Correct
+		size_t lengthTaberuWchar_lit = wcslen(TaberuWchar_lit); // Incorrect
+		size_t lengthTaberuChar8_lit = strlen((const char*)TaberuChar8_lit); // Incorrect
+		//size_t lengthTaberuChar16_lit = wcslen(TaberuChar16_lit);
+		//size_t lengthTaberuChar32_lit = wcslen(TaberuChar32_lit);
+
+		crStringAppendConvert.append("Hello ");
+		crStringAppendConvert.append_convert(TaberuWchar);
+		crStringAppendConvert.append_convert(TaberuWchar);
+		crStringAppendConvert.append_convert(L"Now we add a very long string to a string we know already is heap allocated");
+		crStringAppendConvert.clear();
+		crStringAppendConvert.append_convert(L"Now we add a very long string to a string we know already is heap allocated");
+
+		crWStringAppendConvert.append_convert(u8"\u98df");
+
+		//crStringAppendConvert.append_convert(L", my old friend");
+		//crStringAppendConvert.append_convert(L", when will you");
+		//crStringAppendConvert.append_convert(L" allocate?");
+
+		// append_sprintf
+
+		crstl::string crStringAppendSprintf;
+		crstl::wstring crWstringSprintf;
+
+		crStringAppendSprintf.append_sprintf("Hello %s", "Incredibly Complex World!");
+
+		// assign
+
+		crstl::string crStringAssign;
+		crstl::wstring crWstringAssign;
+		std::string stdStringAssign;
+
+		crStringAssign.assign("Hello String!");
+		crWstringAssign.assign(L"Hello String!");
+		stdStringAssign.assign("Hello String!");
+
+		crstl_check(crStringAssign.size() == stdStringAssign.size());
+		crstl_check(crWstringAssign.size() == stdStringAssign.size());
+
+		crStringAssign.assign(HelloString);
+		crWstringAssign.assign(WHelloString);
+		stdStringAssign.assign(HelloString);
+
+		crstl_check(crStringAssign.size() == stdStringAssign.size());
+		crstl_check(crWstringAssign.size() == stdStringAssign.size());
+
+		// reserve
+
+		crstl::string crStringReserve;
+		crStringReserve.reserve(100);
+
+		// resize
+
+		crstl::string crStringResize;
+		crstl::wstring crWstringResize;
+		std::string stdStringResize;
+
+		crStringResize.resize(16, 'k');
+		crWstringResize.resize(16, L'k');
+		stdStringResize.resize(16, 'k');
+
+		crstl_check(crStringResize.size() == stdStringResize.size());
+		crstl_check(crWstringResize.size() == stdStringResize.size());
+
+		// operator +
+
+		crstl::string crStringExample1("Hello ");
+		crstl::string crStringExample2("String");
+		
+		crstl::string crStringConcat1 = crStringExample1 + crStringExample2;
+		crstl::string crStringConcat2 = crStringExample1 + "String";
+		crstl::string crStringConcat3 = crStringExample1 + StringArray;
+		crstl::string crStringConcat4 = crStringExample1 + String;
+
+		crstl::string crStringConcat5 = "Hello " + crStringExample2;
+		crstl::string crStringConcat6 = HelloArray + crStringExample2;
+		crstl::string crStringConcat7 = Hello + crStringExample2;
+
+		// move
+		{
+			crstl::string crStringLongString = "Here is a long string that triggers the heap";
+			crstl::string crStringCopiedString = crStringLongString;
+			crStringCopiedString = crStringLongString;
+			crstl::string crStringMovedString = crstl::move(crStringLongString);
+		}
+
+		int i = 0; 
+	}
+	end_test();
+
+	// Unicode decoding
 
 #if defined(CRSTL_UNIT_UNICODE_LITERALS)
 	const char* MyCharString = (const char*)u8"Hello String汉字";
@@ -31,126 +351,6 @@ void RunUnitTestsString()
 	crstl::codepoint_t cp = crstl::decode_utf8((const uint8_t*)u4, strlen((const char*)u4), utf8Offset);
 #else
 	const char* MyCharString = (const char*)"Hello String汉字";
-	const wchar_t* MyWCharString = L"Hello String汉字";	
-#endif
-
-	const char* HelloString = "Hello String";
-	char CharArray[128] = {};
-
-	// Constructors
-
-	std::string mystds;
-	crstl::fixed_string32 crFixedString32;
-	crstl::fixed_string32 crFixedString32_2("String");
-	crstl::fixed_string32 crFixedString32_3(HelloString);
-	crstl::fixed_string32 crFixedString32_4(crFixedString32_2.c_str());
-	crstl::fixed_string32 crFixedString32_foo("foo");
-	crstl::fixed_string32 crFixedString32_bar("bar");
-	
-	crstl::fixed_string8 myfs8_foo("foo");
-	crstl::fixed_string8 myfs8_bar("bar");
-
-	crstl::fixed_wstring32 mywfs32;
-
-	// Assignment
-
-	mystds = "Hello String";
-	crFixedString32 = "Hello String";
-	crFixedString32 = HelloString;
-	crFixedString32 = crFixedString32_2;
-	crFixedString32 = crFixedString32_2.c_str();
-
-	const auto mystdsub = mystds.substr(3, 5);
-	const auto myfssub = crFixedString32.substr(3, 5);
-
-	const char* mystdc_str = mystds.c_str();
-	const char* myfsc_str = crFixedString32.c_str();
-
-	const size_t stdfindc = mystds.find('S', 0);
-	const size_t fsfindc = crFixedString32.find('S', 0);
-
-	const size_t stdfind = mystds.find("rin", 2);
-	const size_t fsfind = crFixedString32.find("rin", 2);
-
-	const size_t stdrfindc = mystds.rfind('S', 6);
-	const size_t fsrfindc = crFixedString32.rfind('S', 6);
-
-	const size_t stdfindr = mystds.rfind("ing");
-	const size_t fsfindr = crFixedString32.rfind("ing");
-
-	crFixedString32 = "Hello String";
-	crFixedString32.replace(4, 3, "foo", 3);
-	crFixedString32 = "Hello String";
-	crFixedString32.replace(4, 6, "foo", 3);
-	crFixedString32 = "Hello String";
-	crFixedString32.replace(4, 1, "foo", 3);
-
-	mywfs32 = L"Hello String";
-	mywfs32.replace(4, 3, L"foo", 3);
-	mywfs32 = L"Hello String";
-	mywfs32.replace(4, 6, L"foo", 3);
-	mywfs32 = L"Hello String";
-	mywfs32.replace(4, 1, L"foo", 3);
-
-	mystds.replace(0, 2, "Hello");
-
-	const auto fsfindfs = crFixedString32.find(crFixedString32_2);
-
-	mystds.push_back('a');
-	mystds.pop_back();
-
-	// Operator +
-	crFixedString32 = crFixedString32_foo + crFixedString32_bar;
-	crFixedString32 = myfs8_foo + myfs8_bar;
-	crFixedString32 = myfs8_foo + crFixedString32_bar;
-
-	crFixedString32.assign_convert(MyWCharString, crstl::string_length(MyWCharString));
-	mywfs32.assign_convert(MyCharString, crstl::string_length(MyCharString));
-
-	// string_view
-
-	crstl::string_view crStringViewEmpty;
-
-	crstl::string_view crStringViewConstChar("String View");
-
-#if defined(CRSTL_UNIT_RANGED_FOR)
-	for (char c : crStringViewConstChar)
-	{
-		printf("%c ", c);
-	}
-
-#endif
-
-	printf("\n");
-
-	if (crStringViewConstChar.substr(1, 5) == "tring")
-	{
-		printf("String was equal\n");
-	}
-
-	if (crStringViewConstChar.starts_with('S'))
-	{
-		printf("Starts with letter S\n");
-	}
-
-	if (crStringViewConstChar.ends_with('w'))
-	{
-		printf("Ends with letter w\n");
-	}
-
-	if (crStringViewConstChar.ends_with("View"))
-	{
-		printf("Ends with View\n");
-	}
-
-	crFixedString32.clear();
-	crFixedString32.append_sprintf("Hello %i", 3);
-
-	char cu = toupper('k');
-
-#if crstl_cppversion >= 201703L
-	std::basic_string_view<char> stdStringViewEmpty;
-
-	std::basic_string_view<char> stdStringViewConstChar("String View");
+	const wchar_t* MyWCharString = L"Hello String汉字";
 #endif
 }

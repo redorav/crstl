@@ -256,24 +256,95 @@ crstl_module_export namespace crstl
 		// append_convert
 		//---------------
 
-		//template<typename OtherCharT>
-		//crstl_constexpr basic_string& append_convert(const OtherCharT* string, size_t length) crstl_noexcept
-		//{
-		//	size_t current_length = basic_string::length();
-		//	size_t target_length = current_length + length;
-		//
-		//	const OtherCharT* stringEnd = string + length;
-		//	value_type* dataStart = m_data + m_length;
-		//
-		//	size_t sizeBytes = 0;
-		//	bool success = decode_chunk(dataStart, dataStart + (kCharacterCapacity - m_length), string, stringEnd, sizeBytes);
-		//	crstl_assert(success);
-		//
-		//	m_length += (uint32_t)sizeBytes;
-		//	m_data[m_length] = '\0';
-		//
-		//	return *this;
-		//}
+		template<typename OtherCharT>
+		crstl_constexpr basic_string& append_convert(const OtherCharT* string, size_t length) crstl_noexcept
+		{
+			size_t current_length = basic_string::length();
+
+			// This target capacity is an approximation as we cannot know what the final capacity is going to be.
+			// This is because utf-8 is variable-length encoding. If we know the target capacity is above the sso
+			// we won't even try to store it there
+			size_t target_capacity = current_length + length;
+			size_t current_capacity = basic_string::capacity();
+			size_t dst_decoded_length = 0;
+			size_t src_decoded_length = 0;
+			bool success = false;
+			bool reallocate = false;
+
+			// Try to append into the sso buffer. Maybe we append a small part of it but conclude it didn't fit entirely (because e.g. UTF-8 is variable length)
+			// We then proceed to reallocate, copy the decoded data and continue decoding with an estimation of what we think is the data we need
+
+			if (target_capacity < kSSOCapacity)
+			{
+				T* data = m_layout_allocator.m_first.m_sso.data;
+				utf_result::t result = decode_chunk(data + current_length, data + kSSOCapacity, string, string + length, dst_decoded_length, src_decoded_length);
+
+				switch (result)
+				{
+					case utf_result::invalid:
+						return *this;
+					case utf_result::success:
+						success = true;
+						break;
+					case utf_result::no_memory:
+						target_capacity = kSSOCapacity + 1; // Force reallocation
+						break;
+				}
+
+				current_length += dst_decoded_length; // Add however many characters we managed to decode
+				m_layout_allocator.m_first.m_sso.data[current_length] = 0;
+				m_layout_allocator.m_first.m_sso.remaining_length.value = (char)(kSSOCapacity - current_length);
+			}
+
+			// Assume from here on that we're going to work with the heap
+
+			if (target_capacity > current_capacity)
+			{
+				reallocate = true;
+			}
+
+			while (!success)
+			{
+				// Reallocate and prepare to continue decoding
+				if (reallocate)
+				{
+					target_capacity = reallocate_heap_larger(target_capacity);
+				}
+
+				// Decode as much as we can with our estimation of the space we need for the string
+				size_t iter_src_decoded_length = 0;
+				size_t iter_dst_decoded_length = 0;
+				T* dst_start = m_layout_allocator.m_first.m_heap.data + current_length;
+				T* dst_end = m_layout_allocator.m_first.m_heap.data + target_capacity;
+				const OtherCharT* src_start = string + src_decoded_length;
+				const OtherCharT* src_end = string + length;
+				utf_result::t result = decode_chunk(dst_start, dst_end, src_start, src_end, iter_dst_decoded_length, iter_src_decoded_length);
+
+				// If we detect an invalid decoding, return immediately
+				if (result == utf_result::invalid)
+				{
+					return *this;
+				}
+
+				success = (result == utf_result::success);
+				current_length += iter_dst_decoded_length;
+				src_decoded_length += iter_src_decoded_length;
+
+				m_layout_allocator.m_first.m_heap.length = current_length;
+				m_layout_allocator.m_first.m_heap.data[current_length] = 0;
+
+				reallocate = true;
+			}
+
+			return *this;
+		}
+
+		template<typename OtherCharT>
+		crstl_constexpr basic_string& append_convert(const OtherCharT* string) crstl_noexcept
+		{
+			append_convert(string, string_length(string));
+			return *this;
+		}
 
 		//---------------
 		// append_sprintf
@@ -783,18 +854,20 @@ crstl_module_export namespace crstl
 
 	private:
 
-		size_t compute_new_capacity(size_t capacity)
+		size_t compute_new_capacity(size_t old_capacity)
 		{
-			return capacity;
+			return old_capacity + (old_capacity * 50) / 100;
 		}
 
-		void reallocate_heap_larger(size_t new_capacity)
+		size_t reallocate_heap_larger(size_t requested_capacity)
 		{
+			requested_capacity = compute_new_capacity(requested_capacity);
+
 			// This ensure we pass in a capacity that is larger than the SSO buffer (it wouldn't make sense to allocate otherwise)
 			// and larger than the existing heap capacity too
-			crstl_assert(new_capacity > capacity());
+			crstl_assert(requested_capacity > capacity());
 
-			T* temp = (T*)m_layout_allocator.second().allocate(new_capacity + 1);
+			T* temp = (T*)m_layout_allocator.second().allocate(requested_capacity + 1);
 			size_t length = 0;
 
 			// Copy existing data from current source
@@ -812,7 +885,9 @@ crstl_module_export namespace crstl
 
 			m_layout_allocator.m_first.m_heap.data = temp;
 			m_layout_allocator.m_first.m_heap.length = length;
-			set_capacity_heap(new_capacity);
+			set_capacity_heap(requested_capacity);
+
+			return requested_capacity;
 		}
 
 		// As we need to reallocate and the logic can be a bit convoluted, we'll
@@ -915,6 +990,7 @@ crstl_module_export namespace crstl
 		// Assume allocate and deallocate always add a +1 for the null terminator
 		T* allocate_heap(size_t capacity)
 		{
+			capacity = compute_new_capacity(capacity);
 			T* temp = (T*)m_layout_allocator.second().allocate(capacity + 1);
 			set_capacity_heap(capacity);
 			return temp;
@@ -932,4 +1008,8 @@ crstl_module_export namespace crstl
 
 	typedef basic_string<char, crstl::allocator<char>> string;
 	typedef basic_string<wchar_t, crstl::allocator<wchar_t>> wstring;
+
+	typedef basic_string<char8_t, crstl::allocator<char8_t>> u8string;
+	typedef basic_string<char16_t, crstl::allocator<char16_t>> u16string;
+	typedef basic_string<char32_t, crstl::allocator<char32_t>> u32string;
 };

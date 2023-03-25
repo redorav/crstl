@@ -38,25 +38,11 @@ crstl_module_export namespace crstl
 
 	struct ctor_concatenate {};
 
-	inline size_t string_length(const char* str)
-	{
-		return strlen(str);
-	}
+	inline size_t string_length(const char* str) { return strlen(str); }
+	inline size_t string_length(const char* str, size_t max_length) { return strnlen(str, max_length); }
 
-	inline size_t string_length(const char* str, size_t max_length)
-	{
-		return strnlen(str, max_length);
-	}
-
-	inline size_t string_length(const wchar_t* str)
-	{
-		return wcslen(str);
-	}
-
-	inline size_t string_length(const wchar_t* str, size_t max_length)
-	{
-		return wcsnlen(str, max_length);
-	}
+	inline size_t string_length(const wchar_t* str) { return wcslen(str); }
+	inline size_t string_length(const wchar_t* str, size_t max_length) { return wcsnlen(str, max_length); }
 
 	// = 0   They compare equal
 	// < 0   Either the value of the first character that does not match is lower in the compared string, or all compared characters match but the compared string is shorter.
@@ -371,6 +357,16 @@ crstl_module_export namespace crstl
 		return 4;
 	}
 
+	namespace utf_result
+	{
+		enum t : size_t
+		{
+			success = 0,
+			invalid = (size_t)-1,  // Invalid decoding encountered
+			no_memory = (size_t)-2 // Not enough memory to decode
+		};
+	};
+
 	// utf8: The utf-8 string
 	// length: The length of the utf-8 string, in bytes
 	// offset: An offset into the utf-8 stream
@@ -388,7 +384,7 @@ crstl_module_export namespace crstl
 		bool matches = false;
 
 		// Try to search for a matching leading pattern
-		for (uint32_t i = 0; i < 4; ++i)
+		for (size_t i = 0; i < 4; ++i)
 		{
 			leading_pattern = utf8_leading_patterns[i];
 			matches = (leading & leading_pattern.mask) == leading_pattern.value;
@@ -412,7 +408,7 @@ crstl_module_export namespace crstl
 		codepoint_t codepoint = leading & ~leading_pattern.mask;
 
 		// Loop through continuation bytes to complete the codepoint
-		for (uint32_t i = 1; i < encoding_length; ++i)
+		for (size_t i = 1; i < encoding_length; ++i)
 		{
 			utf8_t continuation = utf8[offset];
 
@@ -557,50 +553,90 @@ crstl_module_export namespace crstl
 	}
 
 	// All possible combinations of decoding can be handled here
-	// We assume that char is utf-8, char16_t is utf-16 and char32_t is utf-32
-	// 
-	// Return value is success
-	// Number of bytes written goes into sizeBytes
+	// We assume that char/char8_t is utf-8, char16_t is utf-16 and char32_t is utf-32
+	// wchar_t is a special case as it is assumed to be utf16 on Windows and utf-32 on
+	// anything else
 
-	inline bool decode_chunk(char* dstStart, const char* dstEnd, const wchar_t* srcStart, const wchar_t* srcEnd, size_t& sizeBytes)
+	inline utf_result::t decode_chunk(char* dst_start, const char* dst_end, const wchar_t* src_start, const wchar_t* src_end, size_t& utf8_offset, size_t& utf16_offset)
 	{
-		size_t srcSizeBytes = (size_t)(srcEnd - srcStart);
-		size_t dstSizeBytes = (size_t)(dstEnd - dstStart);
+		crstl_assert(src_end >= src_start);
+		crstl_assert(dst_end >= dst_start);
 
-		size_t utf16OffsetBytes = 0;
-		size_t utf8OffsetBytes = 0;
+		size_t src_length = (size_t)(src_end - src_start);
+		size_t dst_length = (size_t)(dst_end - dst_start);
 
-		while (utf8OffsetBytes < dstSizeBytes && utf16OffsetBytes < srcSizeBytes)
+		utf16_offset = 0;
+		utf8_offset = 0;
+
+		while (utf8_offset < dst_length && utf16_offset < src_length)
 		{
-			codepoint_t cp = decode_utf16((const utf16_t*)srcStart, srcSizeBytes, utf16OffsetBytes);
-			size_t utf8SizeBytes = encode_utf8(cp, (utf8_t*)dstStart, dstSizeBytes, utf8OffsetBytes);
-			utf8OffsetBytes += utf8SizeBytes;
-		}
+			size_t utf16_length = 0;
+			codepoint_t cp = decode_utf16((const utf16_t*)(src_start + utf16_offset), src_length, utf16_length);
 
-		sizeBytes = utf8OffsetBytes;
+			if (cp == crstl::UnicodeInvalid)
+			{
+				return utf_result::invalid;
+			}
+
+			size_t utf8_length = encode_utf8(cp, (utf8_t*)dst_start, dst_length, utf8_offset);
+
+			if (utf8_length == 0)
+			{
+				return utf_result::no_memory;
+			}
+
+			utf16_offset += utf16_length;
+			utf8_offset += utf8_length;
+		}
 
 		// Return whether we processed the entire utf-16 string
-		return utf16OffsetBytes == srcSizeBytes;
+		if (utf16_offset == src_length)
+		{
+			return utf_result::success;
+		}
+		else
+		{
+			return utf_result::no_memory;
+		}
 	}
 
-	inline bool decode_chunk(wchar_t* dstStart, const wchar_t* dstEnd, const char* srcStart, const char* srcEnd, size_t& sizeBytes)
+	inline utf_result::t decode_chunk(wchar_t* dst_start, const wchar_t* dst_end, const char* src_start, const char* src_end, size_t& utf16_offset, size_t& utf8_offset)
 	{
-		size_t srcSizeBytes = (size_t)(srcEnd - srcStart);
-		size_t dstSizeBytes = (size_t)(dstEnd - dstStart);
+		size_t src_length = (size_t)(src_end - src_start);
+		size_t dst_length = (size_t)(dst_end - dst_start);
 
-		size_t utf16OffsetBytes = 0;
-		size_t utf8OffsetBytes = 0;
+		utf16_offset = 0;
+		utf8_offset = 0;
 
-		while (utf16OffsetBytes < dstSizeBytes && utf8OffsetBytes < srcSizeBytes)
+		while (utf16_offset < dst_length && utf8_offset < src_length)
 		{
-			codepoint_t cp = decode_utf8((const utf8_t*)srcStart, srcSizeBytes, utf8OffsetBytes);
-			size_t utf16SizeBytes = encode_utf16(cp, (utf16_t*)dstStart, dstSizeBytes, utf16OffsetBytes);
-			utf16OffsetBytes += utf16SizeBytes;
+			size_t utf8_length = 0;
+			codepoint_t cp = decode_utf8((const utf8_t*)(src_start + utf8_offset), src_length, utf8_length);
+
+			if (cp == crstl::UnicodeInvalid)
+			{
+				return utf_result::invalid;
+			}
+
+			size_t utf16_length = encode_utf16(cp, (utf16_t*)dst_start, dst_length, utf16_offset);
+
+			if (utf16_length == 0)
+			{
+				return utf_result::no_memory;
+			}
+
+			utf8_offset += utf8_length;
+			utf16_offset += utf16_length;
 		}
 
-		sizeBytes = utf16OffsetBytes;
-
 		// Return whether we processed the entire utf-8 string
-		return utf8OffsetBytes == srcSizeBytes;
+		if (utf8_offset == src_length)
+		{
+			return utf_result::success;
+		}
+		else
+		{
+			return utf_result::no_memory;
+		}
 	}
 };

@@ -193,14 +193,14 @@ crstl_module_export namespace crstl
 		template<typename OtherCharT>
 		crstl_constexpr basic_fixed_string& append_convert(const OtherCharT* string, size_t length) crstl_noexcept
 		{
-			const OtherCharT* stringEnd = string + length;
-			value_type* dataStart = m_data + m_length;
+			const OtherCharT* string_end = string + length;
+			value_type* data_start = m_data + m_length;
 
-			size_t sizeBytes = 0;
-			bool success = decode_chunk(dataStart, dataStart + (kCharacterCapacity - m_length), string, stringEnd, sizeBytes);
-			crstl_assert(success);
+			size_t dst_decoded_length = 0, src_decoded_length = 0;
+			utf_result::t result = decode_chunk(data_start, data_start + (kCharacterCapacity - m_length), string, string_end, dst_decoded_length, src_decoded_length);
+			crstl_assert(result == utf_result::success);
 
-			m_length += (uint32_t)sizeBytes;
+			m_length += (uint32_t)dst_decoded_length;
 			m_data[m_length] = '\0';
 
 			return *this;
