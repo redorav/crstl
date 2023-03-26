@@ -375,7 +375,7 @@ crstl_module_export namespace crstl
 		utf8_t leading = utf8[offset];
 
 		// The number of bytes that are used to encode the codepoint
-		uint32_t encoding_length = 0;
+		size_t encoding_length = 0;
 
 		// The pattern of the leading byte
 		utf8_pattern leading_pattern = {};
