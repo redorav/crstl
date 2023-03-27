@@ -28,9 +28,9 @@
 #endif
 
 #if defined(CRSTL_LINUX)
-#define wthrow throw()
+#define crstl_wthrow throw()
 #else
-#define wthrow
+#define crstl_wthrow
 #endif
 
 extern "C"
@@ -41,13 +41,13 @@ extern "C"
 	void* memset(void* dst, int val, crstl::size_t size);
 	void* memcpy(void* destination, void const* source, crstl::size_t size);
 
-	crstl_dllimport crstl::size_t wcslen(const wchar_t* str) wthrow;
-	crstl_dllimport crstl::size_t wcsnlen(const wchar_t* str, crstl::size_t max_count) wthrow;
+	crstl_dllimport crstl::size_t wcslen(const wchar_t* str) crstl_wthrow;
+	crstl_dllimport crstl::size_t wcsnlen(const wchar_t* str, crstl::size_t max_count) crstl_wthrow;
 
-	wchar_t* wmemset(wchar_t* ptr, wchar_t wc, crstl::size_t num) wthrow;
+	wchar_t* wmemset(wchar_t* ptr, wchar_t wc, crstl::size_t num) crstl_wthrow;
 
 	crstl_1600_dllimport void* memmove(void* destination, const void* source, crstl::size_t num);
 
-	crstl_dllimport int tolower(int c) wthrow;
-	crstl_dllimport int toupper(int c) wthrow;
+	crstl_dllimport int tolower(int c) crstl_wthrow;
+	crstl_dllimport int toupper(int c) crstl_wthrow;
 }
