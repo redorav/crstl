@@ -27,6 +27,7 @@ crstl_module_export namespace crstl
 		typedef const T* const_pointer;
 		typedef T*       iterator;
 		typedef const T* const_iterator;
+		typedef size_t   size_type;
 
 		// View of heap-allocated string
 		struct heap_view
@@ -126,7 +127,7 @@ crstl_module_export namespace crstl
 			string.m_layout_allocator.first().m_heap.data = nullptr; // Don't try to deallocate
 		}
 
-		crstl_constexpr basic_string(ctor_concatenate, const basic_string& string1, const basic_string& string2) crstl_noexcept
+		crstl_constexpr basic_string(ctor_concatenate, const basic_string& string1, const basic_string& string2) crstl_noexcept : basic_string()
 		{
 			reserve(string1.size() + string2.size());
 			initialize_string(string1.c_str(), string1.size());
@@ -134,7 +135,7 @@ crstl_module_export namespace crstl
 		}
 
 		template<int N>
-		crstl_constexpr basic_string(ctor_concatenate, const basic_string& string, const T(&string_literal)[N]) crstl_noexcept
+		crstl_constexpr basic_string(ctor_concatenate, const basic_string& string, const T(&string_literal)[N]) crstl_noexcept : basic_string()
 		{
 			reserve(string.size() + N);
 			initialize_string(string.c_str(), string.size());
@@ -142,7 +143,7 @@ crstl_module_export namespace crstl
 		}
 
 		template<int N>
-		crstl_constexpr basic_string(ctor_concatenate, const basic_string& string, T(&char_array)[N]) crstl_noexcept
+		crstl_constexpr basic_string(ctor_concatenate, const basic_string& string, T(&char_array)[N]) crstl_noexcept : basic_string()
 		{
 			size_t char_array_length = string_length(char_array, N - 1);
 			reserve(string.size() + char_array_length);
@@ -151,7 +152,7 @@ crstl_module_export namespace crstl
 		}
 
 		template<typename Q>
-		crstl_constexpr basic_string(ctor_concatenate, const basic_string& string1, Q string2, crstl_is_char_ptr(Q)) crstl_noexcept
+		crstl_constexpr basic_string(ctor_concatenate, const basic_string& string1, Q string2, crstl_is_char_ptr(Q)) crstl_noexcept : basic_string()
 		{
 			size_t string2_length = string_length(string2);
 			reserve(string1.size() + string2_length);
@@ -159,7 +160,7 @@ crstl_module_export namespace crstl
 			append(string2, string2_length);
 		}
 
-		crstl_constexpr basic_string(ctor_concatenate, const T* string1, const basic_string& string2) crstl_noexcept
+		crstl_constexpr basic_string(ctor_concatenate, const T* string1, const basic_string& string2) crstl_noexcept : basic_string()
 		{
 			size_t string1_length = string_length(string1);
 			reserve(string1_length + string2.size());

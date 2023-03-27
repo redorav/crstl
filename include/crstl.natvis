@@ -65,7 +65,7 @@
 		<DisplayString>[size = {m_length}]</DisplayString>
 
 		<Expand>
-			<Item Name="[capacity]">m_capacity</Item>
+			<Item Name="[capacity]">m_capacity_allocator.m_first</Item>
 			<Item Name="[size]">m_length</Item>
 			<ArrayItems>
 				<Size>m_length</Size>
