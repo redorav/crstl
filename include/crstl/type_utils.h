@@ -1,12 +1,12 @@
 #pragma once
 
-#include "config.h"
+#include "crstl/config.h"
 
-#include "crstldef.h"
+#include "crstl/crstldef.h"
 
-#include "type_builtins.h"
+#include "crstl/type_builtins.h"
 
-#include "move_forward.h"
+#include "crstl/move_forward.h"
 
 crstl_module_export namespace crstl
 {

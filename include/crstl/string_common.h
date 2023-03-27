@@ -1,10 +1,10 @@
 #pragma once
 
-#include "config.h"
+#include "crstl/config.h"
 
-#include "config_fwd.h"
+#include "crstl/config_fwd.h"
 
-#include "crstldef.h"
+#include "crstl/crstldef.h"
 
 // This include is very cheap in compile times and hard
 // to get right outside of its actual implementation

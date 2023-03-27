@@ -1,8 +1,8 @@
 #pragma once
 
-#include "config.h"
+#include "crstl/config.h"
 
-#include "crstldef.h"
+#include "crstl/crstldef.h"
 
 #if defined(CRSTL_WINDOWS)
 #include "crstl/platform/atomic_win32.h"

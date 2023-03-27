@@ -1,8 +1,8 @@
 #pragma once
 
-#include "config.h"
+#include "crstl/config.h"
 
-#include "crstldef.h"
+#include "crstl/crstldef.h"
 
 // Function forward declarations. This is to avoid includes as one of our priorities is to make compile times
 // very fast. Here we can do compiler checks, mangling, whatever we need to conform to the target compiler

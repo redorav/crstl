@@ -1,10 +1,10 @@
 #pragma once
 
-#include "config.h"
+#include "crstl/config.h"
 
-#include "config_fwd.h"
+#include "crstl/config_fwd.h"
 
-#include "crstldef.h"
+#include "crstl/crstldef.h"
 
 crstl_module_export namespace crstl
 {

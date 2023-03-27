@@ -1,8 +1,8 @@
 #pragma once
 
-#include "string_common.h"
+#include "crstl/string_common.h"
 
-#include "crstldef.h"
+#include "crstl/crstldef.h"
 
 // fixed_string
 //
