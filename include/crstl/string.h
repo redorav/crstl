@@ -173,6 +173,21 @@ crstl_module_export namespace crstl
 			initialize_string(string.c_str() + subpos, sublen);
 		}
 
+		crstl_constexpr basic_string(size_t n, T c) crstl_noexcept : basic_string()
+		{
+			append(n, c);
+		}
+
+		explicit crstl_constexpr basic_string(int value)                crstl_noexcept : basic_string() { append_sprintf("%d", value); }
+		explicit crstl_constexpr basic_string(long value)               crstl_noexcept : basic_string() { append_sprintf("%ld", value); }
+		explicit crstl_constexpr basic_string(long long value)          crstl_noexcept : basic_string() { append_sprintf("%lld", value); }
+		explicit crstl_constexpr basic_string(unsigned value)           crstl_noexcept : basic_string() { append_sprintf("%u", value); }
+		explicit crstl_constexpr basic_string(unsigned long value)      crstl_noexcept : basic_string() { append_sprintf("%lu", value); }
+		explicit crstl_constexpr basic_string(unsigned long long value) crstl_noexcept : basic_string() { append_sprintf("%llu", value); }
+		explicit crstl_constexpr basic_string(float value)              crstl_noexcept : basic_string() { append_sprintf("%f", value); }
+		explicit crstl_constexpr basic_string(double value)             crstl_noexcept : basic_string() { append_sprintf("%f", value); }
+		explicit crstl_constexpr basic_string(long double value)        crstl_noexcept : basic_string() { append_sprintf("%Lf", value); }
+
 		~basic_string() crstl_noexcept
 		{
 			if (is_heap())

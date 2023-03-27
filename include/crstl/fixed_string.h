@@ -14,6 +14,7 @@
 // - Implicit conversions between const char* or string literals are disallowed
 // - There are extra functions not present in the standard such as
 //   - constructors and functions taking string literals and char arrays (avoids calling strlen)
+//   - explicit constructors for creating a string from an integer or float
 //   - append_convert: append converting from different characters representations
 //   - assign_convert: assign converting from different characters representations
 //   - append_sprintf: Use sprintf-like formatting to append string
@@ -103,6 +104,16 @@ crstl_module_export namespace crstl
 		{
 			assign(string, subpos, sublen);
 		}
+
+		explicit crstl_constexpr basic_fixed_string(int value)                crstl_noexcept : basic_fixed_string() { append_sprintf("%d", value); }
+		explicit crstl_constexpr basic_fixed_string(long value)               crstl_noexcept : basic_fixed_string() { append_sprintf("%ld", value); }
+		explicit crstl_constexpr basic_fixed_string(long long value)          crstl_noexcept : basic_fixed_string() { append_sprintf("%lld", value); }
+		explicit crstl_constexpr basic_fixed_string(unsigned value)           crstl_noexcept : basic_fixed_string() { append_sprintf("%u", value); }
+		explicit crstl_constexpr basic_fixed_string(unsigned long value)      crstl_noexcept : basic_fixed_string() { append_sprintf("%lu", value); }
+		explicit crstl_constexpr basic_fixed_string(unsigned long long value) crstl_noexcept : basic_fixed_string() { append_sprintf("%llu", value); }
+		explicit crstl_constexpr basic_fixed_string(float value)              crstl_noexcept : basic_fixed_string() { append_sprintf("%f", value); }
+		explicit crstl_constexpr basic_fixed_string(double value)             crstl_noexcept : basic_fixed_string() { append_sprintf("%f", value); }
+		explicit crstl_constexpr basic_fixed_string(long double value)        crstl_noexcept : basic_fixed_string() { append_sprintf("%Lf", value); }
 
 		crstl_constexpr reference at(size_t i) crstl_noexcept
 		{
