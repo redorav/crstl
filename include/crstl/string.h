@@ -615,6 +615,50 @@ crstl_module_export namespace crstl
 				m_layout_allocator.m_first.m_heap.data + m_layout_allocator.m_first.m_heap.length;
 		}
 
+		//------
+		// erase
+		//------
+
+		crstl_constexpr basic_string& erase(size_t pos = 0, size_t length = npos) crstl_noexcept
+		{
+			size_t current_length = basic_string::length();
+			T* data = basic_string::data();
+
+			length = length < current_length ? length : current_length;
+
+			crstl_assert(pos + length <= current_length);
+			pointer dst = data + pos, src = data + pos + length;
+
+			for (size_t i = 0; i < length; ++i)
+			{
+				dst[i] = src[i];
+			}
+
+			if (is_sso())
+			{
+				m_layout_allocator.m_first.m_sso.remaining_length.value += length;
+				m_layout_allocator.m_first.m_sso.data[m_layout_allocator.m_first.m_sso.remaining_length.value] = 0;
+			}
+			else
+			{
+				m_layout_allocator.m_first.m_heap.length -= length;
+				m_layout_allocator.m_first.m_heap.data[m_layout_allocator.m_first.m_heap.length] = 0;
+			}
+
+			return *this;
+		}
+
+		crstl_constexpr basic_string& erase(const_pointer begin) crstl_noexcept
+		{
+			return erase(begin, 1);
+		}
+
+		crstl_constexpr basic_string& erase(const_pointer begin, const_pointer end) crstl_noexcept
+		{
+			crstl_assert(end >= begin);
+			return erase(begin, (size_t)(end - begin));
+		}
+
 		//-----
 		// find
 		//-----

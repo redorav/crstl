@@ -13,6 +13,7 @@
 // - The number of elements is specified at compile time
 // - Implicit conversions between const char* or string literals are disallowed
 // - There are extra functions not present in the standard such as
+//   - constructors and functions taking string literals and char arrays (avoids calling strlen)
 //   - append_convert: append converting from different characters representations
 //   - assign_convert: assign converting from different characters representations
 //   - append_sprintf: Use sprintf-like formatting to append string
@@ -462,6 +463,38 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr iterator end() crstl_noexcept { return &m_data[0] + m_length; }
 		crstl_constexpr const_iterator end() const crstl_noexcept { return &m_data[0] + m_length; }
+
+		//------
+		// erase
+		//------
+
+		crstl_constexpr basic_fixed_string& erase(size_t pos = 0, size_t length = npos) crstl_noexcept
+		{
+			length = length < m_length ? length : m_length;
+
+			crstl_assert(pos + length <= m_length);
+			pointer dst = m_data + pos, src = m_data + pos + length;
+
+			for (size_t i = 0; i < length; ++i)
+			{
+				dst[i] = src[i];
+			}
+
+			m_length -= length;
+			m_data[m_length] = 0;
+			return *this;
+		}
+
+		crstl_constexpr basic_fixed_string& erase(const_pointer begin) crstl_noexcept
+		{
+			return erase(begin, 1);
+		}
+
+		crstl_constexpr basic_fixed_string& erase(const_pointer begin, const_pointer end) crstl_noexcept
+		{
+			crstl_assert(end >= begin);
+			return erase(begin, (size_t)(end - begin));
+		}
 
 		//-----
 		// find
