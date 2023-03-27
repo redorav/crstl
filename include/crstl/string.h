@@ -650,6 +650,56 @@ crstl_module_export namespace crstl
 		// replace
 		//--------
 
+		crstl_constexpr basic_string& replace(size_t needle_pos, size_t needle_length, const_pointer replace_string, size_t replace_length)
+		{
+			crstl_assert(needle_pos + needle_length <= basic_string::length());
+			T* data = replace_common(basic_string::length(), needle_pos, needle_length, replace_length);
+			memcpy(data + needle_pos, replace_string, replace_length * kCharSize);
+			return *this;
+		}
+
+		crstl_constexpr basic_string& replace(size_t needle_pos, size_t needle_length, size_t n, value_type c)
+		{
+			crstl_assert(needle_pos + needle_length <= basic_string::length());
+			T* data = replace_common(basic_string::length(), needle_pos, needle_length, n);
+			crstl::fill_char(data + needle_pos, n, c);
+			return *this;
+		}
+
+		crstl_constexpr basic_string& replace(size_t needle_pos, size_t needle_length, const_pointer replace_string)
+		{
+			return replace(needle_pos, needle_length, replace_string, string_length(replace_string));
+		}
+
+		crstl_constexpr basic_string& replace(size_t needle_pos, size_t needle_length, const basic_string& replace_string) crstl_noexcept
+		{
+			return replace(needle_pos, needle_length, replace_string.m_data, replace_string.m_length);
+		}
+
+		crstl_constexpr basic_string& replace(size_t needle_pos, size_t needle_length, const basic_string& replace_string, size_t subpos, size_t sublen = npos) crstl_noexcept
+		{
+			sublen = sublen < replace_string.m_length ? sublen : replace_string.m_length;
+			return replace(needle_pos, needle_length, replace_string.m_data + subpos, sublen);
+		}
+
+		crstl_constexpr basic_string& replace(const_pointer begin, const_pointer end, const_pointer replace_string) crstl_noexcept
+		{
+			crstl_assert(end >= begin);
+			return replace((size_t)(begin - data()), (size_t)(end - begin), replace_string, crstl::string_length(replace_string));
+		}
+
+		crstl_constexpr basic_string& replace(const_pointer begin, const_pointer end, const_pointer replace_string, size_t replace_length) crstl_noexcept
+		{
+			crstl_assert(end >= begin);
+			return replace((size_t)(begin - data()), (size_t)(end - begin), replace_string, replace_length);
+		}
+
+		crstl_constexpr basic_string& replace(const_pointer begin, const_pointer end, const basic_string& replace_string) crstl_noexcept
+		{
+			crstl_assert(end >= begin);
+			return replace((size_t)(begin - data()), (size_t)(end - begin), replace_string.data(), (size_t)replace_string.length());
+		}
+
 		//--------
 		// reserve
 		//--------
@@ -939,6 +989,39 @@ crstl_module_export namespace crstl
 				m_layout_allocator.m_first.m_heap.length = length;
 				m_layout_allocator.m_first.m_heap.data[length] = 0;
 			}
+		}
+
+		T* replace_common(size_t current_length, size_t needle_pos, size_t needle_length, size_t replace_length)
+		{
+			size_t current_capacity = basic_string::capacity();
+			size_t replace_difference = (replace_length - needle_length);
+			size_t target_length = current_length + replace_length - needle_length;
+
+			if (target_length > current_capacity)
+			{
+				current_capacity = reallocate_heap_larger(target_length);
+			}
+
+			T* data = basic_string::data();
+
+			// Move the parts that would be stomped or leave gaps, including the null terminator
+			if (replace_difference != 0)
+			{
+				memmove(data + needle_pos + replace_length, data + needle_pos + needle_length, (current_length - (needle_pos + needle_length) + 1) * kCharSize);
+			}
+
+			if (is_sso())
+			{
+				set_length_sso(target_length);
+				m_layout_allocator.m_first.m_sso.data[target_length] = 0;
+			}
+			else
+			{
+				set_length_heap(target_length);
+				m_layout_allocator.m_first.m_heap.data[target_length] = 0;
+			}
+
+			return data;
 		}
 
 		// Given a position and a length, return the length that fits the string

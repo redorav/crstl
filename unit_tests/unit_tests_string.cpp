@@ -292,6 +292,20 @@ void RunUnitTestsString()
 		crstl_check(crStringAssign.size() == stdStringAssign.size());
 		crstl_check(crWstringAssign.size() == stdStringAssign.size());
 
+		// replace
+		{
+			crstl::string crStringReplace = "Hello String";
+			std::string stdStringReplace = "Hello String";
+
+			crStringReplace.replace(6, 6, "World", crstl::string_length("World"));
+			stdStringReplace.replace(6, 6, "World", crstl::string_length("World"));
+			crstl_check(crStringReplace.size() == stdStringReplace.size());
+
+			crStringReplace.replace(6, 1, 20, 'k');
+			stdStringReplace.replace(6, 1, 20, 'k');
+			crstl_check(crStringReplace.size() == stdStringReplace.size());
+		}
+
 		// reserve
 
 		crstl::string crStringReserve;
@@ -331,8 +345,6 @@ void RunUnitTestsString()
 			crStringCopiedString = crStringLongString;
 			crstl::string crStringMovedString = crstl::move(crStringLongString);
 		}
-
-		int i = 0; 
 	}
 	end_test();
 

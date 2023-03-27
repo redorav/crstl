@@ -565,48 +565,51 @@ crstl_module_export namespace crstl
 		// replace
 		//--------
 
-		basic_fixed_string& replace(size_t pos, size_t length, const_pointer replace_string, size_t replace_length)
+		crstl_constexpr basic_fixed_string& replace(size_t needle_pos, size_t needle_length, const_pointer replace_string, size_t replace_length)
 		{
-			replace_common(pos, length, replace_length);
-			memcpy(m_data + pos, replace_string, replace_length * kCharSize);
+			replace_common(needle_pos, needle_length, replace_length);
+			memcpy(m_data + needle_pos, replace_string, replace_length * kCharSize);
 			return *this;
 		}
 
-		basic_fixed_string& replace(size_t pos, size_t length, size_t n, value_type c)
+		crstl_constexpr basic_fixed_string& replace(size_t needle_pos, size_t needle_length, size_t n, value_type c)
 		{
-			replace_common(pos, length, n);
-			crstl::fill_char(m_data + pos, n, c);
+			replace_common(needle_pos, needle_length, n);
+			crstl::fill_char(m_data + needle_pos, n, c);
 			return *this;
 		}
 
-		crstl_constexpr basic_fixed_string& replace(size_t pos, size_t length, const_pointer replace_string) crstl_noexcept
+		crstl_constexpr basic_fixed_string& replace(size_t needle_pos, size_t needle_length, const_pointer replace_string) crstl_noexcept
 		{
-			return replace(pos, length, replace_string, crstl::string_length(replace_string));
+			return replace(needle_pos, needle_length, replace_string, crstl::string_length(replace_string));
 		}
 
-		crstl_constexpr basic_fixed_string& replace(size_t pos, size_t length, const basic_fixed_string& replace_string) crstl_noexcept
+		crstl_constexpr basic_fixed_string& replace(size_t needle_pos, size_t needle_length, const basic_fixed_string& replace_string) crstl_noexcept
 		{
-			return replace(pos, length, replace_string.m_data, replace_string.m_length);
+			return replace(needle_pos, needle_length, replace_string.m_data, replace_string.m_length);
 		}
 
-		crstl_constexpr basic_fixed_string& replace(size_t pos, size_t length, const basic_fixed_string& replace_string, size_t subpos, size_t sublen = npos) crstl_noexcept
+		crstl_constexpr basic_fixed_string& replace(size_t needle_pos, size_t needle_length, const basic_fixed_string& replace_string, size_t subpos, size_t sublen = npos) crstl_noexcept
 		{
 			sublen = sublen < replace_string.m_length ? sublen : replace_string.m_length;
-			return replace(pos, length, replace_string.m_data + subpos, sublen);
+			return replace(needle_pos, needle_length, replace_string.m_data + subpos, sublen);
 		}
 
 		crstl_constexpr basic_fixed_string& replace(const_pointer begin, const_pointer end, const_pointer replace_string) crstl_noexcept
 		{
+			crstl_assert(end >= begin);
 			return replace((size_t)(begin - m_data), (size_t)(end - begin), replace_string, crstl::string_length(replace_string));
 		}
 
 		crstl_constexpr basic_fixed_string& replace(const_pointer begin, const_pointer end, const_pointer replace_string, size_t replace_length) crstl_noexcept
 		{
+			crstl_assert(end >= begin);
 			return replace((size_t)(begin - m_data), (size_t)(end - begin), replace_string, replace_length);
 		}
 
 		crstl_constexpr basic_fixed_string& replace(const_pointer begin, const_pointer end, const basic_fixed_string& replace_string) crstl_noexcept
 		{
+			crstl_assert(end >= begin);
 			return replace((size_t)(begin - m_data), (size_t)(end - begin), replace_string.m_data, (size_t)replace_string.m_length);
 		}
 
@@ -734,14 +737,14 @@ crstl_module_export namespace crstl
 
 	private:
 
-		crstl_constexpr void replace_common(size_t pos, size_t length, size_t replace_length)
+		crstl_constexpr void replace_common(size_t needle_pos, size_t needle_length, size_t replace_length)
 		{
-			crstl_assert(pos < m_length);
-			crstl_assert(length <= m_length);
+			crstl_assert(needle_pos < m_length);
+			crstl_assert(needle_length <= m_length);
 
-			size_t replace_difference = (replace_length - length);
+			size_t replace_difference = (replace_length - needle_length);
 
-			if (replace_length > length)
+			if (replace_length > needle_length)
 			{
 				crstl_assert(m_length + replace_difference < kCharacterCapacityWithZero);
 			}
@@ -749,11 +752,11 @@ crstl_module_export namespace crstl
 			// Move the parts that would be stomped or leave gaps, including the null terminator
 			if (replace_difference != 0)
 			{
-				memmove(m_data + pos + replace_length, m_data + pos + length, (m_length - (pos + length) + 1) * kCharSize);
+				memmove(m_data + needle_pos + replace_length, m_data + needle_pos + needle_length, (m_length - (needle_pos + needle_length) + 1) * kCharSize);
 			}
 
 			// This happens before the actual writing of data so take care not to use m_length after using this function
-			m_length = (uint32_t)(m_length - length + replace_length);
+			m_length = (uint32_t)(m_length - needle_length + replace_length);
 		}
 
 		// Given a position and a length, return the length that fits the string
