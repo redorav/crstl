@@ -636,8 +636,8 @@ crstl_module_export namespace crstl
 
 			if (is_sso())
 			{
-				m_layout_allocator.m_first.m_sso.remaining_length.value += length;
-				m_layout_allocator.m_first.m_sso.data[m_layout_allocator.m_first.m_sso.remaining_length.value] = 0;
+				m_layout_allocator.m_first.m_sso.remaining_length.value += (char)length;
+				m_layout_allocator.m_first.m_sso.data[kSSOCapacity - m_layout_allocator.m_first.m_sso.remaining_length.value] = 0;
 			}
 			else
 			{

@@ -480,7 +480,7 @@ crstl_module_export namespace crstl
 				dst[i] = src[i];
 			}
 
-			m_length -= length;
+			m_length = (uint32_t)(m_length - length);
 			m_data[m_length] = 0;
 			return *this;
 		}
