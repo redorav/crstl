@@ -13,6 +13,9 @@
 extern "C"
 {
 	crstl_1600_dllimport int vsnprintf(char* s, crstl::size_t n, const char* format, va_list arg) crstl_wthrow;
+
+	crstl_dllimport int tolower(int c) crstl_wthrow;
+	crstl_dllimport int toupper(int c) crstl_wthrow;
 }
 
 crstl_module_export namespace crstl

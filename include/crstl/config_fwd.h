@@ -47,7 +47,4 @@ extern "C"
 	wchar_t* wmemset(wchar_t* ptr, wchar_t wc, crstl::size_t num) crstl_wthrow;
 
 	crstl_1600_dllimport void* memmove(void* destination, const void* source, crstl::size_t num);
-
-	crstl_dllimport int tolower(int c) crstl_wthrow;
-	crstl_dllimport int toupper(int c) crstl_wthrow;
 }

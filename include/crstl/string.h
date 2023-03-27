@@ -197,7 +197,6 @@ crstl_module_export namespace crstl
 		// append
 		//-------
 
-		// Append a const char* string with a provided length
 		crstl_constexpr basic_string& append(const_pointer string, size_t length)
 		{
 			append_function(length, [string, length](T* begin, T* /*end*/)
@@ -228,7 +227,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr basic_string& append(const_pointer begin, const_pointer end) crstl_noexcept
 		{
-			crstl_assert(end > begin);
+			crstl_assert(end >= begin);
 			append(begin, (size_t)(end - begin));
 			return *this;
 		}
@@ -339,10 +338,37 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
-		template<typename OtherCharT>
-		crstl_constexpr basic_string& append_convert(const OtherCharT* string) crstl_noexcept
+		template<typename OtherCharT, int N>
+		crstl_constexpr basic_string& append_convert(const OtherCharT(&string_literal)[N]) crstl_noexcept
+		{
+			append_convert(string_literal, N - 1); return *this;
+		}
+
+		template<typename OtherCharT, int N>
+		crstl_constexpr basic_string& append_convert(OtherCharT(&char_array)[N]) crstl_noexcept
+		{
+			append_convert(char_array, string_length(char_array, N - 1)); return *this;
+		}
+
+		template<typename OtherCharQ>
+		crstl_constexpr basic_string& append_convert(OtherCharQ string, crstl_is_char_ptr(OtherCharQ)) crstl_noexcept
 		{
 			append_convert(string, string_length(string));
+			return *this;
+		}
+
+		template<typename OtherCharT>
+		crstl_constexpr basic_string& append_convert(const OtherCharT* begin, const OtherCharT* end) crstl_noexcept
+		{
+			crstl_assert(end >= begin);
+			append_convert(begin, (size_t)(end - begin));
+			return *this;
+		}
+
+		template<typename OtherCharT>
+		crstl_constexpr basic_string& append_convert(const basic_string<OtherCharT>& string) crstl_noexcept
+		{
+			append_convert(string.data(), string.length());
 			return *this;
 		}
 
@@ -401,13 +427,13 @@ crstl_module_export namespace crstl
 		template<int N>
 		crstl_constexpr basic_string& assign(const T(&string_literal)[N]) crstl_noexcept
 		{
-			clear(); assign(string_literal, N - 1); return *this;
+			clear(); append(string_literal, N - 1); return *this;
 		}
 
 		template<int N>
 		crstl_constexpr basic_string& assign(T(&char_array)[N]) crstl_noexcept
 		{
-			clear(); assign(char_array); return *this;
+			clear(); append(char_array); return *this;
 		}
 
 		template<typename Q>
@@ -432,9 +458,57 @@ crstl_module_export namespace crstl
 			clear(); append(string, subpos, sublen); return *this;
 		}
 
-		crstl_constexpr basic_string& assign(size_t n, value_type c) crstl_noexcept
+		//---------------
+		// assign_convert
+		//---------------
+
+		template<typename OtherCharT>
+		crstl_constexpr basic_string& assign_convert(const OtherCharT* string, size_t length) crstl_noexcept
 		{
-			clear(); append(n, c); return *this;
+			clear(); append_convert(string, length); return *this;
+		}
+
+		template<typename OtherCharT, int N>
+		crstl_constexpr basic_string& assign_convert(const OtherCharT(&string_literal)[N]) crstl_noexcept
+		{
+			clear(); append_convert(string_literal, N - 1); return *this;
+		}
+
+		template<typename OtherCharT, int N>
+		crstl_constexpr basic_string& assign_convert(OtherCharT(&char_array)[N]) crstl_noexcept
+		{
+			clear(); append_convert(char_array); return *this;
+		}
+
+		template<typename OtherCharQ>
+		crstl_constexpr basic_string& assign_convert(OtherCharQ string, crstl_is_char_ptr(OtherCharQ)) crstl_noexcept
+		{
+			clear(); append_convert(string); return *this;
+		}
+
+		template<typename OtherCharT>
+		crstl_constexpr basic_string& assign_convert(const OtherCharT* begin, const OtherCharT* end) crstl_noexcept
+		{
+			crstl_assert(end >= begin);
+			clear(); append_convert(begin, end); return *this;
+		}
+
+		template<typename OtherCharT>
+		crstl_constexpr basic_string& assign_convert(const basic_string<OtherCharT>& string) crstl_noexcept
+		{
+			clear(); append_convert(string); return *this;
+		}
+
+		template<typename OtherCharT>
+		crstl_constexpr basic_string& assign_convert(const basic_string<OtherCharT>& string, size_t subpos, size_t sublen = npos) crstl_noexcept
+		{
+			clear(); append_convert(string, subpos, sublen); return *this;
+		}
+
+		template<typename OtherCharT>
+		crstl_constexpr basic_string& assign_convert(size_t n, OtherCharT c) crstl_noexcept
+		{
+			clear(); append_convert(n, c); return *this;
 		}
 
 		crstl_constexpr reference back() crstl_noexcept
