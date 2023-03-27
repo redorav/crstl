@@ -487,13 +487,14 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr basic_fixed_string& erase(const_pointer begin) crstl_noexcept
 		{
-			return erase(begin, 1);
+			crstl_assert(m_data <= begin && begin <= m_data + m_length);
+			return erase((size_t)(begin - m_data), 1);
 		}
 
 		crstl_constexpr basic_fixed_string& erase(const_pointer begin, const_pointer end) crstl_noexcept
 		{
-			crstl_assert(end >= begin);
-			return erase(begin, (size_t)(end - begin));
+			crstl_assert(end >= begin && m_data <= begin && begin <= m_data + m_length);
+			return erase((size_t)(begin - m_data), (size_t)(end - begin));
 		}
 
 		//-----
