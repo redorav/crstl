@@ -58,7 +58,7 @@ crstl_module_export namespace crstl
 		}
 
 		template<int N>
-		crstl_constexpr basic_fixed_string(const T (&string_literal)[N]) crstl_noexcept
+		crstl_constexpr basic_fixed_string(const CharT(&string_literal)[N]) crstl_noexcept
 		{
 			assign(string_literal, N - 1);
 		}
@@ -132,7 +132,7 @@ crstl_module_export namespace crstl
 		}
 
 		template<int N>
-		crstl_constexpr basic_fixed_string& append(const T (&string_literal)[N]) crstl_noexcept
+		crstl_constexpr basic_fixed_string& append(const CharT(&string_literal)[N]) crstl_noexcept
 		{
 			append(string_literal, N - 1);
 			return *this;
@@ -272,7 +272,7 @@ crstl_module_export namespace crstl
 		}
 
 		template<int N>
-		crstl_constexpr basic_fixed_string& assign(const T (&string_literal)[N]) crstl_noexcept
+		crstl_constexpr basic_fixed_string& assign(const CharT(&string_literal)[N]) crstl_noexcept
 		{
 			clear(); assign(string_literal, N - 1); return *this;
 		}
