@@ -21,24 +21,24 @@
 
 crstl_module_export namespace crstl
 {
-	template<typename T, int NumElements>
+	template<typename CharT, int NumElements>
 	class basic_fixed_string
 	{
 	public:
 
-		typedef T                          value_type;
-		typedef T&                         reference;
-		typedef const T&                   const_reference;
-		typedef T*                         pointer;
-		typedef const T*                   const_pointer;
-		typedef T*                         iterator;
-		typedef const T*                   const_iterator;
+		typedef CharT                          value_type;
+		typedef CharT&                         reference;
+		typedef const CharT&                   const_reference;
+		typedef CharT*                         pointer;
+		typedef const CharT*                   const_pointer;
+		typedef CharT*                         iterator;
+		typedef const CharT*                   const_iterator;
 		
 		enum
 		{
 			kCharacterCapacityWithZero = NumElements,     // Number of elements, including terminating zero
 			kCharacterCapacity         = NumElements - 1, // Number of usable characters
-			kCharSize                  = sizeof(T)
+			kCharSize                  = sizeof(CharT)
 		};
 
 		static const crstl_constexpr size_t npos = (size_t)-1;
@@ -64,7 +64,7 @@ crstl_module_export namespace crstl
 		}
 
 		template<int N>
-		crstl_constexpr basic_fixed_string(T(&char_array)[N]) crstl_noexcept
+		crstl_constexpr basic_fixed_string(CharT(&char_array)[N]) crstl_noexcept
 		{
 			assign(char_array);
 		}
@@ -81,7 +81,7 @@ crstl_module_export namespace crstl
 		}
 
 		template<int OtherNumElements>
-		crstl_constexpr basic_fixed_string(const basic_fixed_string<T, OtherNumElements>& string) crstl_noexcept
+		crstl_constexpr basic_fixed_string(const basic_fixed_string<CharT, OtherNumElements>& string) crstl_noexcept
 		{
 			assign(string);
 		}
@@ -92,7 +92,7 @@ crstl_module_export namespace crstl
 		}
 
 		template<int OtherNumElements>
-		crstl_constexpr basic_fixed_string(const basic_fixed_string<T, NumElements>& string1, const basic_fixed_string<T, OtherNumElements>& string2) crstl_noexcept
+		crstl_constexpr basic_fixed_string(const basic_fixed_string<CharT, NumElements>& string1, const basic_fixed_string<CharT, OtherNumElements>& string2) crstl_noexcept
 		{
 			assign(string1);
 			append(string2);
@@ -139,7 +139,7 @@ crstl_module_export namespace crstl
 		}
 
 		template<int N>
-		crstl_constexpr basic_fixed_string& append(T(&char_array)[N]) crstl_noexcept
+		crstl_constexpr basic_fixed_string& append(CharT(&char_array)[N]) crstl_noexcept
 		{
 			append(char_array, string_length(char_array, N - 1));
 			return *this;
@@ -160,7 +160,7 @@ crstl_module_export namespace crstl
 		}
 
 		template<int OtherNumElements>
-		crstl_constexpr basic_fixed_string& append(const basic_fixed_string<T, OtherNumElements>& string) crstl_noexcept
+		crstl_constexpr basic_fixed_string& append(const basic_fixed_string<CharT, OtherNumElements>& string) crstl_noexcept
 		{
 			append(string.m_data, string.m_length);
 			return *this;
@@ -278,7 +278,7 @@ crstl_module_export namespace crstl
 		}
 
 		template<int N>
-		crstl_constexpr basic_fixed_string& assign(T(&char_array)[N]) crstl_noexcept
+		crstl_constexpr basic_fixed_string& assign(CharT(&char_array)[N]) crstl_noexcept
 		{
 			clear(); assign(char_array); return *this;
 		}
@@ -295,7 +295,7 @@ crstl_module_export namespace crstl
 		}
 
 		template<int OtherNumElements>
-		crstl_constexpr basic_fixed_string& assign(const basic_fixed_string<T, OtherNumElements>& string) crstl_noexcept
+		crstl_constexpr basic_fixed_string& assign(const basic_fixed_string<CharT, OtherNumElements>& string) crstl_noexcept
 		{
 			clear(); append(string); return *this;
 		}
@@ -382,18 +382,18 @@ crstl_module_export namespace crstl
 		// compare
 		//--------
 
-		crstl_constexpr int compare(const T* string) const crstl_noexcept
+		crstl_constexpr int compare(const CharT* string) const crstl_noexcept
 		{
 			return crstl::string_compare(m_data, m_length, string, string_length(string));
 		}
 
-		crstl_constexpr int compare(size_t pos, size_t length, const T* string) const crstl_noexcept
+		crstl_constexpr int compare(size_t pos, size_t length, const CharT* string) const crstl_noexcept
 		{
 			crstl_assert(pos < m_length);
 			return crstl::string_compare(m_data + pos, clamp_length(pos, length), string, string_length(string));
 		}
 
-		crstl_constexpr int compare(size_t pos, size_t length, const T* string, size_t subpos, size_t sublen = npos) const crstl_noexcept
+		crstl_constexpr int compare(size_t pos, size_t length, const CharT* string, size_t subpos, size_t sublen = npos) const crstl_noexcept
 		{
 			crstl_assert(pos < m_length);
 			return crstl::string_compare(m_data + pos, clamp_length(pos, length), string + subpos, crstl::string_clamp_length(string_length(string), subpos, sublen));
@@ -420,18 +420,18 @@ crstl_module_export namespace crstl
 		// comparei
 		//---------
 
-		crstl_constexpr int comparei(const T* string) const crstl_noexcept
+		crstl_constexpr int comparei(const CharT* string) const crstl_noexcept
 		{
 			return crstl::string_comparei(m_data, m_length, string, string_length(string));
 		}
 
-		crstl_constexpr int comparei(size_t pos, size_t length, const T* string) const crstl_noexcept
+		crstl_constexpr int comparei(size_t pos, size_t length, const CharT* string) const crstl_noexcept
 		{
 			crstl_assert(pos < m_length);
 			return crstl::string_comparei(m_data + pos, clamp_length(pos, length), string, string_length(string));
 		}
 
-		crstl_constexpr int comparei(size_t pos, size_t length, const T* string, size_t subpos, size_t sublen = npos) const crstl_noexcept
+		crstl_constexpr int comparei(size_t pos, size_t length, const CharT* string, size_t subpos, size_t sublen = npos) const crstl_noexcept
 		{
 			crstl_assert(pos < m_length);
 			return crstl::string_comparei(m_data + pos, clamp_length(pos, length), string + subpos, crstl::string_clamp_length(string_length(string), subpos, sublen));
@@ -622,7 +622,7 @@ crstl_module_export namespace crstl
 			resize(length, 0);
 		}
 
-		crstl_constexpr void resize(size_t length, T c)
+		crstl_constexpr void resize(size_t length, CharT c)
 		{
 			crstl_assert(length < NumElements);
 
@@ -731,7 +731,7 @@ crstl_module_export namespace crstl
 		crstl_constexpr bool operator == (const basic_fixed_string& string) const crstl_noexcept { return compare(string) == 0; }
 		crstl_constexpr bool operator != (const basic_fixed_string& string) const crstl_noexcept { return compare(string) != 0; }
 
-		T m_data[NumElements];
+		CharT m_data[NumElements];
 
 		uint32_t m_length;
 
@@ -767,18 +767,18 @@ crstl_module_export namespace crstl
 	};
 
 	// Return the concatenation of two equally-sized strings
-	template<typename T, int NumElements>
-	basic_fixed_string<T, NumElements> operator + (const basic_fixed_string<T, NumElements>& string1, const basic_fixed_string<T, NumElements>& string2)
+	template<typename CharT, int NumElements>
+	basic_fixed_string<CharT, NumElements> operator + (const basic_fixed_string<CharT, NumElements>& string1, const basic_fixed_string<CharT, NumElements>& string2)
 	{
-		return basic_fixed_string<T, NumElements>(string1, string2);
+		return basic_fixed_string<CharT, NumElements>(string1, string2);
 	}
 
 	// Return the concatenation of differently-sized strings. As we have to choose a size for the return string, we'll select the largest one,
 	// on the assumption that it is the most likely to hold the sum of the two values
-	template<typename T, int NumElements, int OtherNumElements>
-	basic_fixed_string<T, (NumElements > OtherNumElements ? NumElements : OtherNumElements)> operator + (const basic_fixed_string<T, NumElements>& string1, const basic_fixed_string<T, OtherNumElements>& string2)
+	template<typename CharT, int NumElements, int OtherNumElements>
+	basic_fixed_string<CharT, (NumElements > OtherNumElements ? NumElements : OtherNumElements)> operator + (const basic_fixed_string<CharT, NumElements>& string1, const basic_fixed_string<CharT, OtherNumElements>& string2)
 	{
-		return basic_fixed_string<T, (NumElements > OtherNumElements ? NumElements : OtherNumElements)>(string1, string2);
+		return basic_fixed_string<CharT, (NumElements > OtherNumElements ? NumElements : OtherNumElements)>(string1, string2);
 	}
 
 	typedef basic_fixed_string<char, 8> fixed_string8;
