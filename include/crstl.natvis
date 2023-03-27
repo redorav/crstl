@@ -23,8 +23,8 @@
 		<DisplayString>{m_data} [length = {m_length}]</DisplayString>
 
 		<Expand>
-			<Item Name="[capacity]">$T2</Item>
 			<Item Name="[length]">m_length</Item>
+			<Item Name="[capacity]">$T2</Item>
 			<Item Name="[value]">m_data</Item>
 		</Expand>
 	</Type>
@@ -95,13 +95,13 @@
 		<StringView Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)">m_layout_allocator.m_first.m_heap.data, s8</StringView>
 
 		<Expand>
-			<Item Condition="!(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[capacity]">kSSOCapacity</Item>
 			<Item Condition="!(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[length]">kSSOCapacity - m_layout_allocator.m_first.m_sso.remaining_length.value</Item>
+			<Item Condition="!(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[capacity]">kSSOCapacity</Item>
 			<Item Condition="!(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[value]">m_layout_allocator.m_first.m_sso.data, s8</Item>
 			<Item Condition="!(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[heap]">false</Item>
 
-			<Item Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[capacity]">m_layout_allocator.m_first.m_heap.capacity &amp; kHeapCapacityMask</Item>
 			<Item Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[length]">m_layout_allocator.m_first.m_heap.length</Item>
+			<Item Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[capacity]">m_layout_allocator.m_first.m_heap.capacity &amp; kHeapCapacityMask</Item>
 			<Item Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[value]">m_layout_allocator.m_first.m_heap.data, s8</Item>
 			<Item Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[heap]">true</Item>
 		</Expand>
@@ -116,13 +116,13 @@
 		<StringView Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)">m_layout_allocator.m_first.m_heap.data, su</StringView>
 
 		<Expand>
-			<Item Condition="!(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[capacity]">kSSOCapacity</Item>
 			<Item Condition="!(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[length]">kSSOCapacity - m_layout_allocator.m_first.m_sso.remaining_length.value</Item>
+			<Item Condition="!(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[capacity]">kSSOCapacity</Item>
 			<Item Condition="!(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[value]">m_layout_allocator.m_first.m_sso.data, su</Item>
 			<Item Condition="!(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[heap]">false</Item>
 
-			<Item Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[capacity]">m_layout_allocator.m_first.m_heap.capacity &amp; kHeapCapacityMask</Item>
 			<Item Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[length]">m_layout_allocator.m_first.m_heap.length</Item>
+			<Item Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[capacity]">m_layout_allocator.m_first.m_heap.capacity &amp; kHeapCapacityMask</Item>
 			<Item Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[value]">m_layout_allocator.m_first.m_heap.data, su</Item>
 			<Item Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[heap]">true</Item>
 		</Expand>
@@ -137,13 +137,13 @@
 		<StringView Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)">m_layout_allocator.m_first.m_heap.data</StringView>
 
 		<Expand>
-			<Item Condition="!(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[capacity]">kSSOCapacity</Item>
 			<Item Condition="!(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[length]">kSSOCapacity - m_layout_allocator.m_first.m_sso.remaining_length.value</Item>
+			<Item Condition="!(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[capacity]">kSSOCapacity</Item>
 			<Item Condition="!(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[value]">m_layout_allocator.m_first.m_sso.data, s</Item>
 			<Item Condition="!(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[heap]">false</Item>
 
-			<Item Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[capacity]">m_layout_allocator.m_first.m_heap.capacity &amp; kHeapCapacityMask</Item>
 			<Item Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[length]">m_layout_allocator.m_first.m_heap.length</Item>
+			<Item Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[capacity]">m_layout_allocator.m_first.m_heap.capacity &amp; kHeapCapacityMask</Item>
 			<Item Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[value]">m_layout_allocator.m_first.m_heap.data, s</Item>
 			<Item Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[heap]">true</Item>
 		</Expand>
