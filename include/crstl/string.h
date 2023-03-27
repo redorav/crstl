@@ -904,12 +904,12 @@ crstl_module_export namespace crstl
 
 	private:
 
-		size_t compute_new_capacity(size_t old_capacity)
+		crstl_constexpr size_t compute_new_capacity(size_t old_capacity)
 		{
 			return old_capacity + (old_capacity * 50) / 100;
 		}
 
-		size_t reallocate_heap_larger(size_t requested_capacity)
+		crstl_constexpr size_t reallocate_heap_larger(size_t requested_capacity)
 		{
 			requested_capacity = compute_new_capacity(requested_capacity);
 
@@ -944,7 +944,7 @@ crstl_module_export namespace crstl
 		// provide a function here that deals with all that and calls a function
 		// with what we need to do
 		template<typename Function>
-		void append_function(size_t length, const Function& function)
+		crstl_constexpr void append_function(size_t length, const Function& function)
 		{
 			size_t current_length = basic_string::length();
 			size_t target_length = current_length + length;
@@ -974,7 +974,7 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		void initialize_string(const_pointer string, size_t length)
+		crstl_constexpr void initialize_string(const_pointer string, size_t length)
 		{
 			if (length < kSSOCapacity)
 			{
@@ -991,7 +991,7 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		T* replace_common(size_t current_length, size_t needle_pos, size_t needle_length, size_t replace_length)
+		crstl_constexpr T* replace_common(size_t current_length, size_t needle_pos, size_t needle_length, size_t replace_length)
 		{
 			size_t current_capacity = basic_string::capacity();
 			size_t replace_difference = (replace_length - needle_length);
