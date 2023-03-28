@@ -179,6 +179,21 @@ crstl_module_export namespace crstl
 			append(n, c);
 		}
 
+		crstl_constexpr basic_string(ctor_no_initialize, size_t length) : basic_string()
+		{
+			if (length < kSSOCapacity)
+			{
+				m_layout_allocator.m_first.m_sso.remaining_length.value = kSSOCapacity;
+				m_layout_allocator.m_first.m_sso.data[0] = 0;
+			}
+			else
+			{
+				m_layout_allocator.m_first.m_heap.data = allocate_heap(length);
+				m_layout_allocator.m_first.m_heap.length = 0;
+				m_layout_allocator.m_first.m_heap.data[0] = 0;
+			}
+		}
+
 		explicit crstl_constexpr basic_string(int value)                crstl_noexcept : basic_string() { append_sprintf("%d", value); }
 		explicit crstl_constexpr basic_string(long value)               crstl_noexcept : basic_string() { append_sprintf("%ld", value); }
 		explicit crstl_constexpr basic_string(long long value)          crstl_noexcept : basic_string() { append_sprintf("%lld", value); }
@@ -761,6 +776,23 @@ crstl_module_export namespace crstl
 		crstl_constexpr reference front() crstl_noexcept { return is_sso() ? m_layout_allocator.m_first.m_sso.data : m_layout_allocator.m_first.m_heap.data; }
 		crstl_constexpr const_reference front() const crstl_noexcept { return is_sso() ? m_layout_allocator.m_first.m_sso.data : m_layout_allocator.m_first.m_heap.data; }
 
+		crstl_constexpr void force_length(size_t length) crstl_noexcept
+		{
+			crstl_assert(length < capacity());
+
+			// Ensure there's at least a null terminator
+			if(is_sso())
+			{
+				set_length_sso(length);
+				m_layout_allocator.m_first.m_sso.data[length] = 0;
+			}
+			else
+			{
+				set_length_heap(length);
+				m_layout_allocator.m_first.m_heap.data[length] = 0;
+			}
+		}
+
 		crstl_constexpr size_t length() const crstl_noexcept { return is_sso() ? length_sso() : length_heap(); }
 
 		crstl_constexpr size_t max_size() const crstl_noexcept { return kHeapCapacityMask; }
@@ -808,13 +840,13 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr basic_string& replace(size_t needle_pos, size_t needle_length, const basic_string& replace_string) crstl_noexcept
 		{
-			return replace(needle_pos, needle_length, replace_string.m_data, replace_string.m_length);
+			return replace(needle_pos, needle_length, replace_string.data(), replace_string.length());
 		}
 
 		crstl_constexpr basic_string& replace(size_t needle_pos, size_t needle_length, const basic_string& replace_string, size_t subpos, size_t sublen = npos) crstl_noexcept
 		{
-			sublen = sublen < replace_string.m_length ? sublen : replace_string.m_length;
-			return replace(needle_pos, needle_length, replace_string.m_data + subpos, sublen);
+			sublen = sublen < replace_string.length() ? sublen : replace_string.length();
+			return replace(needle_pos, needle_length, replace_string.data() + subpos, sublen);
 		}
 
 		crstl_constexpr basic_string& replace(const_pointer begin, const_pointer end, const_pointer replace_string) crstl_noexcept

@@ -41,6 +41,8 @@ crstl_module_export namespace crstl
 
 	struct ctor_concatenate {};
 
+	struct ctor_no_initialize {};
+
 	inline size_t string_length(const char* str) { return strlen(str); }
 	inline size_t string_length(const char* str, size_t max_length) { return strnlen(str, max_length); }
 
