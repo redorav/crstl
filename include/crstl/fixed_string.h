@@ -744,7 +744,7 @@ crstl_module_export namespace crstl
 		}
 
 		//----------
-		// Operators
+		// operators
 		//----------
 
 		crstl_constexpr reference operator [](size_t i)
@@ -773,8 +773,17 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr bool operator == (const_pointer string) const crstl_noexcept { return compare(string) == 0; }
 		crstl_constexpr bool operator != (const_pointer string) const crstl_noexcept { return compare(string) != 0; }
+		crstl_constexpr bool operator <  (const_pointer string) const crstl_noexcept { return compare(string) <  0; }
+		crstl_constexpr bool operator <= (const_pointer string) const crstl_noexcept { return compare(string) <= 0; }
+		crstl_constexpr bool operator >  (const_pointer string) const crstl_noexcept { return compare(string) >  0; }
+		crstl_constexpr bool operator >= (const_pointer string) const crstl_noexcept { return compare(string) >= 0; }
+
 		crstl_constexpr bool operator == (const basic_fixed_string& string) const crstl_noexcept { return compare(string) == 0; }
 		crstl_constexpr bool operator != (const basic_fixed_string& string) const crstl_noexcept { return compare(string) != 0; }
+		crstl_constexpr bool operator <  (const basic_fixed_string& string) const crstl_noexcept { return compare(string) <  0; }
+		crstl_constexpr bool operator <= (const basic_fixed_string& string) const crstl_noexcept { return compare(string) <= 0; }
+		crstl_constexpr bool operator >  (const basic_fixed_string& string) const crstl_noexcept { return compare(string) >  0; }
+		crstl_constexpr bool operator >= (const basic_fixed_string& string) const crstl_noexcept { return compare(string) >= 0; }
 
 		CharT m_data[NumElements];
 

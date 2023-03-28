@@ -1021,11 +1021,6 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
-		crstl_constexpr bool operator == (const_pointer string) const crstl_noexcept { return compare(string) == 0; }
-		crstl_constexpr bool operator != (const_pointer string) const crstl_noexcept { return compare(string) != 0; }
-		crstl_constexpr bool operator == (const basic_string& string) const crstl_noexcept { return compare(string) == 0; }
-		crstl_constexpr bool operator != (const basic_string& string) const crstl_noexcept { return compare(string) != 0; }
-
 		// operator +
 
 		friend basic_string operator + (const basic_string& string1, const basic_string& string2)
@@ -1068,6 +1063,20 @@ crstl_module_export namespace crstl
 		{
 			return basic_string(ctor_concatenate(), const_char, string);
 		}
+
+		crstl_constexpr bool operator == (const_pointer string) const crstl_noexcept { return compare(string) == 0; }
+		crstl_constexpr bool operator != (const_pointer string) const crstl_noexcept { return compare(string) != 0; }
+		crstl_constexpr bool operator <  (const_pointer string) const crstl_noexcept { return compare(string) <  0; }
+		crstl_constexpr bool operator <= (const_pointer string) const crstl_noexcept { return compare(string) <= 0; }
+		crstl_constexpr bool operator >  (const_pointer string) const crstl_noexcept { return compare(string) >  0; }
+		crstl_constexpr bool operator >= (const_pointer string) const crstl_noexcept { return compare(string) >= 0; }
+
+		crstl_constexpr bool operator == (const basic_string& string) const crstl_noexcept { return compare(string) == 0; }
+		crstl_constexpr bool operator != (const basic_string& string) const crstl_noexcept { return compare(string) != 0; }
+		crstl_constexpr bool operator <  (const basic_string& string) const crstl_noexcept { return compare(string) <  0; }
+		crstl_constexpr bool operator <= (const basic_string& string) const crstl_noexcept { return compare(string) <= 0; }
+		crstl_constexpr bool operator >  (const basic_string& string) const crstl_noexcept { return compare(string) >  0; }
+		crstl_constexpr bool operator >= (const basic_string& string) const crstl_noexcept { return compare(string) >= 0; }
 
 	private:
 
