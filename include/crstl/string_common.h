@@ -55,21 +55,23 @@ crstl_module_export namespace crstl
 	template<typename T>
 	inline crstl_constexpr int string_compare(const T* string1, size_t length1, const T* string2, size_t length2)
 	{
-		if (length1 == length2)
-		{
-			while (length1 != 0)
-			{
-				T char1 = *string1, char2 = *string2;
-				if (char1 != char2)
-				{
-					return char1 < char2 ? -1 : 1;
-				}
+		size_t min_length = length1 < length2 ? length1 : length2;
 
-				string1++;
-				string2++;
-				length1--;
+		while (min_length != 0)
+		{
+			T char1 = *string1, char2 = *string2;
+			if (char1 != char2)
+			{
+				return char1 < char2 ? -1 : 1;
 			}
 
+			string1++;
+			string2++;
+			min_length--;
+		}
+
+		if (length1 == length2)
+		{
 			return 0;
 		}
 		else
