@@ -172,18 +172,20 @@ crstl_module_export namespace crstl
 			append(n, c);
 		}
 
-		crstl_constexpr basic_string(ctor_no_initialize, size_t length) : basic_string()
+		crstl_constexpr basic_string(ctor_no_initialize, size_t capacity, size_t length = 0) : basic_string()
 		{
-			if (length < kSSOCapacity)
+			crstl_assert(length <= capacity);
+
+			if (capacity < kSSOCapacity)
 			{
-				m_layout_allocator.m_first.m_sso.remaining_length.value = kSSOCapacity;
-				m_layout_allocator.m_first.m_sso.data[0] = 0;
+				m_layout_allocator.m_first.m_sso.remaining_length.value = (char)(kSSOCapacity - length);
+				m_layout_allocator.m_first.m_sso.data[length] = 0;
 			}
 			else
 			{
-				m_layout_allocator.m_first.m_heap.data = allocate_heap(length);
-				m_layout_allocator.m_first.m_heap.length = 0;
-				m_layout_allocator.m_first.m_heap.data[0] = 0;
+				m_layout_allocator.m_first.m_heap.data = allocate_heap(capacity);
+				m_layout_allocator.m_first.m_heap.length = length;
+				m_layout_allocator.m_first.m_heap.data[length] = 0;
 			}
 		}
 
