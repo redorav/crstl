@@ -25,7 +25,7 @@ crstl_module_export namespace crstl
 	template<typename T>
 	class span;
 
-	template<typename T, typename Allocator = crstl::allocator<T>>
+	template<typename T, typename Allocator = crstl::allocator>
 	class vector
 	{
 	public:
@@ -38,6 +38,8 @@ crstl_module_export namespace crstl
 		typedef T*                     iterator;
 		typedef const T*               const_iterator;
 		typedef uint32_t               length_type;
+
+		static const size_t kDataSize = sizeof(T);
 
 		crstl_constexpr vector() crstl_noexcept : m_data(nullptr), m_length(0)
 		{
@@ -361,14 +363,14 @@ crstl_module_export namespace crstl
 
 		T* allocate(size_t capacity)
 		{
-			T* temp = (T*)m_capacity_allocator.second().allocate(capacity);
+			T* temp = (T*)m_capacity_allocator.second().allocate(capacity * kDataSize);
 			m_capacity_allocator.m_first = capacity;
 			return temp;
 		}
 
 		void deallocate()
 		{
-			m_capacity_allocator.second().deallocate(m_data, m_capacity_allocator.m_first);
+			m_capacity_allocator.second().deallocate(m_data, m_capacity_allocator.m_first * kDataSize);
 			m_capacity_allocator.m_first = 0;
 			m_data = nullptr;
 		}
@@ -387,7 +389,7 @@ crstl_module_export namespace crstl
 			size_t growth_capacity = m_capacity_allocator.m_first * 2; // TODO Growth factor
 			size_t new_capacity = capacity > growth_capacity ? capacity : growth_capacity;
 
-			T* temp = (T*)m_capacity_allocator.second().allocate(new_capacity);
+			T* temp = (T*)m_capacity_allocator.second().allocate(new_capacity * kDataSize);
 
 			// Copy existing data
 			for (size_t i = 0; i < m_length; ++i)
@@ -395,7 +397,7 @@ crstl_module_export namespace crstl
 				::new((void*)&temp[i]) T(m_data[i]);
 			}
 
-			m_capacity_allocator.second().deallocate(m_data, m_capacity_allocator.m_first);
+			m_capacity_allocator.second().deallocate(m_data, m_capacity_allocator.m_first * kDataSize);
 			m_data = temp;
 			m_capacity_allocator.m_first = new_capacity;
 		}

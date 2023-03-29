@@ -15,7 +15,7 @@
 
 crstl_module_export namespace crstl
 {
-	template<typename T, typename Allocator = crstl::allocator<T>>
+	template<typename T, typename Allocator = crstl::allocator>
 	class basic_string
 	{
 	public:
@@ -1052,20 +1052,20 @@ crstl_module_export namespace crstl
 			// and larger than the existing heap capacity too
 			crstl_assert(requested_capacity > capacity());
 
-			T* temp = (T*)m_layout_allocator.second().allocate(requested_capacity + 1);
+			T* temp = (T*)m_layout_allocator.second().allocate(requested_capacity * kCharSize + kCharSize);
 			size_t length = 0;
 
 			// Copy existing data from current source
 			if (is_sso())
 			{
 				length = length_sso();
-				memcpy(temp, m_layout_allocator.m_first.m_sso.data, (length + 1) * kCharSize);
+				memcpy(temp, m_layout_allocator.m_first.m_sso.data, length * kCharSize + kCharSize);
 			}
 			else
 			{
 				length = length_heap();
-				memcpy(temp, m_layout_allocator.m_first.m_heap.data, (length + 1) * kCharSize);
-				m_layout_allocator.second().deallocate(m_layout_allocator.m_first.m_heap.data, get_capacity_heap() + 1);
+				memcpy(temp, m_layout_allocator.m_first.m_heap.data, length * kCharSize + kCharSize);
+				m_layout_allocator.second().deallocate(m_layout_allocator.m_first.m_heap.data, get_capacity_heap() * kCharSize + kCharSize);
 			}
 
 			m_layout_allocator.m_first.m_heap.data = temp;
@@ -1209,14 +1209,14 @@ crstl_module_export namespace crstl
 		T* allocate_heap(size_t capacity)
 		{
 			capacity = compute_new_capacity(capacity);
-			T* temp = (T*)m_layout_allocator.second().allocate(capacity + 1);
+			T* temp = (T*)m_layout_allocator.second().allocate(capacity * kCharSize + kCharSize);
 			set_capacity_heap(capacity);
 			return temp;
 		}
 
 		void deallocate_heap()
 		{
-			m_layout_allocator.second().deallocate(m_layout_allocator.m_first.m_heap.data, get_capacity_heap() + 1);
+			m_layout_allocator.second().deallocate(m_layout_allocator.m_first.m_heap.data, get_capacity_heap() * kCharSize + kCharSize);
 			set_capacity_heap(0);
 			m_layout_allocator.m_first.m_heap.data = nullptr;
 		}
@@ -1224,10 +1224,10 @@ crstl_module_export namespace crstl
 		crstl::compressed_pair<layout, Allocator> m_layout_allocator;
 	};
 
-	typedef basic_string<char, crstl::allocator<char>> string;
-	typedef basic_string<wchar_t, crstl::allocator<wchar_t>> wstring;
+	typedef basic_string<char, crstl::allocator> string;
+	typedef basic_string<wchar_t, crstl::allocator> wstring;
 
-	typedef basic_string<char8_t, crstl::allocator<char8_t>> u8string;
-	typedef basic_string<char16_t, crstl::allocator<char16_t>> u16string;
-	typedef basic_string<char32_t, crstl::allocator<char32_t>> u32string;
+	typedef basic_string<char8_t, crstl::allocator> u8string;
+	typedef basic_string<char16_t, crstl::allocator> u16string;
+	typedef basic_string<char32_t, crstl::allocator> u32string;
 };
