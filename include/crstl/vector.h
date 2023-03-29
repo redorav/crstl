@@ -306,7 +306,10 @@ crstl_module_export namespace crstl
 		{
 			if (length > (size_t)m_length)
 			{
-				reallocate_larger(length);
+				if (length > m_capacity_allocator.m_first)
+				{
+					reallocate_larger(length);
+				}
 
 				for (size_t i = m_length; i < length; ++i)
 				{

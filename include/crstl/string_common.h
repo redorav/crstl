@@ -44,10 +44,18 @@ crstl_module_export namespace crstl
 	struct ctor_no_initialize {};
 
 	inline size_t string_length(const char* str) { return strlen(str); }
-	inline size_t string_length(const char* str, size_t max_length) { return strnlen(str, max_length); }
+	inline size_t string_length(const char* str, size_t max_length)
+	{
+		size_t length = strlen(str);
+		return length < max_length ? length : max_length;
+	}
 
 	inline size_t string_length(const wchar_t* str) { return wcslen(str); }
-	inline size_t string_length(const wchar_t* str, size_t max_length) { return wcsnlen(str, max_length); }
+	inline size_t string_length(const wchar_t* str, size_t max_length)
+	{
+		size_t length = wcslen(str);
+		return length < max_length ? length : max_length;
+	}
 
 	// = 0   They compare equal
 	// < 0   Either the value of the first character that does not match is lower in the compared string, or all compared characters match but the compared string is shorter.

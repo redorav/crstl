@@ -95,13 +95,7 @@ crstl_module_export namespace crstl
 		template<int N>
 		crstl_constexpr basic_string(const T(&string_literal)[N]) crstl_noexcept
 		{
-			initialize_string(string_literal, N - 1);
-		}
-
-		template<int N>
-		crstl_constexpr basic_string(T(&char_array)[N]) crstl_noexcept
-		{
-			initialize_string(char_array, string_length(char_array, N));
+			initialize_string(string_literal, string_length(string_literal, N - 1));
 		}
 
 		template<typename Q>
@@ -142,15 +136,6 @@ crstl_module_export namespace crstl
 			append(string_literal);
 		}
 
-		template<int N>
-		crstl_constexpr basic_string(ctor_concatenate, const basic_string& string, T(&char_array)[N]) crstl_noexcept : basic_string()
-		{
-			size_t char_array_length = string_length(char_array, N - 1);
-			reserve(string.size() + char_array_length);
-			initialize_string(string.c_str(), string.size());
-			append(char_array, char_array_length);
-		}
-
 		template<typename Q>
 		crstl_constexpr basic_string(ctor_concatenate, const basic_string& string1, Q string2, crstl_is_char_ptr(Q)) crstl_noexcept : basic_string()
 		{
@@ -170,7 +155,15 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr basic_string(const basic_string& string, size_t subpos, size_t sublen = npos) crstl_noexcept
 		{
-			crstl_assert(subpos + sublen <= string.length());
+			size_t string_length = string.length();
+
+			crstl_assert(subpos <= string_length);
+
+			if(sublen > string_length - subpos)
+			{
+				sublen = string_length - subpos;
+			}
+
 			initialize_string(string.c_str() + subpos, sublen);
 		}
 
@@ -241,13 +234,7 @@ crstl_module_export namespace crstl
 		template<int N>
 		crstl_constexpr basic_string& append(const T(&string_literal)[N]) crstl_noexcept
 		{
-			append(string_literal, N - 1); return *this;
-		}
-
-		template<int N>
-		crstl_constexpr basic_string& append(T(&char_array)[N]) crstl_noexcept
-		{
-			append(char_array, string_length(char_array, N - 1)); return *this;
+			append(string_literal, string_length(string_literal, N - 1)); return *this;
 		}
 
 		template<typename Q>
@@ -372,13 +359,7 @@ crstl_module_export namespace crstl
 		template<typename OtherCharT, int N>
 		crstl_constexpr basic_string& append_convert(const OtherCharT(&string_literal)[N]) crstl_noexcept
 		{
-			append_convert(string_literal, N - 1); return *this;
-		}
-
-		template<typename OtherCharT, int N>
-		crstl_constexpr basic_string& append_convert(OtherCharT(&char_array)[N]) crstl_noexcept
-		{
-			append_convert(char_array, string_length(char_array, N - 1)); return *this;
+			append_convert(string_literal, string_length(string_literal, N - 1)); return *this;
 		}
 
 		template<typename OtherCharQ>
@@ -458,13 +439,7 @@ crstl_module_export namespace crstl
 		template<int N>
 		crstl_constexpr basic_string& assign(const T(&string_literal)[N]) crstl_noexcept
 		{
-			clear(); append(string_literal, N - 1); return *this;
-		}
-
-		template<int N>
-		crstl_constexpr basic_string& assign(T(&char_array)[N]) crstl_noexcept
-		{
-			clear(); append(char_array); return *this;
+			clear(); append(string_literal); return *this;
 		}
 
 		template<typename Q>
@@ -502,13 +477,7 @@ crstl_module_export namespace crstl
 		template<typename OtherCharT, int N>
 		crstl_constexpr basic_string& assign_convert(const OtherCharT(&string_literal)[N]) crstl_noexcept
 		{
-			clear(); append_convert(string_literal, N - 1); return *this;
-		}
-
-		template<typename OtherCharT, int N>
-		crstl_constexpr basic_string& assign_convert(OtherCharT(&char_array)[N]) crstl_noexcept
-		{
-			clear(); append_convert(char_array); return *this;
+			clear(); append_convert(string_literal); return *this;
 		}
 
 		template<typename OtherCharQ>
@@ -1033,12 +1002,6 @@ crstl_module_export namespace crstl
 		{
 			return basic_string(ctor_concatenate(), string, string_literal);
 		}
-		
-		template<int N>
-		friend basic_string operator + (const basic_string& string, T(&char_array)[N])
-		{
-			return basic_string(ctor_concatenate(), string, char_array);
-		}
 
 		template<typename Q>
 		friend crstl_return_is_char_ptr(Q, basic_string) operator + (const basic_string& string, Q const_char)
@@ -1050,12 +1013,6 @@ crstl_module_export namespace crstl
 		friend basic_string operator + (const T(&string_literal)[N], const basic_string& string)
 		{
 			return basic_string(ctor_concatenate(), string_literal, string);
-		}
-		
-		template<int N>
-		friend basic_string operator + (T(&char_array)[N], const basic_string& string)
-		{
-			return basic_string(ctor_concatenate(), char_array, string);
 		}
 		
 		template<typename Q>
