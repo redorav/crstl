@@ -13,11 +13,11 @@
 
 crstl_module_export namespace crstl
 {
-	template<typename Signature, int SizeBytes>
+	template<int SizeBytes, typename Signature>
 	class fixed_function;
 
-	template<typename Result, typename... Args, int SizeBytes>
-	class fixed_function<Result(Args...), SizeBytes>
+	template<int SizeBytes, typename Result, typename... Args>
+	class fixed_function<SizeBytes, Result(Args...)>
 	{
 	public:
 
