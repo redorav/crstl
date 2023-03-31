@@ -29,7 +29,7 @@ int DummyIntFunction2(int value)
 	return -1;
 }
 
-void FunctionPassByReferenceTest(const crstl::fixed_function<void(int), 8>& myFunction, int k)
+void FunctionPassByReferenceTest(const crstl::fixed_function<8, void(int)>& myFunction, int k)
 {
 	myFunction(k);
 }
@@ -64,32 +64,32 @@ void RunUnitTestsFunction()
 
 	stdIntFunction = &DummyIntFunction;
 
-	crstl::fixed_function<void(), 8> crVoidFunction;
+	crstl::fixed_function<8, void()> crVoidFunction;
 	
-	crstl::fixed_function<void(), 16> crVoidFunction2 = []()
+	crstl::fixed_function<16, void()> crVoidFunction2 = []()
 	{
 		printf("crVoidFunction2\n");
 	};
 
-	crstl::fixed_function<void(), 8> crVoidFunction3 = [a]()
+	crstl::fixed_function<8, void()> crVoidFunction3 = [a]()
 	{
 		printf("crVoidFunction3 %d\n", a);
 	};
 	
-	crstl::fixed_function<void(), 8> crVoidFunction4 = &DummyVoidFunction;
+	crstl::fixed_function<8, void()> crVoidFunction4 = &DummyVoidFunction;
 
-	crstl::fixed_function<int(int), 8> crIntFunction = &DummyIntFunction;
+	crstl::fixed_function<8, int(int)> crIntFunction = &DummyIntFunction;
 
-	crstl::fixed_function<int(int), 8> crIntFunctionNonConst = &DummyIntFunction2;
+	crstl::fixed_function<8, int(int)> crIntFunctionNonConst = &DummyIntFunction2;
 
-	const crstl::fixed_function<int(int), 8> crIntFunctionConst = &DummyIntFunction2;
+	const crstl::fixed_function<8, int(int)> crIntFunctionConst = &DummyIntFunction2;
 
-	const crstl::fixed_function<void(void), 8> crMoveOnlyFunction = OperatorStruct();
+	const crstl::fixed_function<8, void(void)> crMoveOnlyFunction = OperatorStruct();
 
 	crIntFunction = crIntFunctionNonConst;
-	crstl::fixed_function<int(int), 8> crIntFunctionCopy1(crIntFunctionNonConst);
-	crstl::fixed_function<int(int), 8> crIntFunctionCopy2(crIntFunctionConst);
-	crstl::fixed_function<int(int), 8> crIntFunctionMove(std::move(crIntFunctionNonConst));
+	crstl::fixed_function<8, int(int)> crIntFunctionCopy1(crIntFunctionNonConst);
+	crstl::fixed_function<8, int(int)> crIntFunctionCopy2(crIntFunctionConst);
+	crstl::fixed_function<8, int(int)> crIntFunctionMove(std::move(crIntFunctionNonConst));
 
 	crIntFunctionConst(5);
 
