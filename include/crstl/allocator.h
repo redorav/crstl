@@ -22,7 +22,7 @@ namespace crstl
 			return ::operator new(size_bytes);
 		}
 
-		crstl_constexpr void deallocate(void* p, size_type /*n*/ ) const crstl_noexcept
+		crstl_constexpr void deallocate(void* p, size_type /*size_bytes*/ ) const crstl_noexcept
 		{
 			::operator delete(p);
 		}
