@@ -8,7 +8,9 @@
 
 #include "crstl/crstldef.h"
 
+#if defined(CRSTL_INITIALIZER_LISTS)
 #include <initializer_list>
+#endif
 
 // fixed_vector
 //
@@ -82,15 +84,19 @@ crstl_module_export namespace crstl
 			m_length = (length_type)iter_length;
 		}
 
+#if defined(CRSTL_INITIALIZER_LISTS)
+
 		crstl_constexpr fixed_vector(std::initializer_list<T> ilist) crstl_noexcept : m_length(0)
 		{
-			crstl_assert((ilist.end() - ilist.begin()) <= NumElements);
+			crstl_assert((size_t)(ilist.end() - ilist.begin()) <= NumElements);
 
 			for (const T *ptr = ilist.begin(), *end = ilist.end(); ptr != end; ++ptr)
 			{
 				push_back(*ptr);
 			}
 		}
+
+#endif
 
 		~fixed_vector() crstl_noexcept
 		{

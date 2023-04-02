@@ -12,7 +12,9 @@
 
 #include "crstl/compressed_pair.h"
 
+#if defined(CRSTL_INITIALIZER_LISTS)
 #include <initializer_list>
+#endif
 
 // vector
 //
@@ -97,6 +99,8 @@ crstl_module_export namespace crstl
 			m_length = (length_type)iter_length;
 		}
 
+#if defined(CRSTL_INITIALIZER_LISTS)
+
 		crstl_constexpr vector(std::initializer_list<T> ilist) crstl_noexcept : m_length(0)
 		{
 			crstl_assert(ilist.end() >= ilist.begin());
@@ -110,6 +114,7 @@ crstl_module_export namespace crstl
 				push_back(*ptr);
 			}
 		}
+#endif
 
 		~vector() crstl_noexcept
 		{

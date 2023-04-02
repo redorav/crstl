@@ -98,6 +98,17 @@
 #if crstl_cppversion >= 201103L
 
 	#define CRSTL_VARIADIC_TEMPLATES
+	#define crstl_constructor_delete = delete
+
+#else
+
+	#define crstl_constructor_delete
+
+#endif
+
+#if defined(__cpp_initializer_lists)
+	
+	#define CRSTL_INITIALIZER_LISTS
 
 #endif
 
@@ -109,7 +120,7 @@ inline void crstl_assert_impl(bool condition)
 {
 	if (!condition)
 	{
-		int* p = (int*)(int)(0xDEADBEEF);
+		int* p = (int*)(int)(0xDEADC0DE);
 		*p = 0;
 	}
 }

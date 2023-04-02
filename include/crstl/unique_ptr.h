@@ -106,9 +106,9 @@ crstl_module_export namespace crstl
 
 	private:
 
-		crstl_constexpr unique_ptr_base(const unique_ptr_base& uptr) crstl_noexcept;
-		crstl_constexpr unique_ptr_base& operator = (const unique_ptr_base& uptr) crstl_noexcept;
-		crstl_constexpr unique_ptr_base& operator = (T* ptr) crstl_noexcept;
+		crstl_constexpr unique_ptr_base(const unique_ptr_base& uptr) crstl_constructor_delete;
+		crstl_constexpr unique_ptr_base& operator = (const unique_ptr_base& uptr) crstl_constructor_delete;
+		crstl_constexpr unique_ptr_base& operator = (T* ptr) crstl_constructor_delete;
 	};
 
 	// unique_ptr for scalar types
