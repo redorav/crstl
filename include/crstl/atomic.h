@@ -190,7 +190,7 @@ crstl_module_export namespace crstl
 			return atomic_add((operation_type*)&m_value, -1) - 1;
 		}
 
-		// Post-derement
+		// Post-decrement
 		value_type operator -- (int)
 		{
 			return atomic_add((operation_type*)&m_value, -1);
