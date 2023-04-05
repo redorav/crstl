@@ -1,5 +1,7 @@
 #pragma once
 
+// C++ Version
+
 #if defined(_MSVC_LANG)
 
 	#define crstl_cppversion _MSVC_LANG
@@ -9,6 +11,8 @@
 	#define crstl_cppversion __cplusplus
 
 #endif
+
+// Compiler
 
 #if defined(__clang__)
 
@@ -21,6 +25,30 @@
 #elif defined(_MSC_VER)
 
 	#define CRSTL_MSVC
+
+#endif
+
+// Processor Architecture
+
+#if defined(_M_ARM) || defined(__arm__) || defined(_M_ARM64) || defined(__aarch64__)
+
+	#define CRSTL_ARM
+
+#elif defined(_WIN32)
+
+	#define CRSTL_X86_64
+
+#endif
+
+// Operating System
+
+#if defined(_WIN32)
+
+	#define CRSTL_WINDOWS
+
+#elif defined(__linux__)
+
+	#define CRSTL_LINUX
 
 #endif
 
@@ -51,6 +79,12 @@
 #else
 
 	#define crstl_noexcept noexcept
+
+#endif
+
+#if crstl_cppversion >= 202002L || defined(__cpp_lib_char8_t)
+
+#define CRSTL_CHAR8_TYPE
 
 #endif
 
@@ -130,26 +164,6 @@ inline void crstl_assert_impl(bool condition)
 #else
 
 #define crstl_assert(x)
-
-#endif
-
-#if defined(_M_ARM) || defined(__arm__) || defined(_M_ARM64) || defined(__aarch64__)
-
-	#define CRSTL_ARM
-
-#elif defined(_WIN32)
-
-	#define CRSTL_X86_64
-
-#endif
-
-#if defined(_WIN32)
-
-	#define CRSTL_WINDOWS
-
-#elif defined(__linux__)
-
-	#define CRSTL_LINUX
 
 #endif
 

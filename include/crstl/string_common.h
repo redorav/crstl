@@ -57,6 +57,13 @@ crstl_module_export namespace crstl
 		return length < max_length ? length : max_length;
 	}
 
+	inline size_t string_length(const char8_t* str) { return strlen((const char*)str); }
+	inline size_t string_length(const char8_t* str, size_t max_length)
+	{
+		size_t length = strlen((const char*)str);
+		return length < max_length ? length : max_length;
+	}
+
 	// = 0   They compare equal
 	// < 0   Either the value of the first character that does not match is lower in the compared string, or all compared characters match but the compared string is shorter.
 	// > 0   Either the value of the first character that does not match is greater in the compared string, or all compared characters match but the compared string is longer.
@@ -653,5 +660,15 @@ crstl_module_export namespace crstl
 		{
 			return utf_result::no_memory;
 		}
+	}
+
+	inline utf_result::t decode_chunk(char8_t* dst_start, const char8_t* dst_end, const wchar_t* src_start, const wchar_t* src_end, size_t& utf8_offset, size_t& utf16_offset)
+	{
+		return decode_chunk((char*)dst_start, (const char*)dst_end, src_start, src_end, utf8_offset, utf16_offset);
+	}
+
+	inline utf_result::t decode_chunk(wchar_t* dst_start, const wchar_t* dst_end, const char8_t* src_start, const char8_t* src_end, size_t& utf16_offset, size_t& utf8_offset)
+	{
+		return decode_chunk(dst_start, dst_end, (const char*)src_start, (const char*)src_end, utf8_offset, utf16_offset);
 	}
 };

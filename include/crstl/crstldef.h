@@ -20,12 +20,18 @@ namespace crstl
 	typedef decltype(-9223372036854775807) int64_t;
 	typedef decltype(9223372036854775808u) uint64_t;
 
-	static_assert(sizeof( int8_t) == 1, "Incorrect size for int8_t");
+	static_assert(sizeof(int8_t) == 1, "Incorrect size for int8_t");
 	static_assert(sizeof(uint8_t) == 1, "Incorrect size for uint8_t");
-	static_assert(sizeof( int16_t) == 2, "Incorrect size for int16_t");
+	static_assert(sizeof(int16_t) == 2, "Incorrect size for int16_t");
 	static_assert(sizeof(uint16_t) == 2, "Incorrect size for uint16_t");
-	static_assert(sizeof( int32_t) == 4, "Incorrect size for int32_t");
+	static_assert(sizeof(int32_t) == 4, "Incorrect size for int32_t");
 	static_assert(sizeof(uint32_t) == 4, "Incorrect size for uint32_t");
-	static_assert(sizeof( int64_t) == 8, "Incorrect size for int64_t");
+	static_assert(sizeof(int64_t) == 8, "Incorrect size for int64_t");
 	static_assert(sizeof(uint64_t) == 8, "Incorrect size for uint64_t");
 };
+
+#if !defined(CRSTL_CHAR8_TYPE)
+
+typedef unsigned char char8_t;
+
+#endif
