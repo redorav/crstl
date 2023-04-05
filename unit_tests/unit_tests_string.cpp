@@ -3,8 +3,8 @@
 #if defined(CRSTL_UNIT_MODULES)
 import crstl;
 #else
-#include "crstl/fixed_string.h"
 #include "crstl/string.h"
+#include "crstl/fixed_string.h"
 #include "crstl/string_view.h"
 #include "crstl/move_forward.h"
 #endif
@@ -16,9 +16,16 @@ import crstl;
 #include <string_view>
 #endif
 
+//constexpr void ConstexprFunction()
+//{
+//	constexpr crstl::string crConstexprString = "Hello";
+//}
+
 void RunUnitTestsString()
 {
 	using namespace crstl_unit;
+
+	// Utility Strings
 
 	const char* HelloString = "Hello String";
 	const wchar_t* WHelloString = L"Hello String";
@@ -34,9 +41,36 @@ void RunUnitTestsString()
 	char StringArray[32] = {};
 	sprintf(StringArray, String);
 
+	// Unicode Strings
+
+	// Taberu
+	const char* TaberuUtf8 = (const char*)u8"\u98df\u98df\u98df\u98df"; // Correct
+	const wchar_t* TaberuWchar = L"\u98df\u98df\u98df\u98df\u98df\u98df\u98df\u98df"; // Correct
+	const char8_t* TaberuChar8 = (const char8_t*)u8"\u98df\u98df\u98df\u98df"; // Correct
+	const char16_t* TaberuChar16 = u"\u98df\u98df\u98df\u98df"; // Correct
+	const char32_t* TaberuChar32 = U"\u98df\u98df\u98df\u98df"; // Correct
+
+	size_t lengthTaberuUtf8 = strlen((const char*)TaberuUtf8); // Correct
+	size_t lengthTaberuWchar = wcslen(TaberuWchar); // Correct
+	size_t lengthTaberuChar8 = strlen((const char*)TaberuChar8); // Correct
+	//size_t lengthTaberuChar16 = wcslen(TaberuChar16); // Correct
+	//size_t lengthTaberuChar32 = wcslen(TaberuChar32); // Correct
+
+	// 食
+	const char* TaberuUtf8_lit = (const char*)"食食食食";
+	const wchar_t* TaberuWchar_lit = L"食食食食";
+	const char8_t* TaberuChar8_lit = (const char8_t*)u8"食食食食";
+	const char16_t* TaberuChar16_lit = u"食食食食";
+	const char32_t* TaberuChar32_lit = U"食食食食";
+
+	size_t lengthTaberuUtf8_lit = strlen((const char*)TaberuUtf8_lit); // Correct
+	size_t lengthTaberuWchar_lit = wcslen(TaberuWchar_lit); // Incorrect
+	size_t lengthTaberuChar8_lit = strlen((const char*)TaberuChar8_lit); // Incorrect
+	//size_t lengthTaberuChar16_lit = wcslen(TaberuChar16_lit);
+	//size_t lengthTaberuChar32_lit = wcslen(TaberuChar32_lit);
+
 	begin_test("fixed_string");
 	{
-
 		// Constructors
 
 		std::string mystds;
@@ -112,6 +146,45 @@ void RunUnitTestsString()
 
 		crFixedString32.assign_convert(WHelloString, crstl::string_length(WHelloString));
 		mywfs32.assign_convert(HelloString, crstl::string_length(HelloString));
+
+		// erase
+		{
+			crstl::fixed_string32 crFixedStringErase = "Hello String";
+			std::string stdStringErase = "Hello String";
+
+			crFixedStringErase.erase(2, 5);
+			stdStringErase.erase(2, 5);
+		}
+
+		// operators
+		{
+			crstl::fixed_string32 crStringCompare = "Hello World";
+			std::string stdStringCompare = "Hello World";
+
+			bool crLessThanHello = crStringCompare < "Hello";
+			bool stdLessThanHello = stdStringCompare < "Hello";
+			crstl_check(crLessThanHello == stdLessThanHello);
+
+			bool crGreaterThanHello = crStringCompare > "Hello";
+			bool stdGreaterThanHello = stdStringCompare > "Hello";
+			crstl_check(crGreaterThanHello == stdGreaterThanHello);
+
+			bool crEqualHello = crStringCompare == "Hello World";
+			bool stdEqualHello = stdStringCompare == "Hello World";
+			crstl_check(crEqualHello == stdEqualHello);
+
+			bool crLessThanHelloWordl = crStringCompare < "Hello Wordl";
+			bool stdLessThanHelloWordl = stdStringCompare < "Hello Wordl";
+			crstl_check(crLessThanHelloWordl == stdLessThanHelloWordl);
+
+			bool crLessThanHelloWordl2 = crStringCompare < "Hello Wordl2";
+			bool stdLessThanHelloWordl2 = stdStringCompare < "Hello Wordl2";
+			crstl_check(crLessThanHelloWordl2 == stdLessThanHelloWordl2);
+
+			int crCompareHelloWordl2 = crStringCompare.compare("Hello Wordl2");
+			int stdCompareHelloWordl2 = stdStringCompare.compare("Hello Wordl2");
+			crstl_check(crCompareHelloWordl2 == stdCompareHelloWordl2);
+		}
 
 		// string_view
 
@@ -192,6 +265,10 @@ void RunUnitTestsString()
 		crstl_check(crStringEmpty.size() == stdStringEmpty.size());
 		crstl_check(crWstringEmpty.size() == stdStringEmpty.size());
 
+		//std::string perry(4);
+		crstl::string crStringInteger(462);
+		crstl::string crStringFloat(462.0f);
+
 		// append
 
 		crstl::string crStringAppend;
@@ -226,37 +303,9 @@ void RunUnitTestsString()
 		crstl::string crStringAppendConvert;
 		crstl::wstring crWStringAppendConvert;
 
-		// Taberu
-		const char* TaberuUtf8 = (const char*)u8"\u98df\u98df\u98df\u98df"; // Correct
-		const wchar_t* TaberuWchar = L"\u98df\u98df\u98df\u98df\u98df\u98df\u98df\u98df"; // Correct
-		const char8_t* TaberuChar8 = (const char8_t*)u8"\u98df\u98df\u98df\u98df"; // Correct
-		const char16_t* TaberuChar16 = u"\u98df\u98df\u98df\u98df"; // Correct
-		const char32_t* TaberuChar32 = U"\u98df\u98df\u98df\u98df"; // Correct
-
-		size_t lengthTaberuUtf8  = strlen((const char*)TaberuUtf8); // Correct
-		size_t lengthTaberuWchar  = wcslen(TaberuWchar); // Correct
-		size_t lengthTaberuChar8  = strlen((const char*)TaberuChar8); // Correct
-		//size_t lengthTaberuChar16 = wcslen(TaberuChar16); // Correct
-		//size_t lengthTaberuChar32 = wcslen(TaberuChar32); // Correct
-
-		// 食
-		const char* TaberuUtf8_lit = (const char*)"食食食食";
-		const wchar_t* TaberuWchar_lit = L"食食食食";
-		const char8_t* TaberuChar8_lit = (const char8_t*)u8"食食食食";
-		const char16_t* TaberuChar16_lit = u"食食食食";
-		const char32_t* TaberuChar32_lit = U"食食食食";
-
-		size_t lengthTaberuUtf8_lit = strlen((const char*)TaberuUtf8_lit); // Correct
-		size_t lengthTaberuWchar_lit = wcslen(TaberuWchar_lit); // Incorrect
-		size_t lengthTaberuChar8_lit = strlen((const char*)TaberuChar8_lit); // Incorrect
-		//size_t lengthTaberuChar16_lit = wcslen(TaberuChar16_lit);
-		//size_t lengthTaberuChar32_lit = wcslen(TaberuChar32_lit);
-
 		crStringAppendConvert.append("Hello ");
 		crStringAppendConvert.append_convert(TaberuWchar);
-		crStringAppendConvert.append_convert(TaberuWchar);
-		crStringAppendConvert.append_convert(L"Now we add a very long string to a string we know already is heap allocated");
-		crStringAppendConvert.clear();
+		crStringAppendConvert.append_convert(L"\u98df\u98df\u98df\u98df");
 		crStringAppendConvert.append_convert(L"Now we add a very long string to a string we know already is heap allocated");
 
 		crWStringAppendConvert.append_convert(u8"\u98df");
@@ -292,6 +341,15 @@ void RunUnitTestsString()
 		crstl_check(crStringAssign.size() == stdStringAssign.size());
 		crstl_check(crWstringAssign.size() == stdStringAssign.size());
 
+		// erase
+		{
+			crstl::string crStringErase = "Hello String";
+			std::string stdStringErase = "Hello String";
+		
+			crStringErase.erase(2, 6);
+			stdStringErase.erase(2, 6);
+		}
+
 		// replace
 		{
 			crstl::string crStringReplace = "Hello String";
@@ -307,9 +365,10 @@ void RunUnitTestsString()
 		}
 
 		// reserve
-
-		crstl::string crStringReserve;
-		crStringReserve.reserve(100);
+		{
+			crstl::string crStringReserve;
+			crStringReserve.reserve(100);
+		}
 
 		// resize
 
