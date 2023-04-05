@@ -86,6 +86,19 @@
 		</Expand>
 	</Type>
 
+	<Type Name="crstl::stack_vector&lt;*&gt;">
+		<DisplayString>[size = {m_length}]</DisplayString>
+
+		<Expand>
+			<Item Name="[capacity]">m_capacity</Item>
+			<Item Name="[size]">m_length</Item>
+			<ArrayItems>
+				<Size>m_length</Size>
+				<ValuePointer>m_data</ValuePointer>
+			</ArrayItems>
+		</Expand>
+	</Type>
+
 	<Type Name="crstl::basic_string&lt;char,*&gt;">
 
 		<DisplayString Condition="!(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)"> {m_layout_allocator.m_first.m_sso.data, s8} [{kSSOCapacity - m_layout_allocator.m_first.m_sso.remaining_length.value}] [sso] </DisplayString>
