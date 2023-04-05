@@ -3,6 +3,7 @@
 #if defined(CRSTL_UNIT_MODULES)
 import crstl;
 #else
+#include "crstl/stack_vector.h"
 #include "crstl/fixed_vector.h"
 #include "crstl/vector.h"
 #include "crstl/span.h"
@@ -114,14 +115,14 @@ void RunUnitTestsVector()
 		crstl_check(crFixedVectorBraced.size() == 1);
 		crstl_check(crFixedVectorBraced2.size() == 2);
 		crstl_check(crFixedVectorBraced3.size() == 3);
-
+		
 		crFixedVectorBraced = { Dummy() };
 		crFixedVectorBraced2 = { Dummy(), Dummy() };
 		crFixedVectorBraced3 = { Dummy(1, 2.0f), Dummy(3, 4.0f), Dummy(5, 6.0f) };
 		crstl_check(crFixedVectorBraced.size() == 1);
 		crstl_check(crFixedVectorBraced2.size() == 2);
 		crstl_check(crFixedVectorBraced3.size() == 3);
-
+		
 		// Test the const T& version
 		Dummy dummy;
 		crFixedVectorBraced = { dummy };
@@ -131,7 +132,6 @@ void RunUnitTestsVector()
 		crstl_check(crFixedVectorBraced2.size() == 2);
 		crstl_check(crFixedVectorBraced3.size() == 3);
 
-		//crstl::fixed_vector<std::string, 32> crFixedVectorBreacedString = { "Hello World" };
 #endif
 	}
 	end_test();
@@ -185,6 +185,26 @@ void RunUnitTestsVector()
 			crstl_check(crVector.size() == count);
 		}
 #endif
+	}
+	end_test();
+
+	begin_test("stack_vector");
+	{
+		crstl::stack_vector<Dummy> crStackVector(crstl_alloca_t(Dummy, 32));
+		crStackVector.push_back(Dummy());
+		crStackVector.push_back(Dummy());
+		crStackVector.push_back(Dummy());
+		crStackVector.push_back(Dummy());
+		crStackVector.push_back(Dummy());
+		crStackVector.push_back(Dummy());
+		crStackVector.push_back(Dummy());
+		crStackVector.push_back(Dummy());
+		crStackVector.push_back(Dummy());
+		crStackVector.push_back(Dummy());
+
+		crStackVector.emplace_back();
+
+		crStackVector[4].b = 42;
 	}
 	end_test();
 }
