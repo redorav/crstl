@@ -123,11 +123,20 @@
 
 #endif
 
-#define crstl_warning_anonymous_struct_union_begin \
+#if defined(_MSC_VER)
+
+	#define crstl_warning_anonymous_struct_union_begin \
 	__pragma(warning(push)) \
 	__pragma(warning(disable : 4201))
 
-#define crstl_warning_anonymous_struct_union_end __pragma(warning(pop))
+	#define crstl_warning_anonymous_struct_union_end __pragma(warning(pop))
+
+#else
+
+	#define crstl_warning_anonymous_struct_union_begin
+	#define crstl_warning_anonymous_struct_union_end
+
+#endif
 
 #if crstl_cppversion >= 201103L
 
@@ -170,7 +179,7 @@ inline void crstl_assert_impl(bool condition)
 #if defined(CRSTL_MODULE_DECLARATION)
 
 	#define crstl_module_export export
-
+	
 #else
 
 	#define crstl_module_export
