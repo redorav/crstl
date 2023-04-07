@@ -8,8 +8,10 @@
 #include "crstl/platform/atomic_win32.h"
 #elif defined(CRSTL_ARM)
 #include "crstl/platform/atomic_arm.h"
-#elif defined(__linux__)
+#elif defined(CRSTL_LINUX)
 #include "crstl/platform/atomic_linux.h"
+#elif defined(CRSTL_OSX)
+#include "crstl/platform/atomic_osx.h"
 #endif
 
 crstl_module_export namespace crstl

@@ -50,6 +50,10 @@
 
 	#define CRSTL_LINUX
 
+#elif defined(__APPLE__)
+
+	#define CRSTL_OSX
+
 #endif
 
 #if defined(__clang__) || defined(__GNUG__)
