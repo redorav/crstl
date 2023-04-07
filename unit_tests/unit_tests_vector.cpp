@@ -155,6 +155,11 @@ void RunUnitTestsVector()
 
 		crstl_check(crVector.size() == stdVector.size());
 
+		crVector.emplace_back(9, 20.0f);
+		stdVector.emplace_back(9, 20.0f);
+
+		crstl_check(crVector.size() == stdVector.size());
+
 		crVector.resize(6, Dummy(20, 70.0f, nullptr));
 		stdVector.resize(6, Dummy(20, 70.0f, nullptr));
 

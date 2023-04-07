@@ -17,6 +17,8 @@
 
 #endif
 
+#define crstl_unit_unused(x) (void)x
+
 #include "crstl/config.h"
 
 #include "crstl/config_fwd.h"
@@ -92,11 +94,15 @@ public:
 
 class DummyChild : public Dummy
 {
+public:
+
 	int k;
 };
 
 class DummyOther
 {
+public:
+
 	int k;
 };
 
