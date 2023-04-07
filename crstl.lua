@@ -6,6 +6,7 @@ Workspace = 'workspace/'.._ACTION
 PlatformMSVC64			= 'MSVC 64'
 PlatformMSVC64Modules	= 'MSVC 64 Modules'
 PlatformLLVM64			= 'LLVM 64'
+PlatformLLVM64Modules	= 'LLVM 64 Modules'
 PlatformOSX64			= 'OSX 64'
 PlatformLinux64_GCC		= 'Linux64_GCC'
 PlatformLinux64_Clang	= 'Linux64_Clang'
@@ -98,7 +99,8 @@ workspace('crstl')
 
 			platforms
 			{
-				PlatformMSVC64Modules
+				PlatformMSVC64Modules,
+				PlatformLLVM64Modules
 			}
 
 		end
@@ -137,6 +139,13 @@ workspace('crstl')
 		filter { 'platforms:'..PlatformMSVC64Modules }
 			cppdialect('C++20')
 			toolset('msc')
+			architecture('x64')
+			vectorextensions('sse4.1')
+			defines { '__SSE4_1__' }
+			
+		filter { 'platforms:'..PlatformLLVM64Modules }
+			cppdialect('C++20')
+			toolset(llvmToolset)
 			architecture('x64')
 			vectorextensions('sse4.1')
 			defines { '__SSE4_1__' }
