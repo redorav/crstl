@@ -13,11 +13,7 @@
 #include "crstl/compressed_pair.h"
 
 #if defined(CRSTL_INITIALIZER_LISTS)
-#if defined(CRSTL_MODULE_DECLARATION)
-import <initializer_list>;
-#else
 #include <initializer_list>
-#endif
 #endif
 
 // vector
