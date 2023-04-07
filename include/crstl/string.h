@@ -15,6 +15,13 @@
 
 crstl_module_export namespace crstl
 {
+	namespace detail
+	{
+		// Insert padding when sizeof(value_type) > 1
+		template<int N> struct sso_padding { char padding[N]; };
+		template<> struct sso_padding<0> {};
+	};
+
 	template<typename T, typename Allocator = crstl::allocator>
 	class basic_string
 	{
@@ -37,11 +44,7 @@ crstl_module_export namespace crstl
 			size_t capacity;
 		};
 
-		// Insert padding when sizeof(value_type) > 1
-		template<int N> struct sso_padding { char padding[N]; };
-		template<> struct sso_padding<0> {};
-
-		struct sso_size : sso_padding<sizeof(value_type) - 1>
+		struct sso_size : detail::sso_padding<sizeof(value_type) - 1>
 		{
 			char value;
 		};
