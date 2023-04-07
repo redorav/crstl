@@ -33,6 +33,11 @@
 
 #if defined(_MSC_VER) && !defined(alloca)
 #define alloca _alloca
+#else
+extern "C"
+{
+	void* alloca(crstl::size_t size);
+}
 #endif
 
 #define crstl_alloca_t(T, capacity) crstl::transient_memory_t<T>((T*)alloca(capacity * sizeof(T)), capacity)
