@@ -31,7 +31,11 @@
 // - Consider using a fixed_vector first, and if requirements require dynamic
 //   size for temporary usage, use stack_vector instead
 
-#define crstl_alloca_t(T, capacity) crstl::transient_memory_t<T>((T*)_alloca(capacity * sizeof(T)), capacity)
+#if !defined(alloca)
+#define alloca _alloca
+#endif
+
+#define crstl_alloca_t(T, capacity) crstl::transient_memory_t<T>((T*)alloca(capacity * sizeof(T)), capacity)
 
 crstl_module_export namespace crstl
 {
