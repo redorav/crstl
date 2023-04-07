@@ -9,7 +9,11 @@
 #include "crstl/crstldef.h"
 
 #if defined(CRSTL_INITIALIZER_LISTS)
+#if defined(CRSTL_MODULE_DECLARATION)
+import <initializer_list>;
+#else
 #include <initializer_list>
+#endif
 #endif
 
 // fixed_vector

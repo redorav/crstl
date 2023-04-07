@@ -13,13 +13,19 @@
 #include "crstl/compressed_pair.h"
 
 #if defined(CRSTL_INITIALIZER_LISTS)
+#if defined(CRSTL_MODULE_DECLARATION)
+import <initializer_list>;
+#else
 #include <initializer_list>
+#endif
 #endif
 
 // vector
 //
 // Replacement for std::vector
 //
+// - Guaranteed linear memory
+// - No allocation for new, empty vector
 // - vector of bool is a vector of bool, not a bitvector
 
 crstl_module_export namespace crstl
