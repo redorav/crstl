@@ -31,7 +31,7 @@
 // - Consider using a fixed_vector first, and if requirements require dynamic
 //   size for temporary usage, use stack_vector instead
 
-#if !defined(alloca)
+#if defined(_MSC_VER) && !defined(alloca)
 #define alloca _alloca
 #endif
 
