@@ -22,110 +22,110 @@ crstl_module_export namespace crstl
 {
 	// store_atomic: store value to variable pointed by target, and return its previous value
 
-	inline int8_t store_atomic(int8_t volatile* target, int8_t value) crstl_noexcept
+	inline int8_t atomic_store(int8_t volatile* target, int8_t value) crstl_noexcept
 	{
 		return crstl_atomic_store8(target, value);
 	}
 
-	inline int16_t store_atomic(int16_t volatile* target, int16_t value) crstl_noexcept
+	inline int16_t atomic_store(int16_t volatile* target, int16_t value) crstl_noexcept
 	{
 		return crstl_atomic_store16(target, value);
 	}
 
-	inline int32_t store_atomic(int32_t volatile* target, int32_t value) crstl_noexcept
+	inline int32_t atomic_store(int32_t volatile* target, int32_t value) crstl_noexcept
 	{
 		return crstl_atomic_store32(target, value);
 	}
 
-	inline int64_t store_atomic(int64_t volatile* target, int64_t value) crstl_noexcept
+	inline int64_t atomic_store(int64_t volatile* target, int64_t value) crstl_noexcept
 	{
 		return crstl_atomic_store64(target, value);
 	}
 
 	// add_atomic: add value to variable pointed by target, and return the previous value of target
 
-	inline int8_t add_atomic(int8_t volatile* target, int8_t value) crstl_noexcept
+	inline int8_t atomic_add(int8_t volatile* target, int8_t value) crstl_noexcept
 	{
 		return crstl_atomic_add8(target, value);
 	}
 
-	inline int16_t add_atomic(int16_t volatile* target, int16_t value) crstl_noexcept
+	inline int16_t atomic_add(int16_t volatile* target, int16_t value) crstl_noexcept
 	{
 		return crstl_atomic_add16(target, value);
 	}
 
-	inline int32_t add_atomic(int32_t volatile* target, int32_t value) crstl_noexcept
+	inline int32_t atomic_add(int32_t volatile* target, int32_t value) crstl_noexcept
 	{
 		return crstl_atomic_add32(target, value);
 	}
 
-	inline int64_t add_atomic(int64_t volatile* target, int64_t value) crstl_noexcept
+	inline int64_t atomic_add(int64_t volatile* target, int64_t value) crstl_noexcept
 	{
 		return crstl_atomic_add64(target, value);
 	}
 
 	// and_atomic: AND value with variable pointed by target, and return the previous value of target
 
-	inline int8_t and_atomic(int8_t volatile* target, int8_t value) crstl_noexcept
+	inline int8_t atomic_and(int8_t volatile* target, int8_t value) crstl_noexcept
 	{
 		return crstl_atomic_and8(target, value);
 	}
 
-	inline int16_t and_atomic(int16_t volatile* target, int16_t value) crstl_noexcept
+	inline int16_t atomic_and(int16_t volatile* target, int16_t value) crstl_noexcept
 	{
 		return crstl_atomic_and16(target, value);
 	}
 
-	inline int32_t and_atomic(int32_t volatile* target, int32_t value) crstl_noexcept
+	inline int32_t atomic_and(int32_t volatile* target, int32_t value) crstl_noexcept
 	{
 		return crstl_atomic_and32(target, value);
 	}
 
-	inline int64_t and_atomic(int64_t volatile* target, int64_t value) crstl_noexcept
+	inline int64_t atomic_and(int64_t volatile* target, int64_t value) crstl_noexcept
 	{
 		return crstl_atomic_and64(target, value);
 	}
 
 	// or_atomic: OR value with variable pointed by target, and return the previous value of target
 
-	inline int8_t or_atomic(int8_t volatile* target, int8_t value) crstl_noexcept
+	inline int8_t atomic_or(int8_t volatile* target, int8_t value) crstl_noexcept
 	{
 		return crstl_atomic_or8(target, value);
 	}
 
-	inline int16_t or_atomic(int16_t volatile* target, int16_t value) crstl_noexcept
+	inline int16_t atomic_or(int16_t volatile* target, int16_t value) crstl_noexcept
 	{
 		return crstl_atomic_or16(target, value);
 	}
 
-	inline int32_t or_atomic(int32_t volatile* target, int32_t value) crstl_noexcept
+	inline int32_t atomic_or(int32_t volatile* target, int32_t value) crstl_noexcept
 	{
 		return crstl_atomic_or32(target, value);
 	}
 
-	inline int64_t or_atomic(int64_t volatile* target, int64_t value) crstl_noexcept
+	inline int64_t atomic_or(int64_t volatile* target, int64_t value) crstl_noexcept
 	{
 		return crstl_atomic_or64(target, value);
 	}
 
 	// xor_atomic: XOR value with variable pointed by target, and return the previous value of target
 
-	inline int8_t xor_atomic(int8_t volatile* target, int8_t value) crstl_noexcept
+	inline int8_t atomic_xor(int8_t volatile* target, int8_t value) crstl_noexcept
 	{
 		return crstl_atomic_xor8(target, value);
 	}
 
-	inline int16_t xor_atomic(int16_t volatile* target, int16_t value) crstl_noexcept
+	inline int16_t atomic_xor(int16_t volatile* target, int16_t value) crstl_noexcept
 	{
 		return crstl_atomic_xor16(target, value);
 	}
 
-	inline int32_t xor_atomic(int32_t volatile* target, int32_t value) crstl_noexcept
+	inline int32_t atomic_xor(int32_t volatile* target, int32_t value) crstl_noexcept
 	{
 		return crstl_atomic_xor32(target, value);
 	}
 
-	inline int64_t xor_atomic(int64_t volatile* target, int64_t value) crstl_noexcept
+	inline int64_t atomic_xor(int64_t volatile* target, int64_t value) crstl_noexcept
 	{
 		return crstl_atomic_xor64(target, value);
 	}
@@ -150,56 +150,56 @@ crstl_module_export namespace crstl
 
 		atomic(const value_type& value)
 		{
-			store_atomic((operation_type*)&m_value, value);
+			atomic_store((operation_type*)&m_value, value);
 		}
 
 		atomic& operator += (const value_type& value)
 		{
-			add_atomic((operation_type*)&m_value, value); return *this;
+			atomic_add((operation_type*)&m_value, value); return *this;
 		}
 
 		atomic& operator -= (const value_type& value)
 		{
-			add_atomic((operation_type*)&m_value, -(operation_type)value); return *this;
+			atomic_add((operation_type*)&m_value, -(operation_type)value); return *this;
 		}
 
 		atomic& operator &= (const value_type& value)
 		{
-			and_atomic((operation_type*)&m_value, value); return *this;
+			atomic_and((operation_type*)&m_value, value); return *this;
 		}
 
 		atomic& operator |= (const value_type& value)
 		{
-			or_atomic((operation_type*)&m_value, value); return *this;
+			atomic_or((operation_type*)&m_value, value); return *this;
 		}
 
 		atomic& operator ^= (const value_type& value)
 		{
-			xor_atomic((operation_type*)& m_value, value); return *this;
+			atomic_xor((operation_type*)& m_value, value); return *this;
 		}
 
 		// Pre-increment
 		value_type operator ++ ()
 		{
-			return add_atomic((operation_type*)&m_value, 1) + 1;
+			return atomic_add((operation_type*)&m_value, 1) + 1;
 		}
 
 		// Post-increment
 		value_type operator ++ (int)
 		{
-			return add_atomic((operation_type*)&m_value, 1);
+			return atomic_add((operation_type*)&m_value, 1);
 		}
 
 		// Pre-decrement
 		value_type operator -- ()
 		{
-			return add_atomic((operation_type*)&m_value, -1) - 1;
+			return atomic_add((operation_type*)&m_value, -1) - 1;
 		}
 
 		// Post-decrement
 		value_type operator -- (int)
 		{
-			return add_atomic((operation_type*)&m_value, -1);
+			return atomic_add((operation_type*)&m_value, -1);
 		}
 
 		operator value_type() const
