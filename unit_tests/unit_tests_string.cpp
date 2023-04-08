@@ -183,7 +183,7 @@ void RunUnitTestsString()
 
 			int crCompareHelloWordl2 = crStringCompare.compare("Hello Wordl2");
 			int stdCompareHelloWordl2 = stdStringCompare.compare("Hello Wordl2");
-			crstl_check(crCompareHelloWordl2 == stdCompareHelloWordl2);
+			crstl_check((crCompareHelloWordl2 > 0) == (stdCompareHelloWordl2 > 0));
 		}
 
 		// string_view
