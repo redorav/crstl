@@ -50,11 +50,6 @@ workspace('crstl')
 		{
 			'multiprocessorcompile',
 		}
-
-		buildoptions
-		{
-			'/permissive-'
-		}
 		
 	filter {}
 	
@@ -135,6 +130,7 @@ workspace('crstl')
 			architecture('x64')
 			vectorextensions('sse4.1')
 			defines { '__SSE4_1__' }
+			buildoptions { '/permissive-' }
 
 		filter { 'platforms:'..PlatformMSVC64Modules }
 			cppdialect('C++20')
@@ -142,6 +138,7 @@ workspace('crstl')
 			architecture('x64')
 			vectorextensions('sse4.1')
 			defines { '__SSE4_1__' }
+			buildoptions { '/permissive-' }
 			
 		filter { 'platforms:'..PlatformLLVM64Modules }
 			cppdialect('C++20')
