@@ -396,16 +396,18 @@ crstl_module_export namespace crstl
 		// Append a const char* string with a provided length
 		crstl_constexpr basic_string& append_sprintf(const_pointer format, ...) crstl_noexcept
 		{
-			va_list va_arguments;
-			va_start(va_arguments, format);
-
 			size_t current_length = length();
 			size_t remaining_length = capacity() - current_length;
 
 			T* data = basic_string::data();
 
+			va_list va_arguments;
+			va_start(va_arguments, format);
+
 			// Try to copy, limiting the number of characters to what we have available
 			int char_count = vsnprintf(data + current_length, remaining_length, format, va_arguments);
+
+			va_end(va_arguments);
 
 			// It is a formatting error to return a negative number
 			crstl_assert(char_count >= 0);
@@ -415,8 +417,10 @@ crstl_module_export namespace crstl
 			// this to continue where it left off but that's not possible with format specifiers
 			if ((size_t)char_count > remaining_length)
 			{
+				va_start(va_arguments, format);
 				reallocate_heap_larger(current_length + char_count);
 				char_count = vsnprintf(m_layout_allocator.m_first.m_heap.data + current_length, char_count, format, va_arguments);
+				va_end(va_arguments);
 				crstl_assert(char_count >= 0);
 			}
 

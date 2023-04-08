@@ -232,13 +232,15 @@ crstl_module_export namespace crstl
 		// Append a const char* string with a provided length
 		crstl_constexpr basic_fixed_string& append_sprintf(const_pointer format, ...) crstl_noexcept
 		{
+			size_t remaining_length = kCharacterCapacityWithZero - m_length;
+
 			va_list va_arguments;
 			va_start(va_arguments, format);
 
-			size_t remaining_length = kCharacterCapacityWithZero - m_length;
-
 			// Try to copy, limiting the number of characters to what we have available
 			int char_count = vsnprintf(m_data + m_length, remaining_length, format, va_arguments);
+
+			va_end(va_arguments);
 
 			// It is a formatting error to return a negative number
 			crstl_assert(char_count >= 0);
@@ -256,7 +258,6 @@ crstl_module_export namespace crstl
 				m_data[m_length] = '\0';
 			}
 
-			va_end(va_arguments);
 
 			return *this;
 		}
