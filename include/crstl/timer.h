@@ -6,7 +6,7 @@
 
 #if defined(CRSTL_WINDOWS)
 #include "crstl/platform/timer_win32.h"
-#elif defined(CRSTL_LINUX)
+#elif defined(CRSTL_LINUX) || defined(CRSTL_OSX)
 #include "crstl/platform/timer_posix.h"
 #endif
 
