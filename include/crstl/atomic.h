@@ -8,10 +8,8 @@
 #include "crstl/platform/atomic_win32.h"
 #elif defined(CRSTL_ARM)
 #include "crstl/platform/atomic_arm.h"
-#elif defined(CRSTL_LINUX)
-#include "crstl/platform/atomic_linux.h"
-#elif defined(CRSTL_OSX)
-#include "crstl/platform/atomic_osx.h"
+#elif defined(CRSTL_LINUX) || defined(CRSTL_OSX)
+#include "crstl/platform/atomic_clang_gcc.h"
 #endif
 
 // These freestanding functions used to be called atomic_store, add, etc
