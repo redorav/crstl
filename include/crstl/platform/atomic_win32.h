@@ -87,6 +87,16 @@ namespace crstl
 
 #define crstl_atomic_add64(target, value) _InterlockedExchangeAdd64((long long*)(target), (value))
 
+// Subtraction
+
+#define crstl_atomic_sub8(target, value) _InterlockedExchangeAdd8((char*)(target), -(char)(value))
+
+#define crstl_atomic_sub16(target, value) _InterlockedExchangeAdd16((short*)(target), -(short)(value))
+
+#define crstl_atomic_sub32(target, value) _InterlockedExchangeAdd((long*)(target), -(long)(value))
+
+#define crstl_atomic_sub64(target, value) _InterlockedExchangeAdd64((long long*)(target), -(long long)(value))
+
 // And
 
 #define crstl_atomic_and8(target, value) _InterlockedAnd8((char*)(target), (value))

@@ -18,7 +18,7 @@
 
 crstl_module_export namespace crstl
 {
-	// store_atomic: store value to variable pointed by target, and return its previous value
+	// atomic_store: store value to variable pointed by target, and return its previous value
 
 	inline int8_t atomic_store(int8_t volatile* target, int8_t value) crstl_noexcept
 	{
@@ -40,7 +40,7 @@ crstl_module_export namespace crstl
 		return crstl_atomic_store64(target, value);
 	}
 
-	// add_atomic: add value to variable pointed by target, and return the previous value of target
+	// atomic_add: add value to variable pointed by target, and return the previous value of target
 
 	inline int8_t atomic_add(int8_t volatile* target, int8_t value) crstl_noexcept
 	{
@@ -62,7 +62,29 @@ crstl_module_export namespace crstl
 		return crstl_atomic_add64(target, value);
 	}
 
-	// and_atomic: AND value with variable pointed by target, and return the previous value of target
+	// atomic_sub: subtract value from variable pointed by target, and return the previous value of target
+
+	inline int8_t atomic_sub(int8_t volatile* target, int8_t value) crstl_noexcept
+	{
+		return crstl_atomic_sub8(target, value);
+	}
+
+	inline int16_t atomic_sub(int16_t volatile* target, int16_t value) crstl_noexcept
+	{
+		return crstl_atomic_sub16(target, value);
+	}
+
+	inline int32_t atomic_sub(int32_t volatile* target, int32_t value) crstl_noexcept
+	{
+		return crstl_atomic_sub32(target, value);
+	}
+
+	inline int64_t atomic_sub(int64_t volatile* target, int64_t value) crstl_noexcept
+	{
+		return crstl_atomic_sub64(target, value);
+	}
+
+	// atomic_and: AND value with variable pointed by target, and return the previous value of target
 
 	inline int8_t atomic_and(int8_t volatile* target, int8_t value) crstl_noexcept
 	{
@@ -84,7 +106,7 @@ crstl_module_export namespace crstl
 		return crstl_atomic_and64(target, value);
 	}
 
-	// or_atomic: OR value with variable pointed by target, and return the previous value of target
+	// atomic_or: OR value with variable pointed by target, and return the previous value of target
 
 	inline int8_t atomic_or(int8_t volatile* target, int8_t value) crstl_noexcept
 	{
@@ -106,7 +128,7 @@ crstl_module_export namespace crstl
 		return crstl_atomic_or64(target, value);
 	}
 
-	// xor_atomic: XOR value with variable pointed by target, and return the previous value of target
+	// atomic_xor: XOR value with variable pointed by target, and return the previous value of target
 
 	inline int8_t atomic_xor(int8_t volatile* target, int8_t value) crstl_noexcept
 	{
@@ -158,7 +180,7 @@ crstl_module_export namespace crstl
 
 		atomic& operator -= (const value_type& value)
 		{
-			atomic_add((operation_type*)&m_value, -(operation_type)value); return *this;
+			atomic_sub((operation_type*)&m_value, value); return *this;
 		}
 
 		atomic& operator &= (const value_type& value)
@@ -191,13 +213,13 @@ crstl_module_export namespace crstl
 		// Pre-decrement
 		value_type operator -- ()
 		{
-			return atomic_add((operation_type*)&m_value, -1) - 1;
+			return atomic_sub((operation_type*)&m_value, 1) - 1;
 		}
 
 		// Post-decrement
 		value_type operator -- (int)
 		{
-			return atomic_add((operation_type*)&m_value, -1);
+			return atomic_sub((operation_type*)&m_value, 1);
 		}
 
 		operator value_type() const

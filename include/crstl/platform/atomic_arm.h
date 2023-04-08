@@ -20,6 +20,16 @@
 
 #define crstl_atomic_add64(target, value) __sync_fetch_and_add((long long*)(target), (value))
 
+// Subtraction
+
+#define crstl_atomic_sub8(target, value) __sync_fetch_and_sub((char*)(target), (value))
+
+#define crstl_atomic_sub16(target, value) __sync_fetch_and_sub((short*)(target), (value))
+
+#define crstl_atomic_sub32(target, value) __sync_fetch_and_sub((long*)(target), (value))
+
+#define crstl_atomic_sub64(target, value) __sync_fetch_and_sub((long long*)(target), (value))
+
 // And
 
 #define crstl_atomic_and8(target, value) __sync_fetch_and_and((char*)(target), (value))
