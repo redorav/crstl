@@ -192,7 +192,7 @@ workspace('crstl')
 		optimize('speed')
 
 project ('crstl')
-	kind('staticlib')
+	kind('utility')
 	language('c++')
 	files
 	{
