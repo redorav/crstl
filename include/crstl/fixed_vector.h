@@ -265,18 +265,21 @@ crstl_module_export namespace crstl
 
 		reference push_back_uninitialized()
 		{
+			crstl_assert(m_length < NumElements);
 			m_length++;
 			return back();
 		}
 
 		void push_back(const T& v)
 		{
+			crstl_assert(m_length < NumElements);
 			::new((void*)&m_data[m_length]) T(v);
 			m_length++;
 		}
 
 		void push_back(T&& v)
 		{
+			crstl_assert(m_length < NumElements);
 			::new((void*)&m_data[m_length]) T(crstl::move(v));
 			m_length++;
 		}
@@ -287,6 +290,8 @@ crstl_module_export namespace crstl
 
 		void resize(size_t length)
 		{
+			crstl_assert(length <= NumElements);
+
 			if ((size_t)m_length < length)
 			{
 				for (size_t i = m_length; i < length; ++i)
@@ -307,6 +312,8 @@ crstl_module_export namespace crstl
 
 		void resize(size_t length, const T& value)
 		{
+			crstl_assert(length <= NumElements);
+
 			if ((size_t)m_length < length)
 			{
 				for (size_t i = m_length; i < length; ++i)
