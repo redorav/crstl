@@ -6,8 +6,6 @@
 
 #include "crstl/type_builtins.h"
 
-#include "crstl/move_forward.h"
-
 crstl_module_export namespace crstl
 {
 	// true_type/false_type
