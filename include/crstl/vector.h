@@ -452,11 +452,11 @@ crstl_module_export namespace crstl
 		{
 			size_t current_capacity = m_capacity_allocator.m_first;
 			size_t growth_capacity = compute_new_capacity(current_capacity);
-			size_t capacity = requested_capacity > growth_capacity ? requested_capacity : growth_capacity;
+			size_t new_capacity = requested_capacity > growth_capacity ? requested_capacity : growth_capacity;
 
-			crstl_assert(capacity > current_capacity);
+			crstl_assert(new_capacity > current_capacity);
 
-			T* temp = (T*)m_capacity_allocator.second().allocate(capacity * kDataSize);
+			T* temp = (T*)m_capacity_allocator.second().allocate(new_capacity * kDataSize);
 
 			// Copy existing data
 			for (size_t i = 0; i < m_length; ++i)
@@ -466,7 +466,7 @@ crstl_module_export namespace crstl
 
 			m_capacity_allocator.second().deallocate(m_data, m_capacity_allocator.m_first * kDataSize);
 			m_data = temp;
-			m_capacity_allocator.m_first = capacity;
+			m_capacity_allocator.m_first = new_capacity;
 		}
 
 		T* m_data;

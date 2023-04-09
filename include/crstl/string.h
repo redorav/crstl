@@ -1053,13 +1053,15 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr size_t reallocate_heap_larger(size_t requested_capacity)
 		{
-			requested_capacity = compute_new_capacity(requested_capacity);
+			size_t current_capacity = capacity();
+			size_t growth_capacity = compute_new_capacity(current_capacity);
+			size_t new_capacity = requested_capacity > growth_capacity ? requested_capacity : growth_capacity;
 
 			// This ensure we pass in a capacity that is larger than the SSO buffer (it wouldn't make sense to allocate otherwise)
 			// and larger than the existing heap capacity too
-			crstl_assert(requested_capacity > capacity());
+			crstl_assert(new_capacity > capacity());
 
-			T* temp = (T*)m_layout_allocator.second().allocate(requested_capacity * kCharSize + kCharSize);
+			T* temp = (T*)m_layout_allocator.second().allocate(new_capacity * kCharSize + kCharSize);
 			size_t length = 0;
 
 			// Copy existing data from current source
@@ -1072,14 +1074,14 @@ crstl_module_export namespace crstl
 			{
 				length = length_heap();
 				memcpy(temp, m_layout_allocator.m_first.m_heap.data, length * kCharSize + kCharSize);
-				m_layout_allocator.second().deallocate(m_layout_allocator.m_first.m_heap.data, get_capacity_heap() * kCharSize + kCharSize);
+				m_layout_allocator.second().deallocate(m_layout_allocator.m_first.m_heap.data, current_capacity * kCharSize + kCharSize);
 			}
 
 			m_layout_allocator.m_first.m_heap.data = temp;
 			m_layout_allocator.m_first.m_heap.length = length;
-			set_capacity_heap(requested_capacity);
+			set_capacity_heap(new_capacity);
 
-			return requested_capacity;
+			return new_capacity;
 		}
 
 		// As we need to reallocate and the logic can be a bit convoluted, we'll

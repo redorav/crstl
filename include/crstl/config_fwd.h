@@ -6,8 +6,7 @@
 
 // Function forward declarations. This is to avoid includes as one of our priorities is to make compile times
 // very fast. Here we can do compiler checks, mangling, whatever we need to conform to the target compiler
-// Some functions are well defined across compilers, whereas some are poorly defined such as memchr and wmemchr
-// which is unfortunate. We'll provide our own implementations of these instead
+// Some functions are well defined across compilers, whereas some are poorly defined which is unfortunate
 
 #if defined(_MSC_VER)
 	#define crstl_dllimport __declspec(dllimport)
@@ -46,3 +45,7 @@ extern "C"
 
 	crstl_1600_dllimport void* memmove(void* destination, const void* source, crstl::size_t num);
 }
+
+// Forward declare placement new
+crstl_nodiscard void* operator new  (crstl::size_t count, void* ptr) crstl_noexcept;
+crstl_nodiscard void* operator new[](crstl::size_t count, void* ptr) crstl_noexcept;
