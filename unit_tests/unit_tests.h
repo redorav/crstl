@@ -25,58 +25,30 @@
 
 #include "crstl/intrusive_ptr.h"
 
-#include "stdio.h"
-
 // Dummy structure with all the necessary constructors and operators to test different containers
 class Dummy : public crstl::intrusive_ptr_interface_delete
 {
 public:
 
-	Dummy() : a(4), b(5.0f), ptr(nullptr)
-	{
-		
-	}
+	Dummy();
 
-	Dummy(int a, float b) : a(a), b(b), ptr(nullptr)
-	{
+	Dummy(int a, float b);
 
-	}
-
-	Dummy(int a, float b, int* ptr) : a(a), b(b), ptr(ptr)
-	{
-		
-	}
+	Dummy(int a, float b, int* ptr);
 
 	// Copy constructor
-	Dummy(const Dummy& d)
-	{
-		memcpy(this, &d, sizeof(Dummy));
-	}
+	Dummy(const Dummy& d);
 
-	Dummy(Dummy&& d) crstl_noexcept : a(d.a), b(d.b), ptr(d.ptr)
-	{
-		d.ptr = (int*)(int)(0xDEADBEEF);
-	}
+	Dummy(Dummy&& d) crstl_noexcept;
 
 	// For testing emplace()
-	Dummy(int a, float b, int c, int d, int e, int f, int g, int h, int i, int j)
-		: a(a), b((float)b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j) {}
+	Dummy(int a, float b, int c, int d, int e, int f, int g, int h, int i, int j);
 
-	Dummy& operator = (const Dummy& dummy)
-	{
-		memcpy(this, &dummy, sizeof(Dummy));
-		return *this;
-	}
+	Dummy& operator = (const Dummy& dummy);
 
-	~Dummy()
-	{
+	~Dummy();
 
-	}
-
-	void PrintName()
-	{
-		printf("Dummy\n");
-	}
+	void PrintName();
 
 	int a;
 	float b;
@@ -110,15 +82,9 @@ class RefCountDummy : public crstl::intrusive_ptr_interface_delete
 {
 public:
 
-	void PrintName()
-	{
-		printf("RefCountDummy\n");
-	}
+	void PrintName();
 
-	~RefCountDummy()
-	{
-		printf("RefCountDummy destroyed\n");
-	}
+	~RefCountDummy();
 };
 
 namespace crstl_unit
