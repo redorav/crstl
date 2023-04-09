@@ -22,13 +22,13 @@
 
 // Subtraction
 
-#define crstl_atomic_sub8(target, value) __atomic_fetch_sub((target), (value))
+#define crstl_atomic_sub8(target, value) __atomic_fetch_sub((target), (value), __ATOMIC_SEQ_CST)
 
-#define crstl_atomic_sub16(target, value) __atomic_fetch_sub((target), (value))
+#define crstl_atomic_sub16(target, value) __atomic_fetch_sub((target), (value), __ATOMIC_SEQ_CST)
 
-#define crstl_atomic_sub32(target, value) __atomic_fetch_sub((target), (value))
+#define crstl_atomic_sub32(target, value) __atomic_fetch_sub((target), (value), __ATOMIC_SEQ_CST)
 
-#define crstl_atomic_sub64(target, value) __atomic_fetch_sub((target), (value))
+#define crstl_atomic_sub64(target, value) __atomic_fetch_sub((target), (value), __ATOMIC_SEQ_CST)
 
 // And
 
