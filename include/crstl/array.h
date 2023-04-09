@@ -26,7 +26,7 @@ crstl_module_export namespace crstl
 		crstl_constexpr size_t max_size() const { return N; }
 
 		crstl_constexpr T* data() { return m_data; }
-		crstl_constexpr T* const data() const { return m_data; }
+		crstl_constexpr const T* data() const { return m_data; }
 
 		crstl_constexpr T& operator[](size_t i) { return m_data[i]; }
 		crstl_constexpr const T& operator[](size_t i) const { return m_data[i]; }
