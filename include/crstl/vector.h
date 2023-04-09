@@ -23,6 +23,16 @@
 // - Guaranteed linear memory
 // - No allocation for new, empty vector
 // - vector of bool is a vector of bool, not a bitvector
+//
+// Non-standard functions
+// 
+// - push_back(): push back an empty default object
+// - push_back_uninitialized(): push back an uninitialized object
+// - resize_uninitialized(length): resizes vector to have specified length
+//   but does not initialize the contents of the objects. Use with care as
+//   objects with assignment operators accessing member variables assumed
+//   to be initialized can crash
+// - 
 
 crstl_module_export namespace crstl
 {
@@ -124,7 +134,7 @@ crstl_module_export namespace crstl
 			deallocate();
 		}
 
-		this_type& operator = (const this_type& other) crstl_noexcept
+		crstl_constexpr this_type& operator = (const this_type& other) crstl_noexcept
 		{
 			// Call destructors for all existing objects
 			for (size_t i = 0; i < m_length; ++i)
@@ -153,19 +163,19 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
-		reference at(size_t i) { crstl_assert(i < m_length); return m_data[i]; }
-		const_reference at(size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
+		crstl_constexpr reference at(size_t i) { crstl_assert(i < m_length); return m_data[i]; }
+		crstl_constexpr const_reference at(size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
 
-		reference back() { crstl_assert(m_length > 0); return m_data[m_length - 1]; }
-		const_reference back() const { crstl_assert(m_length > 0); return m_data[m_length - 1]; }
+		crstl_constexpr reference back() { crstl_assert(m_length > 0); return m_data[m_length - 1]; }
+		crstl_constexpr const_reference back() const { crstl_assert(m_length > 0); return m_data[m_length - 1]; }
 
-		iterator begin() { return &m_data[0]; }
-		const_iterator begin() const { return &m_data[0]; }
-		const_iterator cbegin() const { return &m_data[0]; }
+		crstl_constexpr iterator begin() { return &m_data[0]; }
+		crstl_constexpr const_iterator begin() const { return &m_data[0]; }
+		crstl_constexpr const_iterator cbegin() const { return &m_data[0]; }
 
-		size_t capacity() const { return m_capacity_allocator.m_first; }
+		crstl_constexpr size_t capacity() const { return m_capacity_allocator.m_first; }
 
-		void clear()
+		crstl_constexpr void clear()
 		{
 			for (size_t i = 0; i < m_length; ++i)
 			{
@@ -175,14 +185,14 @@ crstl_module_export namespace crstl
 			m_length = 0;
 		}
 
-		pointer data() { return &m_data[0]; }
-		const_pointer data() const { return &m_data[0]; }
+		crstl_constexpr pointer data() { return &m_data[0]; }
+		crstl_constexpr const_pointer data() const { return &m_data[0]; }
 
 #if defined(CRSTL_VARIADIC_TEMPLATES)
 		template<typename... Args>
-		reference emplace_back(Args&&... args)
+		crstl_constexpr reference emplace_back(Args&&... args)
 		{
-			if (m_length == m_capacity_allocator.m_first) { reallocate_larger(compute_new_capacity()); }
+			reallocate_if_length_capacity();
 
 			::new((void*)&m_data[m_length]) T(crstl::forward<Args>(args)...);
 			m_length++;
@@ -191,35 +201,35 @@ crstl_module_export namespace crstl
 #else
 		template<typename Arg0> reference emplace_back(Arg0&& arg0)
 		{
-			if (m_length == m_capacity_allocator.m_first) { reallocate_larger(compute_new_capacity()); } ::new((void*)&m_data[m_length]) T(crstl::forward<Arg0>(arg0)); m_length++; return back();
+			reallocate_if_length_capacity(); ::new((void*)&m_data[m_length]) T(crstl::forward<Arg0>(arg0)); m_length++; return back();
 		}
 		
 		template<typename Arg0, typename Arg1> reference emplace_back(Arg0&& arg0, Arg1&& arg1)
 		{
-			if (m_length == m_capacity_allocator.m_first) { reallocate_larger(compute_new_capacity()); } ::new((void*)&m_data[m_length]) T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1)); m_length++; return back();
+			reallocate_if_length_capacity(); ::new((void*)&m_data[m_length]) T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1)); m_length++; return back();
 		}
 		
 		template<typename Arg0, typename Arg1, typename Arg2> reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2)
 		{
-			if (m_length == m_capacity_allocator.m_first) { reallocate_larger(compute_new_capacity()); } ::new((void*)&m_data[m_length]) T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2)); m_length++; return back();
+			reallocate_if_length_capacity(); ::new((void*)&m_data[m_length]) T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2)); m_length++; return back();
 		}
 		
 		template<typename Arg0, typename Arg1, typename Arg2, typename Arg3> reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2, Arg3&& arg3)
 		{
-			if (m_length == m_capacity_allocator.m_first) { reallocate_larger(compute_new_capacity()); } ::new((void*)&m_data[m_length]) T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3));
+			reallocate_if_length_capacity(); ::new((void*)&m_data[m_length]) T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3));
 			m_length++; return back();
 		}
 		
 		template<typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4> reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2, Arg3&& arg3, Arg4&& arg4)
 		{
-			if (m_length == m_capacity_allocator.m_first) { reallocate_larger(compute_new_capacity()); } ::new((void*)&m_data[m_length])
+			reallocate_if_length_capacity(); ::new((void*)&m_data[m_length])
 				T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3), crstl::forward<Arg4>(arg4));
 			m_length++; return back();
 		}
 		
 		template<typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5> reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2, Arg3&& arg3, Arg4&& arg4, Arg5&& arg5)
 		{
-			if (m_length == m_capacity_allocator.m_first) { reallocate_larger(compute_new_capacity()); } ::new((void*)&m_data[m_length])
+			reallocate_if_length_capacity(); ::new((void*)&m_data[m_length])
 				T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3), crstl::forward<Arg4>(arg4), crstl::forward<Arg5>(arg5));
 			m_length++; return back();
 		}
@@ -227,7 +237,7 @@ crstl_module_export namespace crstl
 		template<typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6>
 		reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2, Arg3&& arg3, Arg4&& arg4, Arg5&& arg5, Arg6&& arg6)
 		{
-			if (m_length == m_capacity_allocator.m_first) { reallocate_larger(compute_new_capacity()); } ::new((void*)&m_data[m_length])
+			reallocate_if_length_capacity(); ::new((void*)&m_data[m_length])
 				T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3), crstl::forward<Arg4>(arg4), crstl::forward<Arg5>(arg5), crstl::forward<Arg6>(arg6));
 			m_length++; return back();
 		}
@@ -235,7 +245,7 @@ crstl_module_export namespace crstl
 		template<typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6, typename Arg7>
 		reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2, Arg3&& arg3, Arg4&& arg4, Arg5&& arg5, Arg6&& arg6, Arg7&& arg7)
 		{
-			if (m_length == m_capacity_allocator.m_first) { reallocate_larger(compute_new_capacity()); } ::new((void*)&m_data[m_length])
+			reallocate_if_length_capacity(); ::new((void*)&m_data[m_length])
 				T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3), crstl::forward<Arg4>(arg4), 
 				crstl::forward<Arg5>(arg5), crstl::forward<Arg6>(arg6), crstl::forward<Arg7>(arg7));
 			m_length++; return back();
@@ -244,7 +254,7 @@ crstl_module_export namespace crstl
 		template<typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6, typename Arg7, typename Arg8>
 		reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2, Arg3&& arg3, Arg4&& arg4, Arg5&& arg5, Arg6&& arg6, Arg7&& arg7, Arg8&& arg8)
 		{
-			if (m_length == m_capacity_allocator.m_first) { reallocate_larger(compute_new_capacity()); } ::new((void*)&m_data[m_length])
+			reallocate_if_length_capacity(); ::new((void*)&m_data[m_length])
 				T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3), crstl::forward<Arg4>(arg4), 
 				crstl::forward<Arg5>(arg5), crstl::forward<Arg6>(arg6), crstl::forward<Arg7>(arg7), crstl::forward<Arg8>(arg8));
 			m_length++; return back();
@@ -253,7 +263,7 @@ crstl_module_export namespace crstl
 		template<typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6, typename Arg7, typename Arg8, typename Arg9>
 		reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2, Arg3&& arg3, Arg4&& arg4, Arg5&& arg5, Arg6&& arg6, Arg7&& arg7, Arg8&& arg8, Arg9&& arg9)
 		{
-			if (m_length == m_capacity_allocator.m_first) { reallocate_larger(compute_new_capacity()); } ::new((void*)&m_data[m_length])
+			reallocate_if_length_capacity(); ::new((void*)&m_data[m_length])
 				T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3), crstl::forward<Arg4>(arg4), 
 				crstl::forward<Arg5>(arg5), crstl::forward<Arg6>(arg6), crstl::forward<Arg7>(arg7), crstl::forward<Arg8>(arg8), crstl::forward<Arg9>(arg9));
 			m_length++; return back();
@@ -264,46 +274,50 @@ crstl_module_export namespace crstl
 		crstl_nodiscard
 		crstl_constexpr bool empty() const { return m_length == 0; }
 
-		iterator end() { return &m_data[0] + m_length; }
-		const_iterator end() const { return &m_data[0] + m_length; }
-		const_iterator cend() const { return &m_data[0] + m_length; }
+		crstl_constexpr iterator end() { return &m_data[0] + m_length; }
+		crstl_constexpr const_iterator end() const { return &m_data[0] + m_length; }
+		crstl_constexpr const_iterator cend() const { return &m_data[0] + m_length; }
 
-		reference front() { m_data[0]; }
-		const_reference front() const { m_data[0]; }
+		crstl_constexpr reference front() { m_data[0]; }
+		crstl_constexpr const_reference front() const { m_data[0]; }
 
-		void pop_back()
+		crstl_constexpr void pop_back()
 		{
 			crstl_assert(m_length > 0);
 			back().~T();
 			m_length--;
 		}
 
-		reference push_back()
+		crstl_constexpr reference push_back()
 		{
-			if (m_length == m_capacity_allocator.m_first) { reallocate_larger(compute_new_capacity()); }
-
+			reallocate_if_length_capacity();
 			::new((void*)&m_data[m_length]) T();
 			m_length++;
 			return back();
 		}
 
-		void push_back(const T& v)
+		crstl_constexpr void push_back(const T& v)
 		{
-			if (m_length == m_capacity_allocator.m_first) { reallocate_larger(compute_new_capacity()); }
-
+			reallocate_if_length_capacity();
 			::new((void*)&m_data[m_length]) T(v);
 			m_length++;
 		}
 
-		void push_back(T&& v)
+		crstl_constexpr void push_back(T&& v)
 		{
-			if (m_length == m_capacity_allocator.m_first) { reallocate_larger(compute_new_capacity()); }
-
+			reallocate_if_length_capacity();
 			::new((void*)&m_data[m_length]) T(crstl::move(v));
 			m_length++;
 		}
 
-		void reserve(size_t capacity)
+		crstl_constexpr reference push_back_uninitialized()
+		{
+			reallocate_if_length_capacity();
+			m_length++;
+			return back();
+		}
+
+		crstl_constexpr void reserve(size_t capacity)
 		{
 			if (capacity > (size_t)m_capacity_allocator.m_first)
 			{
@@ -311,7 +325,7 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		void resize(size_t length)
+		crstl_constexpr void resize(size_t length)
 		{
 			if (length > (size_t)m_length)
 			{
@@ -336,7 +350,7 @@ crstl_module_export namespace crstl
 			m_length = (length_type)length;
 		}
 
-		void resize(size_t length, const T& value)
+		crstl_constexpr void resize(size_t length, const T& value)
 		{
 			if (length > (size_t)m_length)
 			{
@@ -358,45 +372,91 @@ crstl_module_export namespace crstl
 			m_length = (length_type)length;
 		}
 
-		size_t size() const { return m_length; }
+		crstl_constexpr void resize_uninitialized(size_t length)
+		{
+			if (length > (size_t)m_length)
+			{
+				reallocate_larger(length);
+			}
+			else if (length < (size_t)m_length)
+			{
+				for (size_t i = length; i < m_length; ++i)
+				{
+					m_data[i].~T();
+				}
+			}
 
-		reference operator [] (size_t i) { crstl_assert(i < m_length); return m_data[i]; }
+			m_length = (length_type)length;
+		}
 
-		const_reference operator [] (size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
+		crstl_constexpr void shrink_to_fit()
+		{
+			if (m_length < m_capacity_allocator.m_first)
+			{
+				T* temp = (T*)m_capacity_allocator.second().allocate(m_length * kDataSize);
+				
+				// Copy existing data
+				for (size_t i = 0; i < m_length; ++i)
+				{
+					::new((void*)&temp[i]) T(m_data[i]);
+				}
+
+				m_capacity_allocator.second().deallocate(m_data, m_capacity_allocator.m_first * kDataSize);
+				m_data = temp;
+				m_capacity_allocator.m_first = m_length;
+			}
+		}
+
+		crstl_constexpr size_t size() const { return m_length; }
+
+		crstl_constexpr reference operator [] (size_t i) { crstl_assert(i < m_length); return m_data[i]; }
+
+		crstl_constexpr const_reference operator [] (size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
 
 		operator span<T>() const;
 
 	private:
 
-		T* allocate(size_t capacity)
+		crstl_constexpr T* allocate(size_t capacity)
 		{
 			T* temp = (T*)m_capacity_allocator.second().allocate(capacity * kDataSize);
 			m_capacity_allocator.m_first = capacity;
 			return temp;
 		}
 
-		void deallocate()
+		crstl_constexpr void deallocate()
 		{
 			m_capacity_allocator.second().deallocate(m_data, m_capacity_allocator.m_first * kDataSize);
 			m_capacity_allocator.m_first = 0;
 			m_data = nullptr;
 		}
 
-		size_t compute_new_capacity()
+		crstl_constexpr size_t compute_new_capacity(size_t old_capacity)
 		{
-			return 1 + m_capacity_allocator.m_first * 2;
+			return old_capacity + (old_capacity * 50) / 100;
+		}
+
+		// Reallocate memory if length is the same as capacity. Mainly used for
+		// push and emplace functions
+		crstl_constexpr void reallocate_if_length_capacity()
+		{
+			if (m_length == m_capacity_allocator.m_first)
+			{
+				reallocate_larger(m_length + 1);
+			}
 		}
 
 		// Reallocate vector to a quantity larger than the current one, or the capacity adjusted
 		// with the growth factor, whichever is larger
-		void reallocate_larger(size_t capacity)
+		crstl_constexpr void reallocate_larger(size_t requested_capacity)
 		{
-			crstl_assert(capacity > m_capacity_allocator.m_first);
+			size_t current_capacity = m_capacity_allocator.m_first;
+			size_t growth_capacity = compute_new_capacity(current_capacity);
+			size_t capacity = requested_capacity > growth_capacity ? requested_capacity : growth_capacity;
 
-			size_t growth_capacity = m_capacity_allocator.m_first * 2; // TODO Growth factor
-			size_t new_capacity = capacity > growth_capacity ? capacity : growth_capacity;
+			crstl_assert(capacity > current_capacity);
 
-			T* temp = (T*)m_capacity_allocator.second().allocate(new_capacity * kDataSize);
+			T* temp = (T*)m_capacity_allocator.second().allocate(capacity * kDataSize);
 
 			// Copy existing data
 			for (size_t i = 0; i < m_length; ++i)
@@ -406,7 +466,7 @@ crstl_module_export namespace crstl
 
 			m_capacity_allocator.second().deallocate(m_data, m_capacity_allocator.m_first * kDataSize);
 			m_data = temp;
-			m_capacity_allocator.m_first = new_capacity;
+			m_capacity_allocator.m_first = capacity;
 		}
 
 		T* m_data;
