@@ -9,11 +9,25 @@ import crstl;
 #include "crstl/span.h"
 #endif
 
+void RunUnitTestsVectorNoStd()
+{
+	using namespace crstl_unit;
+
+	begin_test("fixed_vector");
+	{
+		int initialVectorSize = 5;
+		crstl::fixed_vector<Dummy, 32> crFixedVector(initialVectorSize);
+		crFixedVector.push_back();
+		crFixedVector.push_back_uninitialized();
+	}
+	end_test();
+}
+
 #include <vector>
 #include <stdio.h>
 
 #if crstl_cppversion >= 202002L
-	#include <span>
+#include <span>
 #endif
 
 void LoopOverSpan(const crstl::span<Dummy>& dummySpan)
@@ -27,7 +41,7 @@ void LoopOverSpan(const crstl::span<Dummy>& dummySpan)
 #endif
 }
 
-void RunUnitTestsVector()
+void RunUnitTestsVectorStdCompare()
 {
 	using namespace crstl_unit;
 
@@ -138,6 +152,16 @@ void RunUnitTestsVector()
 
 	begin_test("vector");
 	{
+		crstl::vector<Dummy> crEmptyVector;
+		std::vector<Dummy> stdEmptyVector;
+
+		crstl_check(crEmptyVector.size() == stdEmptyVector.size());
+
+		crEmptyVector.push_back();
+		stdEmptyVector.push_back(Dummy());
+
+		crstl_check(crEmptyVector.size() == stdEmptyVector.size());
+
 		int initialVectorSize = 5;
 
 		crstl::vector<Dummy> crVector(initialVectorSize);
@@ -151,6 +175,11 @@ void RunUnitTestsVector()
 		crstl_check(crVector.size() == stdVector.size());
 
 		crVector.push_back();
+		stdVector.push_back(Dummy());
+
+		crstl_check(crVector.size() == stdVector.size());
+
+		crVector.push_back_uninitialized();
 		stdVector.push_back(Dummy());
 
 		crstl_check(crVector.size() == stdVector.size());
@@ -169,6 +198,10 @@ void RunUnitTestsVector()
 		stdVector.resize(3);
 
 		crstl_check(crVector.size() == stdVector.size());
+
+		crVector.shrink_to_fit();
+
+		crstl_check(crVector.size() <= crVector.capacity());
 
 		{
 			size_t count = 0;
@@ -195,7 +228,7 @@ void RunUnitTestsVector()
 
 	begin_test("stack_vector");
 	{
-		crstl::stack_vector<Dummy> crStackVector(crstl_alloca_t(Dummy, 32));
+		crstl::stack_vector<Dummy> crStackVector(crstl::transient_memory_t<Dummy>((Dummy*)_alloca(32 * sizeof(Dummy)), 32));
 		crStackVector.push_back(Dummy());
 		crStackVector.push_back(Dummy());
 		crStackVector.push_back(Dummy());
@@ -212,4 +245,10 @@ void RunUnitTestsVector()
 		crStackVector[4].b = 42;
 	}
 	end_test();
+}
+
+void RunUnitTestsVector()
+{
+	RunUnitTestsVectorNoStd();
+	RunUnitTestsVectorStdCompare();
 }
