@@ -57,10 +57,13 @@ crstl_module_export namespace crstl
 		crstl_constexpr fixed_vector(size_t initialLength) crstl_noexcept : m_length(0)
 		{
 			crstl_assert(initialLength < NumElements);
-			for (size_t i = 0; i < initialLength; ++i)
-			{
-				push_back();
-			}
+			resize(initialLength);
+		}
+
+		crstl_constexpr fixed_vector(size_t initialLength, const T& value) crstl_noexcept : m_length(0)
+		{
+			crstl_assert(initialLength < NumElements);
+			resize(initialLength, value);
 		}
 
 		crstl_constexpr fixed_vector(const this_type& other) crstl_noexcept { *this = other; }

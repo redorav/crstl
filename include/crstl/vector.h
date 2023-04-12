@@ -60,14 +60,28 @@ crstl_module_export namespace crstl
 			m_capacity_allocator.m_first = 0;
 		}
 
-		crstl_constexpr vector(size_t initialLength) : m_length(0)
+		crstl_constexpr vector(size_t initialLength)
 		{
 			m_data = allocate(initialLength);
 
 			for (size_t i = 0; i < initialLength; ++i)
 			{
-				push_back();
+				::new((void*)&m_data[i]) T();
 			}
+
+			m_length = initialLength;
+		}
+
+		crstl_constexpr vector(size_t initialLength, const T& value)
+		{
+			m_data = allocate(initialLength);
+
+			for (size_t i = 0; i < initialLength; ++i)
+			{
+				::new((void*)&m_data[i]) T(value);
+			}
+
+			m_length = initialLength;
 		}
 
 		crstl_constexpr vector(const this_type& other) crstl_noexcept
