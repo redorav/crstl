@@ -18,11 +18,15 @@
 
 	#define CRSTL_CLANG
 
-#elif defined(__GNUG__)
+#endif
+
+#if defined(__GNUG__) || defined(__GNUC__)
 
 	#define CRSTL_GCC
 
-#elif defined(_MSC_VER)
+#endif
+
+#if defined(_MSC_VER)
 
 	#define CRSTL_MSVC
 
