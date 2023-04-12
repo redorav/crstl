@@ -146,6 +146,9 @@ void RunUnitTestsVectorStdCompare()
 		crstl_check(crFixedVectorBraced2.size() == 2);
 		crstl_check(crFixedVectorBraced3.size() == 3);
 
+		crstl::fixed_vector<int, 32> crFixedVectorTrivial(initialVectorSize, 10);
+
+		crstl::fixed_vector<int, 32> crFixedVectorTrivial2 = crFixedVectorTrivial;
 #endif
 	}
 	end_test();

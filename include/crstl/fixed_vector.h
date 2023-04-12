@@ -8,6 +8,8 @@
 
 #include "crstl/crstldef.h"
 
+#include "crstl/type_builtins.h"
+
 #if defined(CRSTL_INITIALIZER_LISTS)
 #include <initializer_list>
 #endif
@@ -70,8 +72,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr fixed_vector(this_type&& other) crstl_noexcept { *this = other; }
 
-		template<typename Iterator>
-		crstl_constexpr fixed_vector(Iterator iter1, Iterator iter2) crstl_noexcept
+		crstl_constexpr fixed_vector(T* iter1, T* iter2) crstl_noexcept
 		{
 			crstl_assert(iter1 != nullptr && iter2 != nullptr);
 			crstl_assert(iter2 >= iter1);
@@ -108,9 +109,16 @@ crstl_module_export namespace crstl
 
 		this_type& operator = (const this_type& other) crstl_noexcept
 		{
-			for (size_t i = 0; i < other.m_length; ++i)
+			crstl_constexpr_if(crstl_is_trivially_copyable(T))
 			{
-				::new((void*)&m_data[i]) T(other.m_data[i]);
+				memcpy(m_data, other.m_data, other.m_length * sizeof(T));
+			}
+			else
+			{
+				for (size_t i = 0; i < other.m_length; ++i)
+				{
+					::new((void*)&m_data[i]) T(other.m_data[i]);
+				}
 			}
 
 			m_length = other.m_length;
