@@ -71,7 +71,7 @@ crstl_module_export namespace crstl
 				::new((void*)&m_data[i]) T();
 			}
 
-			m_length = initialLength;
+			m_length = (length_type)initialLength;
 		}
 
 		crstl_constexpr vector(size_t initialLength, const T& value)
@@ -83,7 +83,7 @@ crstl_module_export namespace crstl
 				::new((void*)&m_data[i]) T(value);
 			}
 
-			m_length = initialLength;
+			m_length = (length_type)initialLength;
 		}
 
 		crstl_constexpr vector(const this_type& other) crstl_noexcept
