@@ -11,7 +11,7 @@
 #if defined(_MSC_VER)
 	#define crstl_dllimport __declspec(dllimport)
 
-	#if _MSC_VER <= 1600
+	#if _MSC_VER <= 1900
 	#define crstl_1600_dllimport __declspec(dllimport)
 	#endif
 #else
