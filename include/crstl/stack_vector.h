@@ -220,6 +220,32 @@ crstl_module_export namespace crstl
 
 		const_reference operator [] (size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
 
+		//---------------------
+		// Comparison Operators
+		//---------------------
+
+		crstl_constexpr bool operator == (const this_type& other) crstl_noexcept
+		{
+			if (m_length == other.m_length)
+			{
+				for (size_t i = 0; i < m_length; ++i)
+				{
+					if (!(m_data[i] == other.m_data[i])) { return false; }
+				}
+
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		crstl_constexpr bool operator != (const this_type& other) crstl_noexcept
+		{
+			return !(*this == other);
+		}
+
 	private:
 
 		// Stack vectors are meant to be transient. They are allocated on the stack and given stack

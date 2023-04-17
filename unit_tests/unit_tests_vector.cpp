@@ -218,9 +218,9 @@ void RunUnitTestsVectorStdCompare()
 #if defined(CRSTL_UNIT_RANGED_FOR)
 		{
 			size_t count = 0;
-			for (const auto& dummy : crVector)
+			for (const auto& _ : crVector)
 			{
-				count++;
+				(void)_; count++;
 			}
 
 			crstl_check(crVector.size() == count);
