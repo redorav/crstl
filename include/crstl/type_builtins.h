@@ -23,7 +23,15 @@
 
 // Whether type is trivially copyable, i.e. whether we can use mempcy directly
 // to copy an object or stream it in
-#define crstl_is_trivially_copyable(T) __is_trivially_copyable(T)
+#if defined(_MSC_VER) && (_MSC_VER < 1900)
+
+	#define crstl_is_trivially_copyable(T) __has_trivial_copy(T)
+
+#else
+
+	#define crstl_is_trivially_copyable(T) __is_trivially_copyable(T)
+
+#endif
 
 // Whether type is signed
 #define crstl_is_signed(T) (T(-1) < T(0))

@@ -41,7 +41,18 @@ Dummy& Dummy::operator=(const Dummy& dummy)
 
 Dummy::~Dummy()
 {
+	// Set to values that look uninitialized, for debugging
+	a = -858993460;
+	b = -107374176.0f;
+}
 
+bool Dummy::operator == (const Dummy& other)
+{
+	bool isEqual =
+		a == other.a &&
+		b == other.b;
+
+	return isEqual;
 }
 
 void Dummy::PrintName()
@@ -96,14 +107,15 @@ namespace crstl_unit
 }
 
 void RunUnitTestsArray();
-void RunUnitTestsBitset();
-void RunUnitTestsString();
-void RunUnitTestsVector();
-void RunUnitTestsFunction();
-void RunUnitTestsSmartPtr();
-void RunUnitTestsPair();
 void RunUnitTestsAssociative();
+void RunUnitTestsBitset();
+void RunUnitTestsDeque();
+void RunUnitTestsFunction();
+void RunUnitTestsPair();
+void RunUnitTestsSmartPtr();
+void RunUnitTestsString();
 void RunUnitTestsTimer();
+void RunUnitTestsVector();
 
 #if defined(__ANDROID__)
 
@@ -122,13 +134,13 @@ extern "C"
 {
 	RunUnitTestsArray();
 	RunUnitTestsBitset();
-	RunUnitTestsString();
-	RunUnitTestsVector();
+	RunUnitTestsDeque();
 	RunUnitTestsFunction();
-	RunUnitTestsSmartPtr();
 	RunUnitTestsPair();
-	RunUnitTestsAssociative();
+	RunUnitTestsSmartPtr();
+	RunUnitTestsString();
 	RunUnitTestsTimer();
+	RunUnitTestsVector();
 }
 
 #if defined(__ANDROID__)

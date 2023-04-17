@@ -46,6 +46,9 @@ extern "C"
 	crstl_1600_dllimport void* memmove(void* destination, const void* source, crstl::size_t num);
 }
 
-// Forward declare placement new
-crstl_nodiscard void* operator new  (crstl::size_t count, void* ptr) crstl_noexcept;
-crstl_nodiscard void* operator new[](crstl::size_t count, void* ptr) crstl_noexcept;
+extern "C++"
+{
+	// Forward declare placement new
+	crstl_nodiscard void* operator new  (crstl::size_t count, void* ptr) crstl_noexcept;
+	crstl_nodiscard void* operator new[](crstl::size_t count, void* ptr) crstl_noexcept;
+}

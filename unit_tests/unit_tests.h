@@ -48,6 +48,8 @@ public:
 
 	~Dummy();
 
+	bool operator == (const Dummy& other);
+
 	void PrintName();
 
 	int a;

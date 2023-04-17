@@ -29,6 +29,21 @@
 		</Expand>
 	</Type>
 
+	<Type Name="crstl::fixed_deque&lt;*,*&gt;">
+		<DisplayString>[size = {m_length}]</DisplayString>
+
+		<Expand>
+			<Item Name="[capacity]">$T2</Item>
+			<Item Name="[size]">m_length</Item>
+	
+			<IndexListItems>
+				<Size>m_length</Size>
+				<ValueNode>m_begin + $i &lt; $T2 ? m_data[m_begin + $i] : m_data[m_begin + $i - $T2]</ValueNode>
+			</IndexListItems>
+
+		</Expand>
+	</Type>
+
 	<Type Name="crstl::fixed_vector&lt;*,*&gt;">
 		<DisplayString>[size = {m_length}]</DisplayString>
 

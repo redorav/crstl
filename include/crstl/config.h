@@ -80,7 +80,9 @@
 
 #endif
 
-#if defined(_MSC_VER) && _MSC_VER < 1900
+// __cpp_noexcept_function_type not very reliable
+// noexcept first appeared in VS2015
+#if defined(_MSC_VER) && (_MSC_VER < 1900)
 
 	#define crstl_noexcept
 

@@ -116,7 +116,7 @@ void RunUnitTestsVectorStdCompare()
 		crstl::fixed_vector<Dummy*, 32> crFixedVectorPointer;
 		crFixedVectorPointer.push_back(new DummyChild());
 
-#if defined(CRSTL_UNIT_UNIFORM_INITIALIZATION)
+#if defined(CRSTL_INITIALIZER_LISTS)
 
 		crFixedVector = { Dummy(), Dummy(), Dummy() };
 		stdVector = { Dummy(), Dummy(), Dummy() };
@@ -188,7 +188,11 @@ void RunUnitTestsVectorStdCompare()
 		crstl_check(crVector.size() == stdVector.size());
 
 		crVector.emplace_back(9, 20.0f);
+#if defined(CRSTL_VARIADIC_TEMPLATES)
 		stdVector.emplace_back(9, 20.0f);
+#else
+		stdVector.push_back(Dummy(9, 20.0f));
+#endif
 
 		crstl_check(crVector.size() == stdVector.size());
 
@@ -243,7 +247,9 @@ void RunUnitTestsVectorStdCompare()
 		crStackVector.push_back(Dummy());
 		crStackVector.push_back(Dummy());
 
+#if defined(CRSTL_VARIADIC_TEMPLATES)
 		crStackVector.emplace_back();
+#endif
 
 		crStackVector[4].b = 42;
 	}
