@@ -10,6 +10,17 @@
 
 #include "crstl/type_builtins.h"
 
+// fixed_deque
+//
+// Fixed replacement for std::deque
+//
+// fixed_deque doesn't allocate memory, instead manages an internal array.
+// It is akin to a ring buffer, in that it wraps around if the element is
+// beyond the array until it runs out of elements
+//
+// - The number of elements is specified at compile time
+// - Elements wrap around until capacity is exhausted
+
 crstl_module_export namespace crstl
 {
 	template<typename T, size_t NumElements>
@@ -88,7 +99,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr fixed_deque(const fixed_deque& other) crstl_noexcept
 		{
-			*this = other;
+			copy_other(other);
 		}
 
 		~fixed_deque() crstl_noexcept
@@ -99,46 +110,7 @@ crstl_module_export namespace crstl
 		this_type& operator = (const this_type& other) crstl_noexcept
 		{
 			clear();
-
-			if (other.m_end >= other.m_begin)
-			{
-				crstl_constexpr_if(crstl_is_trivially_copyable(T))
-				{
-					memcpy(&m_data[other.m_begin], &other.m_data[other.m_begin], other.m_length * sizeof(T));
-				}
-				else
-				{
-					for (size_t i = other.m_begin; i < other.m_length; ++i)
-					{
-						::new((void*)&m_data[i]) T(other.m_data[i]);
-					}
-				}
-			}
-			else
-			{
-				crstl_constexpr_if(crstl_is_trivially_copyable(T))
-				{
-					memcpy(&m_data[0], &other.m_data[0], other.m_end * sizeof(T));
-					memcpy(&m_data[other.m_begin], &other.m_data[other.m_begin], (NumElements - other.m_begin) * sizeof(T));
-				}
-				else
-				{
-					for (size_t i = 0; i < other.m_end; ++i)
-					{
-						::new((void*)&m_data[i]) T(other.m_data[i]);
-					}
-
-					for (size_t i = other.m_begin; i < NumElements; ++i)
-					{
-						::new((void*)&m_data[i]) T(other.m_data[i]);
-					}
-				}
-			}
-
-			m_begin  = other.m_begin;
-			m_end    = other.m_end;
-			m_length = other.m_length;
-
+			copy_other(other);
 			return *this;
 		}
 
@@ -156,23 +128,26 @@ crstl_module_export namespace crstl
 		
 		crstl_constexpr void clear()
 		{
-			if (m_begin <= m_end)
+			if (m_length > 0)
 			{
-				for (size_t i = m_begin; i != m_end; ++i)
+				if (m_begin <= m_end)
 				{
-					m_data[i].~T();
+					for (size_t i = m_begin; i != m_end; ++i)
+					{
+						m_data[i].~T();
+					}
 				}
-			}
-			else
-			{
-				for (size_t i = 0; i != m_end; ++i)
+				else
 				{
-					m_data[i].~T();
-				}
-		
-				for (size_t i = m_begin; i != NumElements; ++i)
-				{
-					m_data[i].~T();
+					for (size_t i = 0; i != m_end; ++i)
+					{
+						m_data[i].~T();
+					}
+
+					for (size_t i = m_begin; i != NumElements; ++i)
+					{
+						m_data[i].~T();
+					}
 				}
 			}
 		
@@ -384,6 +359,48 @@ crstl_module_export namespace crstl
 		}
 
 	private:
+
+		void copy_other(const this_type& other)
+		{
+			if (other.m_end >= other.m_begin)
+			{
+				crstl_constexpr_if(crstl_is_trivially_copyable(T))
+				{
+					memcpy(&m_data[other.m_begin], &other.m_data[other.m_begin], other.m_length * sizeof(T));
+				}
+			else
+			{
+				for (size_t i = other.m_begin; i < other.m_length; ++i)
+				{
+					::new((void*)&m_data[i]) T(other.m_data[i]);
+				}
+			}
+			}
+			else
+			{
+				crstl_constexpr_if(crstl_is_trivially_copyable(T))
+				{
+					memcpy(&m_data[0], &other.m_data[0], other.m_end * sizeof(T));
+					memcpy(&m_data[other.m_begin], &other.m_data[other.m_begin], (NumElements - other.m_begin) * sizeof(T));
+				}
+				else
+				{
+					for (size_t i = 0; i < other.m_end; ++i)
+					{
+						::new((void*)&m_data[i]) T(other.m_data[i]);
+					}
+
+					for (size_t i = other.m_begin; i < NumElements; ++i)
+					{
+						::new((void*)&m_data[i]) T(other.m_data[i]);
+					}
+					}
+			}
+
+			m_begin = other.m_begin;
+			m_end = other.m_end;
+			m_length = other.m_length;
+		}
 
 		template<typename Function>
 		void resize_function(size_t length, const Function& createFunction)

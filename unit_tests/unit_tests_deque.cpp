@@ -117,7 +117,10 @@ void RunUnitTestsDeque()
 		crDeque.emplace_back(1, 2.0f);
 		crDeque.emplace_front(2, 3.0f);
 
-#if defined(CRSTL_UNIT_RANGED_FOR)		
+		Dummy& backRef = crDeque.back(); (void)backRef;
+		const Dummy& frontRef = crDeque.front(); (void)frontRef;
+
+#if defined(CRSTL_UNIT_RANGED_FOR)
 		{
 			size_t count = 0;
 			for (auto iter = crDeque.begin(); iter != crDeque.end(); ++iter)
