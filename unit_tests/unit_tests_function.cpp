@@ -115,7 +115,7 @@ void RunUnitTestsFunction()
 	crVoidFunction4();
 
 	int i = crIntFunction(4);
-	printf("IntFunction %d", i);
+	printf("IntFunction %d\n", i);
 
 	//printf("Hello\n");
 	//printf("Hello %d\n", a);
