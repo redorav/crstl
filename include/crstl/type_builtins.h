@@ -26,10 +26,14 @@
 #if defined(_MSC_VER) && (_MSC_VER < 1900)
 
 	#define crstl_is_trivially_copyable(T) __has_trivial_copy(T)
+	#define crstl_is_trivially_constructible(T) __has_trivial_constructor(T)
+	#define crstl_is_trivially_destructible(T) __has_trivial_destructor(T)
 
 #else
 
 	#define crstl_is_trivially_copyable(T) __is_trivially_copyable(T)
+	#define crstl_is_trivially_constructible(T) __is_trivially_constructible(T)
+	#define crstl_is_trivially_destructible(T) __is_trivially_destructible(T)
 
 #endif
 

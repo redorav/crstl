@@ -41,6 +41,13 @@ void LoopOverSpan(const crstl::span<Dummy>& dummySpan)
 #endif
 }
 
+crstl_constexpr void VectorConstexprFunction()
+{
+	crstl::fixed_vector<int, 32> crConstexprFixedVector;
+	crConstexprFixedVector.push_back();
+	crConstexprFixedVector.emplace_back();
+}
+
 void RunUnitTestsVectorStdCompare()
 {
 	using namespace crstl_unit;
