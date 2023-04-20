@@ -10,6 +10,8 @@
 
 #include "crstl/type_builtins.h"
 
+#include "crstl/internal/fixed_common.h"
+
 // fixed_deque
 //
 // Fixed replacement for std::deque
@@ -26,9 +28,9 @@ crstl_module_export namespace crstl
 	template<typename T, size_t NumElements>
 	struct fixed_deque_iterator
 	{
-		typedef fixed_deque_iterator<T, NumElements> this_type;
-		typedef uint32_t                             length_type;
-		typedef ptrdiff_t                            difference_type;
+		typedef fixed_deque_iterator<T, NumElements>  this_type;
+		typedef ptrdiff_t                             difference_type;
+		typedef size_t                                length_type;
 
 		static const size_t kLastElement = NumElements - 1;
 
@@ -82,7 +84,7 @@ crstl_module_export namespace crstl
 		typedef const T*                                   const_pointer;
 		typedef fixed_deque_iterator<T, NumElements>       iterator;
 		typedef const fixed_deque_iterator<T, NumElements> const_iterator;
-		typedef uint32_t                                   length_type;
+		typedef typename fixed_length_select_type<NumElements>::type length_type;
 
 		static const size_t kLastElement = NumElements - 1;
 		

@@ -10,6 +10,8 @@
 
 #include "crstl/type_builtins.h"
 
+#include "crstl/internal/fixed_common.h"
+
 #if defined(CRSTL_INITIALIZER_LISTS)
 #include <initializer_list>
 #endif
@@ -43,7 +45,7 @@ crstl_module_export namespace crstl
 		typedef const T*                     const_pointer;
 		typedef T*                           iterator;
 		typedef const T*                     const_iterator;
-		typedef uint32_t                     length_type;
+		typedef typename fixed_length_select_type<NumElements>::type length_type;
 
 		enum
 		{

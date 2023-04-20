@@ -4,6 +4,8 @@
 
 #include "crstl/crstldef.h"
 
+#include "crstl/internal/fixed_common.h"
+
 // fixed_string
 //
 // Fixed replacement for std::string
@@ -35,6 +37,7 @@ crstl_module_export namespace crstl
 		typedef const CharT*                   const_pointer;
 		typedef CharT*                         iterator;
 		typedef const CharT*                   const_iterator;
+		typedef typename fixed_length_select_type<NumElements>::type length_type;
 		
 		enum
 		{
@@ -131,7 +134,7 @@ crstl_module_export namespace crstl
 			{
 				crstl_assert(m_length + length < kCharacterCapacityWithZero);
 				memcpy(m_data + m_length, string, length * kCharSize);
-				m_length += (uint32_t)length;
+				m_length += (length_type)length;
 				m_data[m_length] = '\0';
 			}
 			return *this;
@@ -199,7 +202,7 @@ crstl_module_export namespace crstl
 			utf_result::t result = decode_chunk(data_start, data_start + (kCharacterCapacity - m_length), string, string_end, dst_decoded_length, src_decoded_length);
 			crstl_assert(result == utf_result::success);
 
-			m_length += (uint32_t)dst_decoded_length;
+			m_length += (length_type)dst_decoded_length;
 			m_data[m_length] = '\0';
 
 			return *this;
@@ -253,7 +256,7 @@ crstl_module_export namespace crstl
 				crstl_assert(sz_char_count < remaining_length);
 
 				size_t copied_length = sz_char_count < remaining_length ? sz_char_count : remaining_length;
-				m_length += (uint32_t)copied_length;
+				m_length += (length_type)copied_length;
 
 				m_data[m_length] = '\0';
 			}
@@ -473,7 +476,7 @@ crstl_module_export namespace crstl
 				dst[i] = src[i];
 			}
 
-			m_length = (uint32_t)(m_length - length);
+			m_length = (length_type)(m_length - length);
 			m_data[m_length] = 0;
 			return *this;
 		}
@@ -663,7 +666,7 @@ crstl_module_export namespace crstl
 			}
 
 			m_data[length] = 0;
-			m_length = (uint32_t)length;
+			m_length = (length_type)length;
 		}
 
 		//-----
@@ -769,7 +772,7 @@ crstl_module_export namespace crstl
 
 		CharT m_data[NumElements];
 
-		uint32_t m_length;
+		length_type m_length;
 
 	private:
 
@@ -792,7 +795,7 @@ crstl_module_export namespace crstl
 			}
 
 			// This happens before the actual writing of data so take care not to use m_length after using this function
-			m_length = (uint32_t)(m_length - needle_length + replace_length);
+			m_length = (length_type)(m_length - needle_length + replace_length);
 		}
 
 		// Given a position and a length, return the length that fits the string
