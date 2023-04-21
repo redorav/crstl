@@ -29,6 +29,10 @@
 #if defined(_MSC_VER)
 
 	#define CRSTL_MSVC
+	#define CRSTL_MSVC_VERSION _MSC_VER
+	#define CRSTL_MSVC_FULL_VERSION _MSC_FULL_VER
+
+	#define CRSTL_MSVC_2015 1900
 
 #endif
 
@@ -60,11 +64,11 @@
 
 #endif
 
-#if defined(__clang__) || defined(__GNUG__)
+#if defined(CRSTL_CLANG) || defined(CRSTL_GCC)
 
 	#define crstl_finline inline __attribute__((always_inline))
 
-#elif defined(_MSC_VER)
+#elif defined(CRSTL_MSVC)
 
 	#define crstl_finline __forceinline
 
@@ -82,7 +86,7 @@
 
 // __cpp_noexcept_function_type not very reliable
 // noexcept first appeared in VS2015
-#if defined(_MSC_VER) && (_MSC_VER < 1900)
+#if defined(CRSTL_MSVC) && (CRSTL_MSVC_VERSION < CRSTL_MSVC_2015)
 
 	#define crstl_noexcept
 
@@ -114,7 +118,7 @@
 
 #else
 
-	#if defined(_MSC_VER)
+	#if defined(CRSTL_MSVC)
 		
 		// warning C4127: conditional expression is constant
 		// Disable because we always use these in a template context
@@ -133,7 +137,7 @@
 
 #endif
 
-#if defined(_MSC_VER)
+#if defined(CRSTL_MSVC)
 
 	#define crstl_warning_anonymous_struct_union_begin \
 	__pragma(warning(push)) \
@@ -193,5 +197,17 @@ inline void crstl_assert_impl(bool condition)
 #else
 
 	#define crstl_module_export
+
+#endif
+
+#if defined(CRSTL_CLANG) || defined(CRSTL_GCC)
+
+	#define crstl_likely(x) __builtin_expect(!!(x), 1)
+	#define crstl_unlikely(x) __builtin_expect(!!(x), 0)
+
+#else
+
+	#define crstl_likely(x) (x)
+	#define crstl_unlikely(x) (x)	
 
 #endif

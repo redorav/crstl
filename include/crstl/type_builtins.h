@@ -1,5 +1,7 @@
 #pragma once
 
+#include "crstl/config.h"
+
 //----------------
 // Type Properties
 //----------------
@@ -21,19 +23,28 @@
 
 #define crstl_has_unique_object_representations(T) __has_unique_object_representations(T)
 
-// Whether type is trivially copyable, i.e. whether we can use mempcy directly
-// to copy an object or stream it in
-#if defined(_MSC_VER) && (_MSC_VER < 1900)
+// Whether type is trivially constructible and destructible
+#if defined(CRSTL_MSVC) && (CRSTL_MSVC_VERSION < CRSTL_MSVC_2015)
 
-	#define crstl_is_trivially_copyable(T) __has_trivial_copy(T)
 	#define crstl_is_trivially_constructible(T) __has_trivial_constructor(T)
 	#define crstl_is_trivially_destructible(T) __has_trivial_destructor(T)
 
 #else
 
-	#define crstl_is_trivially_copyable(T) __is_trivially_copyable(T)
 	#define crstl_is_trivially_constructible(T) __is_trivially_constructible(T)
 	#define crstl_is_trivially_destructible(T) __is_trivially_destructible(T)
+
+#endif
+
+// Whether type is trivially copyable, i.e. whether we can use mempcy directly
+// to copy an object or stream it in
+#if defined(CRSTL_MSVC) && (CRSTL_MSVC_VERSION < CRSTL_MSVC_2015)
+
+	#define crstl_is_trivially_copyable(T) __has_trivial_copy(T)
+
+#else
+
+	#define crstl_is_trivially_copyable(T) __is_trivially_copyable(T)
 
 #endif
 

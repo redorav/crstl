@@ -8,10 +8,10 @@
 // very fast. Here we can do compiler checks, mangling, whatever we need to conform to the target compiler
 // Some functions are well defined across compilers, whereas some are poorly defined which is unfortunate
 
-#if defined(_MSC_VER)
+#if defined(CRSTL_MSVC)
 	#define crstl_dllimport __declspec(dllimport)
 
-	#if _MSC_VER <= 1900
+	#if CRSTL_MSVC_VERSION <= CRSTL_MSVC_2015
 	#define crstl_1600_dllimport __declspec(dllimport)
 	#endif
 #else
