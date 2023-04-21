@@ -24,7 +24,7 @@
 #define crstl_has_unique_object_representations(T) __has_unique_object_representations(T)
 
 // Whether type is trivially constructible and destructible
-#if defined(CRSTL_MSVC) && (CRSTL_MSVC_VERSION < CRSTL_MSVC_2015)
+#if (defined(CRSTL_MSVC) && (CRSTL_MSVC_VERSION < CRSTL_MSVC_2015)) || defined(CRSTL_GCC)
 
 	#define crstl_is_trivially_constructible(T) __has_trivial_constructor(T)
 	#define crstl_is_trivially_destructible(T) __has_trivial_destructor(T)
