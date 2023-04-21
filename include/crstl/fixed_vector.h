@@ -12,6 +12,8 @@
 
 #include "crstl/internal/fixed_common.h"
 
+#include "crstl/internal/memory_copy.h"
+
 #if defined(CRSTL_INITIALIZER_LISTS)
 #include <initializer_list>
 #endif
@@ -114,18 +116,7 @@ crstl_module_export namespace crstl
 
 		this_type& operator = (const this_type& other) crstl_noexcept
 		{
-			crstl_constexpr_if(crstl_is_trivially_copyable(T))
-			{
-				memcpy(m_data, other.m_data, other.m_length * sizeof(T));
-			}
-			else
-			{
-				for (size_t i = 0; i < other.m_length; ++i)
-				{
-					::new((void*)&m_data[i]) T(other.m_data[i]);
-				}
-			}
-
+			copy_initialize_or_memcpy<T>(m_data, other.m_data, other.m_length);
 			m_length = other.m_length;
 			return *this;
 		}
