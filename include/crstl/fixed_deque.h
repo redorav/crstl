@@ -120,8 +120,12 @@ crstl_module_export namespace crstl
 
 		this_type& operator = (const this_type& other) crstl_noexcept
 		{
-			clear();
-			copy_other(other);
+			if (this != &other)
+			{
+				clear();
+				copy_other(other);
+			}
+
 			return *this;
 		}
 
@@ -375,37 +379,12 @@ crstl_module_export namespace crstl
 		{
 			if (other.m_end >= other.m_begin)
 			{
-				crstl_constexpr_if(crstl_is_trivially_copyable(T))
-				{
-					memcpy(&m_data[other.m_begin], &other.m_data[other.m_begin], other.m_length * sizeof(T));
-				}
-			else
-			{
-				for (size_t i = other.m_begin; i < other.m_length; ++i)
-				{
-					::new((void*)&m_data[i]) T(other.m_data[i]);
-				}
-			}
+				copy_initialize_or_memcpy(&m_data[other.m_begin], &other.m_data[other.m_begin], other.m_length);
 			}
 			else
 			{
-				crstl_constexpr_if(crstl_is_trivially_copyable(T))
-				{
-					memcpy(&m_data[0], &other.m_data[0], other.m_end * sizeof(T));
-					memcpy(&m_data[other.m_begin], &other.m_data[other.m_begin], (NumElements - other.m_begin) * sizeof(T));
-				}
-				else
-				{
-					for (size_t i = 0; i < other.m_end; ++i)
-					{
-						::new((void*)&m_data[i]) T(other.m_data[i]);
-					}
-
-					for (size_t i = other.m_begin; i < NumElements; ++i)
-					{
-						::new((void*)&m_data[i]) T(other.m_data[i]);
-					}
-					}
+				copy_initialize_or_memcpy(m_data, other.m_data, other.m_end);
+				copy_initialize_or_memcpy(&m_data[other.m_begin], &other.m_data[other.m_begin], NumElements - other.m_begin);
 			}
 
 			m_begin = other.m_begin;

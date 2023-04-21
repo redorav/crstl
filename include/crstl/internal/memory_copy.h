@@ -9,7 +9,7 @@
 namespace crstl
 {
 	template<typename T, bool CanMemcpy = false>
-	struct function_selector
+	struct copy_initialize_or_memcpy_select
 	{
 		static void copy_initialize_or_memcpy(T* destination, const T* source, size_t count)
 		{
@@ -21,7 +21,7 @@ namespace crstl
 	};
 
 	template<typename T>
-	struct function_selector<T, true>
+	struct copy_initialize_or_memcpy_select<T, true>
 	{
 		static void copy_initialize_or_memcpy(T* destination, const T* source, size_t count)
 		{
@@ -32,6 +32,6 @@ namespace crstl
 	template<typename T>
 	void copy_initialize_or_memcpy(T* destination, const T* source, size_t count)
 	{
-		function_selector<T, crstl_is_trivially_copyable(T)>::copy_initialize_or_memcpy(destination, source, count);
+		copy_initialize_or_memcpy_select<T, crstl_is_trivially_copyable(T)>::copy_initialize_or_memcpy(destination, source, count);
 	}
 };
