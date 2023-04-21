@@ -177,7 +177,7 @@ crstl_module_export namespace crstl
 			crstl_assert(m_length < NumElements);
 			size_t current_end = m_end;
 			::new((void*)&m_data[current_end]) T(crstl::forward<Args>(args)...);
-			m_end = m_end + 1 > kLastElement ? 0 : m_end + 1;
+			m_end = size_t(m_end + 1) > kLastElement ? 0 : m_end + 1;
 			m_length++;
 			return m_data[current_end];
 		}
@@ -186,7 +186,7 @@ crstl_module_export namespace crstl
 		reference emplace_front(Args&&... args)
 		{
 			crstl_assert(m_length < NumElements);
-			m_begin = m_begin - 1 > kLastElement ? kLastElement : m_begin - 1;
+			m_begin = size_t(m_begin - 1) > kLastElement ? kLastElement : m_begin - 1;
 			::new((void*)&m_data[m_begin]) T(crstl::forward<Args>(args)...);
 			m_length++;
 			return m_data[m_begin];
@@ -209,7 +209,7 @@ crstl_module_export namespace crstl
 		void pop_back()
 		{
 			crstl_assert(m_length > 0);
-			m_end = m_end - 1 > kLastElement ? kLastElement : m_end - 1;
+			m_end = size_t(m_end - 1) > kLastElement ? kLastElement : m_end - 1;
 			m_data[m_end].~T();
 			m_length--;
 		}
@@ -218,7 +218,7 @@ crstl_module_export namespace crstl
 		{
 			crstl_assert(m_length > 0);
 			m_data[m_begin].~T();
-			m_begin = m_begin + 1 > kLastElement ? 0 : m_begin + 1;
+			m_begin = size_t(m_begin + 1) > kLastElement ? 0 : m_begin + 1;
 			m_length--;
 		}
 		
@@ -231,7 +231,7 @@ crstl_module_export namespace crstl
 			crstl_assert(m_length < NumElements);
 			length_type current_end = m_end;
 			::new((void*)&m_data[current_end]) T();
-			m_end = m_end + 1 > kLastElement ? 0 : m_end + 1;
+			m_end = size_t(m_end + 1) > kLastElement ? 0 : m_end + 1;
 			m_length++;
 			return m_data[current_end];
 		}
@@ -240,7 +240,7 @@ crstl_module_export namespace crstl
 		{
 			crstl_assert(m_length < NumElements);
 			length_type current_end = m_end;
-			m_end = m_end + 1 > kLastElement ? 0 : m_end + 1;
+			m_end = size_t(m_end + 1) > kLastElement ? 0 : m_end + 1;
 			m_length++;
 			return m_data[current_end];
 		}
@@ -249,7 +249,7 @@ crstl_module_export namespace crstl
 		{
 			crstl_assert(m_length < NumElements);
 			::new((void*)&m_data[m_end]) T(v);
-			m_end = m_end + 1 > kLastElement ? 0 : m_end + 1;
+			m_end = size_t(m_end + 1) > kLastElement ? 0 : m_end + 1;
 			m_length++;
 		}
 		
@@ -257,7 +257,7 @@ crstl_module_export namespace crstl
 		{
 			crstl_assert(m_length < NumElements);
 			::new((void*)&m_data[m_end]) T(crstl::move(v));
-			m_end = m_end + 1 > kLastElement ? 0 : m_end + 1;
+			m_end = size_t(m_end + 1) > kLastElement ? 0 : m_end + 1;
 			m_length++;
 		}
 
@@ -268,7 +268,7 @@ crstl_module_export namespace crstl
 		reference push_front()
 		{
 			crstl_assert(m_length < NumElements);
-			m_begin = m_begin - 1 > kLastElement ? kLastElement : m_begin - 1;
+			m_begin = size_t(m_begin - 1) > kLastElement ? kLastElement : m_begin - 1;
 			::new((void*)&m_data[m_begin]) T();
 			m_length++;
 			return m_data[m_begin];
@@ -277,7 +277,7 @@ crstl_module_export namespace crstl
 		reference push_front_uninitialized()
 		{
 			crstl_assert(m_length < NumElements);
-			m_begin = m_begin - 1 > kLastElement ? kLastElement : m_begin - 1;
+			m_begin = size_t(m_begin - 1) > kLastElement ? kLastElement : m_begin - 1;
 			m_length++;
 			return m_data[m_begin];
 		}
@@ -285,7 +285,7 @@ crstl_module_export namespace crstl
 		void push_front(const T& v)
 		{
 			crstl_assert(m_length < NumElements);
-			m_begin = m_begin - 1 > kLastElement ? kLastElement : m_begin - 1;
+			m_begin = size_t(m_begin - 1) > kLastElement ? kLastElement : m_begin - 1;
 			::new((void*)&m_data[m_begin]) T(v);
 			m_length++;
 		}
@@ -293,7 +293,7 @@ crstl_module_export namespace crstl
 		void push_front(T&& v)
 		{
 			crstl_assert(m_length < NumElements);
-			m_begin = m_begin - 1 > kLastElement ? kLastElement : m_begin - 1;
+			m_begin = size_t(m_begin - 1) > kLastElement ? kLastElement : m_begin - 1;
 			::new((void*)&m_data[m_begin]) T(crstl::move(v));
 			m_length++;
 		}
