@@ -122,8 +122,10 @@ crstl_module_export namespace crstl
 		{
 			if (this != &string)
 			{
-				clear(); assign(string); return *this;
+				clear(); assign(string);
 			}
+
+			return *this;
 		}
 
 		explicit crstl_constexpr basic_fixed_string(int value)                crstl_noexcept : basic_fixed_string() { append_sprintf("%d", value); }
