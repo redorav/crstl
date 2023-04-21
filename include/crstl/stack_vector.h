@@ -31,7 +31,7 @@
 // - Consider using a fixed_vector first, and if requirements require dynamic
 //   size for temporary usage, use stack_vector instead
 
-#if defined(_MSC_VER)
+#if defined(CRSTL_MSVC)
 	#define crstl_alloca(size) (_alloca(size))
 #else
 	#define crstl_alloca(size) (__builtin_alloca(size))
