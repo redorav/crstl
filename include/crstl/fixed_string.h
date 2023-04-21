@@ -102,6 +102,27 @@ crstl_module_export namespace crstl
 			assign(string, subpos, sublen);
 		}
 
+		//-----------
+		// Assignment
+		//-----------
+
+		template<int N>
+		crstl_constexpr basic_fixed_string& operator = (const CharT(&string_literal)[N]) crstl_noexcept
+		{
+			clear(); assign(string_literal); return *this;
+		}
+
+		template<int OtherNumElements>
+		crstl_constexpr basic_fixed_string& operator = (const basic_fixed_string<CharT, OtherNumElements>& string) crstl_noexcept
+		{
+			clear(); assign(string); return *this;
+		}
+
+		crstl_constexpr basic_fixed_string& operator = (const basic_fixed_string& string) crstl_noexcept
+		{
+			clear(); assign(string); return *this;
+		}
+
 		explicit crstl_constexpr basic_fixed_string(int value)                crstl_noexcept : basic_fixed_string() { append_sprintf("%d", value); }
 		explicit crstl_constexpr basic_fixed_string(long value)               crstl_noexcept : basic_fixed_string() { append_sprintf("%ld", value); }
 		explicit crstl_constexpr basic_fixed_string(long long value)          crstl_noexcept : basic_fixed_string() { append_sprintf("%lld", value); }
