@@ -33,13 +33,13 @@ void RunUnitTestsString()
 	const char* String = "String";
 	
 	char HelloStringArray[64] = {};
-	sprintf(HelloStringArray, HelloString);
+	memcpy(HelloStringArray, HelloString, strlen(HelloString) * sizeof(char));
 
 	char HelloArray[32] = {};
-	sprintf(HelloArray, Hello);
+	memcpy(HelloArray, Hello, strlen(Hello) * sizeof(char));
 
 	char StringArray[32] = {};
-	sprintf(StringArray, String);
+	memcpy(StringArray, String, strlen(String) * sizeof(char));
 
 	// Unicode Strings
 
