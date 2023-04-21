@@ -2,6 +2,8 @@
 
 #include "crstl/config.h"
 
+#include "crstl/type_builtins.h"
+
 namespace crstl
 {
 	typedef signed char int8_t;
@@ -59,6 +61,15 @@ namespace crstl
 	static_assert(sizeof(uint32_t) == 4, "Incorrect size for uint32_t");
 	static_assert(sizeof(int64_t)  == 8, "Incorrect size for int64_t");
 	static_assert(sizeof(uint64_t) == 8, "Incorrect size for uint64_t");
+
+	static_assert(crstl_is_signed(int8_t), "Incorrect signedness for int8_t");
+	static_assert(crstl_is_unsigned(uint8_t), "Incorrect signedness for uint8_t");
+	static_assert(crstl_is_signed(int16_t), "Incorrect signedness for int16_t");
+	static_assert(crstl_is_unsigned(uint16_t), "Incorrect signedness for uint16_t");
+	static_assert(crstl_is_signed(int32_t), "Incorrect signedness for int32_t");
+	static_assert(crstl_is_unsigned(uint32_t), "Incorrect signedness for uint32_t");
+	static_assert(crstl_is_signed(int64_t), "Incorrect signedness for int64_t");
+	static_assert(crstl_is_unsigned(uint64_t), "Incorrect signedness for uint64_t");
 };
 
 #if !defined(CRSTL_CHAR8_TYPE)
