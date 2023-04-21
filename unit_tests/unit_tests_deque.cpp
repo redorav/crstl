@@ -122,7 +122,7 @@ void RunUnitTestsDeque()
 
 #if defined(CRSTL_UNIT_RANGED_FOR)
 		{
-			size_t count = 0;
+			crstl::size_t count = 0;
 			for (auto iter = crDeque.begin(); iter != crDeque.end(); ++iter)
 			{
 				++count;
@@ -132,7 +132,7 @@ void RunUnitTestsDeque()
 		}
 
 		{
-			size_t count = 0;
+			crstl::size_t count = 0;
 			for (const Dummy& d : crDeque)
 			{
 				(void)d;
