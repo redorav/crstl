@@ -18,9 +18,19 @@ Dummy::Dummy(int a, float b, int* ptr) : a(a), b(b), ptr(ptr)
 
 }
 
-Dummy::Dummy(const Dummy& d)
+Dummy::Dummy(const Dummy& dummy)
 {
-	memcpy(this, &d, sizeof(Dummy));
+	a = dummy.a;
+	b = dummy.b;
+	c = dummy.c;
+	d = dummy.d;
+	e = dummy.e;
+	f = dummy.f;
+	g = dummy.g;
+	h = dummy.h;
+	i = dummy.i;
+	j = dummy.j;
+	ptr = dummy.ptr;
 }
 
 Dummy::Dummy(Dummy&& d) crstl_noexcept : a(d.a), b(d.b), ptr(d.ptr)
@@ -35,7 +45,17 @@ Dummy::Dummy(int a, float b, int c, int d, int e, int f, int g, int h, int i, in
 
 Dummy& Dummy::operator=(const Dummy& dummy)
 {
-	memcpy(this, &dummy, sizeof(Dummy));
+	a = dummy.a;
+	b = dummy.b;
+	c = dummy.c;
+	d = dummy.d;
+	e = dummy.e;
+	f = dummy.f;
+	g = dummy.g;
+	h = dummy.h;
+	i = dummy.i;
+	j = dummy.j;
+	ptr = dummy.ptr;
 	return *this;
 }
 
