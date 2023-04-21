@@ -244,7 +244,7 @@ void RunUnitTestsVectorStdCompare()
 
 	begin_test("stack_vector");
 	{
-		crstl::stack_vector<Dummy> crStackVector(crstl::transient_memory_t<Dummy>((Dummy*)_alloca(32 * sizeof(Dummy)), 32));
+		crstl::stack_vector<Dummy> crStackVector(crstl_alloca_t(Dummy, 32));
 		crStackVector.push_back(Dummy());
 		crStackVector.push_back(Dummy());
 		crStackVector.push_back(Dummy());
