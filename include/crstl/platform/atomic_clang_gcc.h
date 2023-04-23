@@ -1,5 +1,7 @@
 #pragma once
 
+// https://gcc.gnu.org/onlinedocs/gcc/_005f_005fatomic-Builtins.html
+
 // Storage
 
 #define crstl_atomic_store8(target, value) __atomic_exchange_n((target), (value), __ATOMIC_SEQ_CST)
