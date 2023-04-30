@@ -89,19 +89,7 @@ crstl_module_export namespace crstl
 		crstl_constexpr vector(const this_type& other) crstl_noexcept
 		{
 			m_data = allocate(other.m_length);
-
-			crstl_constexpr_if(crstl_is_trivially_copyable(T))
-			{
-				memcpy(m_data, other.m_data, other.m_length * sizeof(T));
-			}
-			else
-			{
-				for (size_t i = 0; i < other.m_length; ++i)
-				{
-					::new((void*)&m_data[i]) T(other.m_data[i]);
-				}
-			}
-
+			copy_initialize_or_memcpy(m_data, other.m_data, other.m_length);
 			m_length = other.m_length;
 		}
 
@@ -311,6 +299,10 @@ crstl_module_export namespace crstl
 			back().~T();
 			m_length--;
 		}
+
+		//----------
+		// push_back
+		//----------
 
 		crstl_constexpr reference push_back()
 		{
