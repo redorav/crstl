@@ -504,10 +504,7 @@ crstl_module_export namespace crstl
 			T* temp = (T*)m_capacity_allocator.second().allocate(new_capacity * kDataSize);
 
 			// Copy existing data
-			for (size_t i = 0; i < m_length; ++i)
-			{
-				::new((void*)&temp[i]) T(m_data[i]);
-			}
+			copy_initialize_or_memcpy(temp, m_data, m_length);
 
 			m_capacity_allocator.second().deallocate(m_data, m_capacity_allocator.m_first * kDataSize);
 			m_data = temp;
