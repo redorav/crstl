@@ -108,10 +108,7 @@ crstl_module_export namespace crstl
 
 		~fixed_vector() crstl_noexcept
 		{
-			crstl_constexpr_if (!crstl_is_trivially_destructible(T))
-			{
-				clear();
-			}
+			clear();
 		}
 
 		this_type& operator = (const this_type& other) crstl_noexcept
@@ -148,9 +145,12 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr void clear()
 		{
-			for (size_t i = 0; i < m_length; ++i)
+			crstl_constexpr_if(!crstl_is_trivially_destructible(T))
 			{
-				m_data[i].~T();
+				for (size_t i = 0; i < m_length; ++i)
+				{
+					m_data[i].~T();
+				}
 			}
 
 			m_length = 0;

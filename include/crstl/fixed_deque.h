@@ -115,10 +115,7 @@ crstl_module_export namespace crstl
 
 		~fixed_deque() crstl_noexcept
 		{
-			crstl_constexpr_if(!crstl_is_trivially_destructible(T))
-		{
 			clear();
-		}
 		}
 
 		this_type& operator = (const this_type& other) crstl_noexcept
@@ -146,25 +143,28 @@ crstl_module_export namespace crstl
 		
 		crstl_constexpr void clear()
 		{
-			if (m_length > 0)
+			crstl_constexpr_if(!crstl_is_trivially_destructible(T))
 			{
-				if (m_begin <= m_end)
+				if (m_length > 0)
 				{
-					for (size_t i = m_begin; i != m_end; ++i)
+					if (m_begin <= m_end)
 					{
-						m_data[i].~T();
+						for (size_t i = m_begin; i != m_end; ++i)
+						{
+							m_data[i].~T();
+						}
 					}
-				}
-				else
-				{
-					for (size_t i = 0; i != m_end; ++i)
+					else
 					{
-						m_data[i].~T();
-					}
+						for (size_t i = 0; i != m_end; ++i)
+						{
+							m_data[i].~T();
+						}
 
-					for (size_t i = m_begin; i != NumElements; ++i)
-					{
-						m_data[i].~T();
+						for (size_t i = m_begin; i != NumElements; ++i)
+						{
+							m_data[i].~T();
+						}
 					}
 				}
 			}

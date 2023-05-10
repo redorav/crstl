@@ -11,7 +11,7 @@
 #define CRSTL_UNIT_UNIFORM_INITIALIZATION
 #endif
 
-#if defined(__cpp_modules)
+#if defined(CRSTL_USE_CPP_MODULE)
 
 	#define CRSTL_UNIT_MODULES
 

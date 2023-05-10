@@ -137,7 +137,7 @@ workspace('crstl')
 			toolset('msc')
 			architecture('x64')
 			vectorextensions('sse4.1')
-			defines { '__SSE4_1__' }
+			defines { '__SSE4_1__', 'CRSTL_USE_CPP_MODULE' }
 			buildoptions { '/permissive-' }
 			
 		filter { 'platforms:'..PlatformLLVM64Modules }
@@ -145,7 +145,7 @@ workspace('crstl')
 			toolset(llvmToolset)
 			architecture('x64')
 			vectorextensions('sse4.1')
-			defines { '__SSE4_1__' }
+			defines { '__SSE4_1__', 'CRSTL_USE_CPP_MODULE' }
 			
 		filter { 'platforms:'..PlatformLLVM64 }
 			toolset(llvmToolset)

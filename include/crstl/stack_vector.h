@@ -67,6 +67,11 @@ crstl_module_export namespace crstl
 			: m_data((T*)init.memory)
 			, m_capacity(init.capacity)
 			, m_length(0) {}
+		
+		~stack_vector()
+		{
+			clear();
+		}
 
 		reference at(size_t i) { crstl_assert(i < m_length); return m_data[i]; }
 		const_reference at(size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
@@ -82,9 +87,12 @@ crstl_module_export namespace crstl
 
 		void clear()
 		{
-			for (size_t i = 0; i < m_length; ++i)
+			crstl_constexpr_if(!crstl_is_trivially_destructible(T))
 			{
-				m_data[i].~T();
+				for (size_t i = 0; i < m_length; ++i)
+				{
+					m_data[i].~T();
+				}
 			}
 
 			m_length = 0;
