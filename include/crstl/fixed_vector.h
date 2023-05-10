@@ -161,7 +161,7 @@ crstl_module_export namespace crstl
 
 #if defined(CRSTL_VARIADIC_TEMPLATES)
 		template<typename... Args>
-		reference emplace_back(Args&&... args)
+		crstl_constexpr reference emplace_back(Args&&... args)
 		{
 			crstl_assert(m_length < NumElements);
 			::new((void*)&m_data[m_length]) T(crstl::forward<Args>(args)...);
@@ -253,7 +253,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr size_t max_size() const { return NumElements; }
 
-		void pop_back()
+		crstl_constexpr void pop_back()
 		{
 			crstl_assert(m_length > 0);
 			back().~T();
@@ -264,7 +264,7 @@ crstl_module_export namespace crstl
 		// push_back
 		//----------
 
-		reference push_back()
+		crstl_constexpr reference push_back()
 		{
 			crstl_assert(m_length < NumElements);
 			::new((void*)&m_data[m_length]) T();
@@ -272,21 +272,21 @@ crstl_module_export namespace crstl
 			return back();
 		}
 
-		reference push_back_uninitialized()
+		crstl_constexpr reference push_back_uninitialized()
 		{
 			crstl_assert(m_length < NumElements);
 			m_length++;
 			return back();
 		}
 
-		void push_back(const T& v)
+		crstl_constexpr void push_back(const T& v)
 		{
 			crstl_assert(m_length < NumElements);
 			::new((void*)&m_data[m_length]) T(v);
 			m_length++;
 		}
 
-		void push_back(T&& v)
+		crstl_constexpr void push_back(T&& v)
 		{
 			crstl_assert(m_length < NumElements);
 			::new((void*)&m_data[m_length]) T(crstl::move(v));
@@ -297,7 +297,7 @@ crstl_module_export namespace crstl
 		// resize
 		//-------
 
-		void resize(size_t length)
+		crstl_constexpr void resize(size_t length)
 		{
 			crstl_assert(length <= NumElements);
 
@@ -319,7 +319,7 @@ crstl_module_export namespace crstl
 			m_length = (length_type)length;
 		}
 
-		void resize(size_t length, const T& value)
+		crstl_constexpr void resize(size_t length, const T& value)
 		{
 			crstl_assert(length <= NumElements);
 
@@ -341,9 +341,9 @@ crstl_module_export namespace crstl
 			m_length = (length_type)length;
 		}
 
-		size_t size() const { return m_length; }
+		crstl_constexpr size_t size() const { return m_length; }
 
-		void swap(this_type& v)
+		crstl_constexpr void swap(this_type& v)
 		{
 			// For small vectors, make a temporary copy directly on the stack, then copy it back
 			crstl_constexpr_if(sizeof(this_type) <= kMaxStack)
@@ -379,9 +379,9 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		reference operator [] (size_t i) { crstl_assert(i < m_length); return m_data[i]; }
+		crstl_constexpr reference operator [] (size_t i) { crstl_assert(i < m_length); return m_data[i]; }
 
-		const_reference operator [] (size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
+		crstl_constexpr const_reference operator [] (size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
 
 		//---------------------
 		// Comparison Operators
