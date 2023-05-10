@@ -4,11 +4,11 @@
 
 #if defined(_MSVC_LANG)
 
-	#define crstl_cppversion _MSVC_LANG
+	#define CRSTL_CPPVERSION _MSVC_LANG
 
 #elif defined(__cplusplus)
 
-	#define crstl_cppversion __cplusplus
+	#define CRSTL_CPPVERSION __cplusplus
 
 #endif
 
@@ -74,7 +74,12 @@
 
 #endif
 
-#if defined(__cpp_if_constexpr)
+#define CRSTL_CPP11 201103L
+#define CRSTL_CPP14 201402L
+#define CRSTL_CPP17 201703L
+#define CRSTL_CPP20 202002L
+
+#if defined(__cpp_constexpr)
 
 	#define crstl_constexpr constexpr
 
@@ -96,13 +101,13 @@
 
 #endif
 
-#if crstl_cppversion >= 202002L || defined(__cpp_lib_char8_t)
+#if CRSTL_CPPVERSION >= CRSTL_CPP20 || defined(__cpp_lib_char8_t)
 
 #define CRSTL_CHAR8_TYPE
 
 #endif
 
-#if crstl_cppversion >= 201702L
+#if CRSTL_CPPVERSION >= CRSTL_CPP17
 
 	#define crstl_nodiscard [[nodiscard]]
 
@@ -152,7 +157,7 @@
 
 #endif
 
-#if crstl_cppversion >= 201103L
+#if CRSTL_CPPVERSION >= CRSTL_CPP11
 
 	#define CRSTL_VARIADIC_TEMPLATES
 	#define crstl_constructor_delete = delete

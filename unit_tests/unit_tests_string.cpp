@@ -12,7 +12,7 @@ import crstl;
 #include <ctype.h>
 #include <string>
 
-#if crstl_cppversion >= 201703L
+#if CRSTL_CPPVERSION >= CRSTL_CPP17
 #include <string_view>
 #endif
 
@@ -225,7 +225,7 @@ void RunUnitTestsString()
 		crFixedString32.clear();
 		crFixedString32.append_sprintf("Hello %i", 3);
 
-#if crstl_cppversion >= 201703L
+#if CRSTL_CPPVERSION >= CRSTL_CPP17
 		std::basic_string_view<char> stdStringViewEmpty;
 
 		std::basic_string_view<char> stdStringViewConstChar("String View");

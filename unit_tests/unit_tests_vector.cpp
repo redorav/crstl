@@ -26,7 +26,7 @@ void RunUnitTestsVectorNoStd()
 #include <vector>
 #include <stdio.h>
 
-#if crstl_cppversion >= 202002L
+#if CRSTL_CPPVERSION >= CRSTL_CPP20
 #include <span>
 #endif
 
