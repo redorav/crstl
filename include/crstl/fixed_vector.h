@@ -367,8 +367,8 @@ crstl_module_export namespace crstl
 					memcpy(thisData + chunkOffset, chunkData, kMaxStack);
 				}
 
-				static const size_t kChunkCount = (sizeof(this_type) + kMaxStack - 1) / kMaxStack;
-				static const size_t kChunkRemaining = sizeof(this_type) - (kChunkCount - 1) * kMaxStack;
+				const size_t kChunkCount = (sizeof(this_type) + kMaxStack - 1) / kMaxStack;
+				const size_t kChunkRemaining = sizeof(this_type) - (kChunkCount - 1) * kMaxStack;
 
 				// Copy last chunk
 				uint8_t chunkData[kMaxStack];
