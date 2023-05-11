@@ -12,7 +12,7 @@
 	#define crstl_dllimport __declspec(dllimport)
 
 	#if CRSTL_MSVC_VERSION <= CRSTL_MSVC_2015
-	#define crstl_1600_dllimport __declspec(dllimport)
+	#define crstl_2015_dllimport __declspec(dllimport)
 	#endif
 #else
 	#define crstl_dllimport
@@ -22,14 +22,14 @@
 	#define crstl_dllimport
 #endif
 
-#if !defined(crstl_1600_dllimport)
-	#define crstl_1600_dllimport
+#if !defined(crstl_2015_dllimport)
+	#define crstl_2015_dllimport
 #endif
 
 #if defined(CRSTL_LINUX)
-#define crstl_wthrow throw()
+#define crstl_linux_wthrow throw()
 #else
-#define crstl_wthrow
+#define crstl_linux_wthrow
 #endif
 
 extern "C"
@@ -39,11 +39,11 @@ extern "C"
 	void* memset(void* dst, int val, crstl::size_t size);
 	void* memcpy(void* destination, void const* source, crstl::size_t size);
 
-	crstl_dllimport crstl::size_t wcslen(const wchar_t* str) crstl_wthrow;
+	crstl_dllimport crstl::size_t wcslen(const wchar_t* str) crstl_linux_wthrow;
 
-	wchar_t* wmemset(wchar_t* ptr, wchar_t wc, crstl::size_t num) crstl_wthrow;
+	wchar_t* wmemset(wchar_t* ptr, wchar_t wc, crstl::size_t num) crstl_linux_wthrow;
 
-	crstl_1600_dllimport void* memmove(void* destination, const void* source, crstl::size_t num);
+	crstl_2015_dllimport void* memmove(void* destination, const void* source, crstl::size_t num);
 }
 
 extern "C++"
