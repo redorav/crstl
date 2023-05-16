@@ -44,6 +44,10 @@ extern "C"
 	wchar_t* wmemset(wchar_t* ptr, wchar_t wc, crstl::size_t num) crstl_linux_wthrow;
 
 	crstl_2015_dllimport void* memmove(void* destination, const void* source, crstl::size_t num);
+
+#if defined(CRSTL_MSVC)
+	void* _alloca(crstl::size_t size);
+#endif
 }
 
 extern "C++"
@@ -52,3 +56,9 @@ extern "C++"
 	crstl_nodiscard void* operator new  (crstl::size_t count, void* ptr) crstl_noexcept;
 	crstl_nodiscard void* operator new[](crstl::size_t count, void* ptr) crstl_noexcept;
 }
+
+#if defined(CRSTL_MSVC)
+#define crstl_alloca(size) (_alloca(size))
+#else
+#define crstl_alloca(size) (__builtin_alloca(size))
+#endif
