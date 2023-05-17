@@ -216,3 +216,5 @@ inline void crstl_assert_impl(bool condition)
 	#define crstl_unlikely(x) (x)	
 
 #endif
+
+#define crstl_restrict __restrict
