@@ -263,7 +263,7 @@ crstl_module_export namespace crstl
 		{
 			size_t remaining_length = kCharacterCapacityWithZero - m_length;
 
-			va_list va_arguments;
+			va_list va_arguments = nullptr;
 			va_start(va_arguments, format);
 
 			// Try to copy, limiting the number of characters to what we have available

@@ -401,7 +401,7 @@ crstl_module_export namespace crstl
 
 			T* data = basic_string::data();
 
-			va_list va_arguments;
+			va_list va_arguments = nullptr;
 			va_start(va_arguments, format);
 
 			// Try to copy, limiting the number of characters to what we have available
