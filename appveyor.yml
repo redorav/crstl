@@ -1,0 +1,35 @@
+# version format
+version: 1.0.{build}
+
+# Do not build feature branch with open Pull Requests
+skip_branch_with_pr: true
+
+environment:
+  matrix:
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      vsversion: 2019
+      platform: MSVC 64
+      configuration: Release
+
+install:
+  - cmd: if %vsversion%==2015
+         start /B /W premake/win/premake5 --file=premake.lua vs2015
+  - cmd: if %vsversion%==2017
+         start /B /W premake/win/premake5 --file=premake.lua vs2017
+  - cmd: if %vsversion%==2019
+         start /B /W premake/win/premake5 --file=premake.lua vs2019
+  - cmd: if %vsversion%==2022
+         start /B /W premake/win/premake5 --file=premake.lua vs2022
+  - sh: if [[ $APPVEYOR_BUILD_WORKER_IMAGE = Ubuntu ]]; then ./Linux.sh; fi;
+  - sh: if [[ $APPVEYOR_BUILD_WORKER_IMAGE = macOS ]]; then ./Xcode.sh; fi;
+
+build_script:
+  - cmd: if %vsversion%==2015
+         msbuild "C:\projects\hlslpp\workspace\vs2015\hlsl++.sln" /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+  - cmd: if %vsversion%==2017
+         msbuild "C:\projects\hlslpp\workspace\vs2017\hlsl++.sln" /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+  - cmd: if %vsversion%==2019
+         msbuild "C:\projects\hlslpp\workspace\vs2019\hlsl++.sln" /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+  - cmd: if %vsversion%==2022
+         msbuild "C:\projects\hlslpp\workspace\vs2022\hlsl++.sln" /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+         
