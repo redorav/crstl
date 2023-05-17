@@ -105,7 +105,9 @@ namespace crstl_unit
 	
 	void begin_test_case(const char* functionString, int lineNumber, const char* file)
 	{
-
+		(void)functionString;
+		(void)lineNumber;
+		(void)file;
 	}
 
 	void check_condition(bool condition)
