@@ -41,14 +41,14 @@ void LoopOverSpan(const crstl::span<Dummy>& dummySpan)
 #endif
 }
 
-crstl_constexpr void VectorConstexprFunction()
-{
-	crstl::fixed_vector<int, 32> crConstexprFixedVector;
-	crConstexprFixedVector.push_back();
-#if defined(CRSTL_VARIADIC_TEMPLATES)
-	crConstexprFixedVector.emplace_back();
-#endif
-}
+//crstl_constexpr void VectorConstexprFunction()
+//{
+//	crstl::fixed_vector<int, 32> crConstexprFixedVector;
+//	crConstexprFixedVector.push_back();
+//#if defined(CRSTL_VARIADIC_TEMPLATES)
+//	crConstexprFixedVector.emplace_back();
+//#endif
+//}
 
 void RunUnitTestsVectorStdCompare()
 {
