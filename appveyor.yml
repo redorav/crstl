@@ -25,11 +25,11 @@ install:
 
 build_script:
   - cmd: if %vsversion%==2015
-         msbuild "C:\projects\hlslpp\workspace\vs2015\hlsl++.sln" /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+         msbuild "C:\projects\crstl\workspace\vs2015\crstl.sln" /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
   - cmd: if %vsversion%==2017
-         msbuild "C:\projects\hlslpp\workspace\vs2017\hlsl++.sln" /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+         msbuild "C:\projects\crstl\workspace\vs2017\crstl.sln" /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
   - cmd: if %vsversion%==2019
-         msbuild "C:\projects\hlslpp\workspace\vs2019\hlsl++.sln" /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+         msbuild "C:\projects\crstl\workspace\vs2019\crstl.sln" /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
   - cmd: if %vsversion%==2022
-         msbuild "C:\projects\hlslpp\workspace\vs2022\hlsl++.sln" /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+         msbuild "C:\projects\crstl\workspace\vs2022\crstl.sln" /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
          
