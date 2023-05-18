@@ -44,15 +44,15 @@ void RunUnitTestsString()
 	// Unicode Strings
 
 	// Taberu
-	const char* TaberuUtf8 = (const char*)u8"\u98df\u98df\u98df\u98df"; // Correct
-	const wchar_t* TaberuWchar = L"\u98df\u98df\u98df\u98df\u98df\u98df\u98df\u98df"; // Correct
-	const char8_t* TaberuChar8 = (const char8_t*)u8"\u98df\u98df\u98df\u98df"; // Correct
-	const char16_t* TaberuChar16 = u"\u98df\u98df\u98df\u98df"; // Correct
-	const char32_t* TaberuChar32 = U"\u98df\u98df\u98df\u98df"; // Correct
+	const char* TaberuUtf8 = (const char*)u8"\u98df\u98df\u98df\u98df"; crstl_unused(TaberuUtf8); // Correct
+	const wchar_t* TaberuWchar = L"\u98df\u98df\u98df\u98df\u98df\u98df\u98df\u98df"; crstl_unused(TaberuWchar); // Correct
+	const char8_t* TaberuChar8 = (const char8_t*)u8"\u98df\u98df\u98df\u98df"; crstl_unused(TaberuChar8); // Correct
+	const char16_t* TaberuChar16 = u"\u98df\u98df\u98df\u98df"; crstl_unused(TaberuChar16); // Correct
+	const char32_t* TaberuChar32 = U"\u98df\u98df\u98df\u98df"; crstl_unused(TaberuChar32); // Correct
 
-	size_t lengthTaberuUtf8 = strlen((const char*)TaberuUtf8); // Correct
-	size_t lengthTaberuWchar = wcslen(TaberuWchar); // Correct
-	size_t lengthTaberuChar8 = strlen((const char*)TaberuChar8); // Correct
+	size_t lengthTaberuUtf8 = strlen((const char*)TaberuUtf8); crstl_unused(lengthTaberuUtf8); // Correct
+	size_t lengthTaberuWchar = wcslen(TaberuWchar); crstl_unused(lengthTaberuWchar); // Correct
+	size_t lengthTaberuChar8 = strlen((const char*)TaberuChar8); crstl_unused(lengthTaberuChar8); // Correct
 	//size_t lengthTaberuChar16 = wcslen(TaberuChar16); // Correct
 	//size_t lengthTaberuChar32 = wcslen(TaberuChar32); // Correct
 
@@ -60,12 +60,12 @@ void RunUnitTestsString()
 	const char* TaberuUtf8_lit = (const char*)"食食食食";
 	const wchar_t* TaberuWchar_lit = L"食食食食";
 	const char8_t* TaberuChar8_lit = (const char8_t*)u8"食食食食";
-	const char16_t* TaberuChar16_lit = u"食食食食";
-	const char32_t* TaberuChar32_lit = U"食食食食";
+	const char16_t* TaberuChar16_lit = u"食食食食"; crstl_unused(TaberuChar16_lit);
+	const char32_t* TaberuChar32_lit = U"食食食食"; crstl_unused(TaberuChar32_lit);
 
-	size_t lengthTaberuUtf8_lit = strlen((const char*)TaberuUtf8_lit); // Correct
-	size_t lengthTaberuWchar_lit = wcslen(TaberuWchar_lit); // Incorrect
-	size_t lengthTaberuChar8_lit = strlen((const char*)TaberuChar8_lit); // Incorrect
+	size_t lengthTaberuUtf8_lit = strlen((const char*)TaberuUtf8_lit); crstl_unused(lengthTaberuUtf8_lit); // Correct
+	size_t lengthTaberuWchar_lit = wcslen(TaberuWchar_lit); crstl_unused(lengthTaberuWchar_lit);// Incorrect
+	size_t lengthTaberuChar8_lit = strlen((const char*)TaberuChar8_lit); crstl_unused(lengthTaberuChar8_lit);// Incorrect
 	//size_t lengthTaberuChar16_lit = wcslen(TaberuChar16_lit);
 	//size_t lengthTaberuChar32_lit = wcslen(TaberuChar32_lit);
 
@@ -101,6 +101,9 @@ void RunUnitTestsString()
 
 		const char* myfsc_str = crFixedString32.c_str();
 		const char* mystdc_str = mystds.c_str();
+		crstl_check(crFixedString32 == myfsc_str);
+		crstl_check(crFixedString32 == mystdc_str);
+		//crstl_check(myfsc_str == crFixedString32);
 
 		const size_t fsfindc = crFixedString32.find('S', 0);
 		const size_t stdfindc = mystds.find('S', 0);
@@ -134,7 +137,7 @@ void RunUnitTestsString()
 
 		mystds.replace(0, 2, "Hello");
 
-		const auto fsfindfs = crFixedString32.find(crFixedString32_2);
+		const auto fsfindfs = crFixedString32.find(crFixedString32_2); crstl_unused(fsfindfs);
 
 		mystds.push_back('a');
 		mystds.pop_back();
@@ -410,16 +413,16 @@ void RunUnitTestsString()
 	// Unicode decoding
 
 #if defined(CRSTL_UNIT_UNICODE_LITERALS)
-	const char* MyCharString = (const char*)u8"Hello String汉字";
-	const wchar_t* MyWCharString = L"Hello String汉字";
+	const char* MyCharString = (const char*)u8"Hello String汉字"; crstl_unused(MyCharString);
+	const wchar_t* MyWCharString = L"Hello String汉字"; crstl_unused(MyWCharString);
 
-	const char* u1 = (const char*)u8"a";
-	const char* u2 = (const char*)u8"\u03EA";
-	const char* u3 = (const char*)u8"\u27c1";
-	const char* u4 = (const char*)u8"\U00010CFF";
+	const char* u1 = (const char*)u8"a"; crstl_unused(u1);
+	const char* u2 = (const char*)u8"\u03EA"; crstl_unused(u2);
+	const char* u3 = (const char*)u8"\u27c1"; crstl_unused(u3);
+	const char* u4 = (const char*)u8"\U00010CFF"; crstl_unused(u4);
 
 	size_t utf8Offset = 0;
-	crstl::codepoint_t cp = crstl::decode_utf8((const uint8_t*)u4, strlen((const char*)u4), utf8Offset);
+	crstl::codepoint_t cp = crstl::decode_utf8((const uint8_t*)u4, strlen((const char*)u4), utf8Offset); crstl_unused(cp);
 #else
 	const char* MyCharString = (const char*)"Hello String汉字";
 	const wchar_t* MyWCharString = L"Hello String汉字";
