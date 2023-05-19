@@ -50,11 +50,6 @@ crstl_module_export namespace crstl
 			function.m_manager = nullptr;
 		}
 
-		fixed_function(fixed_function& function) crstl_noexcept
-		{
-			copy(function);
-		}
-
 		fixed_function(const fixed_function& function) crstl_noexcept
 		{
 			copy(function);
