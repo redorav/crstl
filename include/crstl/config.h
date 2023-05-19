@@ -218,3 +218,5 @@ inline void crstl_assert_impl(bool condition)
 #endif
 
 #define crstl_restrict __restrict
+
+#define crstl_unused(x) (void)x
