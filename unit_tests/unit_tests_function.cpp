@@ -29,6 +29,11 @@ int DummyIntFunction2(int value)
 	return -1;
 }
 
+int DummyReturnPassedInt(int value)
+{
+	return value;
+}
+
 void FunctionPassByReferenceTest(const crstl::fixed_function<8, void(int)>& myFunction, int k)
 {
 	myFunction(k);
@@ -47,6 +52,12 @@ struct OperatorStruct
 void RunUnitTestsFunction()
 {
 	int a = 3;
+
+	int rand1 = rand();
+	int rand2 = rand();
+	int rand3 = rand();
+	int rand4 = rand();
+	int rand5 = rand();
 
 	std::function<void()> stdVoidFunction;
 
@@ -78,20 +89,30 @@ void RunUnitTestsFunction()
 	
 	crstl::fixed_function<8, void()> crVoidFunction4 = &DummyVoidFunction;
 
-	crstl::fixed_function<8, int(int)> crIntFunction = &DummyIntFunction;
+	crstl::fixed_function<8, int(int)> crIntFunction = &DummyReturnPassedInt;
 
-	crstl::fixed_function<8, int(int)> crIntFunctionNonConst = &DummyIntFunction2;
+	crstl::fixed_function<8, int(int)> crIntFunctionNonConst = &DummyReturnPassedInt;
 
-	const crstl::fixed_function<8, int(int)> crIntFunctionConst = &DummyIntFunction2;
+	crstl::fixed_function<8, int(int)> crIntFunctionMove = &DummyReturnPassedInt;
+
+	const crstl::fixed_function<8, int(int)> crIntFunctionConst = &DummyReturnPassedInt;
+	crstl_assert(crIntFunctionConst(rand1) == rand1);
 
 	const crstl::fixed_function<8, void(void)> crMoveOnlyFunction = OperatorStruct();
 
 	crIntFunction = crIntFunctionNonConst;
-	crstl::fixed_function<8, int(int)> crIntFunctionCopy1(crIntFunctionNonConst);
-	crstl::fixed_function<8, int(int)> crIntFunctionCopy2(crIntFunctionConst);
-	crstl::fixed_function<8, int(int)> crIntFunctionMove(std::move(crIntFunctionNonConst));
 
-	crIntFunctionConst(5);
+	crstl::fixed_function<8, int(int)> crIntFunctionCopy1(crIntFunctionNonConst);
+	crstl_assert(crIntFunctionCopy1(rand2) == rand2);
+	
+	crstl::fixed_function<8, int(int)> crIntFunctionCopy2(crIntFunctionConst);
+	crstl_assert(crIntFunctionCopy2(rand3) == rand3);
+
+	crstl::fixed_function<8, int(int)> crIntFunctionMoved(std::move(crIntFunctionMove));
+	crstl_assert(crIntFunctionMoved(rand4) == rand4);
+
+	crstl::fixed_function<16, int(int)> crIntFunctionCopyDifferentSize(crIntFunctionNonConst);
+	crstl_assert(crIntFunctionCopyDifferentSize(rand5) == rand5);
 
 	// Call functions
 

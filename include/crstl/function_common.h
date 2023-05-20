@@ -49,6 +49,9 @@ namespace crstl
 	template<typename Signature, typename FunctorT, int Size>
 	class functor_handler;
 
+	// FunctorT is anything from a lambda to a function pointer. It cannot represent fixed_function itself
+	// it's too complicated to manage and we can do better via direct handling of differently sized fixed_function
+
 	template<typename Result, typename FunctorT, int Size, typename... Args>
 	class functor_handler<Result(Args...), FunctorT, Size>
 	{
@@ -104,23 +107,23 @@ namespace crstl
 			create(functor, crstl::forward<Fn>(f));
 		}
 
-		static Result invoke(const functor_storage<Size>& functor, Args&&... args)
+		static Result invoke(const void* functor, Args&&... args)
 		{
-			return (*get_pointer(functor))(crstl::forward<Args>(args)...);
+			return (*get_pointer(*((const functor_storage<Size>*)functor)))(crstl::forward<Args>(args)...);
 		}
 
-		static void manage(functor_storage<Size>& destination, const functor_storage<Size>& source, manager_operation::t operation)
+		static void manage(void* destination, const void* source, manager_operation::t operation)
 		{
 			switch (operation)
 			{
 				case manager_operation::destroy:
 				{
-					destroy(destination);
+					destroy(*((functor_storage<Size>*)destination));
 					break;
 				}
 				case manager_operation::copy:
 				{
-					init_functor(destination, *static_cast<const FunctorT*>(get_pointer(source)));
+					init_functor(*((functor_storage<Size>*)destination), *static_cast<const FunctorT*>(get_pointer(*((const functor_storage<Size>*)source))));
 					break;
 				}
 			}

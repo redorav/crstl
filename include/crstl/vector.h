@@ -14,6 +14,8 @@
 
 #include "crstl/type_builtins.h"
 
+#include "crstl/internal/memory_copy.h"
+
 #if defined(CRSTL_INITIALIZER_LISTS)
 #include <initializer_list>
 #endif
