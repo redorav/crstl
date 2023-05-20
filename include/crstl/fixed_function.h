@@ -54,16 +54,22 @@ crstl_module_export namespace crstl
 
 		fixed_function(fixed_function&& other) crstl_noexcept
 		{
-			m_functor_storage = other.m_functor_storage;
-			m_invoker = other.m_invoker;
-			m_manager = other.m_manager;
-			other.m_invoker = nullptr;
-			other.m_manager = nullptr;
+			if (this != &other)
+			{
+				m_functor_storage = other.m_functor_storage;
+				m_invoker = other.m_invoker;
+				m_manager = other.m_manager;
+				other.m_invoker = nullptr;
+				other.m_manager = nullptr;
+			}
 		}
 
 		fixed_function(const fixed_function& other) crstl_noexcept
 		{
-			copy(other);
+			if (this != &other)
+			{
+				copy(other);
+			}
 		}
 
 		template<int NewSizeBytes>
