@@ -53,18 +53,4 @@ crstl_module_export namespace crstl
 	template<typename T> struct is_same<T, T> : true_type {};
 
 	template <typename T> struct is_empty : bool_constant<crstl_is_empty(T)> {};
-
-#if defined(CRSTL_VARIADIC_TEMPLATES)
-
-	// Used for variadic template parameter pack iteration, when fold expressions are not available
-	// Useful for braced initialization of vector, etc.
-	// The magic behind this technique is explained here https://stackoverflow.com/questions/1579719/variable-number-of-parameters-in-function-in-c
-
-	struct expand_type
-	{
-		template<typename... T>
-		expand_type(T&&...) {}
-	};
-
-#endif
 };

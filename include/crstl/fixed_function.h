@@ -16,6 +16,11 @@ crstl_module_export namespace crstl
 	template<int SizeBytes, typename Signature>
 	class fixed_function;
 
+	template <typename> struct is_not_fixed_function { typedef const char* type; };
+
+	template <int SizeBytes, typename Result, typename... Args>
+	struct is_not_fixed_function<fixed_function<SizeBytes, Result(Args...)>> {};
+
 	template<int SizeBytes, typename Result, typename... Args>
 	class fixed_function<SizeBytes, Result(Args...)>
 	{
@@ -25,14 +30,20 @@ crstl_module_export namespace crstl
 
 		fixed_function() crstl_noexcept : m_invoker(nullptr), m_manager(nullptr) {}
 
-		template<typename Functor>
-		fixed_function(Functor&& functor) crstl_noexcept
+		template<typename FunctorT>
+		fixed_function
+		(
+			FunctorT&& functor, 
+			// Do not accept as Functor a fixed_function, we'll deal with it in a specialized copy/move constructor but due to overload
+			// resolution rules, this one takes precedence. Remove reference to be able to compare the underlying type
+			typename crstl::is_not_fixed_function<typename crstl::remove_reference<FunctorT>::type>::type = nullptr
+		) crstl_noexcept
 		{
-			if (!handler<Functor>::empty_function(functor))
+			if (!handler<FunctorT>::empty_function(functor))
 			{
-				handler<Functor>::template create<Functor>(m_functor_storage, crstl::forward<Functor>(functor));
-				m_invoker = &handler<Functor>::invoke;
-				m_manager = &handler<Functor>::manage;
+				handler<FunctorT>::template create<FunctorT>(m_functor_storage, crstl::forward<FunctorT>(functor));
+				m_invoker = &handler<FunctorT>::invoke;
+				m_manager = &handler<FunctorT>::manage;
 			}
 			else
 			{
@@ -41,18 +52,26 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		fixed_function(fixed_function&& function) crstl_noexcept
+		fixed_function(fixed_function&& other) crstl_noexcept
 		{
-			m_functor_storage = function.m_functor_storage;
-			m_invoker = function.m_invoker;
-			m_manager = function.m_manager;
-			function.m_invoker = nullptr;
-			function.m_manager = nullptr;
+			m_functor_storage = other.m_functor_storage;
+			m_invoker = other.m_invoker;
+			m_manager = other.m_manager;
+			other.m_invoker = nullptr;
+			other.m_manager = nullptr;
 		}
 
-		fixed_function(const fixed_function& function) crstl_noexcept
+		fixed_function(const fixed_function& other) crstl_noexcept
 		{
-			copy(function);
+			copy(other);
+		}
+
+		template<int NewSizeBytes>
+		fixed_function(const fixed_function<NewSizeBytes, Result(Args...)>& other) crstl_noexcept
+		{
+			static_assert(NewSizeBytes <= SizeBytes, "Not enough size to hold new function");
+			(void)other;
+			// TODO implement
 		}
 
 		~fixed_function() crstl_noexcept
@@ -63,19 +82,19 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		fixed_function& operator = (fixed_function&& function)
+		fixed_function& operator = (fixed_function&& other)
 		{
-			m_functor_storage = function.m_functor_storage;
-			m_invoker = function.m_invoker;
-			m_manager = function.m_manager;
-			function.m_invoker = nullptr;
-			function.m_manager = nullptr;
+			m_functor_storage = other.m_functor_storage;
+			m_invoker = other.m_invoker;
+			m_manager = other.m_manager;
+			other.m_invoker = nullptr;
+			other.m_manager = nullptr;
 			return *this;
 		}
 
-		fixed_function& operator = (const fixed_function& function)
+		fixed_function& operator = (const fixed_function& other)
 		{
-			copy(function);
+			copy(other);
 			return *this;
 		}
 		
@@ -92,21 +111,28 @@ crstl_module_export namespace crstl
 
 	private:
 
-		template<typename Functor>
-		using handler = functor_handler<Result(Args...), Functor, SizeBytes>;
+		template<typename FunctorT>
+		using handler = functor_handler<Result(Args...), FunctorT, SizeBytes>;
 
+		// The invoker_type is a function pointer that returns Result and takes functor_storage plus a variable number of arguments
 		using invoker_type = Result(*)(const functor_storage<SizeBytes>&, Args&&...);
+
+		// The manager_type is a function pointer that returns void and takes a destination (non-const) and source (const) functor_storage
 		using manager_type = void(*)(functor_storage<SizeBytes>&, const functor_storage<SizeBytes>&, manager_operation::t);
 
-		void copy(const fixed_function& f) crstl_noexcept
+		void copy(const fixed_function& other) crstl_noexcept
 		{
-			f.m_manager(m_functor_storage, f.m_functor_storage, manager_operation::copy);
-			m_manager = f.m_manager;
-			m_invoker = f.m_invoker;
+			if (other.m_manager)
+			{
+				other.m_manager(m_functor_storage, other.m_functor_storage, manager_operation::copy);
+			}
+
+			m_manager = other.m_manager;
+			m_invoker = other.m_invoker;
 		}
 
 		// The invoker is a pointer to a function that reinterprets the data we pass in and calls the function
-		// It return the same value as the fixed_function
+		// It returns the same value as the fixed_function
 		invoker_type m_invoker;
 
 		// The manager can perform operations such as copy, move, create and destroy by reinterpreting the data
