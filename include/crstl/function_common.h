@@ -4,6 +4,8 @@
 
 #include "crstl/move_forward.h"
 
+#include "crstl/type_utils.h"
+
 namespace crstl
 {
 	namespace manager_operation
@@ -24,11 +26,14 @@ namespace crstl
 		void(undefined_class::*member)(void);
 	};
 
+	// functor_storage works as either a pointer to a memory block in the heap or a memory
+	// block itself, depending on whether the captures of the lambda fit in m_data
 	template<int Size>
 	union functor_storage
 	{
 		static_assert(Size >= 0, "Cannot have a negative size");
 
+		// Effectively returns this
 		void* data() crstl_noexcept { return &m_data[0]; }
 		const void* data() const crstl_noexcept { return &m_data[0]; }
 
@@ -41,43 +46,43 @@ namespace crstl
 		char m_data[Size == 0 ? sizeof(callable_types) : Size];
 	};
 
-	template<typename Signature, typename Functor, int Size>
+	template<typename Signature, typename FunctorT, int Size>
 	class functor_handler;
 
-	template<typename Result, typename Functor, int Size, typename... Args>
-	class functor_handler<Result(Args...), Functor, Size>
+	template<typename Result, typename FunctorT, int Size, typename... Args>
+	class functor_handler<Result(Args...), FunctorT, Size>
 	{
 	public:
 
 		// If we request a specific size, then we'll consider it local, without the option to make a heap allocation
 		// If we pass in 0, then we have some stack space to at least store function pointers on the stack
-		static const bool local = Size > 0 || sizeof(Functor) <= sizeof(const functor_storage<0>);
+		static const bool local = Size > 0 || sizeof(FunctorT) <= sizeof(const functor_storage<0>);
 
-		static Functor* get_pointer(const functor_storage<Size>& source)
+		static FunctorT* get_pointer(const functor_storage<Size>& source)
 		{
 			crstl_constexpr_if(local)
 			{
-				const Functor& functor = source.template data<Functor>();
-				return const_cast<Functor*>(&(functor));
+				const FunctorT& functor = source.template data<FunctorT>();
+				return const_cast<FunctorT*>(&(functor));
 			}
 			else
 			{
-				return source.template data<Functor*>();
+				return source.template data<FunctorT*>();
 			}
 		}
 
 		template<typename Fn>
 		static void create(functor_storage<Size>& destination, Fn&& fn)
 		{
-			static_assert(local ? sizeof(Functor) <= sizeof(functor_storage<Size>) : true, "Not enough space to store functor");
+			static_assert(local ? sizeof(FunctorT) <= sizeof(destination) : true, "Not enough space to store functor");
 
 			crstl_constexpr_if(local)
 			{
-				::new (destination.data()) Functor(crstl::forward<Fn>(fn));
+				::new (destination.data()) FunctorT(crstl::forward<Fn>(fn));
 			}
 			else
 			{
-				destination.template data<Functor*>() = new Functor(crstl::forward<Fn>(fn));
+				destination.template data<FunctorT*>() = new FunctorT(crstl::forward<Fn>(fn));
 			}
 		}
 
@@ -85,11 +90,11 @@ namespace crstl
 		{
 			crstl_constexpr_if(local) // If local, just call destructor 
 			{
-				destination.template data<Functor>().~Functor();
+				destination.template data<FunctorT>().~FunctorT();
 			}
 			else
 			{
-				delete destination.template data<Functor*>();
+				delete destination.template data<FunctorT*>();
 			}
 		}
 
@@ -115,24 +120,27 @@ namespace crstl
 				}
 				case manager_operation::copy:
 				{
-					init_functor(destination, *static_cast<const Functor*>(get_pointer(source)));
+					init_functor(destination, *static_cast<const FunctorT*>(get_pointer(source)));
 					break;
 				}
 			}
 		}
 
+		// A null function pointer is considered empty
 		template<typename T>
-		static bool empty_function(T* fp) noexcept
+		static bool empty_function(T* function_pointer) noexcept
 		{
-			return fp == nullptr;
+			return function_pointer == nullptr;
 		}
 
+		// A null member function is empty
 		template<typename Class, typename T>
-		static bool empty_function(T Class::* mp) noexcept
+		static bool empty_function(T Class::* member_pointer) noexcept
 		{
-			return mp == nullptr;
+			return member_pointer == nullptr;
 		}
 
+		// A reference is never empty
 		template<typename T>
 		static bool empty_function(const T&) noexcept
 		{
