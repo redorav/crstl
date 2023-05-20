@@ -92,7 +92,7 @@ void RunUnitTestsString()
 		mystds = mystds.c_str();
 		crFixedString32 = "Hello String";
 		crFixedString32 = HelloString;
-		crFixedString32 = crFixedString32;
+		//crFixedString32 = crFixedString32;
 		crFixedString32 = crFixedString32.c_str();
 
 		const auto myfssub = crFixedString32.substr(3, 5);
