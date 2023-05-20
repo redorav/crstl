@@ -18,6 +18,14 @@ environment:
       vsversion: 2017
       platform: MSVC 64
       configuration: Release
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+      vsversion: 2022
+      platform: LLVM 64
+      configuration: Release
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      vsversion: 2019
+      platform: LLVM 64
+      configuration: Release
 
 install:
   - cmd: if %vsversion%==2015
