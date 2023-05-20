@@ -12,6 +12,8 @@
 
 #include "crstl/internal/fixed_common.h"
 
+#include "crstl/internal/memory_copy.h"
+
 // fixed_deque
 //
 // Fixed replacement for std::deque
@@ -442,23 +444,32 @@ crstl_module_export namespace crstl
 				{
 					begin = m_end - delete_length;
 
-					for (size_t i = begin; i != m_end; ++i)
+					crstl_constexpr_if(!crstl_is_trivially_destructible(T))
 					{
-						m_data[i].~T();
+						for (size_t i = begin; i != m_end; ++i)
+						{
+							m_data[i].~T();
+						}
 					}
 				}
 				else
 				{
-					for (size_t i = 0; i != m_end; ++i)
+					crstl_constexpr_if(!crstl_is_trivially_destructible(T))
 					{
-						m_data[i].~T();
+						for (size_t i = 0; i != m_end; ++i)
+						{
+							m_data[i].~T();
+						}
 					}
 
 					begin = NumElements - (delete_length - m_end);
 
-					for (size_t i = begin; i != NumElements; ++i)
+					crstl_constexpr_if(!crstl_is_trivially_destructible(T))
 					{
-						m_data[i].~T();
+						for (size_t i = begin; i != NumElements; ++i)
+						{
+							m_data[i].~T();
+						}
 					}
 				}
 
