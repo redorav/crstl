@@ -3,6 +3,7 @@ export module crstl;
 #define CRSTL_MODULE_DECLARATION
 #include "crstl/array.h"
 #include "crstl/bitset.h"
+#include "crstl/deque.h"
 #include "crstl/fixed_deque.h"
 #include "crstl/fixed_function.h"
 #include "crstl/fixed_string.h"

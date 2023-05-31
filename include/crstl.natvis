@@ -29,6 +29,21 @@
 		</Expand>
 	</Type>
 
+	<Type Name="crstl::deque&lt;*,*,*&gt;">
+		<DisplayString>[size = {m_length}]</DisplayString>
+
+		<Expand>
+			<Item Name="[capacity]">m_capacity_allocator.m_first</Item>
+			<Item Name="[size]">m_length</Item>
+
+			<IndexListItems>
+				<Size>m_length</Size>
+				<ValueNode>m_chunk_array[(m_chunk_begin * $T3 + m_local_begin + $i) / $T3]->m_data[(m_chunk_begin * $T3 + m_local_begin + $i) % $T3]</ValueNode>
+			</IndexListItems>
+
+		</Expand>
+	</Type>
+
 	<Type Name="crstl::fixed_deque&lt;*,*&gt;">
 		<DisplayString>[size = {m_length}]</DisplayString>
 
