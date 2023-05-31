@@ -298,7 +298,10 @@ crstl_module_export namespace crstl
 		crstl_constexpr void pop_back()
 		{
 			crstl_assert(m_length > 0);
-			back().~T();
+			crstl_constexpr_if(!crstl_is_trivially_destructible(T))
+			{
+				back().~T();
+			}
 			m_length--;
 		}
 
@@ -359,9 +362,12 @@ crstl_module_export namespace crstl
 			}
 			else if (length < (size_t)m_length)
 			{
-				for (size_t i = length; i < m_length; ++i)
+				crstl_constexpr_if(!crstl_is_trivially_destructible(T))
 				{
-					m_data[i].~T();
+					for (size_t i = length; i < m_length; ++i)
+					{
+						m_data[i].~T();
+					}
 				}
 			}
 
@@ -381,9 +387,12 @@ crstl_module_export namespace crstl
 			}
 			else if (length < (size_t)m_length)
 			{
-				for (size_t i = length; i < m_length; ++i)
+				crstl_constexpr_if(!crstl_is_trivially_destructible(T))
 				{
-					m_data[i].~T();
+					for (size_t i = length; i < m_length; ++i)
+					{
+						m_data[i].~T();
+					}
 				}
 			}
 
@@ -398,9 +407,12 @@ crstl_module_export namespace crstl
 			}
 			else if (length < (size_t)m_length)
 			{
-				for (size_t i = length; i < m_length; ++i)
+				crstl_constexpr_if(!crstl_is_trivially_destructible(T))
 				{
-					m_data[i].~T();
+					for (size_t i = length; i < m_length; ++i)
+					{
+						m_data[i].~T();
+					}
 				}
 			}
 
