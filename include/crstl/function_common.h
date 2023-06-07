@@ -78,11 +78,6 @@ namespace crstl
 		template<typename Fn>
 		static void create(functor_storage<Size>& destination, Fn&& fn)
 		{
-			const size_t FunctorTSize = sizeof(FunctorT); (void)FunctorTSize;
-			const size_t FnSize = sizeof(Fn); (void)FnSize;
-			const size_t DestinationSize = sizeof(destination); (void)DestinationSize;
-			const size_t FunctorStorage0Size = sizeof(functor_storage<0>); (void)FunctorStorage0Size;
-
 			static_assert(!SupportsHeap ? sizeof(FunctorT) <= sizeof(destination) : true, "Not enough space to store functor");
 
 			crstl_constexpr_if(static_local)
