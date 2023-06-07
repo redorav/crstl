@@ -51,13 +51,15 @@ struct OperatorStruct
 
 void RunUnitTestsFunction()
 {
+	using namespace crstl_unit;
+
 	int a = 3;
 
-	int rand1 = rand();
-	int rand2 = rand();
-	int rand3 = rand();
-	int rand4 = rand();
-	int rand5 = rand();
+	int rand1 = rand(); crstl_unused(rand1);
+	int rand2 = rand(); crstl_unused(rand2);
+	int rand3 = rand(); crstl_unused(rand3);
+	int rand4 = rand(); crstl_unused(rand4);
+	int rand5 = rand(); crstl_unused(rand5);
 
 	std::function<void()> stdVoidFunction;
 
@@ -75,68 +77,72 @@ void RunUnitTestsFunction()
 
 	stdIntFunction = &DummyIntFunction;
 
-	crstl::fixed_function<8, void()> crVoidFunction;
-	
-	crstl::fixed_function<16, void()> crVoidFunction2 = []()
+	begin_test("fixed_function");
 	{
-		printf("crVoidFunction2\n");
-	};
+		crstl::fixed_function<8, void()> crVoidFunction;
 
-	crstl::fixed_function<8, void()> crVoidFunction3 = [a]()
-	{
-		printf("crVoidFunction3 %d\n", a);
-	};
-	
-	crstl::fixed_function<8, void()> crVoidFunction4 = &DummyVoidFunction;
+		crstl::fixed_function<16, void()> crVoidFunction2 = []()
+		{
+			printf("crVoidFunction2\n");
+		};
 
-	crstl::fixed_function<8, int(int)> crIntFunction = &DummyReturnPassedInt;
+		crstl::fixed_function<8, void()> crVoidFunction3 = [a]()
+		{
+			printf("crVoidFunction3 %d\n", a);
+		};
 
-	crstl::fixed_function<8, int(int)> crIntFunctionNonConst = &DummyReturnPassedInt;
+		crstl::fixed_function<8, void()> crVoidFunction4 = &DummyVoidFunction;
 
-	crstl::fixed_function<8, int(int)> crIntFunctionMove = &DummyReturnPassedInt;
+		crstl::fixed_function<8, int(int)> crIntFunction = &DummyReturnPassedInt;
 
-	const crstl::fixed_function<8, int(int)> crIntFunctionConst = &DummyReturnPassedInt;
-	crstl_assert(crIntFunctionConst(rand1) == rand1);
+		crstl::fixed_function<8, int(int)> crIntFunctionNonConst = &DummyReturnPassedInt;
 
-	const crstl::fixed_function<8, void(void)> crMoveOnlyFunction = OperatorStruct();
+		crstl::fixed_function<8, int(int)> crIntFunctionMove = &DummyReturnPassedInt;
 
-	crIntFunction = crIntFunctionNonConst;
+		const crstl::fixed_function<8, int(int)> crIntFunctionConst = &DummyReturnPassedInt;
+		crstl_assert(crIntFunctionConst(rand1) == rand1);
 
-	crstl::fixed_function<8, int(int)> crIntFunctionCopy1(crIntFunctionNonConst);
-	crstl_assert(crIntFunctionCopy1(rand2) == rand2);
-	
-	crstl::fixed_function<8, int(int)> crIntFunctionCopy2(crIntFunctionConst);
-	crstl_assert(crIntFunctionCopy2(rand3) == rand3);
+		const crstl::fixed_function<8, void(void)> crMoveOnlyFunction = OperatorStruct();
 
-	crstl::fixed_function<8, int(int)> crIntFunctionMoved(std::move(crIntFunctionMove));
-	crstl_assert(crIntFunctionMoved(rand4) == rand4);
+		crIntFunction = crIntFunctionNonConst;
 
-	crstl::fixed_function<16, int(int)> crIntFunctionCopyDifferentSize(crIntFunctionNonConst);
-	crstl_assert(crIntFunctionCopyDifferentSize(rand5) == rand5);
+		crstl::fixed_function<8, int(int)> crIntFunctionCopy1(crIntFunctionNonConst);
+		crstl_assert(crIntFunctionCopy1(rand2) == rand2);
 
-	// Call functions
+		crstl::fixed_function<8, int(int)> crIntFunctionCopy2(crIntFunctionConst);
+		crstl_assert(crIntFunctionCopy2(rand3) == rand3);
 
-	if (stdVoidFunction)
-	{
-		stdVoidFunction();
+		crstl::fixed_function<8, int(int)> crIntFunctionMoved(std::move(crIntFunctionMove));
+		crstl_assert(crIntFunctionMoved(rand4) == rand4);
+
+		crstl::fixed_function<16, int(int)> crIntFunctionCopyDifferentSize(crIntFunctionNonConst);
+		crstl_assert(crIntFunctionCopyDifferentSize(rand5) == rand5);
+
+		// Call functions
+
+		if (stdVoidFunction)
+		{
+			stdVoidFunction();
+		}
+
+		if (crVoidFunction)
+		{
+			crVoidFunction();
+		}
+
+		stdVoidFunction2();
+		crVoidFunction2();
+
+		stdVoidFunction3();
+		crVoidFunction3();
+
+		//stdVoidFunction4();
+		crVoidFunction4();
+
+		int i = crIntFunction(4);
+		printf("IntFunction %d\n", i);
 	}
-
-	if (crVoidFunction)
-	{
-		crVoidFunction();
-	}
-
-	stdVoidFunction2();
-	crVoidFunction2();
-	
-	stdVoidFunction3();
-	crVoidFunction3();
-	
-	//stdVoidFunction4();
-	crVoidFunction4();
-
-	int i = crIntFunction(4);
-	printf("IntFunction %d\n", i);
+	end_test();
 
 	//printf("Hello\n");
 	//printf("Hello %d\n", a);
