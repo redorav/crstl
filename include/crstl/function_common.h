@@ -46,24 +46,25 @@ namespace crstl
 		char m_data[Size == 0 ? sizeof(callable_types) : Size];
 	};
 
-	template<typename Signature, typename FunctorT, int Size>
+	template<typename Signature, typename FunctorT, int Size, bool SupportsHeap>
 	class functor_handler;
 
 	// FunctorT is anything from a lambda to a function pointer. It cannot represent fixed_function itself
 	// it's too complicated to manage and we can do better via direct handling of differently sized fixed_function
 
-	template<typename Result, typename FunctorT, int Size, typename... Args>
-	class functor_handler<Result(Args...), FunctorT, Size>
+	template<typename Result, typename FunctorT, int Size, bool SupportsHeap, typename... Args>
+	class functor_handler<Result(Args...), FunctorT, Size, SupportsHeap>
 	{
 	public:
 
+		static_assert(!SupportsHeap ? Size > 0 : true, "Need Size > 0 if we don't support heap");
+
 		// If we request a specific size, then we'll consider it local, without the option to make a heap allocation
-		// If we pass in 0, then we have some stack space to at least store function pointers on the stack
-		static const bool local = Size > 0 || sizeof(FunctorT) <= sizeof(const functor_storage<0>);
+		static const bool static_local = sizeof(FunctorT) <= sizeof(functor_storage<Size>);
 
 		static FunctorT* get_pointer(const functor_storage<Size>& source)
 		{
-			crstl_constexpr_if(local)
+			crstl_constexpr_if(static_local)
 			{
 				const FunctorT& functor = source.template data<FunctorT>();
 				return const_cast<FunctorT*>(&(functor));
@@ -77,9 +78,14 @@ namespace crstl
 		template<typename Fn>
 		static void create(functor_storage<Size>& destination, Fn&& fn)
 		{
-			static_assert(local ? sizeof(FunctorT) <= sizeof(destination) : true, "Not enough space to store functor");
+			const size_t FunctorTSize = sizeof(FunctorT); (void)FunctorTSize;
+			const size_t FnSize = sizeof(Fn); (void)FnSize;
+			const size_t DestinationSize = sizeof(destination); (void)DestinationSize;
+			const size_t FunctorStorage0Size = sizeof(functor_storage<0>); (void)FunctorStorage0Size;
 
-			crstl_constexpr_if(local)
+			static_assert(!SupportsHeap ? sizeof(FunctorT) <= sizeof(destination) : true, "Not enough space to store functor");
+
+			crstl_constexpr_if(static_local)
 			{
 				::new (destination.data()) FunctorT(crstl::forward<Fn>(fn));
 			}
@@ -91,7 +97,7 @@ namespace crstl
 
 		static void destroy(functor_storage<Size>& destination)
 		{
-			crstl_constexpr_if(local) // If local, just call destructor 
+			crstl_constexpr_if(static_local) // If local, just call destructor 
 			{
 				destination.template data<FunctorT>().~FunctorT();
 			}

@@ -4,8 +4,7 @@
 
 // fixed_function
 //
-// fixed_function is a fixed-memory replacement for function
-// Its main characteristics are:
+// fixed_function is a fixed-memory replacement for std::function
 //
 // - The user supplies a size to the template object, which creates storage
 // - The storage is used to locally copy or instantiate functors
@@ -127,7 +126,7 @@ crstl_module_export namespace crstl
 	private:
 
 		template<typename FunctorT>
-		using handler = functor_handler<Result(Args...), FunctorT, SizeBytes>;
+		using handler = functor_handler<Result(Args...), FunctorT, SizeBytes, false>;
 
 		// The actual signature is void* because we need to be able to copy function pointers between fixed_functions that have different 
 		// buffer sizes, which unfortunately makes this a bit harder to read than necessary. We cannot just cast on use because we copy the
@@ -136,7 +135,7 @@ crstl_module_export namespace crstl
 		// The invoker_type is a function pointer that returns Result and takes functor_storage plus a variable number of arguments
 		using invoker_type = Result(*)(const void*, Args&&...);
 
-		// The manager_type is a function pointer that returns void and takes a destination (non-const) and source (const) functor_storage		
+		// The manager_type is a function pointer that returns void and takes a destination (non-const) and source (const) functor_storage
 		using manager_type = void(*)(void*, const void*, manager_operation::t);
 
 		void copy(const fixed_function& other) crstl_noexcept
