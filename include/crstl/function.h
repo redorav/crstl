@@ -23,7 +23,6 @@ crstl_module_export namespace crstl
 	template <typename Result, typename... Args>
 	struct is_not_function<function<Result(Args...)>> {};
 
-
 	template<typename Result, typename... Args>
 	class function<Result(Args...)>
 	{
