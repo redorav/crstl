@@ -10,6 +10,8 @@
 
 #include "crstl/config_fwd.h"
 
+#include "crstl/move_forward.h"
+
 // Only turn this on for development
 //#define CRSTL_DEQUE_EXHAUSTIVE_VALIDATION
 
