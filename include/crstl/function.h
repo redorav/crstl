@@ -1,6 +1,6 @@
 #pragma once
 
-#include "function_common.h"
+#include "crstl/function_common.h"
 
 // function
 //
@@ -13,7 +13,7 @@
 #define CRSTL_FUNCTION_INTERNAL_BUFFER_BYTES 0
 #endif
 
-namespace crstl
+crstl_module_export namespace crstl
 {
 	template<typename Signature>
 	class function;

@@ -14,7 +14,9 @@
 
 #include "crstl/internal/memory_copy.h"
 
-#if defined(CRSTL_INITIALIZER_LISTS)
+#if defined(CRSTL_MODULE_DECLARATION)
+import <initializer_list>;
+#elif defined(CRSTL_INITIALIZER_LISTS)
 #include <initializer_list>
 #endif
 

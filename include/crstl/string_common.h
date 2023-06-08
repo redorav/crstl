@@ -8,7 +8,11 @@
 
 // This include is very cheap in compile times and hard
 // to get right outside of its actual implementation
+#if defined(CRSTL_MODULE_DECLARATION)
+import <stdarg.h>;
+#else
 #include <stdarg.h>
+#endif
 
 extern "C"
 {
