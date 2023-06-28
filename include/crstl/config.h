@@ -16,23 +16,29 @@
 
 #if defined(__clang__)
 
-	#define CRSTL_CLANG
+	#define CRSTL_COMPILER_CLANG
 
 #endif
 
 #if defined(__GNUG__) || defined(__GNUC__)
 
-	#define CRSTL_GCC
+	#define CRSTL_COMPILER_GCC
 
 #endif
 
 #if defined(_MSC_VER)
 
-	#define CRSTL_MSVC
+	#define CRSTL_COMPILER_MSVC
 	#define CRSTL_MSVC_VERSION _MSC_VER
 	#define CRSTL_MSVC_FULL_VERSION _MSC_FULL_VER
 
 	#define CRSTL_MSVC_2015 1900
+
+#endif
+
+#if defined(__INTEL_COMPILER)
+
+	#define CRSTL_COMPILER_INTEL
 
 #endif
 
@@ -64,11 +70,11 @@
 
 #endif
 
-#if defined(CRSTL_CLANG) || defined(CRSTL_GCC)
+#if defined(CRSTL_COMPILER_CLANG) || defined(CRSTL_COMPILER_GCC)
 
 	#define crstl_finline inline __attribute__((always_inline))
 
-#elif defined(CRSTL_MSVC)
+#elif defined(CRSTL_COMPILER_MSVC)
 
 	#define crstl_finline __forceinline
 
@@ -91,7 +97,7 @@
 
 // __cpp_noexcept_function_type not very reliable
 // noexcept first appeared in VS2015
-#if defined(CRSTL_MSVC) && (CRSTL_MSVC_VERSION < CRSTL_MSVC_2015)
+#if defined(CRSTL_COMPILER_MSVC) && (CRSTL_MSVC_VERSION < CRSTL_MSVC_2015)
 
 	#define crstl_noexcept
 
@@ -123,7 +129,7 @@
 
 #else
 
-	#if defined(CRSTL_MSVC)
+	#if defined(CRSTL_COMPILER_MSVC)
 		
 		// warning C4127: conditional expression is constant
 		// Disable because we always use these in a template context
@@ -142,7 +148,7 @@
 
 #endif
 
-#if defined(CRSTL_MSVC)
+#if defined(CRSTL_COMPILER_MSVC)
 
 	#define crstl_warning_anonymous_struct_union_begin \
 	__pragma(warning(push)) \
@@ -161,10 +167,12 @@
 
 	#define CRSTL_VARIADIC_TEMPLATES
 	#define crstl_constructor_delete = delete
+	#define crstl_constructor_default = default
 
 #else
 
 	#define crstl_constructor_delete
+	#define crstl_constructor_default {}
 
 #endif
 
@@ -205,7 +213,7 @@ inline void crstl_assert_impl(bool condition)
 
 #endif
 
-#if defined(CRSTL_CLANG) || defined(CRSTL_GCC)
+#if defined(CRSTL_COMPILER_CLANG) || defined(CRSTL_COMPILER_GCC)
 
 	#define crstl_likely(x) __builtin_expect(!!(x), 1)
 	#define crstl_unlikely(x) __builtin_expect(!!(x), 0)

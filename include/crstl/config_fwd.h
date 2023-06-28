@@ -8,7 +8,7 @@
 // very fast. Here we can do compiler checks, mangling, whatever we need to conform to the target compiler
 // Some functions are well defined across compilers, whereas some are poorly defined which is unfortunate
 
-#if defined(CRSTL_MSVC)
+#if defined(CRSTL_COMPILER_MSVC)
 	#define crstl_dllimport __declspec(dllimport)
 
 	#if CRSTL_MSVC_VERSION <= CRSTL_MSVC_2015
@@ -45,7 +45,7 @@ extern "C"
 
 	crstl_2015_dllimport void* memmove(void* destination, const void* source, crstl::size_t num);
 
-#if defined(CRSTL_MSVC)
+#if defined(CRSTL_COMPILER_MSVC)
 	void* _alloca(crstl::size_t size);
 #endif
 }
@@ -57,7 +57,7 @@ extern "C++"
 	crstl_nodiscard void* operator new[](crstl::size_t count, void* ptr) crstl_noexcept;
 }
 
-#if defined(CRSTL_MSVC)
+#if defined(CRSTL_COMPILER_MSVC)
 #define crstl_alloca(size) (_alloca(size))
 #else
 #define crstl_alloca(size) (__builtin_alloca(size))
