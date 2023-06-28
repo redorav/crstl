@@ -41,10 +41,12 @@
 #if defined(CRSTL_MSVC) && (CRSTL_MSVC_VERSION < CRSTL_MSVC_2015)
 
 	#define crstl_is_trivially_copyable(T) __has_trivial_copy(T)
+	#define crstl_is_final(T) false
 
 #else
 
 	#define crstl_is_trivially_copyable(T) __is_trivially_copyable(T)
+	#define crstl_is_final(T) __is_final(T)
 
 #endif
 
