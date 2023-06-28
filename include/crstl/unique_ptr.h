@@ -184,26 +184,26 @@ crstl_module_export namespace crstl
 	template<bool Test, typename T = void> struct unique_ptr_enable_if;
 	template<typename T> struct unique_ptr_enable_if<true, T> { typedef T type; };
 
-	template <typename T, class... Args, typename unique_ptr_enable_if<!is_array<T>::value, int>::type = 0>
+	template <typename T, class... Args, typename unique_ptr_enable_if<!is_array<T>::value>::type = 0>
 	crstl_nodiscard crstl_constexpr unique_ptr<T> make_unique(Args&&... args)
 	{
 		return unique_ptr<T>(new T(crstl::forward<Args>(args)...));
 	}
 
-	template <class T, typename unique_ptr_enable_if<is_array<T>::value, int>::type = 0>
+	template <class T, typename unique_ptr_enable_if<is_array<T>::value>::type = 0>
 	crstl_nodiscard crstl_constexpr unique_ptr<T> make_unique(const size_t size)
 	{
 		using TNoExtents = typename remove_extent<T>::type;
 		return unique_ptr<T>(new TNoExtents[size]());
 	}
 
-	template <typename T, typename unique_ptr_enable_if<!is_array<T>::value, int>::type = 0>
+	template <typename T, typename unique_ptr_enable_if<!is_array<T>::value>::type = 0>
 	crstl_nodiscard crstl_constexpr unique_ptr<T> make_unique_uninitialized()
 	{
 		return unique_ptr<T>(new T);
 	}
 
-	template <class T, typename unique_ptr_enable_if<is_array<T>::value, int>::type = 0>
+	template <class T, typename unique_ptr_enable_if<is_array<T>::value>::type = 0>
 	crstl_nodiscard crstl_constexpr unique_ptr<T> make_unique_uninitialized(const size_t size)
 	{
 		using TNoExtents = typename remove_extent<T>::type;
