@@ -4,8 +4,6 @@
 
 #include "crstl/move_forward.h"
 
-#include "crstl/type_utils.h"
-
 namespace crstl
 {
 	namespace manager_operation
