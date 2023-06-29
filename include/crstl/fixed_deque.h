@@ -202,11 +202,11 @@ crstl_module_export namespace crstl
 		crstl_nodiscard
 		crstl_constexpr bool empty() const { return m_length == 0; }
 
-		crstl_constexpr iterator end() { return iterator(m_data, m_end, m_begin, m_end); }
+		crstl_constexpr14 iterator end() { return iterator(m_data, m_end, m_begin, m_end); }
 		crstl_constexpr const_iterator end() const { return iterator(m_data, m_end, m_begin, m_end); }
 		crstl_constexpr const_iterator cend() const { return iterator(m_data, m_end, m_begin, m_end); }
 		
-		crstl_constexpr reference front() { return m_data[m_begin]; }
+		crstl_constexpr14 reference front() { return m_data[m_begin]; }
 		crstl_constexpr const_reference front() const { return m_data[m_begin]; }
 
 		crstl_constexpr size_t max_size() const { return NumElements; }
