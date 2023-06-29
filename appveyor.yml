@@ -6,6 +6,14 @@ skip_branch_with_pr: true
 
 environment:
   matrix:
+    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+      build: off
+      platform: Linux64 GGC
+      configuration: Release
+    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+      build: off
+      platform: Linux64 Clang
+      configuration: Release
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
       vsversion: 2022
       platform: MSVC 64
@@ -48,4 +56,14 @@ build_script:
          msbuild "C:\projects\crstl\workspace\vs2019\crstl.sln" /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
   - cmd: if %vsversion%==2022
          msbuild "C:\projects\crstl\workspace\vs2022\crstl.sln" /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+  - sh: if [[ $platform = "Linux64 GGC" ]]; then 
+        pushd workspace/gmake2;
+        set -e;
+        make all config=release_linux64_gcc;
+        popd; fi;
+  - sh: if [[ $platform = "Linux64 Clang" ]]; then 
+        pushd workspace/gmake2;
+        set -e;
+        make all config=release_linux64_clang;
+        popd; fi;
          
