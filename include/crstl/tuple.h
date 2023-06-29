@@ -94,8 +94,8 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
-		tuple_leaf& get() { return m_value; }
-		const tuple_leaf& get() const { return m_value; }
+		ValueT& get() { return m_value; }
+		const ValueT& get() const { return m_value; }
 
 	private:
 
