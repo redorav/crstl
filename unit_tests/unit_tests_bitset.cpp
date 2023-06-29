@@ -10,6 +10,6 @@ import crstl;
 
 void RunUnitTestsBitset()
 {
-	crstl::bitset<64, uint64_t> mybiset;
-	std::bitset<64> stdbitset;
+	crstl::bitset<64, uint64_t> crBitset; crstl_unused(crBitset);
+	std::bitset<64> stdBitset; crstl_unused(stdBitset);
 }
