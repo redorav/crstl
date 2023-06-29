@@ -11,11 +11,11 @@ crstl_module_export namespace crstl
 	{
 	public:
 
-		crstl_constexpr T* begin() { return m_data; }
+		crstl_constexpr14 T* begin() { return m_data; }
 		crstl_constexpr const T* begin() const { return m_data; }
 		crstl_constexpr const T* cbegin() const { return m_data; }
 
-		crstl_constexpr T* end() { return m_data + N; }
+		crstl_constexpr14 T* end() { return m_data + N; }
 		crstl_constexpr const T* end() const { return m_data + N; }
 		crstl_constexpr const T* cend() const { return m_data + N; }
 
@@ -25,13 +25,13 @@ crstl_module_export namespace crstl
 		crstl_constexpr size_t size() const { return N; }
 		crstl_constexpr size_t max_size() const { return N; }
 
-		crstl_constexpr T* data() { return m_data; }
+		crstl_constexpr14 T* data() { return m_data; }
 		crstl_constexpr const T* data() const { return m_data; }
 
-		crstl_constexpr T& operator[](size_t i) { return m_data[i]; }
+		crstl_constexpr14 T& operator[](size_t i) { return m_data[i]; }
 		crstl_constexpr const T& operator[](size_t i) const { return m_data[i]; }
 
-		crstl_constexpr T& at(size_t i) { return m_data[i]; }
+		crstl_constexpr14 T& at(size_t i) { return m_data[i]; }
 		crstl_constexpr const T& at(size_t i) const { return m_data[i]; }
 
 		// Public to allow braced initialization
