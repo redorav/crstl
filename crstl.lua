@@ -74,13 +74,14 @@ workspace('crstl')
 	
 		platforms { PlatformLinux64_GCC, PlatformLinux64_Clang }
 		architecture('x64')
-		buildoptions { '-std=c++11 -Wconstexpr-not-const' }
+		buildoptions { '-std=c++11' }
 		
 		filter { 'platforms:'..PlatformLinux64_GCC }
 			toolset('gcc')
 		
 		filter { 'platforms:'..PlatformLinux64_Clang }
 			toolset('clang')
+			buildoptions { '-Wno-constexpr-not-const' }
 		
 	else
 	
