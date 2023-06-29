@@ -67,14 +67,14 @@ workspace('crstl')
 		platforms { PlatformOSX64 }
 		toolset('clang')
 		architecture('x64')
-		buildoptions { '-std=c++11 -msse4.1 -Wno-unused-variable' }
+		buildoptions { '-std=c++11' }
 		linkoptions { '-stdlib=libc++' }
 		
 	elseif(isLinuxBuild) then
 	
 		platforms { PlatformLinux64_GCC, PlatformLinux64_Clang }
 		architecture('x64')
-		buildoptions { '-std=c++11 -msse4.1 -Wno-unused-variable' }
+		buildoptions { '-std=c++11 -Wconstexpr-not-const' }
 		
 		filter { 'platforms:'..PlatformLinux64_GCC }
 			toolset('gcc')
