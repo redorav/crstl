@@ -226,7 +226,7 @@ crstl_module_export namespace crstl
 #if defined(CRSTL_VARIADIC_TEMPLATES)
 
 		template<typename... Args>
-		crstl_constexpr reference emplace_back(Args&&... args)
+		crstl_constexpr14 reference emplace_back(Args&&... args)
 		{
 			request_capacity_back(1);
 			reference data = m_chunk_array[m_chunk_end]->m_data[m_local_end];
@@ -236,7 +236,7 @@ crstl_module_export namespace crstl
 		}
 
 		template<typename... Args>
-		crstl_constexpr reference emplace_front(Args&&... args)
+		crstl_constexpr14 reference emplace_front(Args&&... args)
 		{
 			request_capacity_front(1);
 			increment_front();
@@ -257,14 +257,14 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 reference front() { crstl_assert(m_length > 0); return m_chunk_array[m_chunk_begin]->m_data[m_local_begin]; }
 		crstl_constexpr const_reference front() const { crstl_assert(m_length > 0); return m_chunk_array[m_chunk_begin]->m_data[m_local_begin]; }
 
-		crstl_constexpr void pop_back()
+		crstl_constexpr14 void pop_back()
 		{
 			crstl_assert(m_length > 0);
 			decrement_back();
 			m_chunk_array[m_chunk_end]->m_data[m_local_end].~T();
 		}
 
-		crstl_constexpr void pop_front()
+		crstl_constexpr14 void pop_front()
 		{
 			crstl_assert(m_length > 0);
 			m_chunk_array[m_chunk_begin]->m_data[m_local_begin].~T();
@@ -275,7 +275,7 @@ crstl_module_export namespace crstl
 		// push_back
 		//----------
 
-		crstl_constexpr reference push_back()
+		crstl_constexpr14 reference push_back()
 		{
 			request_capacity_back(1);
 			reference data = m_chunk_array[m_chunk_end]->m_data[m_local_end];
@@ -284,7 +284,7 @@ crstl_module_export namespace crstl
 			return data;
 		}
 
-		crstl_constexpr reference push_back(const T& v)
+		crstl_constexpr14 reference push_back(const T& v)
 		{
 			request_capacity_back(1);
 			reference data = m_chunk_array[m_chunk_end]->m_data[m_local_end];
@@ -293,7 +293,7 @@ crstl_module_export namespace crstl
 			return data;
 		}
 
-		crstl_constexpr reference push_back(T&& v)
+		crstl_constexpr14 reference push_back(T&& v)
 		{
 			request_capacity_back(1);
 			reference data = m_chunk_array[m_chunk_end]->m_data[m_local_end];
@@ -302,7 +302,7 @@ crstl_module_export namespace crstl
 			return data;
 		}
 
-		crstl_constexpr reference push_back_uninitialized()
+		crstl_constexpr14 reference push_back_uninitialized()
 		{
 			request_capacity_back(1);
 			reference data = m_chunk_array[m_chunk_end]->m_data[m_local_end];
@@ -314,7 +314,7 @@ crstl_module_export namespace crstl
 		// push_front
 		//-----------
 
-		crstl_constexpr reference push_front()
+		crstl_constexpr14 reference push_front()
 		{
 			request_capacity_front(1);
 			increment_front();
@@ -323,7 +323,7 @@ crstl_module_export namespace crstl
 			return data;
 		}
 
-		crstl_constexpr reference push_front(const T& v)
+		crstl_constexpr14 reference push_front(const T& v)
 		{
 			request_capacity_front(1);
 			increment_front();
@@ -332,7 +332,7 @@ crstl_module_export namespace crstl
 			return data;
 		}
 
-		crstl_constexpr reference push_front(T&& v)
+		crstl_constexpr14 reference push_front(T&& v)
 		{
 			request_capacity_front(1);
 			increment_front();
@@ -341,7 +341,7 @@ crstl_module_export namespace crstl
 			return data;
 		}
 
-		crstl_constexpr reference push_front_uninitialized()
+		crstl_constexpr14 reference push_front_uninitialized()
 		{
 			request_capacity_front(1);
 			increment_front();
@@ -354,12 +354,12 @@ crstl_module_export namespace crstl
 		//-------
 
 		// Assume resize has the same behavior as resize_back
-		crstl_constexpr void resize(size_t length)
+		crstl_constexpr14 void resize(size_t length)
 		{
 			resize_back(length);
 		}
 
-		crstl_constexpr void resize_back(size_t length)
+		crstl_constexpr14 void resize_back(size_t length)
 		{
 			if (length > (size_t)m_length)
 			{
@@ -395,7 +395,7 @@ crstl_module_export namespace crstl
 		// This is difficult, we need to make a reservation backwards
 		// and then loop through the uninitialized elements to initialize
 		// or the existing elements to destroy them
-		crstl_constexpr void resize_front(size_t length)
+		crstl_constexpr14 void resize_front(size_t length)
 		{
 			if (length > (size_t)m_length)
 			{
@@ -454,7 +454,7 @@ crstl_module_export namespace crstl
 	private:
 
 		template<typename Function>
-		crstl_constexpr void iterate(ptrdiff_t begin, ptrdiff_t end, Function function)
+		crstl_constexpr14 void iterate(ptrdiff_t begin, ptrdiff_t end, Function function)
 		{
 			ptrdiff_t global_offset = m_chunk_begin * ChunkSize + m_local_begin;
 
@@ -466,12 +466,12 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		crstl_constexpr size_t get_required_chunks(size_t length)
+		crstl_constexpr14 size_t get_required_chunks(size_t length)
 		{
 			return (length + ChunkSize - 1) / ChunkSize;
 		}
 
-		crstl_constexpr size_t compute_new_capacity(size_t old_capacity)
+		crstl_constexpr14 size_t compute_new_capacity(size_t old_capacity)
 		{
 			return old_capacity + (old_capacity * 50) / 100;
 		}
