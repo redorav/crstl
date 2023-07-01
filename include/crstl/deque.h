@@ -206,7 +206,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr size_t capacity() const { return m_capacity_allocator.m_first; }
 
-		crstl_constexpr void clear()
+		crstl_constexpr14 void clear()
 		{
 			crstl_constexpr_if(!crstl_is_trivially_destructible(T))
 			{
