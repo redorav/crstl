@@ -44,22 +44,22 @@ namespace crstl
 
 		double seconds() const
 		{
-			return m_ticks / (double)TicksPerSecond;
+			return (double)m_ticks / (double)TicksPerSecond;
 		}
 
 		double milliseconds() const
 		{
-			return m_ticks * 1000.0 / (double)TicksPerSecond;
+			return (double)m_ticks * 1000.0 / (double)TicksPerSecond;
 		}
 
 		double microseconds() const
 		{
-			return m_ticks * 1000000.0 / (double)TicksPerSecond;
+			return (double)m_ticks * 1000000.0 / (double)TicksPerSecond;
 		}
 
 		double frequency() const
 		{
-			return (double)TicksPerSecond / m_ticks;
+			return (double)TicksPerSecond / (double)m_ticks;
 		}
 
 		inline time operator + (const time& other) const
