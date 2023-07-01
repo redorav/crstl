@@ -163,7 +163,7 @@ crstl_module_export namespace crstl
 
 #if defined(CRSTL_VARIADIC_TEMPLATES)
 		template<typename... Args>
-		crstl_constexpr reference emplace_back(Args&&... args)
+		crstl_constexpr14 reference emplace_back(Args&&... args)
 		{
 			crstl_assert(m_length < NumElements);
 			::new((void*)&m_data[m_length]) T(crstl::forward<Args>(args)...);
@@ -266,7 +266,7 @@ crstl_module_export namespace crstl
 		// push_back
 		//----------
 
-		crstl_constexpr reference push_back()
+		crstl_constexpr14 reference push_back()
 		{
 			crstl_assert(m_length < NumElements);
 			::new((void*)&m_data[m_length]) T();
@@ -274,7 +274,7 @@ crstl_module_export namespace crstl
 			return back();
 		}
 
-		crstl_constexpr reference push_back_uninitialized()
+		crstl_constexpr14 reference push_back_uninitialized()
 		{
 			crstl_assert(m_length < NumElements);
 			m_length++;
