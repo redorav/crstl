@@ -72,7 +72,7 @@ crstl_module_export namespace crstl
 	// < 0   Either the value of the first character that does not match is lower in the compared string, or all compared characters match but the compared string is shorter.
 	// > 0   Either the value of the first character that does not match is greater in the compared string, or all compared characters match but the compared string is longer.
 	template<typename T>
-	inline crstl_constexpr int string_compare(const T* string1, size_t length1, const T* string2, size_t length2)
+	inline crstl_constexpr14 int string_compare(const T* string1, size_t length1, const T* string2, size_t length2)
 	{
 		size_t min_length = length1 < length2 ? length1 : length2;
 
@@ -534,7 +534,7 @@ crstl_module_export namespace crstl
 		// Write the leading byte
 		utf8_pattern pattern = utf8_leading_patterns[size_bytes - 1];
 
-		utf8_t lead = codepoint & ~(pattern.mask);
+		utf8_t lead = (utf8_t)(codepoint & ~(pattern.mask));
 		lead |= pattern.value;
 
 		utf8[offset] = lead;
