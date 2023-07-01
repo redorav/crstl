@@ -61,12 +61,9 @@ crstl_module_export namespace crstl
 
 		static const size_t kDataSize = sizeof(T);
 
-		crstl_constexpr vector() crstl_noexcept : m_data(nullptr), m_length(0)
-		{
-			m_capacity_allocator.m_first = 0;
-		}
+		crstl_constexpr vector() crstl_noexcept : m_data(nullptr), m_length(0), m_capacity_allocator() {}
 
-		crstl_constexpr vector(size_t initialLength)
+		crstl_constexpr14 vector(size_t initialLength)
 		{
 			m_data = allocate(initialLength);
 
@@ -78,7 +75,7 @@ crstl_module_export namespace crstl
 			m_length = (length_type)initialLength;
 		}
 
-		crstl_constexpr vector(size_t initialLength, const T& value)
+		crstl_constexpr14 vector(size_t initialLength, const T& value)
 		{
 			m_data = allocate(initialLength);
 
@@ -90,14 +87,14 @@ crstl_module_export namespace crstl
 			m_length = (length_type)initialLength;
 		}
 
-		crstl_constexpr vector(const this_type& other) crstl_noexcept
+		crstl_constexpr14 vector(const this_type& other) crstl_noexcept
 		{
 			m_data = allocate(other.m_length);
 			copy_initialize_or_memcpy(m_data, other.m_data, other.m_length);
 			m_length = other.m_length;
 		}
 
-		crstl_constexpr vector(this_type&& other) crstl_noexcept
+		crstl_constexpr14 vector(this_type&& other) crstl_noexcept
 		{
 			// Swap relevant data
 			m_data = other.m_data;
@@ -108,7 +105,7 @@ crstl_module_export namespace crstl
 			other.m_length = 0;
 		}
 
-		crstl_constexpr vector(T* iter1, T* iter2) crstl_noexcept
+		crstl_constexpr14 vector(T* iter1, T* iter2) crstl_noexcept
 		{
 			crstl_assert(iter1 != nullptr && iter2 != nullptr);
 			crstl_assert(iter2 >= iter1);
@@ -126,7 +123,7 @@ crstl_module_export namespace crstl
 
 #if defined(CRSTL_INITIALIZER_LISTS)
 
-		crstl_constexpr vector(std::initializer_list<T> ilist) crstl_noexcept : m_length(0)
+		crstl_constexpr14 vector(std::initializer_list<T> ilist) crstl_noexcept : m_length(0)
 		{
 			crstl_assert(ilist.end() >= ilist.begin());
 
@@ -147,7 +144,7 @@ crstl_module_export namespace crstl
 			deallocate();
 		}
 
-		crstl_constexpr this_type& operator = (const this_type& other) crstl_noexcept
+		crstl_constexpr14 this_type& operator = (const this_type& other) crstl_noexcept
 		{
 			// Call destructors for all existing objects
 			for (size_t i = 0; i < m_length; ++i)
@@ -206,7 +203,7 @@ crstl_module_export namespace crstl
 
 #if defined(CRSTL_VARIADIC_TEMPLATES)
 		template<typename... Args>
-		crstl_constexpr reference emplace_back(Args&&... args)
+		crstl_constexpr14 reference emplace_back(Args&&... args)
 		{
 			reallocate_if_length_capacity();
 
@@ -311,7 +308,7 @@ crstl_module_export namespace crstl
 		// push_back
 		//----------
 
-		crstl_constexpr reference push_back()
+		crstl_constexpr14 reference push_back()
 		{
 			reallocate_if_length_capacity();
 			::new((void*)&m_data[m_length]) T();
@@ -478,7 +475,7 @@ crstl_module_export namespace crstl
 
 	private:
 
-		crstl_constexpr T* allocate(size_t capacity)
+		crstl_constexpr14 T* allocate(size_t capacity)
 		{
 			T* temp = (T*)m_capacity_allocator.second().allocate(capacity * kDataSize);
 			m_capacity_allocator.m_first = capacity;
