@@ -32,7 +32,7 @@ crstl_module_export namespace crstl
 
 		basic_string_view(const_pointer begin, const_pointer end) : m_data(begin), m_length(end - begin) {}
 
-		crstl_constexpr reference at(size_type i) crstl_noexcept
+		crstl_constexpr14 reference at(size_type i) crstl_noexcept
 		{
 			crstl_assert(i < m_length);
 			return m_data[i];
@@ -44,7 +44,7 @@ crstl_module_export namespace crstl
 			return m_data[i];
 		}
 
-		crstl_constexpr reference back() crstl_noexcept
+		crstl_constexpr14 reference back() crstl_noexcept
 		{
 			crstl_assert(m_length > 0);
 			return m_data[m_length - 1];
@@ -56,7 +56,7 @@ crstl_module_export namespace crstl
 			return m_data[m_length - 1];
 		}
 
-		crstl_constexpr iterator begin() crstl_noexcept { return m_data; }
+		crstl_constexpr14 iterator begin() crstl_noexcept { return m_data; }
 		crstl_constexpr const_iterator begin() const crstl_noexcept { return m_data; }
 
 		crstl_constexpr const_iterator cbegin() const crstl_noexcept { return m_data; }
@@ -67,18 +67,18 @@ crstl_module_export namespace crstl
 			return crstl::string_compare(m_data, m_length, sv.m_data, sv.m_length);
 		}
 
-		crstl_constexpr pointer data() crstl_noexcept { return m_data; }
+		crstl_constexpr14 pointer data() crstl_noexcept { return m_data; }
 		crstl_constexpr const_pointer data() const crstl_noexcept { return m_data; }
 
 		crstl_nodiscard
 		crstl_constexpr bool empty() const crstl_noexcept { return m_length == 0; }
 
-		crstl_constexpr iterator end() crstl_noexcept { return m_data + m_length; }
+		crstl_constexpr14 iterator end() crstl_noexcept { return m_data + m_length; }
 		crstl_constexpr const_iterator end() const crstl_noexcept { return m_data + m_length; }
 
-		crstl_constexpr bool ends_with(value_type c) { return find(c, 0) == (m_length - 1); }
+		crstl_constexpr bool ends_with(value_type c) const { return find(c, 0) == (m_length - 1); }
 
-		crstl_constexpr bool ends_with(const basic_string_view& sv) { return find(sv.m_data, m_length - sv.m_length) == (m_length - sv.m_length); }
+		crstl_constexpr bool ends_with(const basic_string_view& sv) const { return find(sv.m_data, m_length - sv.m_length) == (m_length - sv.m_length); }
 
 		//-----
 		// find
@@ -117,7 +117,7 @@ crstl_module_export namespace crstl
 			return find(needle_sv.m_data, pos, needle_sv.m_length);
 		}
 
-		crstl_constexpr reference front() crstl_noexcept { m_data; }
+		crstl_constexpr14 reference front() crstl_noexcept { m_data; }
 		crstl_constexpr const_reference front() const crstl_noexcept { m_data; }
 
 		// Returns the length of the string, in terms of number of characters
@@ -127,9 +127,9 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr size_type size() const crstl_noexcept { return length(); }
 
-		crstl_constexpr bool starts_with(value_type c) { return find(c, 0) == 0; }
+		crstl_constexpr bool starts_with(value_type c) const { return find(c, 0) == 0; }
 
-		crstl_constexpr bool starts_with(const basic_string_view& sv) { return find(sv.m_data, 0) == 0; }
+		crstl_constexpr bool starts_with(const basic_string_view& sv) const { return find(sv.m_data, 0) == 0; }
 
 		crstl_constexpr basic_string_view substr(size_t pos, size_t length = npos) const crstl_noexcept
 		{
@@ -141,7 +141,7 @@ crstl_module_export namespace crstl
 		// Operators
 		//----------
 
-		crstl_constexpr reference operator [](size_type i)
+		crstl_constexpr14 reference operator [](size_type i)
 		{
 			crstl_assert(i < m_length);
 			return m_data[i];
@@ -153,12 +153,12 @@ crstl_module_export namespace crstl
 			return m_data[i];
 		}
 
-		crstl_constexpr bool operator == (const basic_string_view& sv) crstl_noexcept
+		crstl_constexpr bool operator == (const basic_string_view& sv) const crstl_noexcept
 		{
 			return compare(sv) == 0;
 		}
 
-		crstl_constexpr bool operator != (const basic_string_view& sv) crstl_noexcept
+		crstl_constexpr bool operator != (const basic_string_view& sv) const crstl_noexcept
 		{
 			return compare(sv) != 0;
 		}
