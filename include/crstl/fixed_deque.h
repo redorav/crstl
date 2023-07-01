@@ -92,7 +92,7 @@ crstl_module_export namespace crstl
 		
 		crstl_constexpr fixed_deque() crstl_noexcept : m_length(0), m_begin(0), m_end(0) {}
 		
-		crstl_constexpr fixed_deque(size_t initialLength) crstl_noexcept : m_length(0), m_begin(m_data), m_end(m_data)
+		crstl_constexpr14 fixed_deque(size_t initialLength) crstl_noexcept : m_length(0), m_begin(m_data), m_end(m_data)
 		{
 			crstl_assert(initialLength < NumElements);
 			for (size_t i = 0; i < initialLength; ++i)
@@ -101,7 +101,7 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		crstl_constexpr fixed_deque(size_t initialLength, const T& value) crstl_noexcept : m_length(0), m_begin(m_data), m_end(m_data)
+		crstl_constexpr14 fixed_deque(size_t initialLength, const T& value) crstl_noexcept : m_length(0), m_begin(m_data), m_end(m_data)
 		{
 			crstl_assert(initialLength < NumElements);
 			for (size_t i = 0; i < initialLength; ++i)
