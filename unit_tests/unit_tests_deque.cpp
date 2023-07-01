@@ -24,6 +24,8 @@ struct static_sizeof;
 //	//static_assert(crFixedDeque.size() == 3, "");
 //}
 
+#include <stdlib.h>
+
 void RunUnitTestsDeque()
 {
 	using namespace crstl_unit;

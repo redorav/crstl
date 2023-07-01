@@ -10,6 +10,7 @@ import crstl;
 #include <functional>
 
 #include <stdio.h>
+#include <stdlib.h>
 
 int DummyA = 4;
 
