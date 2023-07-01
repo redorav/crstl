@@ -210,7 +210,7 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		crstl_constexpr reference at(size_t i) crstl_noexcept
+		crstl_constexpr14 reference at(size_t i) crstl_noexcept
 		{
 			crstl_assert(i < length());
 			return data()[i];
@@ -520,7 +520,7 @@ crstl_module_export namespace crstl
 			clear(); append_convert(n, c); return *this;
 		}
 
-		crstl_constexpr reference back() crstl_noexcept
+		crstl_constexpr14 reference back() crstl_noexcept
 		{
 			crstl_assert(length() > 0);
 			return data()[length() - 1];
@@ -532,7 +532,7 @@ crstl_module_export namespace crstl
 			return data()[length() - 1];
 		}
 
-		crstl_constexpr iterator begin() crstl_noexcept { return is_sso() ? m_layout_allocator.m_first.m_sso.data : m_layout_allocator.m_first.m_heap.data; }
+		crstl_constexpr14 iterator begin() crstl_noexcept { return is_sso() ? m_layout_allocator.m_first.m_sso.data : m_layout_allocator.m_first.m_heap.data; }
 		crstl_constexpr const_iterator begin() const crstl_noexcept { return is_sso() ? m_layout_allocator.m_first.m_sso.data : m_layout_allocator.m_first.m_heap.data; }
 
 		crstl_constexpr const_pointer c_str() const crstl_noexcept { return is_sso() ? m_layout_allocator.m_first.m_sso.data : m_layout_allocator.m_first.m_heap.data; }
@@ -552,7 +552,7 @@ crstl_module_export namespace crstl
 
 		// Clearing just sets the string as empty, but does not perform a deallocation
 		// It also doesn't change between SSO and heap
-		crstl_constexpr void clear()
+		crstl_constexpr14 void clear()
 		{
 			if (is_sso())
 			{
@@ -754,7 +754,7 @@ crstl_module_export namespace crstl
 		crstl_constexpr reference front() crstl_noexcept { return is_sso() ? m_layout_allocator.m_first.m_sso.data : m_layout_allocator.m_first.m_heap.data; }
 		crstl_constexpr const_reference front() const crstl_noexcept { return is_sso() ? m_layout_allocator.m_first.m_sso.data : m_layout_allocator.m_first.m_heap.data; }
 
-		crstl_constexpr void force_length(size_t length) crstl_noexcept
+		crstl_constexpr14 void force_length(size_t length) crstl_noexcept
 		{
 			crstl_assert(length < capacity());
 
@@ -775,7 +775,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr size_t max_size() const crstl_noexcept { return kHeapCapacityMask; }
 
-		crstl_constexpr void pop_back() crstl_noexcept
+		crstl_constexpr14 void pop_back() crstl_noexcept
 		{
 			crstl_assert(length() > 0);
 
@@ -849,7 +849,7 @@ crstl_module_export namespace crstl
 		// reserve
 		//--------
 
-		crstl_constexpr void reserve(size_t capacity)
+		crstl_constexpr14 void reserve(size_t capacity)
 		{
 			if (capacity > basic_string::capacity())
 			{
@@ -861,12 +861,12 @@ crstl_module_export namespace crstl
 		// resize
 		//-------
 
-		crstl_constexpr void resize(size_t length)
+		crstl_constexpr14 void resize(size_t length)
 		{
 			resize(length, 0);
 		}
 
-		crstl_constexpr void resize(size_t length, T c)
+		crstl_constexpr14 void resize(size_t length, T c)
 		{
 			size_t current_length = basic_string::length();
 
@@ -1088,7 +1088,7 @@ crstl_module_export namespace crstl
 		// provide a function here that deals with all that and calls a function
 		// with what we need to do
 		template<typename Function>
-		crstl_constexpr void append_function(size_t length, const Function& function)
+		crstl_constexpr14 void append_function(size_t length, const Function& function)
 		{
 			size_t current_length = basic_string::length();
 			size_t target_length = current_length + length;
@@ -1118,7 +1118,7 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		crstl_constexpr void initialize_string(const_pointer string, size_t length)
+		crstl_constexpr14 void initialize_string(const_pointer string, size_t length)
 		{
 			if (length < kSSOCapacity)
 			{

@@ -188,7 +188,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr size_t capacity() const { return m_capacity_allocator.m_first; }
 
-		crstl_constexpr void clear()
+		crstl_constexpr14 void clear()
 		{
 			crstl_constexpr_if(!crstl_is_trivially_destructible(T))
 			{
@@ -297,7 +297,7 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 reference front() { m_data[0]; }
 		crstl_constexpr const_reference front() const { m_data[0]; }
 
-		crstl_constexpr void pop_back()
+		crstl_constexpr14 void pop_back()
 		{
 			crstl_assert(m_length > 0);
 			crstl_constexpr_if(!crstl_is_trivially_destructible(T))
@@ -319,28 +319,28 @@ crstl_module_export namespace crstl
 			return back();
 		}
 
-		crstl_constexpr void push_back(const T& v)
+		crstl_constexpr14 void push_back(const T& v)
 		{
 			reallocate_if_length_capacity();
 			::new((void*)&m_data[m_length]) T(v);
 			m_length++;
 		}
 
-		crstl_constexpr void push_back(T&& v)
+		crstl_constexpr14 void push_back(T&& v)
 		{
 			reallocate_if_length_capacity();
 			::new((void*)&m_data[m_length]) T(crstl::move(v));
 			m_length++;
 		}
 
-		crstl_constexpr reference push_back_uninitialized()
+		crstl_constexpr14 reference push_back_uninitialized()
 		{
 			reallocate_if_length_capacity();
 			m_length++;
 			return back();
 		}
 
-		crstl_constexpr void reserve(size_t capacity)
+		crstl_constexpr14 void reserve(size_t capacity)
 		{
 			if (capacity > (size_t)m_capacity_allocator.m_first)
 			{
@@ -348,7 +348,7 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		crstl_constexpr void resize(size_t length)
+		crstl_constexpr14 void resize(size_t length)
 		{
 			if (length > (size_t)m_length)
 			{
@@ -376,7 +376,7 @@ crstl_module_export namespace crstl
 			m_length = (length_type)length;
 		}
 
-		crstl_constexpr void resize(size_t length, const T& value)
+		crstl_constexpr14 void resize(size_t length, const T& value)
 		{
 			if (length > (size_t)m_length)
 			{
@@ -401,7 +401,7 @@ crstl_module_export namespace crstl
 			m_length = (length_type)length;
 		}
 
-		crstl_constexpr void resize_uninitialized(size_t length)
+		crstl_constexpr14 void resize_uninitialized(size_t length)
 		{
 			if (length > (size_t)m_length)
 			{
@@ -421,7 +421,7 @@ crstl_module_export namespace crstl
 			m_length = (length_type)length;
 		}
 
-		crstl_constexpr void shrink_to_fit()
+		crstl_constexpr14 void shrink_to_fit()
 		{
 			if (m_length < m_capacity_allocator.m_first)
 			{
@@ -485,7 +485,7 @@ crstl_module_export namespace crstl
 			return temp;
 		}
 
-		crstl_constexpr void deallocate()
+		crstl_constexpr14 void deallocate()
 		{
 			m_capacity_allocator.second().deallocate(m_data, m_capacity_allocator.m_first * kDataSize);
 			m_capacity_allocator.m_first = 0;
@@ -499,7 +499,7 @@ crstl_module_export namespace crstl
 
 		// Reallocate memory if length is the same as capacity. Mainly used for
 		// push and emplace functions
-		crstl_constexpr void reallocate_if_length_capacity()
+		crstl_constexpr14 void reallocate_if_length_capacity()
 		{
 			if (m_length == m_capacity_allocator.m_first)
 			{
@@ -509,7 +509,7 @@ crstl_module_export namespace crstl
 
 		// Reallocate vector to a quantity larger than the current one, or the capacity adjusted
 		// with the growth factor, whichever is larger
-		crstl_constexpr void reallocate_larger(size_t requested_capacity)
+		crstl_constexpr14 void reallocate_larger(size_t requested_capacity)
 		{
 			size_t current_capacity = m_capacity_allocator.m_first;
 			size_t growth_capacity = compute_new_capacity(current_capacity);

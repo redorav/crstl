@@ -395,7 +395,7 @@ crstl_module_export namespace crstl
 		crstl_constexpr const_iterator cbegin() const crstl_noexcept { return &m_data[0]; }
 		crstl_constexpr const_iterator cend() const crstl_noexcept { return &m_data[0] + m_length; }
 
-		crstl_constexpr void clear() crstl_noexcept
+		crstl_constexpr14 void clear() crstl_noexcept
 		{
 			m_data[0] = '\0';
 			m_length = 0;
@@ -609,7 +609,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr size_t max_size() const crstl_noexcept { return kCharacterCapacity; }
 
-		crstl_constexpr void pop_back() crstl_noexcept
+		crstl_constexpr14 void pop_back() crstl_noexcept
 		{
 			crstl_assert(m_length > 0);
 			m_length--;
@@ -673,12 +673,12 @@ crstl_module_export namespace crstl
 		// resize
 		//-------
 
-		crstl_constexpr void resize(size_t length)
+		crstl_constexpr14 void resize(size_t length)
 		{
 			resize(length, 0);
 		}
 
-		crstl_constexpr void resize(size_t length, CharT c)
+		crstl_constexpr14 void resize(size_t length, CharT c)
 		{
 			crstl_assert(length < NumElements);
 
@@ -802,7 +802,7 @@ crstl_module_export namespace crstl
 
 	private:
 
-		crstl_constexpr void replace_common(size_t needle_pos, size_t needle_length, size_t replace_length)
+		crstl_constexpr14 void replace_common(size_t needle_pos, size_t needle_length, size_t replace_length)
 		{
 			crstl_assert(needle_pos < m_length);
 			crstl_assert(needle_length <= m_length);

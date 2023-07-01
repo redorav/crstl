@@ -255,7 +255,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr size_t max_size() const { return NumElements; }
 
-		crstl_constexpr void pop_back()
+		crstl_constexpr14 void pop_back()
 		{
 			crstl_assert(m_length > 0);
 			back().~T();
