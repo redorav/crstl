@@ -52,52 +52,52 @@ crstl_module_export namespace crstl
 		// Constructors
 		//-------------
 
-		crstl_constexpr basic_fixed_string() crstl_noexcept : m_length(0)
+		crstl_constexpr14 basic_fixed_string() crstl_noexcept : m_length(0)
 		{
 			m_data[0] = 0;
 		}
 
-		crstl_constexpr basic_fixed_string(const_pointer string, size_t length) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string(const_pointer string, size_t length) crstl_noexcept
 		{
 			assign(string, length);
 		}
 
 		template<int N>
-		crstl_constexpr basic_fixed_string(const CharT(&string_literal)[N]) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string(const CharT(&string_literal)[N]) crstl_noexcept
 		{
 			assign(string_literal);
 		}
 
 		template<typename Q>
-		crstl_constexpr basic_fixed_string(Q string, crstl_is_char_ptr(Q)) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string(Q string, crstl_is_char_ptr(Q)) crstl_noexcept
 		{
 			assign(string);
 		}
 
-		crstl_constexpr basic_fixed_string(const_pointer begin, const_pointer end) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string(const_pointer begin, const_pointer end) crstl_noexcept
 		{
 			assign(begin, end);
 		}
 
 		template<int OtherNumElements>
-		crstl_constexpr basic_fixed_string(const basic_fixed_string<CharT, OtherNumElements>& string) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string(const basic_fixed_string<CharT, OtherNumElements>& string) crstl_noexcept
 		{
 			assign(string);
 		}
 
-		crstl_constexpr basic_fixed_string(const basic_fixed_string& string) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string(const basic_fixed_string& string) crstl_noexcept
 		{
 			assign(string);
 		}
 
 		template<int OtherNumElements>
-		crstl_constexpr basic_fixed_string(const basic_fixed_string<CharT, NumElements>& string1, const basic_fixed_string<CharT, OtherNumElements>& string2) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string(const basic_fixed_string<CharT, NumElements>& string1, const basic_fixed_string<CharT, OtherNumElements>& string2) crstl_noexcept
 		{
 			assign(string1);
 			append(string2);
 		}
 
-		crstl_constexpr basic_fixed_string(const basic_fixed_string& string, size_t subpos, size_t sublen = npos) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string(const basic_fixed_string& string, size_t subpos, size_t sublen = npos) crstl_noexcept
 		{
 			assign(string, subpos, sublen);
 		}
@@ -107,18 +107,18 @@ crstl_module_export namespace crstl
 		//-----------
 
 		template<int N>
-		crstl_constexpr basic_fixed_string& operator = (const CharT(&string_literal)[N]) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& operator = (const CharT(&string_literal)[N]) crstl_noexcept
 		{
 			clear(); assign(string_literal); return *this;
 		}
 
 		template<int OtherNumElements>
-		crstl_constexpr basic_fixed_string& operator = (const basic_fixed_string<CharT, OtherNumElements>& string) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& operator = (const basic_fixed_string<CharT, OtherNumElements>& string) crstl_noexcept
 		{
 			clear(); assign(string); return *this;
 		}
 
-		crstl_constexpr basic_fixed_string& operator = (const basic_fixed_string& string) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& operator = (const basic_fixed_string& string) crstl_noexcept
 		{
 			if (this != &string)
 			{
@@ -128,17 +128,17 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
-		explicit crstl_constexpr basic_fixed_string(int value)                crstl_noexcept : basic_fixed_string() { append_sprintf("%d", value); }
-		explicit crstl_constexpr basic_fixed_string(long value)               crstl_noexcept : basic_fixed_string() { append_sprintf("%ld", value); }
-		explicit crstl_constexpr basic_fixed_string(long long value)          crstl_noexcept : basic_fixed_string() { append_sprintf("%lld", value); }
-		explicit crstl_constexpr basic_fixed_string(unsigned value)           crstl_noexcept : basic_fixed_string() { append_sprintf("%u", value); }
-		explicit crstl_constexpr basic_fixed_string(unsigned long value)      crstl_noexcept : basic_fixed_string() { append_sprintf("%lu", value); }
-		explicit crstl_constexpr basic_fixed_string(unsigned long long value) crstl_noexcept : basic_fixed_string() { append_sprintf("%llu", value); }
-		explicit crstl_constexpr basic_fixed_string(float value)              crstl_noexcept : basic_fixed_string() { append_sprintf("%f", value); }
-		explicit crstl_constexpr basic_fixed_string(double value)             crstl_noexcept : basic_fixed_string() { append_sprintf("%f", value); }
-		explicit crstl_constexpr basic_fixed_string(long double value)        crstl_noexcept : basic_fixed_string() { append_sprintf("%Lf", value); }
+		explicit crstl_constexpr14 basic_fixed_string(int value)                crstl_noexcept : basic_fixed_string() { append_sprintf("%d", value); }
+		explicit crstl_constexpr14 basic_fixed_string(long value)               crstl_noexcept : basic_fixed_string() { append_sprintf("%ld", value); }
+		explicit crstl_constexpr14 basic_fixed_string(long long value)          crstl_noexcept : basic_fixed_string() { append_sprintf("%lld", value); }
+		explicit crstl_constexpr14 basic_fixed_string(unsigned value)           crstl_noexcept : basic_fixed_string() { append_sprintf("%u", value); }
+		explicit crstl_constexpr14 basic_fixed_string(unsigned long value)      crstl_noexcept : basic_fixed_string() { append_sprintf("%lu", value); }
+		explicit crstl_constexpr14 basic_fixed_string(unsigned long long value) crstl_noexcept : basic_fixed_string() { append_sprintf("%llu", value); }
+		explicit crstl_constexpr14 basic_fixed_string(float value)              crstl_noexcept : basic_fixed_string() { append_sprintf("%f", value); }
+		explicit crstl_constexpr14 basic_fixed_string(double value)             crstl_noexcept : basic_fixed_string() { append_sprintf("%f", value); }
+		explicit crstl_constexpr14 basic_fixed_string(long double value)        crstl_noexcept : basic_fixed_string() { append_sprintf("%Lf", value); }
 
-		crstl_constexpr reference at(size_t i) crstl_noexcept
+		crstl_constexpr14 reference at(size_t i) crstl_noexcept
 		{
 			crstl_assert(i < m_length);
 			return m_data[i];
@@ -154,7 +154,7 @@ crstl_module_export namespace crstl
 		// append
 		//-------
 
-		crstl_constexpr basic_fixed_string& append(const_pointer string, size_t length) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& append(const_pointer string, size_t length) crstl_noexcept
 		{
 			if (length)
 			{
@@ -167,20 +167,20 @@ crstl_module_export namespace crstl
 		}
 
 		template<int N>
-		crstl_constexpr basic_fixed_string& append(const CharT(&string_literal)[N]) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& append(const CharT(&string_literal)[N]) crstl_noexcept
 		{
 			append(string_literal, string_length(string_literal, N - 1));
 			return *this;
 		}
 
 		template<typename Q>
-		crstl_constexpr basic_fixed_string& append(Q string, crstl_is_char_ptr(Q)) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& append(Q string, crstl_is_char_ptr(Q)) crstl_noexcept
 		{
 			append(string, string_length(string));
 			return *this;
 		}
 
-		crstl_constexpr basic_fixed_string& append(const_pointer begin, const_pointer end) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& append(const_pointer begin, const_pointer end) crstl_noexcept
 		{
 			crstl_assert(end >= begin);
 			append(begin, (size_t)(end - begin));
@@ -188,26 +188,26 @@ crstl_module_export namespace crstl
 		}
 
 		template<int OtherNumElements>
-		crstl_constexpr basic_fixed_string& append(const basic_fixed_string<CharT, OtherNumElements>& string) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& append(const basic_fixed_string<CharT, OtherNumElements>& string) crstl_noexcept
 		{
 			append(string.m_data, string.m_length);
 			return *this;
 		}
 
-		crstl_constexpr basic_fixed_string& append(const basic_fixed_string& string) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& append(const basic_fixed_string& string) crstl_noexcept
 		{
 			append(string.m_data, string.m_length);
 			return *this;
 		}
 
-		crstl_constexpr basic_fixed_string& append(const basic_fixed_string& string, size_t subpos, size_t sublen = npos) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& append(const basic_fixed_string& string, size_t subpos, size_t sublen = npos) crstl_noexcept
 		{
 			crstl_assert(string.length() + subpos + sublen < basic_fixed_string::kCharacterCapacityWithZero);
 			append(string.m_data + subpos, sublen);
 			return *this;
 		}
 
-		crstl_constexpr basic_fixed_string& append(size_t n, value_type c) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& append(size_t n, value_type c) crstl_noexcept
 		{
 			crstl_assert(m_length + n < kCharacterCapacityWithZero);
 			crstl::fill_char(&m_data[m_length], n, c);
@@ -219,7 +219,7 @@ crstl_module_export namespace crstl
 		//---------------
 
 		template<typename OtherCharT>
-		crstl_constexpr basic_fixed_string& append_convert(const OtherCharT* string, size_t length) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& append_convert(const OtherCharT* string, size_t length) crstl_noexcept
 		{
 			const OtherCharT* string_end = string + length;
 			value_type* data_start = m_data + m_length;
@@ -235,20 +235,20 @@ crstl_module_export namespace crstl
 		}
 
 		template<typename OtherCharT>
-		crstl_constexpr basic_fixed_string& append_convert(const OtherCharT* string) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& append_convert(const OtherCharT* string) crstl_noexcept
 		{
 			return append_convert(string, crstl::string_length(string));
 		}
 
 		template<typename OtherCharT, int OtherN>
-		crstl_constexpr basic_fixed_string& append_convert(const basic_fixed_string<OtherCharT, OtherN>& string) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& append_convert(const basic_fixed_string<OtherCharT, OtherN>& string) crstl_noexcept
 		{
 			append_convert(string.c_str(), string.length());
 			return *this;
 		}
 
 		// If we append_convert with our own type, just use append, no need for conversion
-		crstl_constexpr basic_fixed_string& append_convert(const_pointer string, size_t length) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& append_convert(const_pointer string, size_t length) crstl_noexcept
 		{
 			append(string, length);
 			return *this;
@@ -259,7 +259,7 @@ crstl_module_export namespace crstl
 		//---------------
 
 		// Append a const char* string with a provided length
-		crstl_constexpr basic_fixed_string& append_sprintf(const_pointer format, ...) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& append_sprintf(const_pointer format, ...) crstl_noexcept
 		{
 			size_t remaining_length = kCharacterCapacityWithZero - m_length;
 
@@ -295,45 +295,45 @@ crstl_module_export namespace crstl
 		// assign
 		//-------
 
-		crstl_constexpr basic_fixed_string& assign(const_pointer string, size_t length) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& assign(const_pointer string, size_t length) crstl_noexcept
 		{
 			clear(); append(string, length); return *this;
 		}
 
 		template<int N>
-		crstl_constexpr basic_fixed_string& assign(const CharT(&string_literal)[N]) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& assign(const CharT(&string_literal)[N]) crstl_noexcept
 		{
 			clear(); append(string_literal); return *this;
 		}
 
 		template<typename Q>
-		crstl_constexpr basic_fixed_string& assign(Q string, crstl_is_char_ptr(Q)) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& assign(Q string, crstl_is_char_ptr(Q)) crstl_noexcept
 		{
 			clear(); append(string); return *this;
 		}
 
-		crstl_constexpr basic_fixed_string& assign(const_pointer begin, const_pointer end) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& assign(const_pointer begin, const_pointer end) crstl_noexcept
 		{
 			clear(); append(begin, end); return *this;
 		}
 
 		template<int OtherNumElements>
-		crstl_constexpr basic_fixed_string& assign(const basic_fixed_string<CharT, OtherNumElements>& string) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& assign(const basic_fixed_string<CharT, OtherNumElements>& string) crstl_noexcept
 		{
 			clear(); append(string); return *this;
 		}
 
-		crstl_constexpr basic_fixed_string& assign(const basic_fixed_string& string) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& assign(const basic_fixed_string& string) crstl_noexcept
 		{
 			clear(); append(string); return *this;
 		}
 
-		crstl_constexpr basic_fixed_string& assign(const basic_fixed_string& string, size_t subpos, size_t sublen = npos) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& assign(const basic_fixed_string& string, size_t subpos, size_t sublen = npos) crstl_noexcept
 		{
 			clear(); append(string, subpos, sublen); return *this;
 		}
 
-		crstl_constexpr basic_fixed_string& assign(size_t n, value_type c) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& assign(size_t n, value_type c) crstl_noexcept
 		{
 			clear(); append(n, c); return *this;
 		}
@@ -343,30 +343,30 @@ crstl_module_export namespace crstl
 		//---------------
 
 		template<typename OtherCharT>
-		crstl_constexpr basic_fixed_string& assign_convert(const OtherCharT* string, size_t length) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& assign_convert(const OtherCharT* string, size_t length) crstl_noexcept
 		{
 			clear(); append_convert(string, length); return *this;
 		}
 
 		template<typename OtherCharT>
-		crstl_constexpr basic_fixed_string& assign_convert(const OtherCharT* string) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& assign_convert(const OtherCharT* string) crstl_noexcept
 		{
 			return assign_convert(string, crstl::string_length(string));
 		}
 
 		template<typename OtherCharT, int OtherN>
-		crstl_constexpr basic_fixed_string& assign_convert(const basic_fixed_string<OtherCharT, OtherN>& string) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& assign_convert(const basic_fixed_string<OtherCharT, OtherN>& string) crstl_noexcept
 		{
 			assign_convert(string.c_str(), string.length()); return *this;
 		}
 
 		// If we append_convert with our own type, just use append, no need for conversion
-		crstl_constexpr basic_fixed_string& assign_convert(const_pointer string, size_t length) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& assign_convert(const_pointer string, size_t length) crstl_noexcept
 		{
 			assign(string, length); return *this;
 		}
 
-		crstl_constexpr reference back() crstl_noexcept
+		crstl_constexpr14 reference back() crstl_noexcept
 		{
 			crstl_assert(m_length > 0);
 			return m_data[m_length - 1];
@@ -378,7 +378,7 @@ crstl_module_export namespace crstl
 			return m_data[m_length - 1];
 		}
 
-		crstl_constexpr iterator begin() crstl_noexcept { return &m_data[0]; }
+		crstl_constexpr14 iterator begin() crstl_noexcept { return &m_data[0]; }
 		crstl_constexpr const_iterator begin() const crstl_noexcept { return &m_data[0]; }
 
 		crstl_constexpr const_pointer c_str() const crstl_noexcept
@@ -477,20 +477,20 @@ crstl_module_export namespace crstl
 			return crstl::string_comparei(m_data + pos, clamp_length(pos, length), string.m_data + subpos, string.clamp_length(subpos, sublen));
 		}
 
-		crstl_constexpr pointer data() crstl_noexcept { return m_data; }
+		crstl_constexpr14 pointer data() crstl_noexcept { return m_data; }
 		crstl_constexpr const_pointer data() const crstl_noexcept { return m_data; }
 
 		crstl_nodiscard
 		crstl_constexpr bool empty() const crstl_noexcept { return m_length == 0; }
 
-		crstl_constexpr iterator end() crstl_noexcept { return &m_data[0] + m_length; }
+		crstl_constexpr14 iterator end() crstl_noexcept { return &m_data[0] + m_length; }
 		crstl_constexpr const_iterator end() const crstl_noexcept { return &m_data[0] + m_length; }
 
 		//------
 		// erase
 		//------
 
-		crstl_constexpr basic_fixed_string& erase(size_t pos = 0, size_t length = npos) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& erase(size_t pos = 0, size_t length = npos) crstl_noexcept
 		{
 			length = length < m_length ? length : m_length;
 
@@ -507,13 +507,13 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
-		crstl_constexpr basic_fixed_string& erase(const_pointer begin) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& erase(const_pointer begin) crstl_noexcept
 		{
 			crstl_assert(m_data <= begin && begin <= m_data + m_length);
 			return erase((size_t)(begin - m_data), 1);
 		}
 
-		crstl_constexpr basic_fixed_string& erase(const_pointer begin, const_pointer end) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& erase(const_pointer begin, const_pointer end) crstl_noexcept
 		{
 			crstl_assert(end >= begin && m_data <= begin && begin <= m_data + m_length);
 			return erase((size_t)(begin - m_data), (size_t)(end - begin));
@@ -601,7 +601,7 @@ crstl_module_export namespace crstl
 			return rfind(c, pos);
 		}
 
-		crstl_constexpr reference front() crstl_noexcept { return m_data[0]; }
+		crstl_constexpr14 reference front() crstl_noexcept { return m_data[0]; }
 		crstl_constexpr const_reference front() const crstl_noexcept { return m_data[0]; }
 
 		// Returns the length of the string, in terms of number of characters
@@ -615,55 +615,55 @@ crstl_module_export namespace crstl
 			m_length--;
 		}
 
-		crstl_constexpr reference push_back(value_type c) { append(1, c); return back(); }
+		crstl_constexpr14 reference push_back(value_type c) { append(1, c); return back(); }
 
 		//--------
 		// replace
 		//--------
 
-		crstl_constexpr basic_fixed_string& replace(size_t needle_pos, size_t needle_length, const_pointer replace_string, size_t replace_length)
+		crstl_constexpr14 basic_fixed_string& replace(size_t needle_pos, size_t needle_length, const_pointer replace_string, size_t replace_length)
 		{
 			replace_common(needle_pos, needle_length, replace_length);
 			memcpy(m_data + needle_pos, replace_string, replace_length * kCharSize);
 			return *this;
 		}
 
-		crstl_constexpr basic_fixed_string& replace(size_t needle_pos, size_t needle_length, size_t n, value_type c)
+		crstl_constexpr14 basic_fixed_string& replace(size_t needle_pos, size_t needle_length, size_t n, value_type c)
 		{
 			replace_common(needle_pos, needle_length, n);
 			crstl::fill_char(m_data + needle_pos, n, c);
 			return *this;
 		}
 
-		crstl_constexpr basic_fixed_string& replace(size_t needle_pos, size_t needle_length, const_pointer replace_string) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& replace(size_t needle_pos, size_t needle_length, const_pointer replace_string) crstl_noexcept
 		{
 			return replace(needle_pos, needle_length, replace_string, crstl::string_length(replace_string));
 		}
 
-		crstl_constexpr basic_fixed_string& replace(size_t needle_pos, size_t needle_length, const basic_fixed_string& replace_string) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& replace(size_t needle_pos, size_t needle_length, const basic_fixed_string& replace_string) crstl_noexcept
 		{
 			return replace(needle_pos, needle_length, replace_string.m_data, replace_string.m_length);
 		}
 
-		crstl_constexpr basic_fixed_string& replace(size_t needle_pos, size_t needle_length, const basic_fixed_string& replace_string, size_t subpos, size_t sublen = npos) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& replace(size_t needle_pos, size_t needle_length, const basic_fixed_string& replace_string, size_t subpos, size_t sublen = npos) crstl_noexcept
 		{
 			sublen = sublen < replace_string.m_length ? sublen : replace_string.m_length;
 			return replace(needle_pos, needle_length, replace_string.m_data + subpos, sublen);
 		}
 
-		crstl_constexpr basic_fixed_string& replace(const_pointer begin, const_pointer end, const_pointer replace_string) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& replace(const_pointer begin, const_pointer end, const_pointer replace_string) crstl_noexcept
 		{
 			crstl_assert(end >= begin);
 			return replace((size_t)(begin - m_data), (size_t)(end - begin), replace_string, crstl::string_length(replace_string));
 		}
 
-		crstl_constexpr basic_fixed_string& replace(const_pointer begin, const_pointer end, const_pointer replace_string, size_t replace_length) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& replace(const_pointer begin, const_pointer end, const_pointer replace_string, size_t replace_length) crstl_noexcept
 		{
 			crstl_assert(end >= begin);
 			return replace((size_t)(begin - m_data), (size_t)(end - begin), replace_string, replace_length);
 		}
 
-		crstl_constexpr basic_fixed_string& replace(const_pointer begin, const_pointer end, const basic_fixed_string& replace_string) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& replace(const_pointer begin, const_pointer end, const basic_fixed_string& replace_string) crstl_noexcept
 		{
 			crstl_assert(end >= begin);
 			return replace((size_t)(begin - m_data), (size_t)(end - begin), replace_string.m_data, (size_t)replace_string.m_length);
@@ -758,7 +758,7 @@ crstl_module_export namespace crstl
 		// operators
 		//----------
 
-		crstl_constexpr reference operator [](size_t i)
+		crstl_constexpr14 reference operator [](size_t i)
 		{
 			crstl_assert(i < m_length);
 			return m_data[i];
@@ -770,13 +770,13 @@ crstl_module_export namespace crstl
 			return m_data[i];
 		}
 
-		crstl_constexpr basic_fixed_string& operator += (const basic_fixed_string& string) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& operator += (const basic_fixed_string& string) crstl_noexcept
 		{
 			append(string);
 			return *this;
 		}
 
-		crstl_constexpr basic_fixed_string& operator += (const_pointer string) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& operator += (const_pointer string) crstl_noexcept
 		{
 			append(string);
 			return *this;
