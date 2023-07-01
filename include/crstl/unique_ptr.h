@@ -130,9 +130,9 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr unique_ptr(unique_ptr&& uptr) crstl_noexcept : base(crstl::move(uptr)) {}
 
-		crstl_constexpr unique_ptr& operator = (crstl::nullptr_t) crstl_noexcept { base::operator = (nullptr); return *this; }
+		crstl_constexpr14 unique_ptr& operator = (crstl::nullptr_t) crstl_noexcept { base::operator = (nullptr); return *this; }
 
-		crstl_constexpr unique_ptr& operator = (unique_ptr&& uptr) crstl_noexcept { base::operator = (crstl::move(uptr)); return *this; }
+		crstl_constexpr14 unique_ptr& operator = (unique_ptr&& uptr) crstl_noexcept { base::operator = (crstl::move(uptr)); return *this; }
 
 		crstl_constexpr14 void reset(crstl::nullptr_t) crstl_noexcept
 		{
@@ -164,9 +164,9 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr unique_ptr(unique_ptr&& uptr) crstl_noexcept : base(crstl::move(uptr)) {}
 
-		crstl_constexpr unique_ptr& operator = (crstl::nullptr_t) crstl_noexcept { base::operator = (nullptr); return *this; }
+		crstl_constexpr14 unique_ptr& operator = (crstl::nullptr_t) crstl_noexcept { base::operator = (nullptr); return *this; }
 
-		crstl_constexpr unique_ptr& operator = (unique_ptr&& uptr) crstl_noexcept { base::operator = (crstl::move(uptr)); return *this; }
+		crstl_constexpr14 unique_ptr& operator = (unique_ptr&& uptr) crstl_noexcept { base::operator = (crstl::move(uptr)); return *this; }
 
 		crstl_constexpr14 void reset(crstl::nullptr_t) crstl_noexcept
 		{
