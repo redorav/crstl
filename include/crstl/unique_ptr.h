@@ -34,19 +34,19 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr unique_ptr_base(crstl::nullptr_t) crstl_noexcept : m_ptr(nullptr) {}
 
-		crstl_constexpr unique_ptr_base(unique_ptr_base&& uptr) crstl_noexcept
+		crstl_constexpr14 unique_ptr_base(unique_ptr_base&& uptr) crstl_noexcept
 		{
 			m_ptr = uptr.m_ptr;
 			uptr.m_ptr = nullptr;
 		}
 
-		crstl_constexpr unique_ptr_base& operator = (crstl::nullptr_t) crstl_noexcept
+		crstl_constexpr14 unique_ptr_base& operator = (crstl::nullptr_t) crstl_noexcept
 		{
 			static_cast<UniquePtr&>(*this).reset(nullptr);
 			return *this;
 		}
 
-		crstl_constexpr unique_ptr_base& operator = (unique_ptr_base&& uptr) crstl_noexcept
+		crstl_constexpr14 unique_ptr_base& operator = (unique_ptr_base&& uptr) crstl_noexcept
 		{
 			m_ptr = uptr.m_ptr;
 			uptr.m_ptr = nullptr;
@@ -108,9 +108,9 @@ crstl_module_export namespace crstl
 
 	private:
 
-		crstl_constexpr unique_ptr_base(const unique_ptr_base& uptr) crstl_constructor_delete;
-		crstl_constexpr unique_ptr_base& operator = (const unique_ptr_base& uptr) crstl_constructor_delete;
-		crstl_constexpr unique_ptr_base& operator = (T* ptr) crstl_constructor_delete;
+		unique_ptr_base(const unique_ptr_base& uptr) crstl_constructor_delete;
+		unique_ptr_base& operator = (const unique_ptr_base& uptr) crstl_constructor_delete;
+		unique_ptr_base& operator = (T* ptr) crstl_constructor_delete;
 	};
 
 	// unique_ptr for scalar types

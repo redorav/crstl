@@ -177,21 +177,21 @@ crstl_module_export namespace crstl
 	#if defined(CRSTL_VARIADIC_TEMPLATES)
 
 		template<typename... Args>
-		reference emplace_back(Args&&... args)
+		crstl_constexpr14 reference emplace_back(Args&&... args)
 		{
 			crstl_assert(m_length < NumElements);
 			size_t current_end = m_end;
 			::new((void*)&m_data[current_end]) T(crstl::forward<Args>(args)...);
-			m_end = size_t(m_end + 1) > kLastElement ? 0 : m_end + 1;
+			m_end = (length_type)(size_t(m_end + 1) > kLastElement ? 0 : m_end + 1);
 			m_length++;
 			return m_data[current_end];
 		}
 
 		template<typename... Args>
-		reference emplace_front(Args&&... args)
+		crstl_constexpr14 reference emplace_front(Args&&... args)
 		{
 			crstl_assert(m_length < NumElements);
-			m_begin = size_t(m_begin - 1) > kLastElement ? kLastElement : m_begin - 1;
+			m_begin = (length_type)(size_t(m_begin - 1) > kLastElement ? kLastElement : m_begin - 1);
 			::new((void*)&m_data[m_begin]) T(crstl::forward<Args>(args)...);
 			m_length++;
 			return m_data[m_begin];
@@ -231,7 +231,7 @@ crstl_module_export namespace crstl
 		// push_back
 		//----------
 		
-		crstl_constexpr reference push_back()
+		crstl_constexpr14 reference push_back()
 		{
 			crstl_assert(m_length < NumElements);
 			length_type current_end = m_end;
@@ -241,7 +241,7 @@ crstl_module_export namespace crstl
 			return m_data[current_end];
 		}
 		
-		crstl_constexpr reference push_back_uninitialized()
+		crstl_constexpr14 reference push_back_uninitialized()
 		{
 			crstl_assert(m_length < NumElements);
 			length_type current_end = m_end;
@@ -341,7 +341,7 @@ crstl_module_export namespace crstl
 		// Comparison Operators
 		//---------------------
 
-		crstl_constexpr bool operator == (const this_type& other) crstl_noexcept
+		crstl_constexpr14 bool operator == (const this_type& other) crstl_noexcept
 		{
 			if (m_length == other.m_length)
 			{
