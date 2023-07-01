@@ -83,48 +83,48 @@ crstl_module_export namespace crstl
 		// Constructors
 		//-------------
 
-		crstl_constexpr basic_string() crstl_noexcept
+		crstl_constexpr14 basic_string() crstl_noexcept
 		{
 			m_layout_allocator.m_first.m_sso.data[0] = 0;
 			m_layout_allocator.m_first.m_sso.remaining_length.value = kSSOCapacity;
 		}
 
-		crstl_constexpr basic_string(const_pointer string, size_t length) crstl_noexcept
+		crstl_constexpr14 basic_string(const_pointer string, size_t length) crstl_noexcept
 		{
 			crstl_assert(string != nullptr);
 			initialize_string(string, length);
 		}
 
 		template<int N>
-		crstl_constexpr basic_string(const T(&string_literal)[N]) crstl_noexcept
+		crstl_constexpr14 basic_string(const T(&string_literal)[N]) crstl_noexcept
 		{
 			initialize_string(string_literal, string_length(string_literal, N - 1));
 		}
 
 		template<typename Q>
-		crstl_constexpr basic_string(Q string, crstl_is_char_ptr(Q)) crstl_noexcept
+		crstl_constexpr14 basic_string(Q string, crstl_is_char_ptr(Q)) crstl_noexcept
 		{
 			initialize_string(string, string_length(string));
 		}
 
-		crstl_constexpr basic_string(const_pointer begin, const_pointer end) crstl_noexcept
+		crstl_constexpr14 basic_string(const_pointer begin, const_pointer end) crstl_noexcept
 		{
 			crstl_assert(end >= begin);
 			initialize_string(begin, end - begin);
 		}
 
-		crstl_constexpr basic_string(const basic_string& string) crstl_noexcept
+		crstl_constexpr14 basic_string(const basic_string& string) crstl_noexcept
 		{
 			initialize_string(string.c_str(), string.size());
 		}
 
-		crstl_constexpr basic_string(basic_string&& string) crstl_noexcept
+		crstl_constexpr14 basic_string(basic_string&& string) crstl_noexcept
 		{
 			m_layout_allocator = string.m_layout_allocator;
 			string.m_layout_allocator.first().m_heap.data = nullptr; // Don't try to deallocate
 		}
 
-		crstl_constexpr basic_string(ctor_concatenate, const basic_string& string1, const basic_string& string2) crstl_noexcept : basic_string()
+		crstl_constexpr14 basic_string(ctor_concatenate, const basic_string& string1, const basic_string& string2) crstl_noexcept : basic_string()
 		{
 			reserve(string1.size() + string2.size());
 			initialize_string(string1.c_str(), string1.size());
@@ -132,7 +132,7 @@ crstl_module_export namespace crstl
 		}
 
 		template<int N>
-		crstl_constexpr basic_string(ctor_concatenate, const basic_string& string, const T(&string_literal)[N]) crstl_noexcept : basic_string()
+		crstl_constexpr14 basic_string(ctor_concatenate, const basic_string& string, const T(&string_literal)[N]) crstl_noexcept : basic_string()
 		{
 			reserve(string.size() + N);
 			initialize_string(string.c_str(), string.size());
@@ -140,7 +140,7 @@ crstl_module_export namespace crstl
 		}
 
 		template<typename Q>
-		crstl_constexpr basic_string(ctor_concatenate, const basic_string& string1, Q string2, crstl_is_char_ptr(Q)) crstl_noexcept : basic_string()
+		crstl_constexpr14 basic_string(ctor_concatenate, const basic_string& string1, Q string2, crstl_is_char_ptr(Q)) crstl_noexcept : basic_string()
 		{
 			size_t string2_length = string_length(string2);
 			reserve(string1.size() + string2_length);
@@ -148,7 +148,7 @@ crstl_module_export namespace crstl
 			append(string2, string2_length);
 		}
 
-		crstl_constexpr basic_string(ctor_concatenate, const T* string1, const basic_string& string2) crstl_noexcept : basic_string()
+		crstl_constexpr14 basic_string(ctor_concatenate, const T* string1, const basic_string& string2) crstl_noexcept : basic_string()
 		{
 			size_t string1_length = string_length(string1);
 			reserve(string1_length + string2.size());
@@ -156,7 +156,7 @@ crstl_module_export namespace crstl
 			append(string2);
 		}
 
-		crstl_constexpr basic_string(const basic_string& string, size_t subpos, size_t sublen = npos) crstl_noexcept
+		crstl_constexpr14 basic_string(const basic_string& string, size_t subpos, size_t sublen = npos) crstl_noexcept
 		{
 			size_t string_length = string.length();
 
@@ -170,12 +170,12 @@ crstl_module_export namespace crstl
 			initialize_string(string.c_str() + subpos, sublen);
 		}
 
-		crstl_constexpr basic_string(size_t n, T c) crstl_noexcept : basic_string()
+		crstl_constexpr14 basic_string(size_t n, T c) crstl_noexcept : basic_string()
 		{
 			append(n, c);
 		}
 
-		crstl_constexpr basic_string(ctor_no_initialize, size_t capacity, size_t length = 0) : basic_string()
+		crstl_constexpr14 basic_string(ctor_no_initialize, size_t capacity, size_t length = 0) : basic_string()
 		{
 			crstl_assert(length <= capacity);
 
