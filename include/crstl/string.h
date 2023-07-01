@@ -226,7 +226,7 @@ crstl_module_export namespace crstl
 		// append
 		//-------
 
-		crstl_constexpr basic_string& append(const_pointer string, size_t length)
+		crstl_constexpr14 basic_string& append(const_pointer string, size_t length)
 		{
 			append_function(length, [string, length](T* begin, T* /*end*/)
 			{
@@ -237,30 +237,30 @@ crstl_module_export namespace crstl
 		}
 
 		template<int N>
-		crstl_constexpr basic_string& append(const T(&string_literal)[N]) crstl_noexcept
+		crstl_constexpr14 basic_string& append(const T(&string_literal)[N]) crstl_noexcept
 		{
 			append(string_literal, string_length(string_literal, N - 1)); return *this;
 		}
 
 		template<typename Q>
-		crstl_constexpr basic_string& append(Q string, crstl_is_char_ptr(Q))
+		crstl_constexpr14 basic_string& append(Q string, crstl_is_char_ptr(Q))
 		{
 			return append(string, string_length(string));
 		}
 
-		crstl_constexpr basic_string& append(const_pointer begin, const_pointer end) crstl_noexcept
+		crstl_constexpr14 basic_string& append(const_pointer begin, const_pointer end) crstl_noexcept
 		{
 			crstl_assert(end >= begin);
 			append(begin, (size_t)(end - begin));
 			return *this;
 		}
 
-		crstl_constexpr basic_string& append(const basic_string& string) crstl_noexcept
+		crstl_constexpr14 basic_string& append(const basic_string& string) crstl_noexcept
 		{
 			append(string.data(), string.length()); return *this;
 		}
 
-		crstl_constexpr basic_string& append(size_t n, value_type c) crstl_noexcept
+		crstl_constexpr14 basic_string& append(size_t n, value_type c) crstl_noexcept
 		{
 			append_function(n, [c](T* begin, T* end)
 			{
@@ -279,7 +279,7 @@ crstl_module_export namespace crstl
 		//---------------
 
 		template<typename OtherCharT>
-		crstl_constexpr basic_string& append_convert(const OtherCharT* string, size_t length) crstl_noexcept
+		crstl_constexpr14 basic_string& append_convert(const OtherCharT* string, size_t length) crstl_noexcept
 		{
 			size_t current_length = basic_string::length();
 
@@ -362,20 +362,20 @@ crstl_module_export namespace crstl
 		}
 
 		template<typename OtherCharT, int N>
-		crstl_constexpr basic_string& append_convert(const OtherCharT(&string_literal)[N]) crstl_noexcept
+		crstl_constexpr14 basic_string& append_convert(const OtherCharT(&string_literal)[N]) crstl_noexcept
 		{
 			append_convert(string_literal, string_length(string_literal, N - 1)); return *this;
 		}
 
 		template<typename OtherCharQ>
-		crstl_constexpr basic_string& append_convert(OtherCharQ string, crstl_is_char_ptr(OtherCharQ)) crstl_noexcept
+		crstl_constexpr14 basic_string& append_convert(OtherCharQ string, crstl_is_char_ptr(OtherCharQ)) crstl_noexcept
 		{
 			append_convert(string, string_length(string));
 			return *this;
 		}
 
 		template<typename OtherCharT>
-		crstl_constexpr basic_string& append_convert(const OtherCharT* begin, const OtherCharT* end) crstl_noexcept
+		crstl_constexpr14 basic_string& append_convert(const OtherCharT* begin, const OtherCharT* end) crstl_noexcept
 		{
 			crstl_assert(end >= begin);
 			append_convert(begin, (size_t)(end - begin));
@@ -383,7 +383,7 @@ crstl_module_export namespace crstl
 		}
 
 		template<typename OtherCharT>
-		crstl_constexpr basic_string& append_convert(const basic_string<OtherCharT>& string) crstl_noexcept
+		crstl_constexpr14 basic_string& append_convert(const basic_string<OtherCharT>& string) crstl_noexcept
 		{
 			append_convert(string.data(), string.length());
 			return *this;
@@ -394,14 +394,14 @@ crstl_module_export namespace crstl
 		//---------------
 		
 		// Append a const char* string with a provided length
-		crstl_constexpr basic_string& append_sprintf(const_pointer format, ...) crstl_noexcept
+		crstl_constexpr14 basic_string& append_sprintf(const_pointer format, ...) crstl_noexcept
 		{
 			size_t current_length = length();
 			size_t remaining_length = capacity() - current_length;
 
 			T* data = basic_string::data();
 
-			va_list va_arguments = nullptr;
+			va_list va_arguments = {};
 			va_start(va_arguments, format);
 
 			// Try to copy, limiting the number of characters to what we have available
@@ -440,35 +440,35 @@ crstl_module_export namespace crstl
 		// assign
 		//-------
 
-		crstl_constexpr basic_string& assign(const_pointer string, size_t length) crstl_noexcept
+		crstl_constexpr14 basic_string& assign(const_pointer string, size_t length) crstl_noexcept
 		{
 			clear(); append(string, length); return *this;
 		}
 
 		template<int N>
-		crstl_constexpr basic_string& assign(const T(&string_literal)[N]) crstl_noexcept
+		crstl_constexpr14 basic_string& assign(const T(&string_literal)[N]) crstl_noexcept
 		{
 			clear(); append(string_literal); return *this;
 		}
 
 		template<typename Q>
-		crstl_constexpr basic_string& assign(Q string, crstl_is_char_ptr(Q)) crstl_noexcept
+		crstl_constexpr14 basic_string& assign(Q string, crstl_is_char_ptr(Q)) crstl_noexcept
 		{
 			clear(); append(string); return *this;
 		}
 
-		crstl_constexpr basic_string& assign(const_pointer begin, const_pointer end) crstl_noexcept
+		crstl_constexpr14 basic_string& assign(const_pointer begin, const_pointer end) crstl_noexcept
 		{
 			crstl_assert(end >= begin);
 			clear(); append(begin, end); return *this;
 		}
 
-		crstl_constexpr basic_string& assign(const basic_string& string) crstl_noexcept
+		crstl_constexpr14 basic_string& assign(const basic_string& string) crstl_noexcept
 		{
 			clear(); append(string); return *this;
 		}
 
-		crstl_constexpr basic_string& assign(const basic_string& string, size_t subpos, size_t sublen = npos) crstl_noexcept
+		crstl_constexpr14 basic_string& assign(const basic_string& string, size_t subpos, size_t sublen = npos) crstl_noexcept
 		{
 			clear(); append(string, subpos, sublen); return *this;
 		}
@@ -478,44 +478,44 @@ crstl_module_export namespace crstl
 		//---------------
 
 		template<typename OtherCharT>
-		crstl_constexpr basic_string& assign_convert(const OtherCharT* string, size_t length) crstl_noexcept
+		crstl_constexpr14 basic_string& assign_convert(const OtherCharT* string, size_t length) crstl_noexcept
 		{
 			clear(); append_convert(string, length); return *this;
 		}
 
 		template<typename OtherCharT, int N>
-		crstl_constexpr basic_string& assign_convert(const OtherCharT(&string_literal)[N]) crstl_noexcept
+		crstl_constexpr14 basic_string& assign_convert(const OtherCharT(&string_literal)[N]) crstl_noexcept
 		{
 			clear(); append_convert(string_literal); return *this;
 		}
 
 		template<typename OtherCharQ>
-		crstl_constexpr basic_string& assign_convert(OtherCharQ string, crstl_is_char_ptr(OtherCharQ)) crstl_noexcept
+		crstl_constexpr14 basic_string& assign_convert(OtherCharQ string, crstl_is_char_ptr(OtherCharQ)) crstl_noexcept
 		{
 			clear(); append_convert(string); return *this;
 		}
 
 		template<typename OtherCharT>
-		crstl_constexpr basic_string& assign_convert(const OtherCharT* begin, const OtherCharT* end) crstl_noexcept
+		crstl_constexpr14 basic_string& assign_convert(const OtherCharT* begin, const OtherCharT* end) crstl_noexcept
 		{
 			crstl_assert(end >= begin);
 			clear(); append_convert(begin, end); return *this;
 		}
 
 		template<typename OtherCharT>
-		crstl_constexpr basic_string& assign_convert(const basic_string<OtherCharT>& string) crstl_noexcept
+		crstl_constexpr14 basic_string& assign_convert(const basic_string<OtherCharT>& string) crstl_noexcept
 		{
 			clear(); append_convert(string); return *this;
 		}
 
 		template<typename OtherCharT>
-		crstl_constexpr basic_string& assign_convert(const basic_string<OtherCharT>& string, size_t subpos, size_t sublen = npos) crstl_noexcept
+		crstl_constexpr14 basic_string& assign_convert(const basic_string<OtherCharT>& string, size_t subpos, size_t sublen = npos) crstl_noexcept
 		{
 			clear(); append_convert(string, subpos, sublen); return *this;
 		}
 
 		template<typename OtherCharT>
-		crstl_constexpr basic_string& assign_convert(size_t n, OtherCharT c) crstl_noexcept
+		crstl_constexpr14 basic_string& assign_convert(size_t n, OtherCharT c) crstl_noexcept
 		{
 			clear(); append_convert(n, c); return *this;
 		}
@@ -604,13 +604,13 @@ crstl_module_export namespace crstl
 			return crstl::string_compare(data() + pos, clamp_length(pos, length), string.data() + subpos, string.clamp_length(subpos, sublen));
 		}
 
-		crstl_constexpr pointer data() crstl_noexcept { return is_sso() ? m_layout_allocator.m_first.m_sso.data : m_layout_allocator.m_first.m_heap.data; }
+		crstl_constexpr14 pointer data() crstl_noexcept { return is_sso() ? m_layout_allocator.m_first.m_sso.data : m_layout_allocator.m_first.m_heap.data; }
 		crstl_constexpr const_pointer data() const crstl_noexcept { return is_sso() ? m_layout_allocator.m_first.m_sso.data : m_layout_allocator.m_first.m_heap.data; }
 
 		crstl_nodiscard
 		crstl_constexpr bool empty() const crstl_noexcept { return length() == 0; }
 
-		crstl_constexpr iterator end() crstl_noexcept
+		crstl_constexpr14 iterator end() crstl_noexcept
 		{
 			return is_sso() ?
 				m_layout_allocator.m_first.m_sso.data + (kSSOCapacity - m_layout_allocator.m_first.m_sso.remaining_length.value) :
@@ -628,7 +628,7 @@ crstl_module_export namespace crstl
 		// erase
 		//------
 
-		crstl_constexpr basic_string& erase(size_t pos = 0, size_t length = npos) crstl_noexcept
+		crstl_constexpr14 basic_string& erase(size_t pos = 0, size_t length = npos) crstl_noexcept
 		{
 			size_t current_length = basic_string::length();
 			T* data = basic_string::data();
@@ -657,13 +657,13 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
-		crstl_constexpr basic_string& erase(const_pointer begin) crstl_noexcept
+		crstl_constexpr14 basic_string& erase(const_pointer begin) crstl_noexcept
 		{
 			crstl_assert(data() <= begin && begin <= data() + length());
 			return erase((size_t)(begin - data()), 1);
 		}
 
-		crstl_constexpr basic_string& erase(const_pointer begin, const_pointer end) crstl_noexcept
+		crstl_constexpr14 basic_string& erase(const_pointer begin, const_pointer end) crstl_noexcept
 		{
 			crstl_assert(end >= begin && data() <= begin && begin <= data() + length());
 			return erase((size_t)(begin - data()), (size_t)(end - begin));
@@ -751,7 +751,7 @@ crstl_module_export namespace crstl
 			return rfind(c, pos);
 		}
 
-		crstl_constexpr reference front() crstl_noexcept { return is_sso() ? m_layout_allocator.m_first.m_sso.data : m_layout_allocator.m_first.m_heap.data; }
+		crstl_constexpr14 reference front() crstl_noexcept { return is_sso() ? m_layout_allocator.m_first.m_sso.data : m_layout_allocator.m_first.m_heap.data; }
 		crstl_constexpr const_reference front() const crstl_noexcept { return is_sso() ? m_layout_allocator.m_first.m_sso.data : m_layout_allocator.m_first.m_heap.data; }
 
 		crstl_constexpr14 void force_length(size_t length) crstl_noexcept
@@ -789,13 +789,13 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		crstl_constexpr reference push_back(value_type c) { append(1, c); return back(); }
+		crstl_constexpr14 reference push_back(value_type c) { append(1, c); return back(); }
 
 		//--------
 		// replace
 		//--------
 
-		crstl_constexpr basic_string& replace(size_t needle_pos, size_t needle_length, const_pointer replace_string, size_t replace_length)
+		crstl_constexpr14 basic_string& replace(size_t needle_pos, size_t needle_length, const_pointer replace_string, size_t replace_length)
 		{
 			crstl_assert(needle_pos + needle_length <= basic_string::length());
 			T* data = replace_common(basic_string::length(), needle_pos, needle_length, replace_length);
@@ -803,7 +803,7 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
-		crstl_constexpr basic_string& replace(size_t needle_pos, size_t needle_length, size_t n, value_type c)
+		crstl_constexpr14 basic_string& replace(size_t needle_pos, size_t needle_length, size_t n, value_type c)
 		{
 			crstl_assert(needle_pos + needle_length <= basic_string::length());
 			T* data = replace_common(basic_string::length(), needle_pos, needle_length, n);
@@ -811,35 +811,35 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
-		crstl_constexpr basic_string& replace(size_t needle_pos, size_t needle_length, const_pointer replace_string)
+		crstl_constexpr14 basic_string& replace(size_t needle_pos, size_t needle_length, const_pointer replace_string)
 		{
 			return replace(needle_pos, needle_length, replace_string, string_length(replace_string));
 		}
 
-		crstl_constexpr basic_string& replace(size_t needle_pos, size_t needle_length, const basic_string& replace_string) crstl_noexcept
+		crstl_constexpr14 basic_string& replace(size_t needle_pos, size_t needle_length, const basic_string& replace_string) crstl_noexcept
 		{
 			return replace(needle_pos, needle_length, replace_string.data(), replace_string.length());
 		}
 
-		crstl_constexpr basic_string& replace(size_t needle_pos, size_t needle_length, const basic_string& replace_string, size_t subpos, size_t sublen = npos) crstl_noexcept
+		crstl_constexpr14 basic_string& replace(size_t needle_pos, size_t needle_length, const basic_string& replace_string, size_t subpos, size_t sublen = npos) crstl_noexcept
 		{
 			sublen = sublen < replace_string.length() ? sublen : replace_string.length();
 			return replace(needle_pos, needle_length, replace_string.data() + subpos, sublen);
 		}
 
-		crstl_constexpr basic_string& replace(const_pointer begin, const_pointer end, const_pointer replace_string) crstl_noexcept
+		crstl_constexpr14 basic_string& replace(const_pointer begin, const_pointer end, const_pointer replace_string) crstl_noexcept
 		{
 			crstl_assert(end >= begin);
 			return replace((size_t)(begin - data()), (size_t)(end - begin), replace_string, crstl::string_length(replace_string));
 		}
 
-		crstl_constexpr basic_string& replace(const_pointer begin, const_pointer end, const_pointer replace_string, size_t replace_length) crstl_noexcept
+		crstl_constexpr14 basic_string& replace(const_pointer begin, const_pointer end, const_pointer replace_string, size_t replace_length) crstl_noexcept
 		{
 			crstl_assert(end >= begin);
 			return replace((size_t)(begin - data()), (size_t)(end - begin), replace_string, replace_length);
 		}
 
-		crstl_constexpr basic_string& replace(const_pointer begin, const_pointer end, const basic_string& replace_string) crstl_noexcept
+		crstl_constexpr14 basic_string& replace(const_pointer begin, const_pointer end, const basic_string& replace_string) crstl_noexcept
 		{
 			crstl_assert(end >= begin);
 			return replace((size_t)(begin - data()), (size_t)(end - begin), replace_string.data(), (size_t)replace_string.length());
@@ -961,21 +961,21 @@ crstl_module_export namespace crstl
 		// operators
 		//----------
 
-		crstl_constexpr basic_string& operator = (const basic_string& string) crstl_noexcept
+		crstl_constexpr14 basic_string& operator = (const basic_string& string) crstl_noexcept
 		{
 			clear();
 			append(string);
 			return *this;
 		}
 
-		crstl_constexpr basic_string& operator = (basic_string&& string) crstl_noexcept
+		crstl_constexpr14 basic_string& operator = (basic_string&& string) crstl_noexcept
 		{
 			m_layout_allocator = string.m_layout_allocator;
 			string.m_layout_allocator.first().m_heap.data = nullptr; // Don't try to deallocate
 			return *this;
 		}
 
-		crstl_constexpr reference operator [](size_t i) crstl_noexcept
+		crstl_constexpr14 reference operator [](size_t i) crstl_noexcept
 		{
 			crstl_assert(i < length());
 			return data()[i];
@@ -987,13 +987,13 @@ crstl_module_export namespace crstl
 			return data()[i];
 		}
 
-		crstl_constexpr basic_string& operator += (const basic_string& string) crstl_noexcept
+		crstl_constexpr14 basic_string& operator += (const basic_string& string) crstl_noexcept
 		{
 			append(string);
 			return *this;
 		}
 
-		crstl_constexpr basic_string& operator += (const_pointer string) crstl_noexcept
+		crstl_constexpr14 basic_string& operator += (const_pointer string) crstl_noexcept
 		{
 			append(string);
 			return *this;
@@ -1051,7 +1051,7 @@ crstl_module_export namespace crstl
 			return old_capacity + (old_capacity * 50) / 100;
 		}
 
-		crstl_constexpr size_t reallocate_heap_larger(size_t requested_capacity)
+		crstl_constexpr14 size_t reallocate_heap_larger(size_t requested_capacity)
 		{
 			size_t current_capacity = capacity();
 			size_t growth_capacity = compute_new_capacity(current_capacity);
@@ -1135,7 +1135,7 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		crstl_constexpr T* replace_common(size_t current_length, size_t needle_pos, size_t needle_length, size_t replace_length)
+		crstl_constexpr14 T* replace_common(size_t current_length, size_t needle_pos, size_t needle_length, size_t replace_length)
 		{
 			size_t current_capacity = basic_string::capacity();
 			size_t replace_difference = (replace_length - needle_length);
