@@ -74,11 +74,11 @@ crstl_module_export namespace crstl
 			resize(initialLength, value);
 		}
 
-		crstl_constexpr fixed_vector(const this_type& other) crstl_noexcept { *this = other; }
+		crstl_constexpr14 fixed_vector(const this_type& other) crstl_noexcept { *this = other; }
 
-		crstl_constexpr fixed_vector(this_type&& other) crstl_noexcept { *this = other; }
+		crstl_constexpr14 fixed_vector(this_type&& other) crstl_noexcept { *this = other; }
 
-		crstl_constexpr fixed_vector(T* iter1, T* iter2) crstl_noexcept
+		crstl_constexpr14 fixed_vector(T* iter1, T* iter2) crstl_noexcept
 		{
 			crstl_assert(iter1 != nullptr && iter2 != nullptr);
 			crstl_assert(iter2 >= iter1);
@@ -96,7 +96,7 @@ crstl_module_export namespace crstl
 
 #if defined(CRSTL_INITIALIZER_LISTS)
 
-		crstl_constexpr fixed_vector(std::initializer_list<T> ilist) crstl_noexcept : m_length(0)
+		crstl_constexpr14 fixed_vector(std::initializer_list<T> ilist) crstl_noexcept : m_length(0)
 		{
 			crstl_assert((size_t)(ilist.end() - ilist.begin()) <= NumElements);
 

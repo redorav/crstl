@@ -478,7 +478,7 @@ crstl_module_export namespace crstl
 
 		// Requests incremental capacity in a given direction, which could mean rebalancing the entries to make space
 		// for the given elements, or reallocating as necessary
-		crstl_constexpr void request_capacity_back(size_t requested_capacity_increment)
+		crstl_constexpr14 void request_capacity_back(size_t requested_capacity_increment)
 		{
 			size_t remaining_capacity_back = m_capacity_allocator.m_first - (m_chunk_end * ChunkSize + m_local_end);
 
@@ -575,7 +575,7 @@ crstl_module_export namespace crstl
 			#endif
 		}
 
-		crstl_constexpr void request_capacity_front(size_t requested_capacity_increment)
+		crstl_constexpr14 void request_capacity_front(size_t requested_capacity_increment)
 		{
 			size_t remaining_capacity_front = m_chunk_begin * ChunkSize + m_local_begin;
 

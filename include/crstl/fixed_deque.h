@@ -110,7 +110,7 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		crstl_constexpr fixed_deque(const fixed_deque& other) crstl_noexcept
+		crstl_constexpr14 fixed_deque(const fixed_deque& other) crstl_noexcept
 		{
 			copy_other(other);
 		}
