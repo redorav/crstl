@@ -62,13 +62,13 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr fixed_vector() crstl_noexcept : m_length(0) {}
 
-		crstl_constexpr fixed_vector(size_t initialLength) crstl_noexcept : m_length(0)
+		crstl_constexpr14 fixed_vector(size_t initialLength) crstl_noexcept : m_length(0)
 		{
 			crstl_assert(initialLength < NumElements);
 			resize(initialLength);
 		}
 
-		crstl_constexpr fixed_vector(size_t initialLength, const T& value) crstl_noexcept : m_length(0)
+		crstl_constexpr14 fixed_vector(size_t initialLength, const T& value) crstl_noexcept : m_length(0)
 		{
 			crstl_assert(initialLength < NumElements);
 			resize(initialLength, value);
@@ -145,7 +145,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr size_t capacity() const { return NumElements; }
 
-		crstl_constexpr void clear()
+		crstl_constexpr14 void clear()
 		{
 			crstl_constexpr_if(!crstl_is_trivially_destructible(T))
 			{
@@ -281,14 +281,14 @@ crstl_module_export namespace crstl
 			return back();
 		}
 
-		crstl_constexpr void push_back(const T& v)
+		crstl_constexpr14 void push_back(const T& v)
 		{
 			crstl_assert(m_length < NumElements);
 			::new((void*)&m_data[m_length]) T(v);
 			m_length++;
 		}
 
-		crstl_constexpr void push_back(T&& v)
+		crstl_constexpr14 void push_back(T&& v)
 		{
 			crstl_assert(m_length < NumElements);
 			::new((void*)&m_data[m_length]) T(crstl::move(v));
@@ -299,7 +299,7 @@ crstl_module_export namespace crstl
 		// resize
 		//-------
 
-		crstl_constexpr void resize(size_t length)
+		crstl_constexpr14 void resize(size_t length)
 		{
 			crstl_assert(length <= NumElements);
 
@@ -321,7 +321,7 @@ crstl_module_export namespace crstl
 			m_length = (length_type)length;
 		}
 
-		crstl_constexpr void resize(size_t length, const T& value)
+		crstl_constexpr14 void resize(size_t length, const T& value)
 		{
 			crstl_assert(length <= NumElements);
 
@@ -345,7 +345,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr size_t size() const { return m_length; }
 
-		crstl_constexpr void swap(this_type& v)
+		crstl_constexpr14 void swap(this_type& v)
 		{
 			// For small vectors, make a temporary copy directly on the stack, then copy it back
 			crstl_constexpr_if(sizeof(this_type) <= kMaxStack)
@@ -381,7 +381,7 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		crstl_constexpr reference operator [] (size_t i) { crstl_assert(i < m_length); return m_data[i]; }
+		crstl_constexpr14 reference operator [] (size_t i) { crstl_assert(i < m_length); return m_data[i]; }
 
 		crstl_constexpr const_reference operator [] (size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
 
