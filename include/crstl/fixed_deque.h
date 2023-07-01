@@ -143,7 +143,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr size_t capacity() const { return NumElements; }
 		
-		crstl_constexpr void clear()
+		crstl_constexpr14 void clear()
 		{
 			crstl_constexpr_if(!crstl_is_trivially_destructible(T))
 			{
@@ -211,7 +211,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr size_t max_size() const { return NumElements; }
 		
-		crstl_constexpr void pop_back()
+		crstl_constexpr14 void pop_back()
 		{
 			crstl_assert(m_length > 0);
 			m_end = size_t(m_end - 1) > kLastElement ? kLastElement : m_end - 1;
@@ -219,7 +219,7 @@ crstl_module_export namespace crstl
 			m_length--;
 		}
 
-		crstl_constexpr void pop_front()
+		crstl_constexpr14 void pop_front()
 		{
 			crstl_assert(m_length > 0);
 			m_data[m_begin].~T();
@@ -250,7 +250,7 @@ crstl_module_export namespace crstl
 			return m_data[current_end];
 		}
 		
-		crstl_constexpr void push_back(const T& v)
+		crstl_constexpr14 void push_back(const T& v)
 		{
 			crstl_assert(m_length < NumElements);
 			::new((void*)&m_data[m_end]) T(v);
@@ -258,7 +258,7 @@ crstl_module_export namespace crstl
 			m_length++;
 		}
 		
-		crstl_constexpr void push_back(T&& v)
+		crstl_constexpr14 void push_back(T&& v)
 		{
 			crstl_assert(m_length < NumElements);
 			::new((void*)&m_data[m_end]) T(crstl::move(v));
@@ -287,7 +287,7 @@ crstl_module_export namespace crstl
 			return m_data[m_begin];
 		}
 		
-		crstl_constexpr void push_front(const T& v)
+		crstl_constexpr14 void push_front(const T& v)
 		{
 			crstl_assert(m_length < NumElements);
 			m_begin = size_t(m_begin - 1) > kLastElement ? kLastElement : m_begin - 1;
@@ -295,7 +295,7 @@ crstl_module_export namespace crstl
 			m_length++;
 		}
 		
-		crstl_constexpr void push_front(T&& v)
+		crstl_constexpr14 void push_front(T&& v)
 		{
 			crstl_assert(m_length < NumElements);
 			m_begin = size_t(m_begin - 1) > kLastElement ? kLastElement : m_begin - 1;
@@ -307,7 +307,7 @@ crstl_module_export namespace crstl
 		// resize
 		//-------
 
-		crstl_constexpr void resize(size_t length)
+		crstl_constexpr14 void resize(size_t length)
 		{
 			resize_function(length, [](T* data_ptr)
 			{
@@ -315,7 +315,7 @@ crstl_module_export namespace crstl
 			});
 		}
 
-		crstl_constexpr void resize(size_t length, const T& value)
+		crstl_constexpr14 void resize(size_t length, const T& value)
 		{
 			resize_function(length, [&value](T* data_ptr)
 			{
@@ -380,7 +380,7 @@ crstl_module_export namespace crstl
 
 	private:
 
-		crstl_constexpr void copy_other(const this_type& other)
+		crstl_constexpr14 void copy_other(const this_type& other)
 		{
 			if (other.m_end >= other.m_begin)
 			{
@@ -398,7 +398,7 @@ crstl_module_export namespace crstl
 		}
 
 		template<typename Function>
-		crstl_constexpr void resize_function(size_t length, const Function& createFunction)
+		crstl_constexpr14 void resize_function(size_t length, const Function& createFunction)
 		{
 			crstl_assert(length <= NumElements);
 
