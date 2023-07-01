@@ -214,7 +214,7 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 void pop_back()
 		{
 			crstl_assert(m_length > 0);
-			m_end = size_t(m_end - 1) > kLastElement ? kLastElement : m_end - 1;
+			m_end = (length_type)(size_t(m_end - 1) > kLastElement ? kLastElement : m_end - 1);
 			m_data[m_end].~T();
 			m_length--;
 		}
@@ -223,7 +223,7 @@ crstl_module_export namespace crstl
 		{
 			crstl_assert(m_length > 0);
 			m_data[m_begin].~T();
-			m_begin = size_t(m_begin + 1) > kLastElement ? 0 : m_begin + 1;
+			m_begin = (length_type)(size_t(m_begin + 1) > kLastElement ? 0 : m_begin + 1);
 			m_length--;
 		}
 		
@@ -270,19 +270,19 @@ crstl_module_export namespace crstl
 		// push_front
 		//-----------
 		
-		crstl_constexpr reference push_front()
+		crstl_constexpr14 reference push_front()
 		{
 			crstl_assert(m_length < NumElements);
-			m_begin = size_t(m_begin - 1) > kLastElement ? kLastElement : m_begin - 1;
+			m_begin = (length_type)(size_t(m_begin - 1) > kLastElement ? kLastElement : m_begin - 1);
 			::new((void*)&m_data[m_begin]) T();
 			m_length++;
 			return m_data[m_begin];
 		}
 		
-		crstl_constexpr reference push_front_uninitialized()
+		crstl_constexpr14 reference push_front_uninitialized()
 		{
 			crstl_assert(m_length < NumElements);
-			m_begin = size_t(m_begin - 1) > kLastElement ? kLastElement : m_begin - 1;
+			m_begin = (length_type)(size_t(m_begin - 1) > kLastElement ? kLastElement : m_begin - 1);
 			m_length++;
 			return m_data[m_begin];
 		}
@@ -290,7 +290,7 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 void push_front(const T& v)
 		{
 			crstl_assert(m_length < NumElements);
-			m_begin = size_t(m_begin - 1) > kLastElement ? kLastElement : m_begin - 1;
+			m_begin = (length_type)(size_t(m_begin - 1) > kLastElement ? kLastElement : m_begin - 1);
 			::new((void*)&m_data[m_begin]) T(v);
 			m_length++;
 		}
@@ -298,7 +298,7 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 void push_front(T&& v)
 		{
 			crstl_assert(m_length < NumElements);
-			m_begin = size_t(m_begin - 1) > kLastElement ? kLastElement : m_begin - 1;
+			m_begin = (length_type)(size_t(m_begin - 1) > kLastElement ? kLastElement : m_begin - 1);
 			::new((void*)&m_data[m_begin]) T(crstl::move(v));
 			m_length++;
 		}

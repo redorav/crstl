@@ -270,7 +270,7 @@ crstl_module_export namespace crstl
 		return nullptr;
 	}
 
-	inline crstl_constexpr void fill_char(char* destination, size_t n, char c)
+	inline crstl_constexpr14 void fill_char(char* destination, size_t n, char c)
 	{
 		if (n)
 		{
@@ -278,7 +278,7 @@ crstl_module_export namespace crstl
 		}
 	}
 
-	inline crstl_constexpr void fill_char(wchar_t* destination, size_t n, char c)
+	inline crstl_constexpr14 void fill_char(wchar_t* destination, size_t n, char c)
 	{
 		if (n)
 		{
