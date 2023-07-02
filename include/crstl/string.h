@@ -88,6 +88,10 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 basic_string() crstl_noexcept
 		{
 			m_layout_allocator.m_first.m_sso.data[0] = 0;
+
+			// Some compilers will think this is uninitialized because some branches may take it. We'll go with simple and initialize to 0
+			// even though we knows it's not really needed, and avoid removing warnings, etc
+			m_layout_allocator.m_first.m_heap.length = 0;
 			m_layout_allocator.m_first.m_sso.remaining_length.value = kSSOCapacity;
 		}
 
