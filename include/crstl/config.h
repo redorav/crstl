@@ -217,6 +217,20 @@ inline void crstl_assert_impl(bool condition)
 
 #endif
 
+#if defined(CRSTL_COMPILER_MSVC)
+
+	#define crstl_assume(condition) __assume(condition)
+
+#elif defined(CRSTL_COMPILER_CLANG)
+
+	#define crstl_assume(condition) __builtin_assume(condition)
+
+#elif defined(CRSTL_COMPILER_GCC)
+
+	#define crstl_assume(condition) do { if (!(condition)) __builtin_unreachable(); } while (0)
+
+#endif
+
 #if defined(CRSTL_MODULE_DECLARATION)
 
 	#define crstl_module_export export
