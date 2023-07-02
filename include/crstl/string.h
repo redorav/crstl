@@ -1154,21 +1154,34 @@ crstl_module_export namespace crstl
 				current_capacity = reallocate_heap_larger(target_length);
 			}
 
-			T* data = basic_string::data();
+			T* data = nullptr;
+			size_t dst_offset = needle_pos + replace_length;
+			size_t src_offset = needle_pos + needle_length;
+			size_t chars_to_move = current_length - (needle_pos + needle_length) + 1;
+			size_t bytes_to_move = chars_to_move * kCharSize;
 
-			// Move the parts that would be stomped or leave gaps, including the null terminator
-			if (replace_difference != 0)
-			{
-				memory_move(data + needle_pos + replace_length, data + needle_pos + needle_length, (current_length - (needle_pos + needle_length) + 1) * kCharSize);
-			}
-
+			// Move the parts that would be stomped or leave gaps via memory_move, including the null terminator
 			if (is_sso())
 			{
+				if (replace_difference != 0)
+				{
+					crstl_assert(dst_offset < kSSOCapacity);
+					crstl_assume(dst_offset < kSSOCapacity);
+					data = m_layout_allocator.m_first.m_sso.data;
+					memory_move(&data[dst_offset], &data[src_offset], bytes_to_move);
+				}
+
 				set_length_sso(target_length);
 				m_layout_allocator.m_first.m_sso.data[target_length] = 0;
 			}
 			else
 			{
+				if (replace_difference != 0)
+				{
+					data = m_layout_allocator.m_first.m_heap.data;
+					memory_move(&data[dst_offset], &data[src_offset], bytes_to_move);
+				}
+
 				set_length_heap(target_length);
 				m_layout_allocator.m_first.m_heap.data[target_length] = 0;
 			}
