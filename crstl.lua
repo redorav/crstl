@@ -10,8 +10,6 @@ PlatformLLVM64Modules	= 'LLVM 64 Modules'
 
 -- MacOS x86/64
 PlatformOSX64			= 'OSX 64'
-PlatformLinux64_GCC		= 'Linux64_GCC'
-PlatformLinux64_Clang	= 'Linux64_Clang'
 
 -- Linux x86/64
 PlatformLinux64_GCC_Cpp11	= 'Linux64_GCC_C++11'
