@@ -373,7 +373,7 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		crstl_constexpr bool operator != (const this_type& other) crstl_noexcept
+		crstl_constexpr14 bool operator != (const this_type& other) crstl_noexcept
 		{
 			return !(*this == other);
 		}
