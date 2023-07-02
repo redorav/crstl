@@ -11,6 +11,7 @@ import crstl;
 
 #include <ctype.h>
 #include <string>
+#include <cstring>
 
 #if CRSTL_CPPVERSION >= CRSTL_CPP17
 #include <string_view>
@@ -73,7 +74,7 @@ void RunUnitTestsString()
 	{
 		// Constructors
 
-		std::string mystds;
+		std::string stdString;
 		crstl::fixed_string32 crFixedString32;
 		crstl::fixed_string32 crFixedString32_2("String");
 		crstl::fixed_string32 crFixedString32_3(HelloString);
@@ -88,37 +89,37 @@ void RunUnitTestsString()
 
 		// Assignment
 
-		mystds = "Hello String";
-		mystds = mystds.c_str();
+		stdString = "Hello String";
+		stdString = stdString.c_str();
 		crFixedString32 = "Hello String";
 		crFixedString32 = HelloString;
 		//crFixedString32 = crFixedString32;
 		crFixedString32 = crFixedString32.c_str();
 
-		const auto myfssub = crFixedString32.substr(3, 5);
-		const auto mystdsub = mystds.substr(3, 5);
+		const auto crFixedSub = crFixedString32.substr(3, 5); crstl_unused(crFixedSub);
+		const auto mystdsub = stdString.substr(3, 5);
 		//crstl_check(myfssub == mystdsub);
 
 		const char* myfsc_str = crFixedString32.c_str();
-		const char* mystdc_str = mystds.c_str();
+		const char* mystdc_str = stdString.c_str();
 		crstl_check(crFixedString32 == myfsc_str);
 		crstl_check(crFixedString32 == mystdc_str);
 		//crstl_check(myfsc_str == crFixedString32);
 
 		const size_t fsfindc = crFixedString32.find('S', 0);
-		const size_t stdfindc = mystds.find('S', 0);
+		const size_t stdfindc = stdString.find('S', 0);
 		crstl_check(fsfindc == stdfindc);
 
 		const size_t fsfind = crFixedString32.find("rin", 2);
-		const size_t stdfind = mystds.find("rin", 2);
+		const size_t stdfind = stdString.find("rin", 2);
 		crstl_check(fsfind == stdfind);
 
 		const size_t fsrfindc = crFixedString32.rfind('S', 6);
-		const size_t stdrfindc = mystds.rfind('S', 6);
+		const size_t stdrfindc = stdString.rfind('S', 6);
 		crstl_check(fsrfindc == stdrfindc);
 
 		const size_t fsfindr = crFixedString32.rfind("ing");
-		const size_t stdfindr = mystds.rfind("ing");
+		const size_t stdfindr = stdString.rfind("ing");
 		crstl_check(fsfindr == stdfindr);
 
 		crFixedString32 = "Hello String";
@@ -135,12 +136,12 @@ void RunUnitTestsString()
 		mywfs32 = L"Hello String";
 		mywfs32.replace(4, 1, L"foo", 3);
 
-		mystds.replace(0, 2, "Hello");
+		stdString.replace(0, 2, "Hello");
 
 		const auto fsfindfs = crFixedString32.find(crFixedString32_2); crstl_unused(fsfindfs);
 
-		mystds.push_back('a');
-		mystds.pop_back();
+		stdString.push_back('a');
+		stdString.pop_back();
 
 		// Operator +
 		crFixedString32 = crFixedString32_foo + crFixedString32_bar;
