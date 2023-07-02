@@ -6,47 +6,50 @@ skip_branch_with_pr: true
 
 environment:
   matrix:
-    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
-      build: off
-      platform: Linux64 GCC C++11
+    - platform: Linux64 GCC C++11
       configuration: Release
-    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
       build: off
-      platform: Linux64 Clang C++11
+      
+    - platform: Linux64 Clang C++11
       configuration: Release
-    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
       build: off
-      platform: Linux64 GCC C++14
+      
+    - platform: Linux64 GCC C++14
       configuration: Release
-    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
       build: off
-      platform: Linux64 Clang C++14
+      
+    - platform: Linux64 Clang C++14
       configuration: Release
-    - compiler: msvc2022
-      backend: vs2022
-      vsversion: 2022
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+      build: off
+      
+    - vsversion: 2022
       platform: MSVC 64
       configuration: Release
-    - compiler: msvc2019
-      backend: vs2019
-      vsversion: 2019
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+      
+    - vsversion: 2019
       platform: MSVC 64
       configuration: Release
-    - compiler: msvc2017
-      backend: vs2017
-      vsversion: 2017
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      
+    - vsversion: 2017
       platform: MSVC 64
       configuration: Release
-    - compiler: msvc2022
-      backend: vs2022
-      vsversion: 2022
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      
+    - vsversion: 2022
       platform: LLVM 64
       configuration: Release
-    - compiler: msvc2019
-      backend: vs2019
-      vsversion: 2019
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+      
+    - vsversion: 2019
       platform: LLVM 64
       configuration: Release
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
 
 install:
   - cmd: if %vsversion%==2015
