@@ -8,11 +8,19 @@ environment:
   matrix:
     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
       build: off
-      platform: Linux64 GCC
+      platform: Linux64 GCC C++11
       configuration: Release
     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
       build: off
-      platform: Linux64 Clang
+      platform: Linux64 Clang C++11
+      configuration: Release
+    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+      build: off
+      platform: Linux64 GCC C++14
+      configuration: Release
+    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+      build: off
+      platform: Linux64 Clang C++14
       configuration: Release
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
       vsversion: 2022
@@ -56,14 +64,23 @@ build_script:
          msbuild "C:\projects\crstl\workspace\vs2019\crstl.sln" /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
   - cmd: if %vsversion%==2022
          msbuild "C:\projects\crstl\workspace\vs2022\crstl.sln" /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-  - sh: if [[ $platform = "Linux64 GCC" ]]; then 
+  - sh: if [[ $platform = "Linux64 GCC C++11" ]]; then 
         pushd workspace/gmake2;
         set -e;
-        make all config=release_linux64_gcc;
+        make all config=release_linux64_gcc_cpp11;
         popd; fi;
-  - sh: if [[ $platform = "Linux64 Clang" ]]; then 
+  - sh: if [[ $platform = "Linux64 Clang C++11" ]]; then 
         pushd workspace/gmake2;
         set -e;
-        make all config=release_linux64_clang;
+        make all config=release_linux64_clang_cpp11;
         popd; fi;
-         
+  - sh: if [[ $platform = "Linux64 GCC C++14" ]]; then 
+        pushd workspace/gmake2;
+        set -e;
+        make all config=release_linux64_gcc_cpp14;
+        popd; fi;
+  - sh: if [[ $platform = "Linux64 Clang C++14" ]]; then 
+        pushd workspace/gmake2;
+        set -e;
+        make all config=release_linux64_clang_cpp14;
+        popd; fi;

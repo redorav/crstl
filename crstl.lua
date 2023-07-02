@@ -2,14 +2,22 @@ Workspace = 'workspace/'.._ACTION
 
 -- Compilers
 
--- x86/x64
+-- Windows x86/x64
 PlatformMSVC64			= 'MSVC 64'
 PlatformMSVC64Modules	= 'MSVC 64 Modules'
 PlatformLLVM64			= 'LLVM 64'
 PlatformLLVM64Modules	= 'LLVM 64 Modules'
+
+-- MacOS x86/64
 PlatformOSX64			= 'OSX 64'
 PlatformLinux64_GCC		= 'Linux64_GCC'
 PlatformLinux64_Clang	= 'Linux64_Clang'
+
+-- Linux x86/64
+PlatformLinux64_GCC_Cpp11	= 'Linux64_GCC_C++11'
+PlatformLinux64_Clang_Cpp11	= 'Linux64_Clang_C++11'
+PlatformLinux64_GCC_Cpp14	= 'Linux64_GCC_C++14'
+PlatformLinux64_Clang_Cpp14	= 'Linux64_Clang_C++14'
 
 -- NEON
 PlatformARM 			= 'MSVC ARM'
@@ -66,16 +74,24 @@ workspace('crstl')
 		
 	elseif(isLinuxBuild) then
 	
-		platforms { PlatformLinux64_GCC, PlatformLinux64_Clang }
+		platforms { PlatformLinux64_GCC_Cpp11, PlatformLinux64_Clang_Cpp11, PlatformLinux64_GCC_Cpp14, PlatformLinux64_Clang_Cpp14 }
 		architecture('x64')
+
+		filter { 'platforms:'..PlatformLinux64_GCC_Cpp11 }
+			toolset('gcc')
 		buildoptions { '-std=c++11' }
 		
-		filter { 'platforms:'..PlatformLinux64_GCC }
-			toolset('gcc')
-		
-		filter { 'platforms:'..PlatformLinux64_Clang }
+		filter { 'platforms:'..PlatformLinux64_Clang_Cpp11 }
 			toolset('clang')
-			buildoptions { '-Wno-constexpr-not-const' }
+			buildoptions { '-std=c++11' }
+			
+		filter { 'platforms:'..PlatformLinux64_GCC_Cpp14 }
+			toolset('gcc')
+			buildoptions { '-std=c++14' }
+		
+		filter { 'platforms:'..PlatformLinux64_Clang_Cpp14 }
+			toolset('clang')
+			buildoptions { '-std=c++14' }
 		
 	else
 	
