@@ -626,7 +626,7 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 basic_fixed_string& replace(size_t needle_pos, size_t needle_length, const_pointer replace_string, size_t replace_length)
 		{
 			replace_common(needle_pos, needle_length, replace_length);
-			memcpy(m_data + needle_pos, replace_string, replace_length * kCharSize);
+			memory_copy(m_data + needle_pos, replace_string, replace_length * kCharSize);
 			return *this;
 		}
 

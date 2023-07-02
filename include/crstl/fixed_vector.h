@@ -364,9 +364,9 @@ crstl_module_export namespace crstl
 				{
 					uint8_t chunkData[kMaxStack];
 					size_t chunkOffset = c * kMaxStack;
-					memcpy(chunkData, vData + chunkOffset, kMaxStack);
-					memcpy(vData + chunkOffset, thisData + chunkOffset, kMaxStack);
-					memcpy(thisData + chunkOffset, chunkData, kMaxStack);
+					memory_copy(chunkData, vData + chunkOffset, kMaxStack);
+					memory_copy(vData + chunkOffset, thisData + chunkOffset, kMaxStack);
+					memory_copy(thisData + chunkOffset, chunkData, kMaxStack);
 				}
 
 				const size_t kChunkCount = (sizeof(this_type) + kMaxStack - 1) / kMaxStack;
@@ -375,9 +375,9 @@ crstl_module_export namespace crstl
 				// Copy last chunk
 				uint8_t chunkData[kMaxStack];
 				size_t chunkOffset = (chunks - 1) * kMaxStack;
-				memcpy(chunkData, vData + chunkOffset, kChunkRemaining);
-				memcpy(vData + chunkOffset, thisData + chunkOffset, kChunkRemaining);
-				memcpy(thisData + chunkOffset, chunkData, kChunkRemaining);
+				memory_copy(chunkData, vData + chunkOffset, kChunkRemaining);
+				memory_copy(vData + chunkOffset, thisData + chunkOffset, kChunkRemaining);
+				memory_copy(thisData + chunkOffset, chunkData, kChunkRemaining);
 			}
 		}
 

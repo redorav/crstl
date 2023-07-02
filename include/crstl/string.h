@@ -232,7 +232,7 @@ crstl_module_export namespace crstl
 		{
 			append_function(length, [string, length](T* begin, T* /*end*/)
 			{
-				memcpy(begin, string, length * kCharSize);
+				memory_copy(begin, string, length * kCharSize);
 			});
 
 			return *this;
@@ -801,7 +801,7 @@ crstl_module_export namespace crstl
 		{
 			crstl_assert(needle_pos + needle_length <= basic_string::length());
 			T* data = replace_common(basic_string::length(), needle_pos, needle_length, replace_length);
-			memcpy(data + needle_pos, replace_string, replace_length * kCharSize);
+			memory_copy(data + needle_pos, replace_string, replace_length * kCharSize);
 			return *this;
 		}
 
@@ -1124,14 +1124,14 @@ crstl_module_export namespace crstl
 		{
 			if (length < kSSOCapacity)
 			{
-				memcpy(m_layout_allocator.m_first.m_sso.data, string, length * kCharSize);
+				memory_copy(m_layout_allocator.m_first.m_sso.data, string, length * kCharSize);
 				m_layout_allocator.m_first.m_sso.remaining_length.value = (char)(kSSOCapacity - length);
 				m_layout_allocator.m_first.m_sso.data[length] = 0;
 			}
 			else
 			{
 				m_layout_allocator.m_first.m_heap.data = allocate_heap(length);
-				memcpy(m_layout_allocator.m_first.m_heap.data, string, length * kCharSize);
+				memory_copy(m_layout_allocator.m_first.m_heap.data, string, length * kCharSize);
 				m_layout_allocator.m_first.m_heap.length = length;
 				m_layout_allocator.m_first.m_heap.data[length] = 0;
 			}
