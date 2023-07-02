@@ -16,6 +16,14 @@ import <stdarg.h>;
 #include <stdarg.h>
 #endif
 
+#if !defined(CRSTL_COMPILER_MSVC) && !defined(CRSTL_COMPILER_GCC)
+	#define CRSTL_BUILTIN_WCSLEN
+#endif
+
+#if !defined(CRSTL_COMPILER_MSVC)
+	#define CRSTL_BUILTIN_STRLEN
+#endif
+
 extern "C"
 {
 	crstl_2015_dllimport int vsnprintf(char* s, crstl::size_t n, const char* format, va_list arg) crstl_linux_wthrow;
@@ -23,9 +31,12 @@ extern "C"
 	crstl_dllimport int tolower(int c) crstl_linux_wthrow;
 	crstl_dllimport int toupper(int c) crstl_linux_wthrow;
 
-#if defined(CRSTL_COMPILER_MSVC)
+#if !defined(CRSTL_BUILTIN_STRLEN)
 	crstl::size_t strlen(const char* str);
-	crstl_dllimport crstl::size_t wcslen(const wchar_t* str);
+#endif
+
+#if !defined(CRSTL_BUILTIN_WCSLEN)
+	crstl_dllimport crstl::size_t wcslen(const wchar_t* str) crstl_linux_wthrow;
 #endif
 }
 
@@ -56,10 +67,10 @@ crstl_module_export namespace crstl
 
 	inline size_t string_length(const char* str)
 	{
-#if defined(CRSTL_COMPILER_MSVC)
-		return strlen(str);
-#else
+#if defined(CRSTL_BUILTIN_STRLEN)
 		return __builtin_strlen(str);
+#else
+		return strlen(str);
 #endif
 	}
 
@@ -71,16 +82,16 @@ crstl_module_export namespace crstl
 
 	inline size_t string_length(const wchar_t* str)
 	{
-#if defined(CRSTL_COMPILER_MSVC)
-		return wcslen(str);
-#else
+#if defined(CRSTL_BUILTIN_WCSLEN)
 		return __builtin_wcslen(str);
+#else
+		return wcslen(str);
 #endif
 	}
 
 	inline size_t string_length(const wchar_t* str, size_t max_length)
 	{
-		size_t length = wcslen(str);
+		size_t length = string_length(str);
 		return length < max_length ? length : max_length;
 	}
 
