@@ -180,12 +180,12 @@ crstl_module_export namespace crstl
 		crstl_nodiscard
 		crstl_constexpr bool empty() const { return m_length == 0; }
 
-		iterator end() { return &m_data[0] + m_length; }
-		const_iterator end() const { return &m_data[0] + m_length; }
-		const_iterator cend() const { return &m_data[0] + m_length; }
+		crstl_constexpr14 iterator end() { return &m_data[0] + m_length; }
+		crstl_constexpr const_iterator end() const { return &m_data[0] + m_length; }
+		crstl_constexpr const_iterator cend() const { return &m_data[0] + m_length; }
 
-		reference front() { m_data[0]; }
-		const_reference front() const { m_data[0]; }
+		crstl_constexpr14 reference front() { return m_data[0]; }
+		crstl_constexpr const_reference front() const { return m_data[0]; }
 
 		void pop_back()
 		{
@@ -226,7 +226,7 @@ crstl_module_export namespace crstl
 		// Comparison Operators
 		//---------------------
 
-		crstl_constexpr bool operator == (const this_type& other) const crstl_noexcept
+		crstl_constexpr14 bool operator == (const this_type& other) const crstl_noexcept
 		{
 			if (m_length == other.m_length)
 			{
@@ -243,7 +243,7 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		crstl_constexpr bool operator != (const this_type& other) const crstl_noexcept
+		crstl_constexpr14 bool operator != (const this_type& other) const crstl_noexcept
 		{
 			return !(*this == other);
 		}
