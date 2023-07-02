@@ -24,14 +24,8 @@ isMacBuild = _ACTION == 'xcode4'
 isLinuxBuild = _ACTION == 'gmake2'
 isWindowsBuild = not isMacBuild and not isLinuxBuild
 
-isMSVC2010 = _ACTION == 'vs2010'
-isMSVC2015 = _ACTION == 'vs2015'
-isMSVC2017 = _ACTION == 'vs2017'
-isMSVC2019 = _ACTION == 'vs2019'
-isMSVC2022 = _ACTION == 'vs2022'
-
-supportsARMBuild = isMSVC2017 or isMSVC2019 or isMSVC2022
-supportsModules = isMSVC2022
+supportsARMBuild = _ACTION >= 'vs2017'
+supportsModules = _ACTION >= 'vs2022'
 
 cppDefaultDialect = 'C++11'
 
