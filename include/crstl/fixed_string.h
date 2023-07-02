@@ -6,6 +6,8 @@
 
 #include "crstl/internal/fixed_common.h"
 
+#include "crstl/internal/memory_ops.h"
+
 // fixed_string
 //
 // Fixed replacement for std::string
@@ -159,7 +161,7 @@ crstl_module_export namespace crstl
 			if (length)
 			{
 				crstl_assert(m_length + length < kCharacterCapacityWithZero);
-				memcpy(m_data + m_length, string, length * kCharSize);
+				memory_copy(m_data + m_length, string, length * kCharSize);
 				m_length += (length_type)length;
 				m_data[m_length] = '\0';
 			}
@@ -817,7 +819,7 @@ crstl_module_export namespace crstl
 			// Move the parts that would be stomped or leave gaps, including the null terminator
 			if (replace_difference != 0)
 			{
-				memmove(m_data + needle_pos + replace_length, m_data + needle_pos + needle_length, (m_length - (needle_pos + needle_length) + 1) * kCharSize);
+				memory_move(m_data + needle_pos + replace_length, m_data + needle_pos + needle_length, (m_length - (needle_pos + needle_length) + 1) * kCharSize);
 			}
 
 			// This happens before the actual writing of data so take care not to use m_length after using this function

@@ -8,6 +8,8 @@
 
 #include "crstl/string_common.h"
 
+#include "crstl/internal/memory_ops.h"
+
 // string
 //
 // Replacement for std::string
@@ -1068,12 +1070,12 @@ crstl_module_export namespace crstl
 			if (is_sso())
 			{
 				length = length_sso();
-				memcpy(temp, m_layout_allocator.m_first.m_sso.data, length * kCharSize + kCharSize);
+				memory_copy(temp, m_layout_allocator.m_first.m_sso.data, length * kCharSize + kCharSize);
 			}
 			else
 			{
 				length = length_heap();
-				memcpy(temp, m_layout_allocator.m_first.m_heap.data, length * kCharSize + kCharSize);
+				memory_copy(temp, m_layout_allocator.m_first.m_heap.data, length * kCharSize + kCharSize);
 				m_layout_allocator.second().deallocate(m_layout_allocator.m_first.m_heap.data, current_capacity * kCharSize + kCharSize);
 			}
 
@@ -1151,7 +1153,7 @@ crstl_module_export namespace crstl
 			// Move the parts that would be stomped or leave gaps, including the null terminator
 			if (replace_difference != 0)
 			{
-				memmove(data + needle_pos + replace_length, data + needle_pos + needle_length, (current_length - (needle_pos + needle_length) + 1) * kCharSize);
+				memory_move(data + needle_pos + replace_length, data + needle_pos + needle_length, (current_length - (needle_pos + needle_length) + 1) * kCharSize);
 			}
 
 			if (is_sso())

@@ -12,7 +12,7 @@
 
 #include "crstl/internal/fixed_common.h"
 
-#include "crstl/internal/memory_copy.h"
+#include "crstl/internal/memory_ops.h"
 
 // fixed_deque
 //

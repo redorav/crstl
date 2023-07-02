@@ -6,6 +6,8 @@
 
 #include "crstl/crstldef.h"
 
+#include "crstl/internal/memory_ops.h"
+
 crstl_module_export namespace crstl
 {
 	// http://graphics.stanford.edu/~seander/bithacks.html#CountBitsSetParallel
@@ -85,12 +87,12 @@ crstl_module_export namespace crstl
 
 		bitset()
 		{
-			memset(m_data, 0, sizeof(m_data));
+			memory_set(m_data, 0, sizeof(m_data));
 		}
 
 		bitset(word_type v)
 		{
-			memset(m_data, 0, sizeof(m_data));
+			memory_set(m_data, 0, sizeof(m_data));
 
 			m_data[0] = v;
 
@@ -156,12 +158,12 @@ crstl_module_export namespace crstl
 
 		void reset()
 		{
-			memset(m_data, 0, sizeof(m_data));
+			memory_set(m_data, 0, sizeof(m_data));
 		}
 
 		bitset& set()
 		{
-			memset(m_data, 0xff, sizeof(m_data));
+			memory_set(m_data, 0xff, sizeof(m_data));
 			
 			// Set bits in last word to 0 if necessary
 			crstl_constexpr_if(kNumBits & kBitsPerWordMask)

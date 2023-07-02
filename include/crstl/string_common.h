@@ -6,6 +6,8 @@
 
 #include "crstl/crstldef.h"
 
+#include "crstl/internal/memory_ops.h"
+
 // This include is very cheap in compile times and hard
 // to get right outside of its actual implementation
 #if defined(CRSTL_MODULE_DECLARATION)
@@ -20,6 +22,11 @@ extern "C"
 
 	crstl_dllimport int tolower(int c) crstl_linux_wthrow;
 	crstl_dllimport int toupper(int c) crstl_linux_wthrow;
+
+#if defined(CRSTL_COMPILER_MSVC)
+	crstl::size_t strlen(const char* str);
+	crstl_dllimport crstl::size_t wcslen(const wchar_t* str);
+#endif
 }
 
 crstl_module_export namespace crstl
@@ -47,14 +54,30 @@ crstl_module_export namespace crstl
 
 	struct ctor_no_initialize {};
 
-	inline size_t string_length(const char* str) { return strlen(str); }
+	inline size_t string_length(const char* str)
+	{
+#if defined(CRSTL_COMPILER_MSVC)
+		return strlen(str);
+#else
+		return __builtin_strlen(str);
+#endif
+	}
+
 	inline size_t string_length(const char* str, size_t max_length)
 	{
 		size_t length = strlen(str);
 		return length < max_length ? length : max_length;
 	}
 
-	inline size_t string_length(const wchar_t* str) { return wcslen(str); }
+	inline size_t string_length(const wchar_t* str)
+	{
+#if defined(CRSTL_COMPILER_MSVC)
+		return wcslen(str);
+#else
+		return __builtin_wcslen(str);
+#endif
+	}
+
 	inline size_t string_length(const wchar_t* str, size_t max_length)
 	{
 		size_t length = wcslen(str);
@@ -274,7 +297,7 @@ crstl_module_export namespace crstl
 	{
 		if (n)
 		{
-			memset(destination, c, n);
+			memory_set(destination, c, n);
 		}
 	}
 
@@ -282,7 +305,7 @@ crstl_module_export namespace crstl
 	{
 		if (n)
 		{
-			wmemset(destination, c, n);
+			wmemory_set(destination, c, n);
 		}
 	}
 

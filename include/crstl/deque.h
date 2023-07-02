@@ -138,7 +138,7 @@ crstl_module_export namespace crstl
 			m_chunk_array = (chunk_type**)m_capacity_allocator.second().allocate(chunk_count * sizeof(chunk_type*));
 
 			#if defined(CRSTL_DEQUE_EXHAUSTIVE_VALIDATION)
-				memset(m_chunk_array, 0, chunk_count * sizeof(chunk_type*));
+				memory_set(m_chunk_array, 0, chunk_count * sizeof(chunk_type*));
 			#endif
 
 			// Can this be done in a single allocation? How to keep track of memory blocks?
@@ -541,7 +541,7 @@ crstl_module_export namespace crstl
 				chunk_type** temp_array = (chunk_type**)m_capacity_allocator.second().allocate(growth_chunk_count * sizeof(chunk_type*));
 				
 				#if defined(CRSTL_DEQUE_EXHAUSTIVE_VALIDATION)
-					memset(temp_array, 0, growth_chunk_count * sizeof(chunk_type*));
+					memory_set(temp_array, 0, growth_chunk_count * sizeof(chunk_type*));
 				#endif
 
 				// 3. Copy existing chunk pointers
@@ -635,7 +635,7 @@ crstl_module_export namespace crstl
 				chunk_type** temp_array = (chunk_type**)m_capacity_allocator.second().allocate(growth_chunk_count * sizeof(chunk_type*));
 
 				#if defined(CRSTL_DEQUE_EXHAUSTIVE_VALIDATION)
-					memset(temp_array, 0, growth_chunk_count * sizeof(chunk_type*));
+					memory_set(temp_array, 0, growth_chunk_count * sizeof(chunk_type*));
 				#endif
 
 				// 3. Copy existing chunk pointers
