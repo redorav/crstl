@@ -138,7 +138,7 @@ crstl_module_export namespace crstl
 	}
 
 	template<typename T>
-	inline crstl_constexpr int string_comparei(const T* string1, size_t length1, const T* string2, size_t length2)
+	inline crstl_constexpr14 int string_comparei(const T* string1, size_t length1, const T* string2, size_t length2)
 	{
 		if (length1 == length2)
 		{
