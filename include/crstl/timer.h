@@ -12,7 +12,13 @@
 
 namespace crstl
 {
-	template<typename=void>
+#if defined(CRSTL_LINUX) && defined(CRSTL_COMPILER_GCC)
+
+	crstl_constexpr uint64_t TicksPerSecond = ticks_per_second();
+
+#else
+
+	template<typename = void>
 	struct timer_globals
 	{
 		static uint64_t TicksPerSecond;
@@ -23,6 +29,8 @@ namespace crstl
 
 	// This only gets initialized once. See https://youtu.be/xVT1y0xWgww?t=1320 for the trick
 	static uint64_t TicksPerSecond = timer_globals<>::TicksPerSecond;
+
+#endif
 
 	class time
 	{

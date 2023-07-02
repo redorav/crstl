@@ -19,7 +19,7 @@ static inline crstl::int64_t rdtsc_end(void)
 
 namespace crstl
 {
-	inline uint64_t ticks_per_second()
+	crstl_constexpr uint64_t ticks_per_second()
 	{
 		return 1000000000;
 	}
