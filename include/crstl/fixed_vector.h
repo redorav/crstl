@@ -83,7 +83,7 @@ crstl_module_export namespace crstl
 			crstl_assert(iter1 != nullptr && iter2 != nullptr);
 			crstl_assert(iter2 >= iter1);
 
-			size_t iter_length = iter2 - iter1;
+			size_t iter_length = (size_t)(iter2 - iter1);
 			crstl_assert(iter_length < NumElements);
 
 			for (size_t i = 0; i < iter_length; ++i)
