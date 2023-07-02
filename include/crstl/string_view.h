@@ -117,8 +117,8 @@ crstl_module_export namespace crstl
 			return find(needle_sv.m_data, pos, needle_sv.m_length);
 		}
 
-		crstl_constexpr14 reference front() crstl_noexcept { m_data; }
-		crstl_constexpr const_reference front() const crstl_noexcept { m_data; }
+		crstl_constexpr14 reference front() crstl_noexcept { return m_data; }
+		crstl_constexpr const_reference front() const crstl_noexcept { return m_data; }
 
 		// Returns the length of the string, in terms of number of characters
 		crstl_constexpr size_type length() const crstl_noexcept { return m_length; }
