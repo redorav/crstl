@@ -1048,7 +1048,7 @@ crstl_module_export namespace crstl
 
 	private:
 
-		crstl_constexpr size_t compute_new_capacity(size_t old_capacity)
+		crstl_constexpr size_t compute_new_capacity(size_t old_capacity) const
 		{
 			return old_capacity + (old_capacity * 50) / 100;
 		}
