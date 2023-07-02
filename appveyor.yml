@@ -67,20 +67,20 @@ build_script:
   - sh: if [[ $platform = "Linux64 GCC C++11" ]]; then 
         pushd workspace/gmake2;
         set -e;
-        make all config=release_linux64_gcc_cpp11;
+        make all config=release_linux64_gcc_c++11;
         popd; fi;
   - sh: if [[ $platform = "Linux64 Clang C++11" ]]; then 
         pushd workspace/gmake2;
         set -e;
-        make all config=release_linux64_clang_cpp11;
+        make all config=release_linux64_clang_c++11;
         popd; fi;
   - sh: if [[ $platform = "Linux64 GCC C++14" ]]; then 
         pushd workspace/gmake2;
         set -e;
-        make all config=release_linux64_gcc_cpp14;
+        make all config=release_linux64_gcc_c++14;
         popd; fi;
   - sh: if [[ $platform = "Linux64 Clang C++14" ]]; then 
         pushd workspace/gmake2;
         set -e;
-        make all config=release_linux64_clang_cpp14;
+        make all config=release_linux64_clang_c++14;
         popd; fi;
