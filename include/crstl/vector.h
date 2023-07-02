@@ -291,8 +291,8 @@ crstl_module_export namespace crstl
 		crstl_constexpr const_iterator end() const { return &m_data[0] + m_length; }
 		crstl_constexpr const_iterator cend() const { return &m_data[0] + m_length; }
 
-		crstl_constexpr14 reference front() { m_data[0]; }
-		crstl_constexpr const_reference front() const { m_data[0]; }
+		crstl_constexpr14 reference front() { return m_data[0]; }
+		crstl_constexpr const_reference front() const { return m_data[0]; }
 
 		crstl_constexpr14 void pop_back()
 		{
