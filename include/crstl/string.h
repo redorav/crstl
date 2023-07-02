@@ -891,6 +891,8 @@ crstl_module_export namespace crstl
 			
 			if (is_sso())
 			{
+				crstl_assert(length < kSSOCapacity);
+				crstl_assume(length < kSSOCapacity);
 				set_length_sso(length);
 				m_layout_allocator.m_first.m_sso.data[length] = 0;
 			}
