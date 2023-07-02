@@ -446,7 +446,7 @@ crstl_module_export namespace crstl
 		// Comparison Operators
 		//---------------------
 
-		crstl_constexpr bool operator == (const this_type& other) crstl_noexcept
+		crstl_constexpr bool operator == (const this_type& other) const crstl_noexcept
 		{
 			if (m_length == other.m_length)
 			{
@@ -466,7 +466,7 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		crstl_constexpr bool operator != (const this_type& other) crstl_noexcept
+		crstl_constexpr bool operator != (const this_type& other) const crstl_noexcept
 		{
 			return !(*this == other);
 		}

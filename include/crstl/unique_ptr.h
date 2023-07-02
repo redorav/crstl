@@ -81,26 +81,26 @@ crstl_module_export namespace crstl
 			return m_ptr;
 		}
 
-		bool operator == (const unique_ptr_base& other) { return m_ptr == other.m_ptr; }
-		bool operator != (const unique_ptr_base& other) { return m_ptr != other.m_ptr; }
-		bool operator <  (const unique_ptr_base& other) { return m_ptr <  other.m_ptr; }
-		bool operator <= (const unique_ptr_base& other) { return m_ptr <= other.m_ptr; }
-		bool operator >  (const unique_ptr_base& other) { return m_ptr >  other.m_ptr; }
-		bool operator >= (const unique_ptr_base& other) { return m_ptr >= other.m_ptr; }
+		bool operator == (const unique_ptr_base& other) const { return m_ptr == other.m_ptr; }
+		bool operator != (const unique_ptr_base& other) const { return m_ptr != other.m_ptr; }
+		bool operator <  (const unique_ptr_base& other) const { return m_ptr <  other.m_ptr; }
+		bool operator <= (const unique_ptr_base& other) const { return m_ptr <= other.m_ptr; }
+		bool operator >  (const unique_ptr_base& other) const { return m_ptr >  other.m_ptr; }
+		bool operator >= (const unique_ptr_base& other) const { return m_ptr >= other.m_ptr; }
 
-		bool operator == (pointer ptr) { return m_ptr == ptr; }
-		bool operator != (pointer ptr) { return m_ptr != ptr; }
-		bool operator <  (pointer ptr) { return m_ptr <  ptr; }
-		bool operator <= (pointer ptr) { return m_ptr <= ptr; }
-		bool operator >  (pointer ptr) { return m_ptr >  ptr; }
-		bool operator >= (pointer ptr) { return m_ptr >= ptr; }
+		bool operator == (pointer ptr) const { return m_ptr == ptr; }
+		bool operator != (pointer ptr) const { return m_ptr != ptr; }
+		bool operator <  (pointer ptr) const { return m_ptr <  ptr; }
+		bool operator <= (pointer ptr) const { return m_ptr <= ptr; }
+		bool operator >  (pointer ptr) const { return m_ptr >  ptr; }
+		bool operator >= (pointer ptr) const { return m_ptr >= ptr; }
 
-		bool operator == (crstl::nullptr_t) { return m_ptr == nullptr; }
-		bool operator != (crstl::nullptr_t) { return m_ptr != nullptr; }
-		bool operator <  (crstl::nullptr_t) { return m_ptr <  nullptr; }
-		bool operator <= (crstl::nullptr_t) { return m_ptr <= nullptr; }
-		bool operator >  (crstl::nullptr_t) { return m_ptr >  nullptr; }
-		bool operator >= (crstl::nullptr_t) { return m_ptr >= nullptr; }
+		bool operator == (crstl::nullptr_t) const { return m_ptr == nullptr; }
+		bool operator != (crstl::nullptr_t) const { return m_ptr != nullptr; }
+		bool operator <  (crstl::nullptr_t) const { return m_ptr <  nullptr; }
+		bool operator <= (crstl::nullptr_t) const { return m_ptr <= nullptr; }
+		bool operator >  (crstl::nullptr_t) const { return m_ptr >  nullptr; }
+		bool operator >= (crstl::nullptr_t) const { return m_ptr >= nullptr; }
 
 	protected:
 

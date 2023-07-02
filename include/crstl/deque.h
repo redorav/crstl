@@ -74,8 +74,8 @@ crstl_module_export namespace crstl
 		//this_type operator + (difference_type n) const { return this_type(m_data, (m_current + n) % NumElements, m_begin, m_end); }
 		//this_type operator - (difference_type n) const { return this_type(m_data, (m_current - n) % NumElements, m_begin, m_end); }
 
-		bool operator == (const this_type& other) { return m_local_index == other.m_local_index && m_chunk_index == other.m_chunk_index; }
-		bool operator != (const this_type& other) { return m_local_index != other.m_local_index || m_chunk_index != other.m_chunk_index; }
+		bool operator == (const this_type& other) const { return m_local_index == other.m_local_index && m_chunk_index == other.m_chunk_index; }
+		bool operator != (const this_type& other) const { return m_local_index != other.m_local_index || m_chunk_index != other.m_chunk_index; }
 
 	private:
 

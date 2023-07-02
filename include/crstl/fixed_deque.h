@@ -53,8 +53,8 @@ crstl_module_export namespace crstl
 		this_type operator + (difference_type n) const { return this_type(m_data, (m_current + n) % NumElements, m_begin, m_end); }
 		this_type operator - (difference_type n) const { return this_type(m_data, (m_current - n) % NumElements, m_begin, m_end); }
 
-		bool operator == (const this_type& other) { return m_current == other.m_current; }
-		bool operator != (const this_type& other) { return m_current != other.m_current; }
+		bool operator == (const this_type& other) const { return m_current == other.m_current; }
+		bool operator != (const this_type& other) const { return m_current != other.m_current; }
 
 		void increment()
 		{

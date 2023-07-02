@@ -66,7 +66,7 @@ Dummy::~Dummy()
 	b = -107374176.0f;
 }
 
-bool Dummy::operator == (const Dummy& other)
+bool Dummy::operator == (const Dummy& other) const
 {
 	bool isEqual =
 		a == other.a &&
