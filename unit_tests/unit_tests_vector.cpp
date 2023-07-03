@@ -15,7 +15,7 @@ void RunUnitTestsVectorNoStd()
 
 	begin_test("fixed_vector");
 	{
-		int initialVectorSize = 5;
+		crstl::size_t initialVectorSize = 5;
 		crstl::fixed_vector<Dummy, 32> crFixedVector(initialVectorSize);
 		crFixedVector.push_back();
 		crFixedVector.push_back_uninitialized();
@@ -59,7 +59,7 @@ void RunUnitTestsVectorStdCompare()
 
 	begin_test("fixed_vector");
 	{
-		int initialVectorSize = 5;
+		size_t initialVectorSize = 5;
 
 		crstl::fixed_vector<Dummy, 32> crFixedVector(initialVectorSize);
 		crstl::fixed_vector<Dummy, 32> crFixedVector2(initialVectorSize);
@@ -174,7 +174,7 @@ void RunUnitTestsVectorStdCompare()
 
 		crstl_check(crEmptyVector.size() == stdEmptyVector.size());
 
-		int initialVectorSize = 5;
+		size_t initialVectorSize = 5;
 
 		crstl::vector<Dummy> crVector(initialVectorSize);
 		std::vector<Dummy> stdVector(initialVectorSize);
