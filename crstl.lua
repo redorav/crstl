@@ -9,7 +9,8 @@ PlatformLLVM64			= 'LLVM 64'
 PlatformLLVM64Modules	= 'LLVM 64 Modules'
 
 -- MacOS x86/64
-PlatformOSX64			= 'OSX 64'
+PlatformOSX64Cpp11			= 'OSX 64 C++11'
+PlatformOSX64Cpp14			= 'OSX 64 C++14'
 
 -- Linux x86/64
 PlatformLinux64_GCC_Cpp11	= 'Linux64_GCC_C++11'
@@ -64,12 +65,18 @@ workspace('crstl')
 	
 	if(isMacBuild) then
 	
-		platforms { PlatformOSX64 }
+		platforms { PlatformOSX64Cpp11, PlatformOSX64Cpp14 }
 		toolset('clang')
 		architecture('x64')
-		buildoptions { '-std=c++11' }
+		
 		linkoptions { '-stdlib=libc++' }
 		
+		filter { 'platforms:'..PlatformOSX64Cpp11 }
+			buildoptions { '-std=c++11' }
+			
+		filter { 'platforms:'..PlatformOSX64Cpp14 }
+			buildoptions { '-std=c++14' }
+			
 	elseif(isLinuxBuild) then
 	
 		platforms { PlatformLinux64_GCC_Cpp11, PlatformLinux64_Clang_Cpp11, PlatformLinux64_GCC_Cpp14, PlatformLinux64_Clang_Cpp14 }

@@ -6,6 +6,17 @@ skip_branch_with_pr: true
 
 environment:
   matrix:
+  
+    - platform: OSX64 Clang C++11
+      configuration: Release
+      APPVEYOR_BUILD_WORKER_IMAGE: macOS
+      build: off
+      
+    - platform: OSX64 Clang C++14
+      configuration: Release
+      APPVEYOR_BUILD_WORKER_IMAGE: macOS
+      build: off
+  
     - platform: Linux64 GCC C++11
       configuration: Release
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
@@ -91,4 +102,9 @@ build_script:
         pushd workspace/gmake2;
         set -e;
         make all config=release_linux64_clang_c++14;
+        popd; fi;
+  - sh: if [[ $platform = "OSX64 Clang C++11" ] || [ $platform = "OSX64 Clang C++14" ]]; then 
+        pushd workspace/xcode4;
+        set -e;
+        xcodebuild build -project unit_tests.xcodeproj -configuration Release;
         popd; fi;
