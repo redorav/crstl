@@ -1,20 +1,20 @@
 #include <time.h>
 
 // https://gist.github.com/savanovich/f07eda9dba9300eb9ccf
-static inline crstl::int64_t rdtsc_start(void)
+static inline crstl::uint64_t rdtsc_start(void)
 {
 	unsigned a, d; 
 	asm volatile("cpuid" ::: "%rax", "%rbx", "%rcx", "%rdx");
 	asm volatile("rdtsc" : "=a" (a), "=d" (d)); 
-	return ((unsigned long)a) | (((unsigned long)d) << 32); 
+	return (crstl::uint64_t)(((unsigned long)a) | (((unsigned long)d) << 32));
 }
 
-static inline crstl::int64_t rdtsc_end(void)
+static inline crstl::uint64_t rdtsc_end(void)
 {
 	unsigned a, d; 
 	asm volatile("rdtscp" : "=a" (a), "=d" (d)); 
 	asm volatile("cpuid" ::: "%rax", "%rbx", "%rcx", "%rdx");
-	return ((unsigned long)a) | (((unsigned long)d) << 32); 
+	return (crstl::uint64_t)(((unsigned long)a) | (((unsigned long)d) << 32));
 }
 
 namespace crstl
@@ -27,8 +27,8 @@ namespace crstl
 	inline uint64_t current_ticks()
 	{
 		timespec time;
-    		clock_gettime(CLOCK_REALTIME, &time);
-		return time.tv_sec * 1000000000LL + time.tv_nsec;
+    	clock_gettime(CLOCK_REALTIME, &time);
+		return (uint64_t)(time.tv_sec * 1000000000LL + time.tv_nsec);
 	}
 
 	inline uint64_t begin_cycle_count()
