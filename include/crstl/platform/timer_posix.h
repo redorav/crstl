@@ -1,3 +1,7 @@
+#pragma once
+
+#include "crstl/crstldef.h"
+
 #include <time.h>
 
 // https://gist.github.com/savanovich/f07eda9dba9300eb9ccf

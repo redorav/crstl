@@ -1,3 +1,7 @@
+#pragma once
+
+#include "crstl/crstldef.h"
+
 union _LARGE_INTEGER;
 
 extern "C"
