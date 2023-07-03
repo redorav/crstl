@@ -34,26 +34,22 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 reference at(size_type i) crstl_noexcept
 		{
-			crstl_assert(i < m_length);
-			return m_data[i];
+			return crstl_assert(i < m_length), m_data[i];
 		}
 
 		crstl_constexpr const_reference at(size_type i) const crstl_noexcept
 		{
-			crstl_assert(i < m_length);
-			return m_data[i];
+			return crstl_assert(i < m_length), m_data[i];
 		}
 
 		crstl_constexpr14 reference back() crstl_noexcept
 		{
-			crstl_assert(m_length > 0);
-			return m_data[m_length - 1];
+			return crstl_assert(m_length > 0), m_data[m_length - 1];
 		}
 
 		crstl_constexpr const_reference back() const crstl_noexcept
 		{
-			crstl_assert(m_length > 0);
-			return m_data[m_length - 1];
+			return crstl_assert(m_length > 0), m_data[m_length - 1];
 		}
 
 		crstl_constexpr14 iterator begin() crstl_noexcept { return m_data; }
@@ -133,8 +129,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr basic_string_view substr(size_t pos, size_t length = npos) const crstl_noexcept
 		{
-			crstl_assert(pos < m_length);
-			return basic_string_view(m_data + pos, clamp_length(pos, length));
+			return crstl_assert(pos < m_length), basic_string_view(m_data + pos, clamp_length(pos, length));
 		}
 
 		//----------
@@ -143,14 +138,12 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 reference operator [](size_type i)
 		{
-			crstl_assert(i < m_length);
-			return m_data[i];
+			return crstl_assert(i < m_length), m_data[i];
 		}
 
 		crstl_constexpr const_reference operator [](size_type i) const crstl_noexcept
 		{
-			crstl_assert(i < m_length);
-			return m_data[i];
+			return crstl_assert(i < m_length), m_data[i];
 		}
 
 		crstl_constexpr bool operator == (const basic_string_view& sv) const crstl_noexcept

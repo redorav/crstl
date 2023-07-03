@@ -200,20 +200,13 @@
 
 #if defined(CRSTL_ENABLE_ASSERT)
 
-inline void crstl_assert_impl(bool condition)
-{
-	if (!condition)
-	{
-		int* p = (int*)(int)(0xDEADC0DE);
-		*p = 0;
-	}
-}
-
-#define crstl_assert(x) crstl_assert_impl((x))
+// We make the macro a little convoluted to make sure it can run in constexpr scenarios
+// For more information see https://akrzemi1.wordpress.com/2017/05/18/asserts-in-constexpr-functions/
+#define crstl_assert(x) ((x) ? void(0) : [] { int* p = (int*)(int)(0xDEADC0DE); *p = 0; }())
 
 #else
 
-#define crstl_assert(x)
+#define crstl_assert(x) void(0)
 
 #endif
 

@@ -142,14 +142,12 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 reference at(size_t i) crstl_noexcept
 		{
-			crstl_assert(i < m_length);
-			return m_data[i];
+			return crstl_assert(i < m_length), m_data[i];
 		}
 
 		crstl_constexpr const_reference at(size_t i) const crstl_noexcept
 		{
-			crstl_assert(i < m_length);
-			return m_data[i];
+			return crstl_assert(i < m_length), m_data[i];
 		}
 
 		//-------
@@ -370,14 +368,12 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 reference back() crstl_noexcept
 		{
-			crstl_assert(m_length > 0);
-			return m_data[m_length - 1];
+			return crstl_assert(m_length > 0), m_data[m_length - 1];
 		}
 
 		crstl_constexpr const_reference back() const crstl_noexcept
 		{
-			crstl_assert(m_length > 0);
-			return m_data[m_length - 1];
+			return crstl_assert(m_length > 0), m_data[m_length - 1];
 		}
 
 		crstl_constexpr14 iterator begin() crstl_noexcept { return &m_data[0]; }
@@ -414,14 +410,14 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr int compare(size_t pos, size_t length, const CharT* string) const crstl_noexcept
 		{
-			crstl_assert(pos < m_length);
-			return crstl::string_compare(m_data + pos, clamp_length(pos, length), string, string_length(string));
+			return crstl_assert(pos < m_length),
+			crstl::string_compare(m_data + pos, clamp_length(pos, length), string, string_length(string));
 		}
 
 		crstl_constexpr int compare(size_t pos, size_t length, const CharT* string, size_t subpos, size_t sublen = npos) const crstl_noexcept
 		{
-			crstl_assert(pos < m_length);
-			return crstl::string_compare(m_data + pos, clamp_length(pos, length), string + subpos, crstl::string_clamp_length(string_length(string), subpos, sublen));
+			return crstl_assert(pos < m_length), 
+			crstl::string_compare(m_data + pos, clamp_length(pos, length), string + subpos, crstl::string_clamp_length(string_length(string), subpos, sublen));
 		}
 
 		crstl_constexpr int compare(const basic_fixed_string& string) const crstl_noexcept
@@ -431,14 +427,12 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr int compare(size_t pos, size_t length, const basic_fixed_string& string) const crstl_noexcept
 		{
-			crstl_assert(pos < m_length);
-			return crstl::string_compare(m_data + pos, clamp_length(pos, length), string.m_data, string.m_length);
+			return crstl_assert(pos < m_length), crstl::string_compare(m_data + pos, clamp_length(pos, length), string.m_data, string.m_length);
 		}
 
 		crstl_constexpr int compare(size_t pos, size_t length, const basic_fixed_string& string, size_t subpos, size_t sublen = npos) const crstl_noexcept
 		{
-			crstl_assert(pos < m_length);
-			return crstl::string_compare(m_data + pos, clamp_length(pos, length), string.m_data + subpos, string.clamp_length(subpos, sublen));
+			return crstl_assert(pos < m_length), crstl::string_compare(m_data + pos, clamp_length(pos, length), string.m_data + subpos, string.clamp_length(subpos, sublen));
 		}
 
 		//---------
@@ -452,14 +446,12 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr int comparei(size_t pos, size_t length, const CharT* string) const crstl_noexcept
 		{
-			crstl_assert(pos < m_length);
-			return crstl::string_comparei(m_data + pos, clamp_length(pos, length), string, string_length(string));
+			return crstl_assert(pos < m_length), crstl::string_comparei(m_data + pos, clamp_length(pos, length), string, string_length(string));
 		}
 
 		crstl_constexpr int comparei(size_t pos, size_t length, const CharT* string, size_t subpos, size_t sublen = npos) const crstl_noexcept
 		{
-			crstl_assert(pos < m_length);
-			return crstl::string_comparei(m_data + pos, clamp_length(pos, length), string + subpos, crstl::string_clamp_length(string_length(string), subpos, sublen));
+			return crstl_assert(pos < m_length), crstl::string_comparei(m_data + pos, clamp_length(pos, length), string + subpos, crstl::string_clamp_length(string_length(string), subpos, sublen));
 		}
 
 		crstl_constexpr int comparei(const basic_fixed_string& string) const crstl_noexcept
@@ -469,14 +461,12 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr int comparei(size_t pos, size_t length, const basic_fixed_string& string) const crstl_noexcept
 		{
-			crstl_assert(pos < m_length);
-			return crstl::string_comparei(m_data + pos, clamp_length(pos, length), string.m_data, string.m_length);
+			return crstl_assert(pos < m_length), crstl::string_comparei(m_data + pos, clamp_length(pos, length), string.m_data, string.m_length);
 		}
 
 		crstl_constexpr int comparei(size_t pos, size_t length, const basic_fixed_string& string, size_t subpos, size_t sublen = npos) const crstl_noexcept
 		{
-			crstl_assert(pos < m_length);
-			return crstl::string_comparei(m_data + pos, clamp_length(pos, length), string.m_data + subpos, string.clamp_length(subpos, sublen));
+			return crstl_assert(pos < m_length), crstl::string_comparei(m_data + pos, clamp_length(pos, length), string.m_data + subpos, string.clamp_length(subpos, sublen));
 		}
 
 		crstl_constexpr14 pointer data() crstl_noexcept { return m_data; }
@@ -526,7 +516,7 @@ crstl_module_export namespace crstl
 		//-----
 
 		// Find a character
-		crstl_constexpr size_t find(value_type c, size_t pos = 0) const crstl_noexcept
+		crstl_constexpr14 size_t find(value_type c, size_t pos = 0) const crstl_noexcept
 		{
 			crstl_assert(pos <= m_length);
 			const_pointer ptr = (const_pointer)crstl::string_find_char(m_data + pos, c, m_length - pos);
@@ -534,19 +524,19 @@ crstl_module_export namespace crstl
 		}
 
 		// Find a const char* string with an offset and a length
-		crstl_constexpr size_t find(const_pointer needle_string, size_t pos, size_t needle_length) const crstl_noexcept
+		crstl_constexpr14 size_t find(const_pointer needle_string, size_t pos, size_t needle_length) const crstl_noexcept
 		{
 			crstl_assert(pos <= m_length);
 			const_pointer found_string = crstl::string_find(m_data + pos, m_length - pos, needle_string, needle_length);
 			return found_string ? (size_t)(found_string - m_data) : npos;
 		}
 
-		crstl_constexpr size_t find(const_pointer needle_string, size_t pos = 0) const crstl_noexcept
+		crstl_constexpr14 size_t find(const_pointer needle_string, size_t pos = 0) const crstl_noexcept
 		{
 			return find(needle_string, pos, crstl::string_length(needle_string));
 		}
 
-		crstl_constexpr size_t find(const basic_fixed_string& needle_string, size_t pos = 0) const crstl_noexcept
+		crstl_constexpr14 size_t find(const basic_fixed_string& needle_string, size_t pos = 0) const crstl_noexcept
 		{
 			return find(needle_string.m_data, pos, needle_string.m_length);
 		}
@@ -555,24 +545,24 @@ crstl_module_export namespace crstl
 		// find_first_of
 		//--------------
 
-		crstl_constexpr size_t find_first_of(const_pointer needle_string, size_t pos, size_t needle_length) const crstl_noexcept
+		crstl_constexpr14 size_t find_first_of(const_pointer needle_string, size_t pos, size_t needle_length) const crstl_noexcept
 		{
 			crstl_assert(pos < m_length);
 			const_pointer found_string = crstl::string_find_of(m_data + pos, m_length - pos, needle_string, needle_length);
 			return found_string ? (size_t)(found_string - m_data) : npos;
 		}
 
-		crstl_constexpr size_t find_first_of(const_pointer needle_string, size_t pos = 0) const crstl_noexcept
+		crstl_constexpr14 size_t find_first_of(const_pointer needle_string, size_t pos = 0) const crstl_noexcept
 		{
 			return find_first_of(needle_string, pos, crstl::string_length(needle_string));
 		}
 
-		crstl_constexpr size_t find_first_of(const basic_fixed_string& needle_string, size_t pos = 0) const crstl_noexcept
+		crstl_constexpr14 size_t find_first_of(const basic_fixed_string& needle_string, size_t pos = 0) const crstl_noexcept
 		{
 			return find_first_of(needle_string.c_str(), pos, needle_string.length());
 		}
 
-		crstl_constexpr size_t find_first_of(value_type c, size_t pos = 0) const crstl_noexcept
+		crstl_constexpr14 size_t find_first_of(value_type c, size_t pos = 0) const crstl_noexcept
 		{
 			return find(c, pos);
 		}
@@ -581,24 +571,24 @@ crstl_module_export namespace crstl
 		// find_last_of
 		//-------------
 
-		crstl_constexpr size_t find_last_of(const_pointer needle_string, size_t pos, size_t needle_length) const crstl_noexcept
+		crstl_constexpr14 size_t find_last_of(const_pointer needle_string, size_t pos, size_t needle_length) const crstl_noexcept
 		{
 			pos = pos < m_length ? pos : m_length;
 			const_pointer found_string = crstl::string_rfind_of(m_data + pos, pos, needle_string, needle_length);
 			return found_string ? (size_t)(found_string - m_data) : npos;
 		}
 
-		crstl_constexpr size_t find_last_of(const_pointer needle_string, size_t pos = npos) const crstl_noexcept
+		crstl_constexpr14 size_t find_last_of(const_pointer needle_string, size_t pos = npos) const crstl_noexcept
 		{
 			return find_last_of(needle_string, pos, crstl::string_length(needle_string));
 		}
 
-		crstl_constexpr size_t find_last_of(const basic_fixed_string& needle_string, size_t pos = npos) const crstl_noexcept
+		crstl_constexpr14 size_t find_last_of(const basic_fixed_string& needle_string, size_t pos = npos) const crstl_noexcept
 		{
 			return find_last_of(needle_string.c_str(), pos, needle_string.length());
 		}
 
-		crstl_constexpr size_t find_last_of(value_type c, size_t pos = npos) const crstl_noexcept
+		crstl_constexpr14 size_t find_last_of(value_type c, size_t pos = npos) const crstl_noexcept
 		{
 			return rfind(c, pos);
 		}
@@ -762,14 +752,12 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 reference operator [](size_t i)
 		{
-			crstl_assert(i < m_length);
-			return m_data[i];
+			return crstl_assert(i < m_length), m_data[i];
 		}
 
 		crstl_constexpr const_reference operator [](size_t i) const crstl_noexcept
 		{
-			crstl_assert(i < m_length);
-			return m_data[i];
+			return crstl_assert(i < m_length), m_data[i];
 		}
 
 		crstl_constexpr14 basic_fixed_string& operator += (const basic_fixed_string& string) crstl_noexcept

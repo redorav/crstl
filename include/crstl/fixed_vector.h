@@ -133,11 +133,11 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
-		crstl_constexpr14 reference at(size_t i) { crstl_assert(i < m_length); return m_data[i]; }
-		crstl_constexpr const_reference at(size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
+		crstl_constexpr14 reference at(size_t i) { return crstl_assert(i < m_length), m_data[i]; }
+		crstl_constexpr const_reference at(size_t i) const { return crstl_assert(i < m_length), m_data[i]; }
 
-		crstl_constexpr14 reference back() { crstl_assert(m_length > 0); return m_data[m_length - 1]; }
-		crstl_constexpr const_reference back() const { crstl_assert(m_length > 0); return m_data[m_length - 1]; }
+		crstl_constexpr14 reference back() { return crstl_assert(m_length > 0), m_data[m_length - 1]; }
+		crstl_constexpr const_reference back() const { return crstl_assert(m_length > 0), m_data[m_length - 1]; }
 
 		crstl_constexpr14 iterator begin() { return &m_data[0]; }
 		crstl_constexpr const_iterator begin() const { return &m_data[0]; }
@@ -381,9 +381,9 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		crstl_constexpr14 reference operator [] (size_t i) { crstl_assert(i < m_length); return m_data[i]; }
+		crstl_constexpr14 reference operator [] (size_t i) { return crstl_assert(i < m_length), m_data[i]; }
 
-		crstl_constexpr const_reference operator [] (size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
+		crstl_constexpr const_reference operator [] (size_t i) const { return crstl_assert(i < m_length), m_data[i]; }
 
 		//---------------------
 		// Comparison Operators

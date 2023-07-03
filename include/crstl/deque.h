@@ -181,7 +181,7 @@ crstl_module_export namespace crstl
 			return m_chunk_array[global_begin / ChunkSize]->m_data[global_begin - (global_begin / ChunkSize) * ChunkSize];
 		}
 
-		crstl_constexpr const_reference at(size_t i) const
+		crstl_constexpr14 const_reference at(size_t i) const
 		{
 			crstl_assert(i < m_length);
 			size_t global_begin = m_chunk_begin * ChunkSize + m_local_begin + i;
@@ -190,14 +190,12 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 reference back()
 		{
-			crstl_assert(m_length > 0);
-			return m_chunk_array[m_local_end - 1 > kLastChunkElement ? m_chunk_end - 1 : m_chunk_end]->m_data[m_local_end - 1 > kLastChunkElement ? kLastChunkElement : m_local_end - 1];
+			return crstl_assert(m_length > 0), m_chunk_array[m_local_end - 1 > kLastChunkElement ? m_chunk_end - 1 : m_chunk_end]->m_data[m_local_end - 1 > kLastChunkElement ? kLastChunkElement : m_local_end - 1];
 		}
 
 		crstl_constexpr const_reference back() const
 		{
-			crstl_assert(m_length > 0);
-			return m_chunk_array[m_local_end - 1 > kLastChunkElement ? m_chunk_end - 1 : m_chunk_end]->m_data[m_local_end - 1 > kLastChunkElement ? kLastChunkElement : m_local_end - 1];
+			return crstl_assert(m_length > 0), m_chunk_array[m_local_end - 1 > kLastChunkElement ? m_chunk_end - 1 : m_chunk_end]->m_data[m_local_end - 1 > kLastChunkElement ? kLastChunkElement : m_local_end - 1];
 		}
 
 		crstl_constexpr14 iterator begin() { return iterator(m_chunk_array, m_chunk_begin, m_local_begin); }
@@ -254,8 +252,8 @@ crstl_module_export namespace crstl
 		crstl_constexpr const_iterator end() const { return iterator(m_chunk_array, m_chunk_end, m_local_end); }
 		crstl_constexpr const_iterator cend() const { return iterator(m_chunk_array, m_chunk_end, m_local_end); }
 		
-		crstl_constexpr14 reference front() { crstl_assert(m_length > 0); return m_chunk_array[m_chunk_begin]->m_data[m_local_begin]; }
-		crstl_constexpr const_reference front() const { crstl_assert(m_length > 0); return m_chunk_array[m_chunk_begin]->m_data[m_local_begin]; }
+		crstl_constexpr14 reference front() { return crstl_assert(m_length > 0), m_chunk_array[m_chunk_begin]->m_data[m_local_begin]; }
+		crstl_constexpr const_reference front() const { return crstl_assert(m_length > 0), m_chunk_array[m_chunk_begin]->m_data[m_local_begin]; }
 
 		crstl_constexpr14 void pop_back()
 		{
@@ -444,7 +442,7 @@ crstl_module_export namespace crstl
 			return m_chunk_array[global_begin / ChunkSize]->m_data[global_begin - (global_begin / ChunkSize) * ChunkSize];
 		}
 
-		crstl_constexpr const_reference operator [] (size_t i) const
+		crstl_constexpr14 const_reference operator [] (size_t i) const
 		{
 			crstl_assert(i < m_length);
 			size_t global_begin = m_chunk_begin * ChunkSize + m_local_begin + i;
