@@ -150,7 +150,7 @@ crstl_module_export namespace crstl
 			m_chunk_begin = 0;
 			m_local_begin = 0;
 
-			iterate(0, initial_size, [&](T& data)
+			iterate(0, (ptrdiff_t)initial_size, [&](T& data)
 			{
 				::new((void*)&data) T(value);
 			});
@@ -363,7 +363,7 @@ crstl_module_export namespace crstl
 			{
 				request_capacity_back(length - m_capacity_allocator.m_first);
 				
-				iterate(m_length, length, [&](T& data)
+				iterate((ptrdiff_t)m_length, (ptrdiff_t)length, [&](T& data)
 				{
 					::new((void*)&data) T();
 				});
@@ -377,7 +377,7 @@ crstl_module_export namespace crstl
 			{
 				crstl_constexpr_if(!crstl_is_trivially_destructible(T))
 				{
-					iterate(length, m_length, [&](T& data)
+					iterate((ptrdiff_t)length, (ptrdiff_t)m_length, [&](T& data)
 					{
 						data.~T();
 					});
@@ -454,7 +454,7 @@ crstl_module_export namespace crstl
 		template<typename Function>
 		crstl_constexpr14 void iterate(ptrdiff_t begin, ptrdiff_t end, Function function)
 		{
-			ptrdiff_t global_offset = m_chunk_begin * ChunkSize + m_local_begin;
+			ptrdiff_t global_offset = (ptrdiff_t)(m_chunk_begin * ChunkSize + m_local_begin);
 
 			for (ptrdiff_t i = begin; i < end; ++i)
 			{

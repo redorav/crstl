@@ -14,13 +14,12 @@
 
 // Compiler
 
+// Clang can define the GNU flags but not the other way around, so we enforce this ordering
 #if defined(__clang__)
 
 	#define CRSTL_COMPILER_CLANG
 
-#endif
-
-#if defined(__GNUG__) || defined(__GNUC__)
+#elif defined(__GNUG__) || defined(__GNUC__)
 
 	#define CRSTL_COMPILER_GCC
 
