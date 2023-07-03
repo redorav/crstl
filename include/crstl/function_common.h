@@ -80,7 +80,7 @@ namespace crstl
 
 			crstl_constexpr_if(static_local)
 			{
-				::new (destination.data()) FunctorT(crstl::forward<Fn>(fn));
+				crstl_placement_new(destination.data()) FunctorT(crstl::forward<Fn>(fn));
 			}
 			else
 			{

@@ -152,7 +152,7 @@ crstl_module_export namespace crstl
 
 			iterate(0, (ptrdiff_t)initial_size, [&](T& data)
 			{
-				::new((void*)&data) T(value);
+				crstl_placement_new((void*)&data) T(value);
 			});
 
 			m_capacity_allocator.m_first = chunk_count * ChunkSize;
@@ -228,7 +228,7 @@ crstl_module_export namespace crstl
 		{
 			request_capacity_back(1);
 			reference data = m_chunk_array[m_chunk_end]->m_data[m_local_end];
-			::new((void*)&data) T(crstl::forward<Args>(args)...);
+			crstl_placement_new((void*)&data) T(crstl::forward<Args>(args)...);
 			increment_back();
 			return data;
 		}
@@ -239,7 +239,7 @@ crstl_module_export namespace crstl
 			request_capacity_front(1);
 			increment_front();
 			reference data = m_chunk_array[m_chunk_begin]->m_data[m_local_begin]; 
-			::new((void*)&data) T(crstl::forward<Args>(args)...);
+			crstl_placement_new((void*)&data) T(crstl::forward<Args>(args)...);
 			return data;
 		}
 
@@ -277,7 +277,7 @@ crstl_module_export namespace crstl
 		{
 			request_capacity_back(1);
 			reference data = m_chunk_array[m_chunk_end]->m_data[m_local_end];
-			::new((void*)&data) T();
+			crstl_placement_new((void*)&data) T();
 			increment_back();
 			return data;
 		}
@@ -286,7 +286,7 @@ crstl_module_export namespace crstl
 		{
 			request_capacity_back(1);
 			reference data = m_chunk_array[m_chunk_end]->m_data[m_local_end];
-			::new((void*)&data) T(v);
+			crstl_placement_new((void*)&data) T(v);
 			increment_back();
 			return data;
 		}
@@ -295,7 +295,7 @@ crstl_module_export namespace crstl
 		{
 			request_capacity_back(1);
 			reference data = m_chunk_array[m_chunk_end]->m_data[m_local_end];
-			::new((void*)&data) T(crstl::move(v));
+			crstl_placement_new((void*)&data) T(crstl::move(v));
 			increment_back();
 			return data;
 		}
@@ -317,7 +317,7 @@ crstl_module_export namespace crstl
 			request_capacity_front(1);
 			increment_front();
 			reference data = m_chunk_array[m_chunk_begin]->m_data[m_local_begin];
-			::new((void*)&data) T();
+			crstl_placement_new((void*)&data) T();
 			return data;
 		}
 
@@ -326,7 +326,7 @@ crstl_module_export namespace crstl
 			request_capacity_front(1);
 			increment_front();
 			reference data = m_chunk_array[m_chunk_begin]->m_data[m_local_begin];
-			::new((void*)&data) T(v);
+			crstl_placement_new((void*)&data) T(v);
 			return data;
 		}
 
@@ -335,7 +335,7 @@ crstl_module_export namespace crstl
 			request_capacity_front(1);
 			increment_front();
 			reference data = m_chunk_array[m_chunk_begin]->m_data[m_local_begin];
-			::new((void*)&data) T(crstl::move(v));
+			crstl_placement_new((void*)&data) T(crstl::move(v));
 			return data;
 		}
 
@@ -365,7 +365,7 @@ crstl_module_export namespace crstl
 				
 				iterate((ptrdiff_t)m_length, (ptrdiff_t)length, [&](T& data)
 				{
-					::new((void*)&data) T();
+					crstl_placement_new((void*)&data) T();
 				});
 
 				size_t global_end = m_chunk_begin * ChunkSize + m_local_begin + length;
@@ -403,7 +403,7 @@ crstl_module_export namespace crstl
 
 				iterate(-capacity_increment, 0, [&](T& data)
 				{
-					::new((void*)&data) T();
+					crstl_placement_new((void*)&data) T();
 				});
 
 				size_t global_begin = m_chunk_begin * ChunkSize + m_local_begin - capacity_increment;

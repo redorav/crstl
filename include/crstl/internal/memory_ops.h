@@ -61,7 +61,7 @@ namespace crstl
 		{
 			for (size_t i = 0; i < count; ++i)
 			{
-				::new((void*)&destination[i]) T(source[i]);
+				crstl_placement_new((void*)&destination[i]) T(source[i]);
 			}
 		}
 	};

@@ -88,7 +88,7 @@ crstl_module_export namespace crstl
 
 			for (size_t i = 0; i < iter_length; ++i)
 			{
-				::new((void*)&m_data[i]) T(iter1[i]);
+				crstl_placement_new((void*)&m_data[i]) T(iter1[i]);
 			}
 
 			m_length = (length_type)iter_length;
@@ -126,7 +126,7 @@ crstl_module_export namespace crstl
 
 			for (size_t i = 0; i < other.m_length; ++i)
 			{
-				::new((void*)&m_data[i]) T(crstl::move(other.m_data[i]));
+				crstl_placement_new((void*)&m_data[i]) T(crstl::move(other.m_data[i]));
 			}
 
 			other.m_length = 0;
@@ -166,42 +166,42 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 reference emplace_back(Args&&... args)
 		{
 			crstl_assert(m_length < NumElements);
-			::new((void*)&m_data[m_length]) T(crstl::forward<Args>(args)...);
+			crstl_placement_new((void*)&m_data[m_length]) T(crstl::forward<Args>(args)...);
 			m_length++;
 			return back();
 		}
 #else
 		template<typename Arg0> reference emplace_back(Arg0&& arg0)
 		{
-			crstl_assert(m_length < NumElements); ::new((void*)&m_data[m_length]) T(crstl::forward<Arg0>(arg0)); m_length++; return back();
+			crstl_assert(m_length < NumElements); crstl_placement_new((void*)&m_data[m_length]) T(crstl::forward<Arg0>(arg0)); m_length++; return back();
 		}
 		
 		template<typename Arg0, typename Arg1> reference emplace_back(Arg0&& arg0, Arg1&& arg1)
 		{
-			crstl_assert(m_length < NumElements); ::new((void*)&m_data[m_length]) T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1)); m_length++; return back();
+			crstl_assert(m_length < NumElements); crstl_placement_new((void*)&m_data[m_length]) T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1)); m_length++; return back();
 		}
 		
 		template<typename Arg0, typename Arg1, typename Arg2> reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2)
 		{
-			crstl_assert(m_length < NumElements); ::new((void*)&m_data[m_length]) T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2)); m_length++; return back();
+			crstl_assert(m_length < NumElements); crstl_placement_new((void*)&m_data[m_length]) T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2)); m_length++; return back();
 		}
 
 		template<typename Arg0, typename Arg1, typename Arg2, typename Arg3> reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2, Arg3&& arg3)
 		{
-			crstl_assert(m_length < NumElements); ::new((void*)&m_data[m_length]) T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3));
+			crstl_assert(m_length < NumElements); crstl_placement_new((void*)&m_data[m_length]) T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3));
 			m_length++; return back();
 		}
 
 		template<typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4> reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2, Arg3&& arg3, Arg4&& arg4)
 		{
-			crstl_assert(m_length < NumElements); ::new((void*)&m_data[m_length]) 
+			crstl_assert(m_length < NumElements); crstl_placement_new((void*)&m_data[m_length])
 				T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3), crstl::forward<Arg4>(arg4));
 			m_length++; return back();
 		}
 
 		template<typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5> reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2, Arg3&& arg3, Arg4&& arg4, Arg5&& arg5)
 		{
-			crstl_assert(m_length < NumElements); ::new((void*)&m_data[m_length]) 
+			crstl_assert(m_length < NumElements); crstl_placement_new((void*)&m_data[m_length])
 				T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3), crstl::forward<Arg4>(arg4), crstl::forward<Arg5>(arg5));
 			m_length++; return back();
 		}
@@ -209,7 +209,7 @@ crstl_module_export namespace crstl
 		template<typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6>
 		reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2, Arg3&& arg3, Arg4&& arg4, Arg5&& arg5, Arg6&& arg6)
 		{
-			crstl_assert(m_length < NumElements); ::new((void*)&m_data[m_length]) 
+			crstl_assert(m_length < NumElements); crstl_placement_new((void*)&m_data[m_length])
 				T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3), crstl::forward<Arg4>(arg4), crstl::forward<Arg5>(arg5), crstl::forward<Arg6>(arg6));
 			m_length++; return back();
 		}
@@ -217,7 +217,7 @@ crstl_module_export namespace crstl
 		template<typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6, typename Arg7>
 		reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2, Arg3&& arg3, Arg4&& arg4, Arg5&& arg5, Arg6&& arg6, Arg7&& arg7)
 		{
-			crstl_assert(m_length < NumElements); ::new((void*)&m_data[m_length]) 
+			crstl_assert(m_length < NumElements); crstl_placement_new((void*)&m_data[m_length])
 				T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3), crstl::forward<Arg4>(arg4), 
 				crstl::forward<Arg5>(arg5), crstl::forward<Arg6>(arg6), crstl::forward<Arg7>(arg7));
 			m_length++; return back();
@@ -226,7 +226,7 @@ crstl_module_export namespace crstl
 		template<typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6, typename Arg7, typename Arg8>
 		reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2, Arg3&& arg3, Arg4&& arg4, Arg5&& arg5, Arg6&& arg6, Arg7&& arg7, Arg8&& arg8)
 		{
-			crstl_assert(m_length < NumElements); ::new((void*)&m_data[m_length]) 
+			crstl_assert(m_length < NumElements); crstl_placement_new((void*)&m_data[m_length])
 				T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3), crstl::forward<Arg4>(arg4), 
 				crstl::forward<Arg5>(arg5), crstl::forward<Arg6>(arg6), crstl::forward<Arg7>(arg7), crstl::forward<Arg8>(arg8));
 			m_length++; return back();
@@ -235,7 +235,7 @@ crstl_module_export namespace crstl
 		template<typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6, typename Arg7, typename Arg8, typename Arg9>
 		reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2, Arg3&& arg3, Arg4&& arg4, Arg5&& arg5, Arg6&& arg6, Arg7&& arg7, Arg8&& arg8, Arg9&& arg9)
 		{
-			crstl_assert(m_length < NumElements); ::new((void*)&m_data[m_length]) 
+			crstl_assert(m_length < NumElements); crstl_placement_new((void*)&m_data[m_length])
 				T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3), crstl::forward<Arg4>(arg4), 
 				crstl::forward<Arg5>(arg5), crstl::forward<Arg6>(arg6), crstl::forward<Arg7>(arg7), crstl::forward<Arg8>(arg8), crstl::forward<Arg9>(arg9));
 			m_length++; return back();
@@ -269,7 +269,7 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 reference push_back()
 		{
 			crstl_assert(m_length < NumElements);
-			::new((void*)&m_data[m_length]) T();
+			crstl_placement_new((void*)&m_data[m_length]) T();
 			m_length++;
 			return back();
 		}
@@ -284,14 +284,14 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 void push_back(const T& v)
 		{
 			crstl_assert(m_length < NumElements);
-			::new((void*)&m_data[m_length]) T(v);
+			crstl_placement_new((void*)&m_data[m_length]) T(v);
 			m_length++;
 		}
 
 		crstl_constexpr14 void push_back(T&& v)
 		{
 			crstl_assert(m_length < NumElements);
-			::new((void*)&m_data[m_length]) T(crstl::move(v));
+			crstl_placement_new((void*)&m_data[m_length]) T(crstl::move(v));
 			m_length++;
 		}
 
@@ -307,7 +307,7 @@ crstl_module_export namespace crstl
 			{
 				for (size_t i = m_length; i < length; ++i)
 				{
-					::new((void*)&m_data[i]) T();
+					crstl_placement_new((void*)&m_data[i]) T();
 				}
 			}
 			else if ((size_t)m_length > length)
@@ -329,7 +329,7 @@ crstl_module_export namespace crstl
 			{
 				for (size_t i = m_length; i < length; ++i)
 				{
-					::new((void*)&m_data[i]) T(value);
+					crstl_placement_new((void*)&m_data[i]) T(value);
 				}
 			}
 			else if ((size_t)m_length > length)

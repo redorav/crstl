@@ -39,12 +39,21 @@ extern "C"
 #endif
 }
 
-extern "C++"
+// Create our own placement new to avoid including header <new> which is quite heavy
+// We pass in a dummy parameter to disambiguate from the global placement new. The
+// macro is there just for convenience
+namespace crstl
 {
-	// Forward declare placement new
-	crstl_nodiscard void* operator new  (crstl::size_t count, void* ptr) crstl_noexcept;
-	crstl_nodiscard void* operator new[](crstl::size_t count, void* ptr) crstl_noexcept;
+	enum placement_new
+	{
+		placement_new_dummy
+	};
 }
+
+crstl_nodiscard inline void* operator new (crstl::size_t, void* ptr, crstl::placement_new) crstl_noexcept { return ptr; }
+inline void operator delete (void*, void*, crstl::placement_new) crstl_noexcept {}
+
+#define crstl_placement_new(x) ::new(x, crstl::placement_new_dummy)
 
 #if defined(CRSTL_COMPILER_MSVC)
 #define crstl_alloca(size) (_alloca(size))
