@@ -39,12 +39,14 @@ extern "C"
 #endif
 }
 
+#if defined(CRSTL_COMPILER_MSVC)
 extern "C++"
 {
 	// Forward declare placement new
 	crstl_nodiscard void* operator new  (crstl::size_t count, void* ptr) crstl_noexcept;
 	crstl_nodiscard void* operator new[](crstl::size_t count, void* ptr) crstl_noexcept;
 }
+#endif
 
 #if defined(CRSTL_COMPILER_MSVC)
 #define crstl_alloca(size) (_alloca(size))
