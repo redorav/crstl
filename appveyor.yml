@@ -88,22 +88,22 @@ build_script:
         set -e;
         make all config=release_linux64_gcc_c++11;
         popd; fi;
-  - sh: if [[ $platform = "Linux64 Clang C++11" ]]; then 
+        if [[ $platform = "Linux64 Clang C++11" ]]; then 
         pushd workspace/gmake2;
         set -e;
         make all config=release_linux64_clang_c++11;
         popd; fi;
-  - sh: if [[ $platform = "Linux64 GCC C++14" ]]; then 
+        if [[ $platform = "Linux64 GCC C++14" ]]; then 
         pushd workspace/gmake2;
         set -e;
         make all config=release_linux64_gcc_c++14;
         popd; fi;
-  - sh: if [[ $platform = "Linux64 Clang C++14" ]]; then 
+        if [[ $platform = "Linux64 Clang C++14" ]]; then 
         pushd workspace/gmake2;
         set -e;
         make all config=release_linux64_clang_c++14;
         popd; fi;
-  - sh: if [[ $platform = "OSX64 Clang C++11" ] || [ $platform = "OSX64 Clang C++14" ]]; then 
+        if [[ $platform = "OSX64 Clang C++11" ]] || [[ $platform = "OSX64 Clang C++14" ]]; then 
         pushd workspace/xcode4;
         set -e;
         xcodebuild build -project unit_tests.xcodeproj -configuration Release;
