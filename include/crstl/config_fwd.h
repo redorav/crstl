@@ -39,7 +39,7 @@ extern "C"
 #endif
 }
 
-#if defined(CRSTL_COMPILER_MSVC)
+#if !defined(CRSTL_OSX)
 extern "C++"
 {
 	// Forward declare placement new
