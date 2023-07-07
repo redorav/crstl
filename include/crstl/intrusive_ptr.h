@@ -177,7 +177,7 @@ crstl_module_export namespace crstl
 	public:
 
 		template<typename Q>
-		void delete_callback()
+		void intrusive_delete_callback()
 		{
 			delete (Q*)this;
 		}
