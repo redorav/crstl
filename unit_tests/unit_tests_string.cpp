@@ -366,6 +366,9 @@ void RunUnitTestsString()
 			crStringReplace.replace(6, 1, 20, 'k');
 			stdStringReplace.replace(6, 1, 20, 'k');
 			crstl_check(crStringReplace.size() == stdStringReplace.size());
+
+			crStringReplace = "Hello String";
+			crStringReplace.replace(1, 1, 1, 'c');
 		}
 
 		// reserve
