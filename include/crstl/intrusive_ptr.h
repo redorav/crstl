@@ -21,7 +21,7 @@ crstl_module_export namespace crstl
 
 		if (currentRef == 0)
 		{
-			ptr->template intrusive_delete_callback<T>();
+			ptr->template intrusive_ptr_delete_callback<T>();
 		}
 	}
 
@@ -177,7 +177,7 @@ crstl_module_export namespace crstl
 	public:
 
 		template<typename Q>
-		void intrusive_delete_callback()
+		void intrusive_ptr_delete_callback()
 		{
 			delete (Q*)this;
 		}
