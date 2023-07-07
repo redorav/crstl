@@ -21,7 +21,7 @@ crstl_module_export namespace crstl
 
 		if (currentRef == 0)
 		{
-			ptr->template delete_callback<T>();
+			ptr->template intrusive_delete_callback<T>();
 		}
 	}
 
