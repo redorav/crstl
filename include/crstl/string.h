@@ -1153,11 +1153,12 @@ crstl_module_export namespace crstl
 			// Move the parts that would be stomped or leave gaps via memory_move, including the null terminator
 			if (is_sso())
 			{
+				data = m_layout_allocator.m_first.m_sso.data;
+
 				if (replace_difference != 0)
 				{
 					crstl_assert(dst_offset < kSSOCapacity);
 					crstl_assume(dst_offset < kSSOCapacity);
-					data = m_layout_allocator.m_first.m_sso.data;
 					memory_move(&data[dst_offset], &data[src_offset], bytes_to_move);
 				}
 
@@ -1166,9 +1167,10 @@ crstl_module_export namespace crstl
 			}
 			else
 			{
+				data = m_layout_allocator.m_first.m_heap.data;
+
 				if (replace_difference != 0)
 				{
-					data = m_layout_allocator.m_first.m_heap.data;
 					memory_move(&data[dst_offset], &data[src_offset], bytes_to_move);
 				}
 
