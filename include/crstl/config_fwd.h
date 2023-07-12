@@ -26,7 +26,7 @@
 	#define crstl_2015_dllimport
 #endif
 
-#if defined(CRSTL_LINUX)
+#if defined(CRSTL_OS_LINUX)
 #define crstl_linux_wthrow throw()
 #else
 #define crstl_linux_wthrow

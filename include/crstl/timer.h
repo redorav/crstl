@@ -4,15 +4,15 @@
 
 #include "crstl/crstldef.h"
 
-#if defined(CRSTL_WINDOWS)
+#if defined(CRSTL_OS_WINDOWS)
 #include "crstl/platform/timer_win32.h"
-#elif defined(CRSTL_LINUX) || defined(CRSTL_OSX)
+#elif defined(CRSTL_OS_LINUX) || defined(CRSTL_OS_OSX)
 #include "crstl/platform/timer_posix.h"
 #endif
 
 namespace crstl
 {
-#if defined(CRSTL_WINDOWS)
+#if defined(CRSTL_OS_WINDOWS)
 
 	template<typename = void>
 	struct timer_globals

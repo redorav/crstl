@@ -60,7 +60,7 @@ workspace('crstl')
 	}
 	
 	vectorextensions ('sse4.1')
-	cppdialect(cppDefaultDialects)
+	cppdialect(cppDefaultDialect)
 	flags { 'fatalcompilewarnings' }
 	
 	if(isMacBuild) then

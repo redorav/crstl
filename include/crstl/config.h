@@ -45,11 +45,11 @@
 
 #if defined(_M_ARM) || defined(__arm__) || defined(_M_ARM64) || defined(__aarch64__)
 
-	#define CRSTL_ARM
+	#define CRSTL_ARCH_ARM
 
 #elif defined(_WIN32)
 
-	#define CRSTL_X86_64
+	#define CRSTL_ARCH_X86_64
 
 #endif
 
@@ -57,15 +57,15 @@
 
 #if defined(_WIN32)
 
-	#define CRSTL_WINDOWS
+	#define CRSTL_OS_WINDOWS
 
 #elif defined(__linux__)
 
-	#define CRSTL_LINUX
+	#define CRSTL_OS_LINUX
 
 #elif defined(__APPLE__)
 
-	#define CRSTL_OSX
+	#define CRSTL_OS_OSX
 
 #endif
 

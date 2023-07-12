@@ -4,11 +4,11 @@
 
 #include "crstl/crstldef.h"
 
-#if defined(CRSTL_WINDOWS)
+#if defined(CRSTL_OS_WINDOWS)
 #include "crstl/platform/atomic_win32.h"
-#elif defined(CRSTL_ARM)
+#elif defined(CRSTL_ARCH_ARM)
 #include "crstl/platform/atomic_arm.h"
-#elif defined(CRSTL_LINUX) || defined(CRSTL_OSX)
+#elif defined(CRSTL_OS_LINUX) || defined(CRSTL_OS_OSX)
 #include "crstl/platform/atomic_clang_gcc.h"
 #endif
 
