@@ -26,12 +26,6 @@ crstl_module_export namespace crstl
 		template<typename O1, typename O2>
 		crstl_constexpr pair(O1&& first, O2&& second) crstl_noexcept : first(crstl::forward<O1>(first)), second(crstl::forward<O2>(second)) {}
 
-		template<typename O1, typename O2>
-		crstl_constexpr pair(const pair<O1, O2>& other) crstl_noexcept : first(other.first), second(other.second) {}
-
-		template<typename O1, typename O2>
-		crstl_constexpr pair(pair<O1, O2>&& other) crstl_noexcept : first(crstl::forward<O1>(other.first)), second(crstl::forward<O2>(other.second)) {}
-
 		crstl_constexpr bool operator == (const pair& other) const { return first == other.first && second == other.second; }
 		crstl_constexpr bool operator != (const pair& other) const { return !(*this == other); }
 		crstl_constexpr bool operator < (const pair& other) const { return first < other.first || (!(first < other.first) && second < other.second); }
