@@ -24,24 +24,24 @@ crstl_module_export namespace crstl
 		template<> struct sso_padding<0> {};
 	};
 
-	template<typename T, typename Allocator = crstl::allocator>
+	template<typename CharT, typename Allocator = crstl::allocator>
 	class basic_string
 	{
 	public:
 
-		typedef T        value_type;
-		typedef T&       reference;
-		typedef const T& const_reference;
-		typedef T*       pointer;
-		typedef const T* const_pointer;
-		typedef T*       iterator;
-		typedef const T* const_iterator;
-		typedef size_t   size_type;
+		typedef CharT        value_type;
+		typedef CharT&       reference;
+		typedef const CharT& const_reference;
+		typedef CharT*       pointer;
+		typedef const CharT* const_pointer;
+		typedef CharT*       iterator;
+		typedef const CharT* const_iterator;
+		typedef size_t       size_type;
 
 		// View of heap-allocated string
 		struct heap_view
 		{
-			T* data;
+			CharT* data;
 			size_t length;
 			size_t capacity;
 		};
@@ -69,7 +69,7 @@ crstl_module_export namespace crstl
 
 		static_assert(sizeof(heap_view) == sizeof(sso_view), "Size mismatch");
 
-		static const crstl_constexpr size_t kCharSize = sizeof(T);
+		static const crstl_constexpr size_t kCharSize = sizeof(CharT);
 
 		static const crstl_constexpr size_t kSSOCapacity = sizeof(sso_view) / sizeof(value_type) - 1;
 
@@ -154,7 +154,7 @@ crstl_module_export namespace crstl
 			append(string2, string2_length);
 		}
 
-		crstl_constexpr14 basic_string(ctor_concatenate, const T* string1, const basic_string& string2) crstl_noexcept : basic_string()
+		crstl_constexpr14 basic_string(ctor_concatenate, const CharT* string1, const basic_string& string2) crstl_noexcept : basic_string()
 		{
 			size_t string1_length = string_length(string1);
 			reserve(string1_length + string2.size());
@@ -176,7 +176,7 @@ crstl_module_export namespace crstl
 			initialize_string(string.c_str() + subpos, sublen);
 		}
 
-		crstl_constexpr14 basic_string(size_t n, T c) crstl_noexcept : basic_string()
+		crstl_constexpr14 basic_string(size_t n, CharT c) crstl_noexcept : basic_string()
 		{
 			append(n, c);
 		}
@@ -232,7 +232,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 basic_string& append(const_pointer string, size_t length)
 		{
-			append_function(length, [string, length](T* begin, T* /*end*/)
+			append_function(length, [string, length](CharT* begin, CharT* /*end*/)
 			{
 				memory_copy(begin, string, length * kCharSize);
 			});
@@ -266,7 +266,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 basic_string& append(size_t n, value_type c) crstl_noexcept
 		{
-			append_function(n, [c](T* begin, T* end)
+			append_function(n, [c](CharT* begin, CharT* end)
 			{
 				while (begin != end)
 				{
@@ -302,7 +302,7 @@ crstl_module_export namespace crstl
 
 			if (target_capacity < kSSOCapacity)
 			{
-				T* data = m_layout_allocator.m_first.m_sso.data;
+				CharT* data = m_layout_allocator.m_first.m_sso.data;
 				utf_result::t result = decode_chunk(data + current_length, data + kSSOCapacity, string, string + length, dst_decoded_length, src_decoded_length);
 
 				switch (result)
@@ -340,8 +340,8 @@ crstl_module_export namespace crstl
 				// Decode as much as we can with our estimation of the space we need for the string
 				size_t iter_src_decoded_length = 0;
 				size_t iter_dst_decoded_length = 0;
-				T* dst_start = m_layout_allocator.m_first.m_heap.data + current_length;
-				T* dst_end = m_layout_allocator.m_first.m_heap.data + target_capacity;
+				CharT* dst_start = m_layout_allocator.m_first.m_heap.data + current_length;
+				CharT* dst_end = m_layout_allocator.m_first.m_heap.data + target_capacity;
 				const OtherCharT* src_start = string + src_decoded_length;
 				const OtherCharT* src_end = string + length;
 				utf_result::t result = decode_chunk(dst_start, dst_end, src_start, src_end, iter_dst_decoded_length, iter_src_decoded_length);
@@ -403,7 +403,7 @@ crstl_module_export namespace crstl
 			size_t current_length = length();
 			size_t remaining_length = capacity() - current_length;
 
-			T* data = basic_string::data();
+			CharT* data = basic_string::data();
 
 			va_list va_arguments {};
 			va_start(va_arguments, format);
@@ -572,17 +572,17 @@ crstl_module_export namespace crstl
 		// compare
 		//--------
 
-		crstl_constexpr int compare(const T* string) const crstl_noexcept
+		crstl_constexpr int compare(const CharT* string) const crstl_noexcept
 		{
 			return crstl::string_compare(data(), length(), string, string_length(string));
 		}
 
-		crstl_constexpr int compare(size_t pos, size_t length, const T* string) const crstl_noexcept
+		crstl_constexpr int compare(size_t pos, size_t length, const CharT* string) const crstl_noexcept
 		{
 			return crstl_assert(pos < basic_string::length()), crstl::string_compare(data() + pos, clamp_length(pos, length), string, string_length(string));
 		}
 
-		crstl_constexpr int compare(size_t pos, size_t length, const T* string, size_t subpos, size_t sublen = npos) const crstl_noexcept
+		crstl_constexpr int compare(size_t pos, size_t length, const CharT* string, size_t subpos, size_t sublen = npos) const crstl_noexcept
 		{
 			return crstl_assert(pos < basic_string::length()), crstl::string_compare(data() + pos, clamp_length(pos, length), string + subpos, crstl::string_clamp_length(string_length(string), subpos, sublen));
 		}
@@ -606,17 +606,17 @@ crstl_module_export namespace crstl
 		// comparei
 		//---------
 
-		crstl_constexpr int comparei(const T* string) const crstl_noexcept
+		crstl_constexpr int comparei(const CharT* string) const crstl_noexcept
 		{
 			return crstl::string_comparei(data(), length(), string, string_length(string));
 		}
 
-		crstl_constexpr int comparei(size_t pos, size_t length, const T* string) const crstl_noexcept
+		crstl_constexpr int comparei(size_t pos, size_t length, const CharT* string) const crstl_noexcept
 		{
 			return crstl_assert(pos < basic_string::length()), crstl::string_comparei(data() + pos, clamp_length(pos, length), string, string_length(string));
 		}
 
-		crstl_constexpr int comparei(size_t pos, size_t length, const T* string, size_t subpos, size_t sublen = npos) const crstl_noexcept
+		crstl_constexpr int comparei(size_t pos, size_t length, const CharT* string, size_t subpos, size_t sublen = npos) const crstl_noexcept
 		{
 			return crstl_assert(pos < basic_string::length()), crstl::string_comparei(data() + pos, clamp_length(pos, length), string + subpos, crstl::string_clamp_length(string_length(string), subpos, sublen));
 		}
@@ -663,7 +663,7 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 basic_string& erase(size_t pos = 0, size_t length = npos) crstl_noexcept
 		{
 			size_t current_length = basic_string::length();
-			T* data = basic_string::data();
+			CharT* data = basic_string::data();
 
 			length = length < current_length ? length : current_length;
 
@@ -830,7 +830,7 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 basic_string& replace(size_t needle_pos, size_t needle_length, const_pointer replace_string, size_t replace_length)
 		{
 			crstl_assert(needle_pos + needle_length <= basic_string::length());
-			T* data = replace_common(basic_string::length(), needle_pos, needle_length, replace_length);
+			CharT* data = replace_common(basic_string::length(), needle_pos, needle_length, replace_length);
 			memory_copy(data + needle_pos, replace_string, replace_length * kCharSize);
 			return *this;
 		}
@@ -838,7 +838,7 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 basic_string& replace(size_t needle_pos, size_t needle_length, size_t n, value_type c)
 		{
 			crstl_assert(needle_pos + needle_length <= basic_string::length());
-			T* data = replace_common(basic_string::length(), needle_pos, needle_length, n);
+			CharT* data = replace_common(basic_string::length(), needle_pos, needle_length, n);
 			crstl::fill_char(data + needle_pos, n, c);
 			return *this;
 		}
@@ -898,14 +898,14 @@ crstl_module_export namespace crstl
 			resize(length, 0);
 		}
 
-		crstl_constexpr14 void resize(size_t length, T c)
+		crstl_constexpr14 void resize(size_t length, CharT c)
 		{
 			size_t current_length = basic_string::length();
 
 			// If length is larger than current length, initialize new characters to 0
 			if (current_length < length)
 			{
-				append_function(length, [c](T* begin, T* end)
+				append_function(length, [c](CharT* begin, CharT* end)
 				{
 					while (begin != end)
 					{
@@ -1093,7 +1093,7 @@ crstl_module_export namespace crstl
 			// and larger than the existing heap capacity too
 			crstl_assert(new_capacity > capacity());
 
-			T* temp = (T*)m_layout_allocator.second().allocate(new_capacity * kCharSize + kCharSize);
+			CharT* temp = (CharT*)m_layout_allocator.second().allocate(new_capacity * kCharSize + kCharSize);
 			size_t length = 0;
 
 			// Copy existing data from current source
@@ -1127,7 +1127,7 @@ crstl_module_export namespace crstl
 
 			if (target_length < kSSOCapacity)
 			{
-				T* begin = m_layout_allocator.m_first.m_sso.data + current_length;
+				CharT* begin = m_layout_allocator.m_first.m_sso.data + current_length;
 				function(begin, begin + length);
 				m_layout_allocator.m_first.m_sso.remaining_length.value -= (char)length;
 				m_layout_allocator.m_first.m_sso.data[target_length] = 0;
@@ -1143,7 +1143,7 @@ crstl_module_export namespace crstl
 					reallocate_heap_larger(target_length);
 				}
 
-				T* begin = m_layout_allocator.m_first.m_heap.data + current_length;
+				CharT* begin = m_layout_allocator.m_first.m_heap.data + current_length;
 				function(begin, begin + length);
 				m_layout_allocator.m_first.m_heap.length = target_length;
 				m_layout_allocator.m_first.m_heap.data[target_length] = 0;
@@ -1167,7 +1167,7 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		crstl_constexpr14 T* replace_common(size_t current_length, size_t needle_pos, size_t needle_length, size_t replace_length)
+		crstl_constexpr14 CharT* replace_common(size_t current_length, size_t needle_pos, size_t needle_length, size_t replace_length)
 		{
 			size_t current_capacity = basic_string::capacity();
 			size_t replace_difference = (replace_length - needle_length);
@@ -1178,7 +1178,7 @@ crstl_module_export namespace crstl
 				current_capacity = reallocate_heap_larger(target_length);
 			}
 
-			T* data = nullptr;
+			CharT* data = nullptr;
 			size_t dst_offset = needle_pos + replace_length;
 			size_t src_offset = needle_pos + needle_length;
 			size_t chars_to_move = current_length - (needle_pos + needle_length) + 1;
@@ -1262,10 +1262,10 @@ crstl_module_export namespace crstl
 		}
 
 		// Assume allocate and deallocate always add a +1 for the null terminator
-		T* allocate_heap(size_t capacity)
+		CharT* allocate_heap(size_t capacity)
 		{
 			capacity = compute_new_capacity(capacity);
-			T* temp = (T*)m_layout_allocator.second().allocate(capacity * kCharSize + kCharSize);
+			CharT* temp = (CharT*)m_layout_allocator.second().allocate(capacity * kCharSize + kCharSize);
 			set_capacity_heap(capacity);
 			return temp;
 		}
