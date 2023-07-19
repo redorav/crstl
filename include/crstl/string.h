@@ -102,7 +102,7 @@ crstl_module_export namespace crstl
 		}
 
 		template<int N>
-		crstl_constexpr14 basic_string(const T(&string_literal)[N]) crstl_noexcept
+		crstl_constexpr14 basic_string(const CharT(&string_literal)[N]) crstl_noexcept
 		{
 			initialize_string(string_literal, string_length(string_literal, N - 1));
 		}
@@ -138,7 +138,7 @@ crstl_module_export namespace crstl
 		}
 
 		template<int N>
-		crstl_constexpr14 basic_string(ctor_concatenate, const basic_string& string, const T(&string_literal)[N]) crstl_noexcept : basic_string()
+		crstl_constexpr14 basic_string(ctor_concatenate, const basic_string& string, const CharT(&string_literal)[N]) crstl_noexcept : basic_string()
 		{
 			reserve(string.size() + N);
 			initialize_string(string.c_str(), string.size());
@@ -241,7 +241,7 @@ crstl_module_export namespace crstl
 		}
 
 		template<int N>
-		crstl_constexpr14 basic_string& append(const T(&string_literal)[N]) crstl_noexcept
+		crstl_constexpr14 basic_string& append(const CharT(&string_literal)[N]) crstl_noexcept
 		{
 			append(string_literal, string_length(string_literal, N - 1)); return *this;
 		}
@@ -450,7 +450,7 @@ crstl_module_export namespace crstl
 		}
 
 		template<int N>
-		crstl_constexpr14 basic_string& assign(const T(&string_literal)[N]) crstl_noexcept
+		crstl_constexpr14 basic_string& assign(const CharT(&string_literal)[N]) crstl_noexcept
 		{
 			clear(); append(string_literal); return *this;
 		}
@@ -1039,7 +1039,7 @@ crstl_module_export namespace crstl
 		}
 
 		template<int N>
-		friend basic_string operator + (const basic_string& string, const T(&string_literal)[N])
+		friend basic_string operator + (const basic_string& string, const CharT(&string_literal)[N])
 		{
 			return basic_string(ctor_concatenate(), string, string_literal);
 		}
@@ -1051,7 +1051,7 @@ crstl_module_export namespace crstl
 		}
 		
 		template<int N>
-		friend basic_string operator + (const T(&string_literal)[N], const basic_string& string)
+		friend basic_string operator + (const CharT(&string_literal)[N], const basic_string& string)
 		{
 			return basic_string(ctor_concatenate(), string_literal, string);
 		}
