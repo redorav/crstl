@@ -160,7 +160,7 @@ void RunUnitTestsString()
 			stdStringErase.erase(2, 5);
 		}
 
-		// operators
+		// compare
 		{
 			crstl::fixed_string32 crStringCompare = "Hello World";
 			std::string stdStringCompare = "Hello World";
@@ -344,6 +344,40 @@ void RunUnitTestsString()
 
 		crstl_check(crStringAssign.size() == stdStringAssign.size());
 		crstl_check(crWstringAssign.size() == stdStringAssign.size());
+
+		// compare
+		{
+			crstl::string crStringCompare = "Hello World";
+			std::string stdStringCompare = "Hello World";
+
+			bool crLessThanHello = crStringCompare < "Hello";
+			bool stdLessThanHello = stdStringCompare < "Hello";
+			crstl_check(crLessThanHello == stdLessThanHello);
+
+			bool crGreaterThanHello = crStringCompare > "Hello";
+			bool stdGreaterThanHello = stdStringCompare > "Hello";
+			crstl_check(crGreaterThanHello == stdGreaterThanHello);
+
+			bool crEqualHello = crStringCompare == "Hello World";
+			bool stdEqualHello = stdStringCompare == "Hello World";
+			crstl_check(crEqualHello == stdEqualHello);
+
+			bool crLessThanHelloWordl = crStringCompare < "Hello Wordl";
+			bool stdLessThanHelloWordl = stdStringCompare < "Hello Wordl";
+			crstl_check(crLessThanHelloWordl == stdLessThanHelloWordl);
+
+			bool crLessThanHelloWordl2 = crStringCompare < "Hello Wordl2";
+			bool stdLessThanHelloWordl2 = stdStringCompare < "Hello Wordl2";
+			crstl_check(crLessThanHelloWordl2 == stdLessThanHelloWordl2);
+
+			int crCompareHelloWordl2 = crStringCompare.compare("Hello Wordl2");
+			int stdCompareHelloWordl2 = stdStringCompare.compare("Hello Wordl2");
+			crstl_check((crCompareHelloWordl2 > 0) == (stdCompareHelloWordl2 > 0));
+
+			int crCompareiHelloWordl2 = crStringCompare.comparei("Hello Wordl2"); crstl_unused(crCompareiHelloWordl2);
+			//int stdCompareHelloWordl2 = stdStringCompare.comparei("Hello Wordl2");
+			//crstl_check((crCompareHelloWordl2 > 0) == (stdCompareHelloWordl2 > 0));
+		}
 
 		// erase
 		{

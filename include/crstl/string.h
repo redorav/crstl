@@ -602,6 +602,40 @@ crstl_module_export namespace crstl
 			return crstl_assert(pos < basic_string::length()), crstl::string_compare(data() + pos, clamp_length(pos, length), string.data() + subpos, string.clamp_length(subpos, sublen));
 		}
 
+		//---------
+		// comparei
+		//---------
+
+		crstl_constexpr int comparei(const T* string) const crstl_noexcept
+		{
+			return crstl::string_comparei(data(), length(), string, string_length(string));
+		}
+
+		crstl_constexpr int comparei(size_t pos, size_t length, const T* string) const crstl_noexcept
+		{
+			return crstl_assert(pos < basic_string::length()), crstl::string_comparei(data() + pos, clamp_length(pos, length), string, string_length(string));
+		}
+
+		crstl_constexpr int comparei(size_t pos, size_t length, const T* string, size_t subpos, size_t sublen = npos) const crstl_noexcept
+		{
+			return crstl_assert(pos < basic_string::length()), crstl::string_comparei(data() + pos, clamp_length(pos, length), string + subpos, crstl::string_clamp_length(string_length(string), subpos, sublen));
+		}
+
+		crstl_constexpr int comparei(const basic_string& string) const crstl_noexcept
+		{
+			return crstl::string_comparei(data(), length(), string.data(), string.length());
+		}
+
+		crstl_constexpr int comparei(size_t pos, size_t length, const basic_string& string) const crstl_noexcept
+		{
+			return crstl_assert(pos < basic_string::length()), crstl::string_comparei(data() + pos, clamp_length(pos, length), string.data(), string.length());
+		}
+
+		crstl_constexpr int comparei(size_t pos, size_t length, const basic_string& string, size_t subpos, size_t sublen = npos) const crstl_noexcept
+		{
+			return crstl_assert(pos < basic_string::length()), crstl::string_comparei(data() + pos, clamp_length(pos, length), string.data() + subpos, string.clamp_length(subpos, sublen));
+		}
+
 		crstl_constexpr14 pointer data() crstl_noexcept { return is_sso() ? m_layout_allocator.m_first.m_sso.data : m_layout_allocator.m_first.m_heap.data; }
 		crstl_constexpr const_pointer data() const crstl_noexcept { return is_sso() ? m_layout_allocator.m_first.m_sso.data : m_layout_allocator.m_first.m_heap.data; }
 
