@@ -27,7 +27,7 @@ namespace crstl
 
 	// https://stackoverflow.com/questions/1659440/32-bit-to-16-bit-floating-point-conversion
 
-	uint16_t float2half(float value)
+	inline uint16_t float2half(float value)
 	{
 		const uint32_t b = float_bits(value).u + 0x00001000;    // round-to-nearest-even: add last bit after truncated mantissa
 		const uint32_t e = (b & 0x7F800000) >> 23; // exponent
@@ -41,7 +41,7 @@ namespace crstl
 		return (uint16_t)result;
 	}
 
-	float half2float(short h)
+	inline float half2float(short h)
 	{
 		const uint32_t e = (h & 0x7C00) >> 10; // exponent
 		const uint32_t m = (h & 0x03FF) << 13; // mantissa
