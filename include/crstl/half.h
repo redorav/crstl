@@ -74,7 +74,7 @@ namespace crstl
 		uint16_t m_value;
 	};
 
-	namespace literal
+	namespace half_literal
 	{
 		inline half operator "" _h(long double value)
 		{
