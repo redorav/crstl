@@ -409,7 +409,7 @@ crstl_module_export namespace crstl
 			va_start(va_arguments, format);
 
 			// Try to copy, limiting the number of characters to what we have available
-			int char_count = vsnprintf(data + current_length, remaining_length, format, va_arguments);
+			int char_count = vsnprintf(data + current_length, remaining_length + 1, format, va_arguments);
 
 			va_end(va_arguments);
 
@@ -421,9 +421,12 @@ crstl_module_export namespace crstl
 			// this to continue where it left off but that's not possible with format specifiers
 			if ((size_t)char_count > remaining_length)
 			{
+				reallocate_heap_larger(current_length + char_count); // When we reallocate, we always take the null terminator into account
 				va_start(va_arguments, format);
-				reallocate_heap_larger(current_length + char_count);
-				char_count = vsnprintf(m_layout_allocator.m_first.m_heap.data + current_length, char_count, format, va_arguments);
+
+				// We need to pass in char_count + 1 as it will try to leave space for the null terminator and we'd end up with one less character
+				char_count = vsnprintf(m_layout_allocator.m_first.m_heap.data + current_length, char_count + 1, format, va_arguments);
+
 				va_end(va_arguments);
 				crstl_assert(char_count >= 0);
 			}

@@ -129,6 +129,10 @@ void RunUnitTestsString()
 		crFixedString32 = "Hello String";
 		crFixedString32.replace(4, 1, "foo", 3);
 
+		crstl::fixed_string32 crFixedString32_sprintf;
+		crFixedString32_sprintf.append_sprintf("0123456789012345678901234567890");
+		crstl_check(crFixedString32_sprintf == "0123456789012345678901234567890");
+
 		mywfs32 = L"Hello String";
 		mywfs32.replace(4, 3, L"foo", 3);
 		mywfs32 = L"Hello String";
@@ -320,10 +324,15 @@ void RunUnitTestsString()
 
 		// append_sprintf
 
-		crstl::string crStringAppendSprintf;
 		crstl::wstring crWstringSprintf;
 
+		crstl::string crStringAppendSprintf;
+		crStringAppendSprintf.append_sprintf("%s", "01234567890123456789012");
+		crstl_check(crStringAppendSprintf == "01234567890123456789012");
+
+		crStringAppendSprintf = "";
 		crStringAppendSprintf.append_sprintf("Hello %s", "Incredibly Complex World!");
+		crstl_check(crStringAppendSprintf == "Hello Incredibly Complex World!");
 
 		// assign
 

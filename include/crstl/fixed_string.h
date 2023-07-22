@@ -287,7 +287,6 @@ crstl_module_export namespace crstl
 				m_data[m_length] = '\0';
 			}
 
-
 			return *this;
 		}
 
