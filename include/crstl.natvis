@@ -72,6 +72,16 @@
 		</Expand>
 	</Type>
 
+	<Type Name="crstl::half">
+		<Intrinsic Name="cast_utof" Expression="*((float*)&amp;u)"> <Parameter Name="u" Type="unsigned long"/> </Intrinsic>
+		<Intrinsic Name="cast_ftou" Expression="*((unsigned long*)&amp;f)"> <Parameter Name="f" Type="float"/> </Intrinsic>		
+		<Intrinsic Name="e" Expression="(m_value &amp; 0x7C00) &gt;&gt; 10"/>
+		<Intrinsic Name="m" Expression="(m_value &amp; 0x03FF) &lt;&lt; 13"/>
+		<Intrinsic Name="p" Expression="cast_ftou((float)u) &gt;&gt; 23"> <Parameter Name="u" Type="unsigned long"/> </Intrinsic>
+		<Intrinsic Name="v" Expression="p(m())"/>		
+		<DisplayString>[short = {cast_utof((m_value &amp; 0x8000) &lt;&lt; 16 | (e() != 0) * ((e() + 112) &lt;&lt; 23 | m()) | ((e() == 0) &amp; (m() != 0)) * ((v() - 37) &lt;&lt; 23 | ((m() &lt;&lt; (150 - v())) &amp; 0x007FE000)))}]</DisplayString>
+	</Type>
+
 	<Type Name="crstl::intrusive_ptr&lt;*&gt;">
 		<DisplayString Condition="m_ptr != nullptr">({(void*)m_ptr} = {*m_ptr})</DisplayString>
 		<DisplayString Condition="m_ptr == nullptr">nullptr</DisplayString>
