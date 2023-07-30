@@ -519,6 +519,15 @@ crstl_module_export namespace crstl
 			// Copy existing data
 			copy_initialize_or_memcpy(temp, m_data, m_length);
 
+			// Destroy existing data if necessary
+			if (!crstl_is_trivially_destructible(T))
+			{
+				for (size_t i = 0; i < m_length; ++i)
+				{
+					m_data[i].~T();
+				}
+			}
+
 			m_capacity_allocator.second().deallocate(m_data, m_capacity_allocator.m_first * kDataSize);
 			m_data = temp;
 			m_capacity_allocator.m_first = new_capacity;
