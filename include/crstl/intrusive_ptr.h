@@ -169,6 +169,11 @@ crstl_module_export namespace crstl
 			return m_refcount;
 		}
 
+		int32_t get_ref() const
+		{
+			return m_refcount;
+		}
+
 		crstl::atomic<int32_t> m_refcount;
 	};
 
