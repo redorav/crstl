@@ -19,7 +19,7 @@ crstl_module_export namespace crstl
 {
 	namespace detail
 	{
-		// Insert padding when sizeof(value_type) > 1
+		// Insert padding when sizeof(CharT) > 1
 		template<int N> struct sso_padding { char padding[N]; };
 		template<> struct sso_padding<0> {};
 	};
@@ -46,7 +46,7 @@ crstl_module_export namespace crstl
 			size_t capacity;
 		};
 
-		struct sso_size : detail::sso_padding<sizeof(value_type) - 1>
+		struct sso_size : detail::sso_padding<sizeof(CharT) - 1>
 		{
 			char value;
 		};
@@ -54,7 +54,7 @@ crstl_module_export namespace crstl
 		// View of string acting as small-string optimization
 		struct sso_view
 		{
-			value_type data[sizeof(heap_view) / sizeof(value_type) - 1];
+			CharT data[sizeof(heap_view) / sizeof(CharT) - 1];
 			sso_size remaining_length;
 		};
 
@@ -71,7 +71,7 @@ crstl_module_export namespace crstl
 
 		static const crstl_constexpr size_t kCharSize = sizeof(CharT);
 
-		static const crstl_constexpr size_t kSSOCapacity = sizeof(sso_view) / sizeof(value_type) - 1;
+		static const crstl_constexpr size_t kSSOCapacity = sizeof(sso_view) / sizeof(CharT) - 1;
 
 		// This is valid for little endian machines, where the remaining_length and capacity
 		// share the same space in memory
@@ -264,7 +264,7 @@ crstl_module_export namespace crstl
 			append(string.data(), string.length()); return *this;
 		}
 
-		crstl_constexpr14 basic_string& append(size_t n, value_type c) crstl_noexcept
+		crstl_constexpr14 basic_string& append(size_t n, CharT c) crstl_noexcept
 		{
 			append_function(n, [c](CharT* begin, CharT* end)
 			{
@@ -709,7 +709,7 @@ crstl_module_export namespace crstl
 		//-----
 
 		// Find a character
-		crstl_constexpr14 size_t find(value_type c, size_t pos = 0) const crstl_noexcept
+		crstl_constexpr14 size_t find(CharT c, size_t pos = 0) const crstl_noexcept
 		{
 			crstl_assert(pos <= length());
 			const_pointer ptr = (const_pointer)crstl::string_find_char(data() + pos, c, length() - pos);
@@ -755,7 +755,7 @@ crstl_module_export namespace crstl
 			return find_first_of(needle_string.c_str(), pos, needle_string.length());
 		}
 
-		crstl_constexpr14 size_t find_first_of(value_type c, size_t pos = 0) const crstl_noexcept
+		crstl_constexpr14 size_t find_first_of(CharT c, size_t pos = 0) const crstl_noexcept
 		{
 			return find(c, pos);
 		}
@@ -781,7 +781,7 @@ crstl_module_export namespace crstl
 			return find_last_of(needle_string.c_str(), pos, needle_string.length());
 		}
 
-		crstl_constexpr14 size_t find_last_of(value_type c, size_t pos = npos) const crstl_noexcept
+		crstl_constexpr14 size_t find_last_of(CharT c, size_t pos = npos) const crstl_noexcept
 		{
 			return rfind(c, pos);
 		}
@@ -824,7 +824,7 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		crstl_constexpr14 reference push_back(value_type c) { append(1, c); return back(); }
+		crstl_constexpr14 reference push_back(CharT c) { append(1, c); return back(); }
 
 		//--------
 		// replace
@@ -838,7 +838,7 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
-		crstl_constexpr14 basic_string& replace(size_t needle_pos, size_t needle_length, size_t n, value_type c)
+		crstl_constexpr14 basic_string& replace(size_t needle_pos, size_t needle_length, size_t n, CharT c)
 		{
 			crstl_assert(needle_pos + needle_length <= basic_string::length());
 			CharT* data = replace_common(basic_string::length(), needle_pos, needle_length, n);
@@ -936,7 +936,7 @@ crstl_module_export namespace crstl
 		// rfind
 		//-----
 
-		size_t rfind(value_type c, size_t pos = npos) const crstl_noexcept
+		size_t rfind(CharT c, size_t pos = npos) const crstl_noexcept
 		{
 			size_t length = basic_string::length();
 			pointer data = basic_string::data();
@@ -972,7 +972,7 @@ crstl_module_export namespace crstl
 		// starts_with
 		//------------
 
-		crstl_constexpr bool starts_with(value_type c) const crstl_noexcept { return find(c, 0) == 0; }
+		crstl_constexpr bool starts_with(CharT c) const crstl_noexcept { return find(c, 0) == 0; }
 
 		crstl_constexpr size_t starts_with(const_pointer needle_string, size_t needle_length) const crstl_noexcept
 		{

@@ -207,7 +207,7 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
-		crstl_constexpr14 basic_fixed_string& append(size_t n, value_type c) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& append(size_t n, CharT c) crstl_noexcept
 		{
 			crstl_assert(m_length + n < kCharacterCapacityWithZero);
 			crstl::fill_char(&m_data[m_length], n, c);
@@ -222,7 +222,7 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 basic_fixed_string& append_convert(const OtherCharT* string, size_t length) crstl_noexcept
 		{
 			const OtherCharT* string_end = string + length;
-			value_type* data_start = m_data + m_length;
+			CharT* data_start = m_data + m_length;
 
 			size_t dst_decoded_length = 0, src_decoded_length = 0;
 			utf_result::t result = decode_chunk(data_start, data_start + (kCharacterCapacity - m_length), string, string_end, dst_decoded_length, src_decoded_length);
@@ -332,7 +332,7 @@ crstl_module_export namespace crstl
 			clear(); append(string, subpos, sublen); return *this;
 		}
 
-		crstl_constexpr14 basic_fixed_string& assign(size_t n, value_type c) crstl_noexcept
+		crstl_constexpr14 basic_fixed_string& assign(size_t n, CharT c) crstl_noexcept
 		{
 			clear(); append(n, c); return *this;
 		}
@@ -515,7 +515,7 @@ crstl_module_export namespace crstl
 		//-----
 
 		// Find a character
-		crstl_constexpr14 size_t find(value_type c, size_t pos = 0) const crstl_noexcept
+		crstl_constexpr14 size_t find(CharT c, size_t pos = 0) const crstl_noexcept
 		{
 			crstl_assert(pos <= m_length);
 			const_pointer ptr = (const_pointer)crstl::string_find_char(m_data + pos, c, m_length - pos);
@@ -561,7 +561,7 @@ crstl_module_export namespace crstl
 			return find_first_of(needle_string.c_str(), pos, needle_string.length());
 		}
 
-		crstl_constexpr14 size_t find_first_of(value_type c, size_t pos = 0) const crstl_noexcept
+		crstl_constexpr14 size_t find_first_of(CharT c, size_t pos = 0) const crstl_noexcept
 		{
 			return find(c, pos);
 		}
@@ -587,7 +587,7 @@ crstl_module_export namespace crstl
 			return find_last_of(needle_string.c_str(), pos, needle_string.length());
 		}
 
-		crstl_constexpr14 size_t find_last_of(value_type c, size_t pos = npos) const crstl_noexcept
+		crstl_constexpr14 size_t find_last_of(CharT c, size_t pos = npos) const crstl_noexcept
 		{
 			return rfind(c, pos);
 		}
@@ -606,7 +606,7 @@ crstl_module_export namespace crstl
 			m_length--;
 		}
 
-		crstl_constexpr14 reference push_back(value_type c) { append(1, c); return back(); }
+		crstl_constexpr14 reference push_back(CharT c) { append(1, c); return back(); }
 
 		//--------
 		// replace
@@ -619,7 +619,7 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
-		crstl_constexpr14 basic_fixed_string& replace(size_t needle_pos, size_t needle_length, size_t n, value_type c)
+		crstl_constexpr14 basic_fixed_string& replace(size_t needle_pos, size_t needle_length, size_t n, CharT c)
 		{
 			replace_common(needle_pos, needle_length, n);
 			crstl::fill_char(m_data + needle_pos, n, c);
@@ -690,7 +690,7 @@ crstl_module_export namespace crstl
 		// rfind
 		//-----
 
-		size_t rfind(value_type c, size_t pos = npos) const crstl_noexcept
+		size_t rfind(CharT c, size_t pos = npos) const crstl_noexcept
 		{
 			pos = pos < m_length ? pos : m_length;
 			const_pointer ptr = (const_pointer)string_rfind_char(m_data + pos, c, pos);
@@ -723,7 +723,7 @@ crstl_module_export namespace crstl
 		// starts_with
 		//------------
 		
-		crstl_constexpr bool starts_with(value_type c) const crstl_noexcept { return find(c, 0) == 0; }
+		crstl_constexpr bool starts_with(CharT c) const crstl_noexcept { return find(c, 0) == 0; }
 
 		crstl_constexpr size_t starts_with(const_pointer needle_string, size_t needle_length) const crstl_noexcept
 		{
