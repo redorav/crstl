@@ -14,6 +14,15 @@
 //
 // Replacement for std::string
 //
+// - There are extra functions not present in the standard such as
+//   - constructors and functions taking string literals and char arrays (avoids calling strlen)
+//   - explicit constructors for creating a string from an integer or float
+//   - append_convert: append converting from different characters representations
+//   - assign_convert: assign converting from different characters representations
+//   - append_sprintf: Use sprintf-like formatting to append string
+//   - comparei: compare ignoring case
+//   - replace_all: replaces all occurrences of needle with replace. For replace_all(char, char), this doesn't work
+//     with unicode strings
 
 crstl_module_export namespace crstl
 {
@@ -878,6 +887,25 @@ crstl_module_export namespace crstl
 		{
 			crstl_assert(end >= begin);
 			return replace((size_t)(begin - data()), (size_t)(end - begin), replace_string.data(), (size_t)replace_string.length());
+		}
+
+		//------------
+		// replace_all
+		//------------
+
+		crstl_constexpr14 basic_string& replace_all(CharT needle_c, CharT replace_c)
+		{
+			CharT* data = basic_string::data();
+
+			for (size_t i = 0; i < length(); ++i)
+			{
+				if (data[i] == needle_c)
+				{
+					data[i] = replace_c;
+				}
+			}
+
+			return *this;
 		}
 
 		//--------

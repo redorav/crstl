@@ -23,7 +23,8 @@
 //   - assign_convert: assign converting from different characters representations
 //   - append_sprintf: Use sprintf-like formatting to append string
 //   - comparei: compare ignoring case
-//   - 
+//   - replace_all: replaces all occurrences of needle with replace. For replace_all(char, char), this doesn't work
+//     with unicode strings
 
 crstl_module_export namespace crstl
 {
@@ -658,6 +659,23 @@ crstl_module_export namespace crstl
 		{
 			crstl_assert(end >= begin);
 			return replace((size_t)(begin - m_data), (size_t)(end - begin), replace_string.m_data, (size_t)replace_string.m_length);
+		}
+
+		//------------
+		// replace_all
+		//------------
+
+		crstl_constexpr14 basic_fixed_string& replace_all(CharT needle_c, CharT replace_c)
+		{
+			for (size_t i = 0; i < m_length; ++i)
+			{
+				if (m_data[i] == needle_c)
+				{
+					m_data[i] = replace_c;
+				}
+			}
+
+			return *this;
 		}
 
 		//-------
