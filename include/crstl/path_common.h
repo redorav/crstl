@@ -6,6 +6,10 @@
 
 namespace crstl
 {
+	// Forward declarations to be able to convert between these
+	template<typename CharT, typename Allocator> class basic_string;
+	template<typename CharT, int NumElements> class basic_fixed_string;
+
 	template<typename StringInterface>
 	class path_base
 	{
@@ -20,6 +24,12 @@ namespace crstl
 		path_base(const char* path, size_t count) { m_path_string = StringInterface(path, count); normalize(); }
 
 		path_base(const char* path, size_t offset, size_t count) { m_path_string = StringInterface(path + offset, path + offset + count); normalize(); }
+
+		template<typename Allocator>
+		path_base(const basic_string<char, Allocator>& s) : path_base(s.c_str(), s.length()) {}
+
+		template<int NumElements>
+		path_base(const basic_fixed_string<char, NumElements>& s) : path_base(s.c_str(), s.length()) {}
 
 		path_base(const path_base& path, size_t count) : path_base(path.c_str(), count) {}
 

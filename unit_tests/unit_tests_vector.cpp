@@ -239,6 +239,19 @@ void RunUnitTestsVectorStdCompare()
 			crstl_check(crVector.size() == count);
 		}
 #endif
+
+		crstl::vector<crstl::intrusive_ptr<Dummy>> crVectorResize;
+
+		// Check that we are destroying things properly when resizing
+		for (size_t i = 0; i < 32; ++i)
+		{
+			crVectorResize.push_back(crstl::intrusive_ptr<Dummy>(new Dummy()));
+		}
+
+		for (size_t i = 0; i < crVectorResize.size(); ++i)
+		{
+			crstl_check(crVectorResize[i]->get_ref() == 1);
+		}
 	}
 	end_test();
 
