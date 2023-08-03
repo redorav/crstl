@@ -678,6 +678,11 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
+		crstl_constexpr14 void reserve(size_t /*capacity*/)
+		{
+			// Doesn't do anything. Here for interface compatibility
+		}
+
 		//-------
 		// resize
 		//-------
