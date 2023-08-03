@@ -134,6 +134,7 @@ void RunUnitTestsBitset();
 void RunUnitTestsDeque();
 void RunUnitTestsFunction();
 void RunUnitTestsPair();
+void RunUnitTestsPath();
 void RunUnitTestsSmartPtr();
 void RunUnitTestsString();
 void RunUnitTestsTimer();
@@ -163,6 +164,8 @@ extern "C"
 	RunUnitTestsString();
 	RunUnitTestsTimer();
 	RunUnitTestsVector();
+	RunUnitTestsPath();
+	
 }
 
 #if defined(__ANDROID__)
