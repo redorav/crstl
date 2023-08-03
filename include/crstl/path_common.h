@@ -4,6 +4,8 @@
 
 #include "crstl/crstldef.h"
 
+#include "crstl/string_common.h"
+
 namespace crstl
 {
 	// Forward declarations to be able to convert between these
@@ -176,17 +178,31 @@ namespace crstl
 
 		path_base operator + (const char* str) const
 		{
-			return *this + str;
+			path_base new_path;
+			new_path.m_path_string.reserve(m_path_string.length() + string_length(str));
+			new_path.m_path_string = this->m_path_string;
+			new_path.m_path_string += str;
+			return new_path;
 		}
 
 		path_base operator + (const path_base& path) const
 		{
+			path_base new_path;
+			new_path.m_path_string.reserve(m_path_string.length() + path.m_path_string.length());
+			new_path.m_path_string = this->m_path_string;
+			new_path += path.m_path_string;
 			return *this + path.m_path_string;
 		}
 
 		path_base& operator += (const char* str)
 		{
 			m_path_string += str;
+			return *this;
+		}
+
+		path_base& operator += (const path_base& path)
+		{
+			m_path_string += path.m_path_string;
 			return *this;
 		}
 
