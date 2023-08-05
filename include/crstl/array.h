@@ -28,11 +28,11 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 T* data() { return m_data; }
 		crstl_constexpr const T* data() const { return m_data; }
 
-		crstl_constexpr14 T& operator[](size_t i) { return m_data[i]; }
-		crstl_constexpr const T& operator[](size_t i) const { return m_data[i]; }
+		crstl_constexpr14 T& operator[](size_t i) { return crstl_assert(i < N), m_data[i]; }
+		crstl_constexpr const T& operator[](size_t i) const { return crstl_assert(i < N), m_data[i]; }
 
-		crstl_constexpr14 T& at(size_t i) { return m_data[i]; }
-		crstl_constexpr const T& at(size_t i) const { return m_data[i]; }
+		crstl_constexpr14 T& at(size_t i) { return crstl_assert(i < N), m_data[i]; }
+		crstl_constexpr const T& at(size_t i) const { return crstl_assert(i < N), m_data[i]; }
 
 		// Public to allow braced initialization
 		T m_data[N ? N : 1];
