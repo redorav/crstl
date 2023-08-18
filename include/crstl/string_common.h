@@ -183,7 +183,7 @@ crstl_module_export namespace crstl
 	}
 
 	template<typename T>
-	const T* string_rfind_char(const T* string, T c, size_t n)
+	inline const T* string_rfind_char(const T* string, T c, size_t n)
 	{
 		for (const T* ptr = string; ptr != string - n; --ptr)
 		{
@@ -197,7 +197,7 @@ crstl_module_export namespace crstl
 	}
 
 	template<typename T>
-	const T* string_find_of(const T* string, size_t n, const T* needles, size_t needle_length)
+	inline const T* string_find_of(const T* string, size_t n, const T* needles, size_t needle_length)
 	{
 		for (const T* ptr = string; ptr != string + n; ++ptr)
 		{
@@ -214,7 +214,7 @@ crstl_module_export namespace crstl
 	}
 
 	template<typename T>
-	const T* string_rfind_of(const T* string, size_t n, const T* needles, size_t needle_length)
+	inline const T* string_rfind_of(const T* string, size_t n, const T* needles, size_t needle_length)
 	{
 		for (const T* ptr = string; ptr != string - n; --ptr)
 		{
