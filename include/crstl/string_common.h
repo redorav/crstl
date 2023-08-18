@@ -308,6 +308,35 @@ crstl_module_export namespace crstl
 		return nullptr;
 	}
 
+	template<typename T>
+	inline T* erase_all(T* string, size_t length, size_t pos, const T* needle_string, size_t needle_length)
+	{
+		const T* string_end = string + length;
+		const T* found_string = crstl::string_find(string + pos, length - pos, needle_string, needle_length);
+		T* block_dst = (T*)found_string;
+
+		while (found_string)
+		{
+			// Try to find the string again. We only copy up to the block where the next string is, or the end of the string
+			// We copy in blocks, for instance if we have the following string: "thread needle thread needle" -> becomes "thread  thread "
+			// we'll copy the contents up to the next time we find needle, and so on until we reach the end
+			const T* found_string_next = crstl::string_find(found_string + 1, string_end - (found_string + 1), needle_string, needle_length);
+			const T* block_src = found_string + needle_length;
+			const T* block_end = found_string_next ? found_string_next : string_end;
+			const size_t block_length = block_end - block_src;
+
+			for (size_t i = 0; i < block_length; ++i)
+			{
+				block_dst[i] = block_src[i];
+			}
+
+			found_string = found_string_next;
+			block_dst += block_length;
+		}
+
+		return block_dst;
+	}
+
 	inline crstl_constexpr14 void fill_char(char* destination, size_t n, char c)
 	{
 		if (n)

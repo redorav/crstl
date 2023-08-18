@@ -23,6 +23,7 @@
 //   - assign_convert: assign converting from different characters representations
 //   - append_sprintf: Use sprintf-like formatting to append string
 //   - comparei: compare ignoring case
+//   - erase_all: erase all occurrences of a given string. This is more efficient than calling find and erase in a loop because there are fewer copies
 //   - replace_all: replaces all occurrences of needle with replace. Note that replace_all(char, char) doesn't work with unicode strings
 
 crstl_module_export namespace crstl
@@ -512,6 +513,35 @@ crstl_module_export namespace crstl
 			return erase((size_t)(begin - m_data), (size_t)(end - begin));
 		}
 
+		//----------
+		// erase_all
+		//----------
+
+		crstl_constexpr14 basic_fixed_string& erase_all(const_pointer needle_string, size_t pos, size_t needle_length)
+		{
+			crstl_assert(pos <= m_length);
+
+			const_pointer data_end = crstl::erase_all(m_data, m_length, pos, needle_string, needle_length);
+
+			if (data_end)
+			{
+				m_length = data_end - m_data;
+				m_data[m_length] = '\0';
+			}
+
+			return *this;
+		}
+
+		crstl_constexpr14 basic_fixed_string& erase_all(const_pointer needle_string, size_t pos = 0) crstl_noexcept
+		{
+			return erase_all(needle_string, pos, crstl::string_length(needle_string));
+		}
+
+		crstl_constexpr14 basic_fixed_string& erase_all(const basic_fixed_string& needle_string, size_t pos = 0) crstl_noexcept
+		{
+			return erase_all(needle_string.data(), pos, needle_string.length());
+		}
+
 		//-----
 		// find
 		//-----
@@ -717,7 +747,7 @@ crstl_module_export namespace crstl
 		size_t rfind(CharT c, size_t pos = npos) const crstl_noexcept
 		{
 			pos = pos < m_length ? pos : m_length;
-			const_pointer ptr = (const_pointer)string_rfind_char(m_data + pos, c, pos);
+			const_pointer ptr = crstl::string_rfind_char(m_data + pos, c, pos);
 			return ptr ? (size_t)(ptr - m_data) : npos;
 		}
 
@@ -733,7 +763,7 @@ crstl_module_export namespace crstl
 
 		size_t rfind(const_pointer needle_string, size_t pos = npos) const crstl_noexcept
 		{
-			return rfind(needle_string, pos, string_length(needle_string));
+			return rfind(needle_string, pos, crstl::string_length(needle_string));
 		}
 
 		size_t rfind(const basic_fixed_string& needle_string, size_t pos = npos) const crstl_noexcept

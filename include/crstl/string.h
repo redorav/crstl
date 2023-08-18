@@ -21,6 +21,7 @@
 //   - assign_convert: assign converting from different characters representations
 //   - append_sprintf: Use sprintf-like formatting to append string
 //   - comparei: compare ignoring case
+//   - erase_all: erase all occurrences of a given string. This is more efficient than calling find and erase in a loop because there are fewer copies
 //   - replace_all: replaces all occurrences of needle with replace. Note that replace_all(char, char) doesn't work with unicode strings
 
 crstl_module_export namespace crstl
@@ -716,6 +717,36 @@ crstl_module_export namespace crstl
 			return erase((size_t)(begin - data()), (size_t)(end - begin));
 		}
 
+		//----------
+		// erase_all
+		//----------
+
+		crstl_constexpr14 basic_string& erase_all(const_pointer needle_string, size_t pos, size_t needle_length)
+		{
+			size_t current_length = length();
+			pointer current_data = data();
+			crstl_assert(pos <= current_length);
+
+			const_pointer data_end = crstl::erase_all(current_data, current_length, pos, needle_string, needle_length);
+
+			if (data_end)
+			{
+				set_length_and_terminator(data_end - current_data);
+			}
+
+			return *this;
+		}
+
+		crstl_constexpr14 basic_string& erase_all(const_pointer needle_string, size_t pos = 0) crstl_noexcept
+		{
+			return erase_all(needle_string, pos, crstl::string_length(needle_string));
+		}
+
+		crstl_constexpr14 basic_string& erase_all(const basic_string& needle_string, size_t pos = 0) crstl_noexcept
+		{
+			return erase_all(needle_string.data(), pos, needle_string.length());
+		}
+
 		//-----
 		// find
 		//-----
@@ -724,7 +755,7 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 size_t find(CharT c, size_t pos = 0) const crstl_noexcept
 		{
 			crstl_assert(pos <= length());
-			const_pointer ptr = (const_pointer)crstl::string_find_char(data() + pos, c, length() - pos);
+			const_pointer ptr = crstl::string_find_char(data() + pos, c, length() - pos);
 			return ptr ? (size_t)(ptr - data()) : npos;
 		}
 
@@ -1283,6 +1314,20 @@ crstl_module_export namespace crstl
 		void set_length_heap(size_t length)
 		{
 			m_layout_allocator.m_first.m_heap.length = length;
+		}
+
+		void set_length_and_terminator(size_t length)
+		{
+			if (is_sso())
+			{
+				m_layout_allocator.m_first.m_sso.remaining_length.value = (char)length;
+				m_layout_allocator.m_first.m_sso.data[kSSOCapacity - m_layout_allocator.m_first.m_sso.remaining_length.value] = 0;
+			}
+			else
+			{
+				m_layout_allocator.m_first.m_heap.length = length;
+				m_layout_allocator.m_first.m_heap.data[m_layout_allocator.m_first.m_heap.length] = 0;
+			}
 		}
 
 		size_t get_capacity_heap() const
