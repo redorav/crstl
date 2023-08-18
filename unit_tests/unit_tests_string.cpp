@@ -160,8 +160,10 @@ void RunUnitTestsString()
 			crstl::fixed_string32 crFixedStringErase = "Hello String";
 			std::string stdStringErase = "Hello String";
 
-			crFixedStringErase.erase(2, 5);
-			stdStringErase.erase(2, 5);
+			crFixedStringErase.erase(2, 4);
+			stdStringErase.erase(2, 4);
+
+			crstl_check(crFixedStringErase == stdStringErase.c_str());
 		}
 
 		// compare
