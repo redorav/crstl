@@ -8,19 +8,19 @@
 
 crstl_module_export namespace crstl
 {
-	template<typename T>
+	template<typename CharT>
 	class basic_string_view
 	{
 	public:
 
-		typedef T        value_type;
-		typedef T&       reference;
-		typedef const T& const_reference;
-		typedef T*       pointer;
-		typedef const T* const_pointer;
-		typedef const T* iterator;
-		typedef const T* const_iterator;
-		typedef size_t   size_type;
+		typedef CharT        value_type;
+		typedef CharT&       reference;
+		typedef const CharT& const_reference;
+		typedef CharT*       pointer;
+		typedef const CharT* const_pointer;
+		typedef const CharT* iterator;
+		typedef const CharT* const_iterator;
+		typedef size_t       size_type;
 
 		static const crstl_constexpr size_type npos = (size_type)-1;
 
