@@ -21,8 +21,7 @@
 //   - assign_convert: assign converting from different characters representations
 //   - append_sprintf: Use sprintf-like formatting to append string
 //   - comparei: compare ignoring case
-//   - replace_all: replaces all occurrences of needle with replace. For replace_all(char, char), this doesn't work
-//     with unicode strings
+//   - replace_all: replaces all occurrences of needle with replace. Note that replace_all(char, char) doesn't work with unicode strings
 
 crstl_module_export namespace crstl
 {
@@ -674,19 +673,23 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 basic_string& erase(size_t pos = 0, size_t length = npos) crstl_noexcept
 		{
+			crstl_assert(length > 0);
+
 			size_t current_length = basic_string::length();
 			CharT* data = basic_string::data();
 
-			length = length < current_length ? length : current_length;
+			length = length < current_length - pos ? length : current_length - pos;
 
-			crstl_assert(pos + length <= current_length);
-			pointer dst = data + pos, src = data + pos + length;
+			pointer dst = data + pos;
+			pointer src = data + pos + length;
 
-			for (size_t i = 0; i < length; ++i)
+			// Copy data from the position to the current length
+			for (size_t i = 0; i < current_length - pos; ++i)
 			{
 				dst[i] = src[i];
 			}
 
+			// Adjust the length
 			if (is_sso())
 			{
 				m_layout_allocator.m_first.m_sso.remaining_length.value += (char)length;
