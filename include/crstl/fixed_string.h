@@ -525,7 +525,7 @@ crstl_module_export namespace crstl
 
 			if (data_end)
 			{
-				m_length = data_end - m_data;
+				m_length = (length_type)(data_end - m_data);
 				m_data[m_length] = '\0';
 			}
 
