@@ -25,6 +25,8 @@
 //   - comparei: compare ignoring case
 //   - erase_all: erase all occurrences of a given string. This is more efficient than calling find and erase in a loop because there are fewer copies
 //   - replace_all: replaces all occurrences of needle with replace. Note that replace_all(char, char) doesn't work with unicode strings
+//   - resize_uninitialized(length): resize string but don't initialize contents. Using c_str() right after is undefined behavior. Useful when populating
+//   string from an external source
 
 crstl_module_export namespace crstl
 {
@@ -736,6 +738,15 @@ crstl_module_export namespace crstl
 				}
 			}
 
+			m_data[length] = 0;
+			m_length = (length_type)length;
+		}
+
+		crstl_constexpr14 void resize_uninitialized(size_t length)
+		{
+			crstl_assert(length < NumElements);
+
+			// Force the length of the string without initializing
 			m_data[length] = 0;
 			m_length = (length_type)length;
 		}

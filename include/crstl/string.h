@@ -23,6 +23,8 @@
 //   - comparei: compare ignoring case
 //   - erase_all: erase all occurrences of a given string. This is more efficient than calling find and erase in a loop because there are fewer copies
 //   - replace_all: replaces all occurrences of needle with replace. Note that replace_all(char, char) doesn't work with unicode strings
+//   - resize_uninitialized(length): resize string but don't initialize contents. Using c_str() right after is undefined behavior. Useful when populating
+//   string from an external source
 
 crstl_module_export namespace crstl
 {
@@ -979,19 +981,19 @@ crstl_module_export namespace crstl
 					}
 				});
 			}
-			
-			if (is_sso())
+
+			set_length_and_terminator(length);
+		}
+
+		crstl_constexpr14 void resize_uninitialized(size_t length)
+		{
+			if (length > basic_string::capacity())
 			{
-				crstl_assert(length < kSSOCapacity);
-				crstl_assume(length < kSSOCapacity);
-				set_length_sso(length);
-				m_layout_allocator.m_first.m_sso.data[length] = 0;
+				reallocate_heap_larger(length);
 			}
-			else
-			{
-				set_length_heap(length);
-				m_layout_allocator.m_first.m_heap.data[length] = 0;
-			}
+
+			// Force the length of the string without initializing
+			set_length_and_terminator(length);
 		}
 
 		//-----
@@ -1320,13 +1322,15 @@ crstl_module_export namespace crstl
 		{
 			if (is_sso())
 			{
-				m_layout_allocator.m_first.m_sso.remaining_length.value = (char)length;
-				m_layout_allocator.m_first.m_sso.data[kSSOCapacity - m_layout_allocator.m_first.m_sso.remaining_length.value] = 0;
+				crstl_assert(length < kSSOCapacity);
+				crstl_assume(length < kSSOCapacity);
+				set_length_sso(length);
+				m_layout_allocator.m_first.m_sso.data[kSSOCapacity - length] = 0;
 			}
 			else
 			{
-				m_layout_allocator.m_first.m_heap.length = length;
-				m_layout_allocator.m_first.m_heap.data[m_layout_allocator.m_first.m_heap.length] = 0;
+				set_length_heap(length);
+				m_layout_allocator.m_first.m_heap.data[length] = 0;
 			}
 		}
 
