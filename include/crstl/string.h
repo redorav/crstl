@@ -723,6 +723,22 @@ crstl_module_export namespace crstl
 		// erase_all
 		//----------
 
+		crstl_constexpr14 basic_string& erase_all(CharT c, size_t pos = 0)
+		{
+			size_t current_length = length();
+			pointer current_data = data();
+			crstl_assert(pos <= current_length);
+
+			const_pointer data_end = crstl::erase_all(current_data, current_length, pos, c);
+
+			if (data_end)
+			{
+				set_length_and_terminator(data_end - current_data);
+			}
+
+			return *this;
+		}
+
 		crstl_constexpr14 basic_string& erase_all(const_pointer needle_string, size_t pos, size_t needle_length)
 		{
 			size_t current_length = length();
@@ -1325,7 +1341,7 @@ crstl_module_export namespace crstl
 				crstl_assert(length < kSSOCapacity);
 				crstl_assume(length < kSSOCapacity);
 				set_length_sso(length);
-				m_layout_allocator.m_first.m_sso.data[kSSOCapacity - length] = 0;
+				m_layout_allocator.m_first.m_sso.data[length] = 0;
 			}
 			else
 			{

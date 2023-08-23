@@ -309,6 +309,33 @@ crstl_module_export namespace crstl
 	}
 
 	template<typename T>
+	inline T* erase_all(T* string, size_t length, size_t pos, const T needle_char)
+	{
+		const T* string_end = string + length;
+		const T* found_char = crstl::string_find_char(string + pos, needle_char, length - pos);
+		T* block_dst = (T*)found_char;
+
+		while (found_char)
+		{
+			const T* found_char_next = crstl::string_find_char(found_char + 1, needle_char, string_end - (found_char + 1));
+			const T* block_src = found_char + 1;
+			const T* block_end = found_char_next ? found_char_next : string_end;
+
+			const size_t block_length = block_end - block_src;
+
+			for (size_t i = 0; i < block_length; ++i)
+			{
+				block_dst[i] = block_src[i];
+			}
+
+			found_char = found_char_next;
+			block_dst += block_length;
+		}
+
+		return block_dst;
+	}
+
+	template<typename T>
 	inline T* erase_all(T* string, size_t length, size_t pos, const T* needle_string, size_t needle_length)
 	{
 		const T* string_end = string + length;

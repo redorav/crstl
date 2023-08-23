@@ -519,6 +519,20 @@ crstl_module_export namespace crstl
 		// erase_all
 		//----------
 
+		crstl_constexpr14 basic_fixed_string& erase_all(CharT c, size_t pos = 0)
+		{
+			crstl_assert(pos <= m_length);
+
+			const_pointer data_end = crstl::erase_all(m_data, m_length, pos, c);
+
+			if (data_end)
+			{
+				set_length_and_terminator(data_end - m_data);
+			}
+
+			return *this;
+		}
+
 		crstl_constexpr14 basic_fixed_string& erase_all(const_pointer needle_string, size_t pos, size_t needle_length)
 		{
 			crstl_assert(pos <= m_length);
