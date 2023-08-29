@@ -11,13 +11,13 @@
 extern "C"
 {
 #if defined(CRSTL_COMPILER_MSVC)
-	void* memcpy(void* destination, void const* source, crstl::size_t size);
-	crstl_2015_dllimport void* memmove(void* destination, const void* source, crstl::size_t size);
+	void* memcpy(void* destination, void const* source, size_t size);
+	crstl_2015_dllimport void* memmove(void* destination, const void* source, size_t size);
 
-	void* memset(void* dst, int val, crstl::size_t size);
+	void* memset(void* dst, int val, size_t size);
 #endif
 
-	wchar_t* wmemset(wchar_t* ptr, wchar_t wc, crstl::size_t num) crstl_linux_wthrow;
+	wchar_t* wmemset(wchar_t* ptr, wchar_t wc, size_t num) crstl_linux_wthrow;
 };
 
 namespace crstl

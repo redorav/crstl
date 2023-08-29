@@ -4,25 +4,25 @@
 
 #include <time.h>
 
-// https://gist.github.com/savanovich/f07eda9dba9300eb9ccf
-static inline crstl::uint64_t rdtsc_start(void)
-{
-	unsigned a, d; 
-	asm volatile("cpuid" ::: "%rax", "%rbx", "%rcx", "%rdx");
-	asm volatile("rdtsc" : "=a" (a), "=d" (d)); 
-	return (crstl::uint64_t)(((unsigned long)a) | (((unsigned long)d) << 32));
-}
-
-static inline crstl::uint64_t rdtsc_end(void)
-{
-	unsigned a, d; 
-	asm volatile("rdtscp" : "=a" (a), "=d" (d)); 
-	asm volatile("cpuid" ::: "%rax", "%rbx", "%rcx", "%rdx");
-	return (crstl::uint64_t)(((unsigned long)a) | (((unsigned long)d) << 32));
-}
-
 namespace crstl
 {
+	// https://gist.github.com/savanovich/f07eda9dba9300eb9ccf
+	static inline uint64_t rdtsc_start(void)
+	{
+		unsigned a, d;
+		asm volatile("cpuid" ::: "%rax", "%rbx", "%rcx", "%rdx");
+		asm volatile("rdtsc" : "=a" (a), "=d" (d));
+		return (uint64_t)(((unsigned long)a) | (((unsigned long)d) << 32));
+	}
+
+	static inline uint64_t rdtsc_end(void)
+	{
+		unsigned a, d;
+		asm volatile("rdtscp" : "=a" (a), "=d" (d));
+		asm volatile("cpuid" ::: "%rax", "%rbx", "%rcx", "%rdx");
+		return (uint64_t)(((unsigned long)a) | (((unsigned long)d) << 32));
+	}
+
 	crstl_constexpr uint64_t ticks_per_second()
 	{
 		return 1000000000;

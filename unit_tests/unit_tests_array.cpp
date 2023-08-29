@@ -14,7 +14,7 @@ void RunUnitTestsArray()
 	crstl::array<int, 8> crArray32 = { 1, 2, 3, 4, 5, 6, 7, 8 }; crstl_unused(crArray32);
 
 #if defined(CRSTL_UNIT_RANGED_FOR)
-	crstl::size_t count = 0;
+	size_t count = 0;
 	for (const auto& item : crArray32)
 	{
 		(void)item;

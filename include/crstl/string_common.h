@@ -26,17 +26,17 @@ import <stdarg.h>;
 
 extern "C"
 {
-	crstl_2015_dllimport int vsnprintf(char* s, crstl::size_t n, const char* format, va_list arg) crstl_linux_wthrow;
+	crstl_2015_dllimport int vsnprintf(char* s, size_t n, const char* format, va_list arg) crstl_linux_wthrow;
 
 	crstl_dllimport int tolower(int c) crstl_linux_wthrow;
 	crstl_dllimport int toupper(int c) crstl_linux_wthrow;
 
 #if !defined(CRSTL_BUILTIN_STRLEN)
-	crstl::size_t strlen(const char* str);
+	size_t strlen(const char* str);
 #endif
 
 #if !defined(CRSTL_BUILTIN_WCSLEN)
-	crstl_dllimport crstl::size_t wcslen(const wchar_t* str) crstl_linux_wthrow;
+	crstl_dllimport size_t wcslen(const wchar_t* str) crstl_linux_wthrow;
 #endif
 }
 

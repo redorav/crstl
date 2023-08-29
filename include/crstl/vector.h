@@ -34,10 +34,8 @@ import <initializer_list>;
 // 
 // - push_back(): push back an empty default object
 // - push_back_uninitialized(): push back an uninitialized object
-// - resize_uninitialized(length): resizes vector to have specified length
-//   but does not initialize the contents of the objects. Use with care as
-//   objects with assignment operators accessing member variables assumed
-//   to be initialized can crash
+// - resize_uninitialized(length): resizes vector to have specified length but does not initialize the contents of the objects. Use with care as
+//   objects with assignment operators accessing member variables assumed to be initialized can crash
 // - 
 
 crstl_module_export namespace crstl
