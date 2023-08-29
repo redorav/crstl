@@ -114,6 +114,14 @@ void RunUnitTestsString()
 		const size_t stdfind = stdString.find("rin", 2);
 		crstl_check(fsfind == stdfind);
 
+		const size_t fsfindEnd = crFixedString32.find("g", crFixedString32.length() - 1);
+		const size_t stdfindEnd = stdString.find("g", stdString.length() - 1);
+		crstl_check(fsfindEnd == stdfindEnd);
+
+		const size_t fsfindPastEnd = crFixedString32.find("g", crFixedString32.length());
+		const size_t stdfindPastEnd = stdString.find("g", stdString.length());
+		crstl_check(fsfindPastEnd == stdfindPastEnd);
+
 		const size_t fsrfindc = crFixedString32.rfind('S', 6);
 		const size_t stdrfindc = stdString.rfind('S', 6);
 		crstl_check(fsrfindc == stdrfindc);

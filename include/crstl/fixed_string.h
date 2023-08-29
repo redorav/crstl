@@ -566,17 +566,29 @@ crstl_module_export namespace crstl
 		// Find a character
 		crstl_constexpr14 size_t find(CharT c, size_t pos = 0) const crstl_noexcept
 		{
-			crstl_assert(pos <= m_length);
-			const_pointer ptr = (const_pointer)crstl::string_find_char(m_data + pos, c, m_length - pos);
-			return ptr ? (size_t)(ptr - m_data) : npos;
+			if (pos < m_length)
+			{
+				const_pointer ptr = (const_pointer)crstl::string_find_char(m_data + pos, c, m_length - pos);
+				return ptr ? (size_t)(ptr - m_data) : npos;
+			}
+			else
+			{
+				return npos;
+			}
 		}
 
 		// Find a const char* string with an offset and a length
 		crstl_constexpr14 size_t find(const_pointer needle_string, size_t pos, size_t needle_length) const crstl_noexcept
 		{
-			crstl_assert(pos <= m_length);
-			const_pointer found_string = crstl::string_find(m_data + pos, m_length - pos, needle_string, needle_length);
-			return found_string ? (size_t)(found_string - m_data) : npos;
+			if (pos < m_length)
+			{
+				const_pointer found_string = crstl::string_find(m_data + pos, m_length - pos, needle_string, needle_length);
+				return found_string ? (size_t)(found_string - m_data) : npos;
+			}
+			else
+			{
+				return npos;
+			}
 		}
 
 		crstl_constexpr14 size_t find(const_pointer needle_string, size_t pos = 0) const crstl_noexcept
@@ -595,9 +607,15 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 size_t find_first_of(const_pointer needle_string, size_t pos, size_t needle_length) const crstl_noexcept
 		{
-			crstl_assert(pos < m_length);
-			const_pointer found_string = crstl::string_find_of(m_data + pos, m_length - pos, needle_string, needle_length);
-			return found_string ? (size_t)(found_string - m_data) : npos;
+			if (pos < m_length)
+			{
+				const_pointer found_string = crstl::string_find_of(m_data + pos, m_length - pos, needle_string, needle_length);
+				return found_string ? (size_t)(found_string - m_data) : npos;
+			}
+			else
+			{
+				return npos;
+			}
 		}
 
 		crstl_constexpr14 size_t find_first_of(const_pointer needle_string, size_t pos = 0) const crstl_noexcept

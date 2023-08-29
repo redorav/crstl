@@ -772,17 +772,35 @@ crstl_module_export namespace crstl
 		// Find a character
 		crstl_constexpr14 size_t find(CharT c, size_t pos = 0) const crstl_noexcept
 		{
-			crstl_assert(pos <= length());
-			const_pointer ptr = crstl::string_find_char(data() + pos, c, length() - pos);
-			return ptr ? (size_t)(ptr - data()) : npos;
+			size_t current_length = length();
+			const_pointer current_data = data();
+
+			if (pos < current_length)
+			{
+				const_pointer ptr = crstl::string_find_char(current_data + pos, c, current_length - pos);
+				return ptr ? (size_t)(ptr - current_data) : npos;
+			}
+			else
+			{
+				return npos;
+			}
 		}
 
 		// Find a const char* string with an offset and a length
 		crstl_constexpr14 size_t find(const_pointer needle_string, size_t pos, size_t needle_length) const crstl_noexcept
 		{
-			crstl_assert(pos <= length());
-			const_pointer found_string = crstl::string_find(data() + pos, length() - pos, needle_string, needle_length);
-			return found_string ? (size_t)(found_string - data()) : npos;
+			size_t current_length = length();
+			const_pointer current_data = data();
+
+			if (pos < current_length)
+			{
+				const_pointer found_string = crstl::string_find(current_data + pos, current_length - pos, needle_string, needle_length);
+				return found_string ? (size_t)(found_string - current_data) : npos;
+			}
+			else
+			{
+				return npos;
+			}
 		}
 
 		crstl_constexpr14 size_t find(const_pointer needle_string, size_t pos = 0) const crstl_noexcept
@@ -801,9 +819,18 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 size_t find_first_of(const_pointer needle_string, size_t pos, size_t needle_length) const crstl_noexcept
 		{
-			crstl_assert(pos < length());
-			const_pointer found_string = crstl::string_find_of(data() + pos, length() - pos, needle_string, needle_length);
-			return found_string ? (size_t)(found_string - data()) : npos;
+			size_t current_length = length();
+			const_pointer current_data = data();
+
+			if (pos < current_length)
+			{
+				const_pointer found_string = crstl::string_find_of(current_data + pos, current_length - pos, needle_string, needle_length);
+				return found_string ? (size_t)(found_string - current_data) : npos;
+			}
+			else
+			{
+				return npos;
+			}
 		}
 
 		crstl_constexpr14 size_t find_first_of(const_pointer needle_string, size_t pos = 0) const crstl_noexcept

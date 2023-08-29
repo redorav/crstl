@@ -82,20 +82,23 @@ crstl_module_export namespace crstl
 
 		size_t find(value_type c, size_t pos = 0) const crstl_noexcept
 		{
-			crstl_assert(pos < m_length);
-			const_pointer ptr = (const_pointer)string_find_char(m_data + pos, c, m_length - pos);
-			return ptr ? (size_t)(ptr - m_data) : npos;
+			if (pos < m_length)
+			{
+				const_pointer found_char = (const_pointer)string_find_char(m_data + pos, c, m_length - pos);
+				return found_char ? (size_t)(found_char - m_data) : npos;
+			}
+			else
+			{
+				return npos;
+			}
 		}
 
 		size_t find(const_pointer needle_string, size_t pos, size_t needle_length) const crstl_noexcept
 		{
-			crstl_assert(pos < m_length);
-
-			const_pointer found_string = string_find(m_data + pos, m_length - pos, needle_string, needle_length);
-
-			if (found_string)
+			if (pos < m_length)
 			{
-				return (size_t)(found_string - m_data);
+				const_pointer found_string = string_find(m_data + pos, m_length - pos, needle_string, needle_length);
+				return found_string ? (size_t)(found_string - m_data) : npos;
 			}
 			else
 			{
