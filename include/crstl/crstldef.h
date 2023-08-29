@@ -4,9 +4,9 @@
 
 #include "crstl/type_builtins.h"
 
-#include <stdint.h>
+#include <cstdint>
 
-#include <stddef.h>
+#include <cstddef>
 
 #if !defined(CRSTL_CHAR8_TYPE)
 
