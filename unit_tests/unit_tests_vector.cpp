@@ -15,7 +15,7 @@ void RunUnitTestsVectorNoStd()
 
 	begin_test("fixed_vector");
 	{
-		crstl::size_t initialVectorSize = 5;
+		size_t initialVectorSize = 5;
 		crstl::fixed_vector<Dummy, 32> crFixedVector(initialVectorSize);
 		crFixedVector.push_back();
 		crFixedVector.push_back_uninitialized();
