@@ -4,9 +4,12 @@
 
 #include "crstl/type_builtins.h"
 
-#include "stdint.h"
+#include <stdint.h>
 
-#include "stddef.h"
+namespace crstl
+{
+	typedef decltype(nullptr) nullptr_t;
+};
 
 #if !defined(CRSTL_CHAR8_TYPE)
 
