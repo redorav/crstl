@@ -395,8 +395,24 @@ void RunUnitTestsString()
 			crstl::string crStringErase = "Hello String";
 			std::string stdStringErase = "Hello String";
 		
-			crStringErase.erase(2, 6);
-			stdStringErase.erase(2, 6);
+			crStringErase.erase(2, 4);
+			stdStringErase.erase(2, 4);
+
+			crstl_check(crStringErase == stdStringErase.c_str());
+
+			crstl::string crFixedStringEraseRepeated = "Hello WorldString! Hello StringWorld! HelloWorldWorld!";
+			crFixedStringEraseRepeated.erase_all("World");
+			crstl_check(crFixedStringEraseRepeated.find("World") == crFixedStringEraseRepeated.npos);
+
+			crstl::string crFixedStringEraseSingleCharString = "Hkeklklkok Wkokrklkdk!";
+			crFixedStringEraseSingleCharString.erase_all("k");
+			crstl_check(crFixedStringEraseSingleCharString.find("k") == crFixedStringEraseSingleCharString.npos);
+			crstl_check(crFixedStringEraseSingleCharString == "Hello World!");
+
+			crstl::string crFixedStringEraseChar = "Hkeklklkok Wkokrklkdk!";
+			crFixedStringEraseChar.erase_all('k');
+			crstl_check(crFixedStringEraseChar.find('k') == crFixedStringEraseChar.npos);
+			crstl_check(crFixedStringEraseChar == "Hello World!");
 		}
 
 		// replace
@@ -423,17 +439,21 @@ void RunUnitTestsString()
 		}
 
 		// resize
+		{
+			crstl::string crStringResize;
+			crstl::wstring crWstringResize;
+			std::string stdStringResize;
 
-		crstl::string crStringResize;
-		crstl::wstring crWstringResize;
-		std::string stdStringResize;
+			crStringResize.resize(16, 'k');
+			crWstringResize.resize(16, L'k');
+			stdStringResize.resize(16, 'k');
 
-		crStringResize.resize(16, 'k');
-		crWstringResize.resize(16, L'k');
-		stdStringResize.resize(16, 'k');
+			crstl_check(crStringResize.size() == stdStringResize.size());
+			crstl_check(crWstringResize.size() == stdStringResize.size());
 
-		crstl_check(crStringResize.size() == stdStringResize.size());
-		crstl_check(crWstringResize.size() == stdStringResize.size());
+			crStringResize.resize_uninitialized(1024);
+			crstl_check(crStringResize.length() == 1024);
+		}
 
 		// operator +
 
