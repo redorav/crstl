@@ -6,10 +6,7 @@
 
 #include <stdint.h>
 
-namespace crstl
-{
-	typedef decltype(nullptr) nullptr_t;
-};
+#include <stddef.h>
 
 #if !defined(CRSTL_CHAR8_TYPE)
 

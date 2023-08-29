@@ -32,7 +32,7 @@ crstl_module_export namespace crstl
 
 		intrusive_ptr() crstl_noexcept : m_ptr(nullptr) {}
 
-		intrusive_ptr(crstl::nullptr_t) crstl_noexcept : m_ptr(nullptr) {}
+		intrusive_ptr(std::nullptr_t) crstl_noexcept : m_ptr(nullptr) {}
 
 		intrusive_ptr(T* ptr) crstl_noexcept : m_ptr(ptr)
 		{
@@ -63,7 +63,7 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		intrusive_ptr& operator = (crstl::nullptr_t) crstl_noexcept
+		intrusive_ptr& operator = (std::nullptr_t) crstl_noexcept
 		{
 			set_pointer(nullptr);
 			return *this;
