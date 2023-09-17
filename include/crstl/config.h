@@ -248,3 +248,13 @@
 #define crstl_restrict __restrict
 
 #define crstl_unused(x) (void)x
+
+#if defined(CRSTL_COMPILER_MSVC)
+
+	#define crstl_forceinline __forceinline
+
+#else
+
+	#define crstl_forceinline inline __attribute__((always_inline))
+
+#endif
