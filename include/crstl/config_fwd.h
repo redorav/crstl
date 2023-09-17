@@ -50,8 +50,8 @@ namespace crstl
 	};
 }
 
-crstl_nodiscard inline void* operator new (std::size_t, void* ptr, crstl::placement_new) crstl_noexcept { return ptr; }
-inline void operator delete (void*, void*, crstl::placement_new) crstl_noexcept {}
+crstl_nodiscard crstl_forceinline void* operator new (std::size_t, void* ptr, crstl::placement_new) crstl_noexcept { return ptr; }
+crstl_forceinline void operator delete (void*, void*, crstl::placement_new) crstl_noexcept {}
 
 #define crstl_placement_new(x) ::new(x, crstl::placement_new_dummy)
 
