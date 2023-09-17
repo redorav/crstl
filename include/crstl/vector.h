@@ -64,12 +64,7 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 vector(size_t initialLength)
 		{
 			m_data = allocate(initialLength);
-
-			for (size_t i = 0; i < initialLength; ++i)
-			{
-				crstl_placement_new((void*)&m_data[i]) T();
-			}
-
+			default_initialize_or_memset_zero(m_data, initialLength);
 			m_length = (length_type)initialLength;
 		}
 
@@ -111,11 +106,7 @@ crstl_module_export namespace crstl
 			size_t iter_length = iter2 - iter1;
 			m_data = allocate(iter_length);
 
-			for (size_t i = 0; i < iter_length; ++i)
-			{
-				crstl_placement_new((void*)&m_data[i]) T(iter1[i]);
-			}
-
+			copy_initialize_or_memcpy(m_data, iter1, iter_length);
 			m_length = (length_type)iter_length;
 		}
 
@@ -145,9 +136,12 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 this_type& operator = (const this_type& other) crstl_noexcept
 		{
 			// Call destructors for all existing objects
-			for (size_t i = 0; i < m_length; ++i)
+			crstl_constexpr_if(!crstl_is_trivially_destructible(T))
 			{
-				m_data[i].~T();
+				for (size_t i = 0; i < m_length; ++i)
+				{
+					m_data[i].~T();
+				}
 			}
 
 			// If we don't have enough capacity, create more space
@@ -160,11 +154,7 @@ crstl_module_export namespace crstl
 				m_data = allocate(other.m_length);
 			}
 
-			// Copy the incoming objects through their copy constructor
-			for (size_t i = 0; i < other.m_length; ++i)
-			{
-				crstl_placement_new((void*)&m_data[i]) T(other.m_data[i]);
-			}
+			copy_initialize_or_memcpy(m_data, other.m_data, other.m_length);
 
 			m_length = other.m_length;
 
@@ -352,10 +342,7 @@ crstl_module_export namespace crstl
 					reallocate_larger(length);
 				}
 
-				for (size_t i = m_length; i < length; ++i)
-				{
-					crstl_placement_new((void*)&m_data[i]) T();
-				}
+				default_initialize_or_memset_zero(m_data, length);
 			}
 			else if (length < (size_t)m_length)
 			{
@@ -423,10 +410,7 @@ crstl_module_export namespace crstl
 				T* temp = (T*)m_capacity_allocator.second().allocate(m_length * kDataSize);
 				
 				// Copy existing data
-				for (size_t i = 0; i < m_length; ++i)
-				{
-					crstl_placement_new((void*)&temp[i]) T(m_data[i]);
-				}
+				copy_initialize_or_memcpy(temp, m_data, m_length);
 
 				m_capacity_allocator.second().deallocate(m_data, m_capacity_allocator.m_first * kDataSize);
 				m_data = temp;
@@ -518,7 +502,7 @@ crstl_module_export namespace crstl
 			copy_initialize_or_memcpy(temp, m_data, m_length);
 
 			// Destroy existing data if necessary
-			if (!crstl_is_trivially_destructible(T))
+			crstl_constexpr_if(!crstl_is_trivially_destructible(T))
 			{
 				for (size_t i = 0; i < m_length; ++i)
 				{

@@ -22,6 +22,10 @@ extern "C"
 
 namespace crstl
 {
+	//------------------
+	// Memory Primitives
+	//------------------
+
 	inline void memory_copy(void* crstl_restrict destination, const void* crstl_restrict source, size_t size)
 	{
 	#if defined(CRSTL_COMPILER_MSVC)
@@ -53,6 +57,41 @@ namespace crstl
 	{
 		wmemset(destination, value, count);
 	}
+
+	//---------------------------------------------------
+	// Default Initialization: default initialize a range
+	//---------------------------------------------------
+
+	template<typename T, bool CanMemset = false>
+	struct default_initialize_or_memset_zero_select
+	{
+		static void default_initialize_or_memset_zero(T* crstl_restrict destination, size_t count)
+		{
+			for (size_t i = 0; i < count; ++i)
+			{
+				crstl_placement_new((void*)&destination[i]) T();
+			}
+		}
+	};
+
+	template<typename T>
+	struct default_initialize_or_memset_zero_select<T, true>
+	{
+		static void default_initialize_or_memset_zero(T* crstl_restrict destination, size_t count)
+		{
+			memory_set(destination, 0, sizeof(T) * count);
+		}
+	};
+
+	template<typename T>
+	void default_initialize_or_memset_zero(T* crstl_restrict destination, size_t count)
+	{
+		default_initialize_or_memset_zero_select<T, crstl_is_trivially_constructible(T)>::default_initialize_or_memset_zero(destination, count);
+	}
+
+	//-------------------------------------------------
+	// Copy Initialization: Copy entire range of memory
+	//-------------------------------------------------
 
 	template<typename T, bool CanMemcpy = false>
 	struct copy_initialize_or_memcpy_select
