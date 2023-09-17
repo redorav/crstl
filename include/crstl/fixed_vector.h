@@ -65,13 +65,15 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 fixed_vector(size_t initialLength) crstl_noexcept : m_length(0)
 		{
 			crstl_assert(initialLength < NumElements);
-			resize(initialLength);
+			default_initialize_or_memset_zero(m_data, initialLength);
+			m_length = (length_type)initialLength;
 		}
 
 		crstl_constexpr14 fixed_vector(size_t initialLength, const T& value) crstl_noexcept : m_length(0)
 		{
 			crstl_assert(initialLength < NumElements);
-			resize(initialLength, value);
+			set_initialize_or_memset(m_data, value, initialLength);
+			m_length = (length_type)initialLength;
 		}
 
 		crstl_constexpr14 fixed_vector(const this_type& other) crstl_noexcept { *this = other; }
@@ -86,11 +88,7 @@ crstl_module_export namespace crstl
 			size_t iter_length = (size_t)(iter2 - iter1);
 			crstl_assert(iter_length < NumElements);
 
-			for (size_t i = 0; i < iter_length; ++i)
-			{
-				crstl_placement_new((void*)&m_data[i]) T(iter1[i]);
-			}
-
+			copy_initialize_or_memcpy(m_data, iter1, iter_length);
 			m_length = (length_type)iter_length;
 		}
 
@@ -258,7 +256,10 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 void pop_back()
 		{
 			crstl_assert(m_length > 0);
-			back().~T();
+			crstl_constexpr_if(!crstl_is_trivially_destructible(T))
+			{
+				back().~T();
+			}
 			m_length--;
 		}
 
@@ -305,16 +306,16 @@ crstl_module_export namespace crstl
 
 			if ((size_t)m_length < length)
 			{
-				for (size_t i = m_length; i < length; ++i)
-				{
-					crstl_placement_new((void*)&m_data[i]) T();
-				}
+				default_initialize_or_memset_zero(m_data + m_length, length);
 			}
 			else if ((size_t)m_length > length)
 			{
-				for (size_t i = length; i < m_length; ++i)
+				crstl_constexpr_if(!crstl_is_trivially_destructible(T))
 				{
-					m_data[i].~T();
+					for (size_t i = length; i < m_length; ++i)
+					{
+						m_data[i].~T();
+					}
 				}
 			}
 
@@ -327,16 +328,16 @@ crstl_module_export namespace crstl
 
 			if ((size_t)m_length < length)
 			{
-				for (size_t i = m_length; i < length; ++i)
-				{
-					crstl_placement_new((void*)&m_data[i]) T(value);
-				}
+				set_initialize_or_memset(m_data + m_length, value, length);
 			}
 			else if ((size_t)m_length > length)
 			{
-				for (size_t i = length; i < m_length; ++i)
+				crstl_constexpr_if(!crstl_is_trivially_destructible(T))
 				{
-					m_data[i].~T();
+					for (size_t i = length; i < m_length; ++i)
+					{
+						m_data[i].~T();
+					}
 				}
 			}
 

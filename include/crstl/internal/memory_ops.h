@@ -22,6 +22,10 @@ extern "C"
 
 namespace crstl
 {
+	//------------------
+	// Memory Primitives
+	//------------------
+
 	inline void memory_copy(void* crstl_restrict destination, const void* crstl_restrict source, size_t size)
 	{
 	#if defined(CRSTL_COMPILER_MSVC)
@@ -53,6 +57,99 @@ namespace crstl
 	{
 		wmemset(destination, value, count);
 	}
+
+	//---------------------------------------------------
+	// Default Initialization: default initialize a range
+	//---------------------------------------------------
+
+	template<typename T, bool CanMemset = false>
+	struct default_initialize_or_memset_zero_select
+	{
+		static void default_initialize_or_memset_zero(T* crstl_restrict destination, size_t count)
+		{
+			for (size_t i = 0; i < count; ++i)
+			{
+				crstl_placement_new((void*)&destination[i]) T();
+			}
+		}
+	};
+
+	template<typename T>
+	struct default_initialize_or_memset_zero_select<T, true>
+	{
+		static void default_initialize_or_memset_zero(T* crstl_restrict destination, size_t count)
+		{
+			memory_set(destination, 0, sizeof(T) * count);
+		}
+	};
+
+	template<typename T>
+	void default_initialize_or_memset_zero(T* crstl_restrict destination, size_t count)
+	{
+		default_initialize_or_memset_zero_select<T, crstl_is_trivially_constructible(T)>::default_initialize_or_memset_zero(destination, count);
+	}
+
+	//--------------------------------------------------
+	// Set Initialization: Set a range to the same value
+	//--------------------------------------------------
+
+	namespace memset_operation
+	{
+		enum t
+		{
+			placement_copy = 0,
+			memory_copy = 1,
+			memory_set = 2
+		};
+	};
+
+	template<typename T, memset_operation::t op = memset_operation::placement_copy>
+	struct set_initialize_or_memset_select
+	{
+		static void set_initialize_or_memset(T* crstl_restrict destination, const T& value, size_t count)
+		{
+			for (size_t i = 0; i < count; ++i)
+			{
+				crstl_placement_new((void*)&destination[i]) T(value);
+			}
+		}
+	};
+
+	template<typename T>
+	struct set_initialize_or_memset_select<T, memset_operation::memory_copy>
+	{
+		static void set_initialize_or_memset(T* crstl_restrict destination, const T& value, size_t count)
+		{
+			for (size_t i = 0; i < count; ++i)
+			{
+				destination[i] = value;
+			}
+		}
+	};
+
+	template<typename T>
+	struct set_initialize_or_memset_select<T, memset_operation::memory_set>
+	{
+		static void set_initialize_or_memset(T* crstl_restrict destination, T value, size_t count)
+		{
+			static_assert(sizeof(value) == 1, "memset copies in bytes");
+			memory_set(destination, value, count);
+		}
+	};
+
+	template<typename T>
+	void set_initialize_or_memset(T* crstl_restrict destination, const T& value, size_t count)
+	{
+		set_initialize_or_memset_select<T,
+			crstl_is_trivially_constructible(T) && (sizeof(T) == 1) ? memset_operation::memory_set :
+			crstl_is_trivially_copyable(T) ? memset_operation::memory_copy :
+			memset_operation::placement_copy
+		>::set_initialize_or_memset(destination, value, count);
+	}
+
+	//-------------------------------------------------
+	// Copy Initialization: Copy entire range of memory
+	//-------------------------------------------------
 
 	template<typename T, bool CanMemcpy = false>
 	struct copy_initialize_or_memcpy_select
