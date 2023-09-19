@@ -145,14 +145,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 void clear()
 		{
-			crstl_constexpr_if(!crstl_is_trivially_destructible(T))
-			{
-				for (size_t i = 0; i < m_length; ++i)
-				{
-					m_data[i].~T();
-				}
-			}
-
+			destruct_or_ignore(m_data, m_length);
 			m_length = 0;
 		}
 
@@ -310,13 +303,7 @@ crstl_module_export namespace crstl
 			}
 			else if ((size_t)m_length > length)
 			{
-				crstl_constexpr_if(!crstl_is_trivially_destructible(T))
-				{
-					for (size_t i = length; i < m_length; ++i)
-					{
-						m_data[i].~T();
-					}
-				}
+				destruct_or_ignore(&m_data[length], m_length - length);
 			}
 
 			m_length = (length_type)length;
@@ -332,13 +319,7 @@ crstl_module_export namespace crstl
 			}
 			else if ((size_t)m_length > length)
 			{
-				crstl_constexpr_if(!crstl_is_trivially_destructible(T))
-				{
-					for (size_t i = length; i < m_length; ++i)
-					{
-						m_data[i].~T();
-					}
-				}
+				destruct_or_ignore(&m_data[length], m_length - length);
 			}
 
 			m_length = (length_type)length;

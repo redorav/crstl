@@ -177,4 +177,20 @@ namespace crstl
 	{
 		copy_initialize_or_memcpy_select<T, crstl_is_trivially_copyable(T)>::copy_initialize_or_memcpy(destination, source, count);
 	}
+
+	//-----------------------------------------------------
+	// Object Destruction: Destruct entire range of objects
+	//-----------------------------------------------------
+
+	template<typename T>
+	static void destruct_or_ignore(T* destination, size_t count)
+	{
+		crstl_constexpr_if(!crstl_is_trivially_destructible(T))
+		{
+			for (size_t i = 0; i < count; ++i)
+			{
+				destination[i].~T();
+			}
+		}
+	}
 };

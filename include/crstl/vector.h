@@ -170,14 +170,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 void clear()
 		{
-			crstl_constexpr_if(!crstl_is_trivially_destructible(T))
-			{
-				for (size_t i = 0; i < m_length; ++i)
-				{
-					m_data[i].~T();
-				}
-			}
-
+			destruct_or_ignore(m_data, m_length);
 			m_length = 0;
 		}
 
@@ -341,13 +334,7 @@ crstl_module_export namespace crstl
 			}
 			else if (length < (size_t)m_length)
 			{
-				crstl_constexpr_if(!crstl_is_trivially_destructible(T))
-				{
-					for (size_t i = length; i < m_length; ++i)
-					{
-						m_data[i].~T();
-					}
-				}
+				destruct_or_ignore(&m_data[length], m_length - length);
 			}
 
 			m_length = (length_type)length;
@@ -362,13 +349,7 @@ crstl_module_export namespace crstl
 			}
 			else if (length < (size_t)m_length)
 			{
-				crstl_constexpr_if(!crstl_is_trivially_destructible(T))
-				{
-					for (size_t i = length; i < m_length; ++i)
-					{
-						m_data[i].~T();
-					}
-				}
+				destruct_or_ignore(&m_data[length], m_length - length);
 			}
 
 			m_length = (length_type)length;
@@ -382,13 +363,7 @@ crstl_module_export namespace crstl
 			}
 			else if (length < (size_t)m_length)
 			{
-				crstl_constexpr_if(!crstl_is_trivially_destructible(T))
-				{
-					for (size_t i = length; i < m_length; ++i)
-					{
-						m_data[i].~T();
-					}
-				}
+				destruct_or_ignore(&m_data[length], m_length - length);
 			}
 
 			m_length = (length_type)length;
@@ -492,14 +467,8 @@ crstl_module_export namespace crstl
 			// Copy existing data
 			copy_initialize_or_memcpy(temp, m_data, m_length);
 
-			// Destroy existing data if necessary
-			crstl_constexpr_if(!crstl_is_trivially_destructible(T))
-			{
-				for (size_t i = 0; i < m_length; ++i)
-				{
-					m_data[i].~T();
-				}
-			}
+			// Destroy existing data
+			destruct_or_ignore(m_data, m_length);
 
 			m_capacity_allocator.second().deallocate(m_data, m_capacity_allocator.m_first * kDataSize);
 			m_data = temp;
