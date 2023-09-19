@@ -220,6 +220,15 @@ void RunUnitTestsVectorStdCompare()
 		crstl_check(crVector.size() <= crVector.capacity());
 
 		{
+			Dummy dummyCompare(20, 70.0f, nullptr);
+			crstl::vector<Dummy> crResizeVector; crResizeVector.resize(10, dummyCompare);
+			for (uint32_t i = 0; i < crResizeVector.size(); ++i)
+			{
+				crstl_check(crResizeVector[i] == dummyCompare);
+			}
+		}
+
+		{
 			size_t count = 0;
 			for (auto iter = crVector.begin(); iter != crVector.end(); ++iter)
 			{
