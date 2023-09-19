@@ -72,7 +72,8 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 fixed_vector(size_t initialLength, const T& value) crstl_noexcept : m_length(0)
 		{
 			crstl_assert(initialLength < NumElements);
-			resize(initialLength, value);
+			set_initialize_or_memset(m_data, value, initialLength);
+			m_length = (length_type)initialLength;
 		}
 
 		crstl_constexpr14 fixed_vector(const this_type& other) crstl_noexcept { *this = other; }
@@ -327,10 +328,7 @@ crstl_module_export namespace crstl
 
 			if ((size_t)m_length < length)
 			{
-				for (size_t i = m_length; i < length; ++i)
-				{
-					crstl_placement_new((void*)&m_data[i]) T(value);
-				}
+				set_initialize_or_memset(&m_data[m_length], value, length - m_length);
 			}
 			else if ((size_t)m_length > length)
 			{

@@ -71,12 +71,7 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 vector(size_t initialLength, const T& value)
 		{
 			m_data = allocate(initialLength);
-
-			for (size_t i = 0; i < initialLength; ++i)
-			{
-				crstl_placement_new((void*)&m_data[i]) T(value);
-			}
-
+			set_initialize_or_memset(m_data, value, initialLength);
 			m_length = (length_type)initialLength;
 		}
 
@@ -363,11 +358,7 @@ crstl_module_export namespace crstl
 			if (length > (size_t)m_length)
 			{
 				reallocate_larger(length);
-
-				for (size_t i = m_length; i < length; ++i)
-				{
-					crstl_placement_new((void*)&m_data[i]) T(value);
-				}
+				set_initialize_or_memset(&m_data[m_length], value, length - m_length);
 			}
 			else if (length < (size_t)m_length)
 			{
