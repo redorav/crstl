@@ -45,17 +45,17 @@ namespace crstl
 
 		const char* c_str() const { return m_path_string.c_str(); }
 
-		int compare(const char* s)
+		int compare(const char* s) const crstl_noexcept
 		{
 			return m_path_string.compare(s);
 		}
 
-		int comparei(const char* s)
+		int comparei(const char* s) const crstl_noexcept
 		{
 			return m_path_string.comparei(s);
 		}
 
-		bool empty() const
+		bool empty() const crstl_noexcept
 		{
 			return m_path_string.empty();
 		}
