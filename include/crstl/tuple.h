@@ -36,13 +36,13 @@ crstl_module_export namespace crstl
 		template <typename Indices, typename ... Ts> struct parameter_pack_indexer;
 
 		template <int ... Indices, typename ... Ts>
-		struct parameter_pack_indexer<crstl::integer_sequence<size_t, Indices...>, Ts...> : parameter_pack_indexed<Indices, Ts>... {};
+		struct parameter_pack_indexer<integer_sequence<size_t, Indices...>, Ts...> : parameter_pack_indexed<Indices, Ts>... {};
 	};
 
 	template<int Index, typename ... Ts>
 	struct tuple_element
 	{
-		typedef typename decltype(internal::parameter_pack_select<Index>(internal::parameter_pack_indexer<crstl::index_sequence_for<Ts...>, Ts...>{}))::type type;
+		typedef typename decltype(internal::parameter_pack_select<Index>(internal::parameter_pack_indexer<index_sequence_for<Ts...>, Ts...>{}))::type type;
 	};
 
 #endif
@@ -185,12 +185,12 @@ crstl_module_export namespace crstl
 	template<int Index, typename... Ts>
 	const typename tuple_element<Index, Ts...>::type& get(const tuple<Ts ...>& t)
 	{
-		return static_cast<tuple_leaf<Index, typename tuple_element<Index, Ts...>::type>&>(t.m_implementation).get();
+		return static_cast<const tuple_leaf<Index, typename tuple_element<Index, Ts...>::type>&>(t.m_implementation).get();
 	}
 
 	template<int Index, typename... Ts>
 	typename tuple_element<Index, Ts...>::type&& get(tuple<Ts ...>&& t)
 	{
-		return static_cast<tuple_leaf<Index, typename tuple_element<Index, Ts...>::type>&>(crstl::move(t.m_implementation)).get();
+		return static_cast<tuple_leaf<Index, typename tuple_element<Index, Ts...>::type>&&>(crstl::move(t.m_implementation)).get();
 	}
 };
