@@ -15,6 +15,38 @@
 
 crstl_module_export namespace crstl
 {
+#if defined(CRSTL_COMPILER_CLANG)
+
+	template<int Index, typename ... Args>
+	struct type_pack_element
+	{
+		typedef __type_pack_element<Index, Args...> type;
+	};
+
+#else
+
+	namespace internal
+	{
+		// https://ldionne.com/2015/11/29/efficient-parameter-pack-indexing/
+		template <int Index, typename T> struct parameter_pack_indexed { using type = T; };
+
+		template <int Index, typename T>
+		static parameter_pack_indexed<Index, T> parameter_pack_select(parameter_pack_indexed<Index, T>);
+
+		template <typename Indices, typename ... Ts> struct parameter_pack_indexer;
+
+		template <int ... Indices, typename ... Ts>
+		struct parameter_pack_indexer<crstl::integer_sequence<size_t, Indices...>, Ts...> : parameter_pack_indexed<Indices, Ts>... {};
+	};
+
+	template<int Index, typename ... Ts>
+	struct type_pack_element
+	{
+		typedef typename decltype(internal::parameter_pack_select<Index>(internal::parameter_pack_indexer<crstl::index_sequence_for<Ts...>, Ts...>{}))::type type;
+	};
+
+#endif
+
 	// Base declaration of tuple_leaf. Holds the value for each element in the tuple
 	// A tuple is a collection of tuple_leafs, with an associated index for each leaf
 	template <size_t Index, typename ValueT, bool IsEmpty = crstl_is_empty(ValueT) && !crstl_is_final(ValueT)>
@@ -119,8 +151,36 @@ crstl_module_export namespace crstl
 
 		tuple(const T& arg1, const Ts& ... args) : m_implementation(make_integer_sequence<size_t, sizeof...(Ts) + 1>{}, arg1, args...) {}
 
+		// This does not conform to the standard but is a lot more convenient than the free get<>() function
+		template<int Index>
+		const typename type_pack_element<Index, T, Ts...>::type& get()
+		{
+			return static_cast<tuple_leaf<Index, typename type_pack_element<Index, T, Ts...>::type>&>(m_implementation).get();
+		}
+
 		crstl_constexpr size_t size() const { return sizeof...(Ts) + 1; }
 	
 		tuple_implementation<make_integer_sequence<size_t, sizeof...(Ts) + 1>, T, Ts...> m_implementation;
 	};
+
+	// We get the type from the index using the type_pack_element helper, and using that type we cast
+	// m_implementation to the tuple_leaf with the corresponding index and type. Since m_implementation
+	// derives from all the possible tuple_leafs, we get a valid object and just call get() on it
+	template<int Index, typename... Ts>
+	typename type_pack_element<Index, Ts...>::type& get(tuple<Ts ...>& t)
+	{
+		return static_cast<tuple_leaf<Index, typename type_pack_element<Index, Ts...>::type>&>(t.m_implementation).get();
+	}
+
+	template<int Index, typename... Ts>
+	const typename type_pack_element<Index, Ts...>::type& get(const tuple<Ts ...>& t)
+	{
+		return static_cast<tuple_leaf<Index, typename type_pack_element<Index, Ts...>::type>&>(t.m_implementation).get();
+	}
+
+	template<int Index, typename... Ts>
+	typename type_pack_element<Index, Ts...>::type&& get(tuple<Ts ...>&& t)
+	{
+		return static_cast<tuple_leaf<Index, typename type_pack_element<Index, Ts...>::type>&>(crstl::move(t.m_implementation)).get();
+	}
 };
