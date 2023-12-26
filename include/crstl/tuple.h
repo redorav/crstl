@@ -163,6 +163,14 @@ crstl_module_export namespace crstl
 		tuple_implementation<make_integer_sequence<size_t, sizeof...(Ts) + 1>, T, Ts...> m_implementation;
 	};
 
+	// Definition of empty tuple. This may seem like an odd class to have, but consider for example a tuple that stores arguments
+	// to a function. It needs to store the arguments to f(void) as well, which the generic tuple cannot handle
+	template<>
+	class tuple<>
+	{
+	public:
+	};
+
 	// We get the type from the index using the type_pack_element helper, and using that type we cast
 	// m_implementation to the tuple_leaf with the corresponding index and type. Since m_implementation
 	// derives from all the possible tuple_leafs, we get a valid object and just call get() on it
