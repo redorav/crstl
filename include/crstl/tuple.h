@@ -6,6 +6,8 @@
 
 #include "crstl/type_builtins.h"
 
+#include "crstl/sequence.h"
+
 // tuple
 //
 // crstl::tuple is replacement for std::tuple
@@ -13,63 +15,8 @@
 
 crstl_module_export namespace crstl
 {
-	// integer_sequence
-	template <typename T, T... Integers>
-	class integer_sequence
-	{
-	public:
-		typedef T value_type;
-		//static_assert(is_integral<T>::value, "crstl::integer_sequence can only be instantiated with an integral type");
-		static crstl_constexpr size_t size() crstl_noexcept { return sizeof...(Integers); }
-	};
-
-	// An index sequence is integer_sequence with T as size_t
-
-#if defined(CRSTL_COMPILER_GCC)
-	template <typename T, T N>
-	using make_integer_sequence = integer_sequence<T, __integer_pack(N)...>;
-#elif defined(CRSTL_COMPILER_CLANG) || defined(CRSTL_COMPILER_MSVC)
-	template <class T, T N>
-	using make_integer_sequence = __make_integer_seq<integer_sequence, T, N>;
-#else
-
-	template <size_t N, typename IndexSequence>
-	struct make_index_sequence_implementation;
-
-	template <size_t N, size_t... Is>
-	struct make_index_sequence_implementation<N, integer_sequence<size_t, Is...>>
-	{
-		typedef typename make_index_sequence_implementation<N - 1, integer_sequence<size_t, N - 1, Is...>>::type type;
-	};
-
-	template <size_t... Is>
-	struct make_index_sequence_implementation<0, integer_sequence<size_t, Is...>>
-	{
-		typedef integer_sequence<size_t, Is...> type;
-	};
-
-	template <typename Target, typename Sequence>
-	struct integer_sequence_convert_implementation;
-
-	template <typename Target, size_t... Is>
-	struct integer_sequence_convert_implementation<Target, integer_sequence<size_t, Is...>>
-	{
-		typedef integer_sequence<Target, Is...> type;
-	};
-
-	template <typename T, T N>
-	struct make_integer_sequence_impl
-	{
-		typedef typename integer_sequence_convert_implementation<T, typename make_index_sequence_implementation<N, integer_sequence<size_t>>::type>::type type;
-	};
-
-	template <typename T, T N>
-	using make_integer_sequence = typename make_integer_sequence_impl<T, N>::type;
-
-#endif
-
 	// Base declaration of tuple_leaf. Holds the value for each element in the tuple
-	// A tuple is a collection of tuple_leafs
+	// A tuple is a collection of tuple_leafs, with an associated index for each leaf
 	template <size_t Index, typename ValueT, bool IsEmpty = crstl_is_empty(ValueT) && !crstl_is_final(ValueT)>
 	class tuple_leaf;
 
@@ -104,7 +51,7 @@ crstl_module_export namespace crstl
 		ValueT m_value;
 	};
 
-	// Empty base class specialization
+	// Empty base class specialization for tuple_leaf
 	template <size_t Index, typename ValueT>
 	class tuple_leaf<Index, ValueT, true> : private ValueT
 	{
@@ -113,10 +60,7 @@ crstl_module_export namespace crstl
 		tuple_leaf() crstl_constructor_default;
 		tuple_leaf(const ValueT& value) {}
 		tuple_leaf(ValueT&& value) {}
-		tuple_leaf(const tuple_leaf& other) : ValueT(other.get())
-		{
-			
-		}
+		tuple_leaf(const tuple_leaf& other) : ValueT(other.get()) {}
 
 		template <typename OtherValueT>
 		explicit tuple_leaf(OtherValueT&& t) : ValueT(forward<OtherValueT>(t)) {}
@@ -144,10 +88,10 @@ crstl_module_export namespace crstl
 	struct tuple_implementation;
 
 	// e.g. tuple_implementation<0, 1, 2, int, float, char>
-	// Multiple inheritance of tuple_leaf for every combination of Indices and Ts
-	// Also guarantees that the order in which we add the elements is the order in
-	// which they appear
-	template<size_t... Indices, typename ... Ts>
+	// Multiple inheritance of tuple_leaf for every combination of Indices and Ts, so every member is laid out consecutively
+	// This guarantees that the order in which we add the elements is the order in which they appear. Each constructor then
+	// calls the parent constructors in sequence as well
+	template<size_t ... Indices, typename ... Ts>
 	struct tuple_implementation<integer_sequence<size_t, Indices...>, Ts...> : public tuple_leaf<Indices, Ts>...
 	{
 		crstl_constexpr tuple_implementation() crstl_constructor_default;
