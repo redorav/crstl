@@ -36,7 +36,7 @@ crstl_module_export namespace crstl
 		function
 		(
 			FunctorT&& functor,
-			// Do not accept as Functor a fixed_function, we'll deal with it in a specialized copy/move constructor but due to overload
+			// Do not accept as Functor a function, we'll deal with it in a specialized copy/move constructor but due to overload
 			// resolution rules, this one takes precedence. Remove reference to be able to compare the underlying type
 			typename crstl::is_not_function<typename crstl::remove_reference<FunctorT>::type>::type = nullptr
 		) crstl_noexcept
