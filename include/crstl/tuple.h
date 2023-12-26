@@ -6,7 +6,7 @@
 
 #include "crstl/type_builtins.h"
 
-#include "crstl/sequence.h"
+#include "crstl/utility/sequence.h"
 
 // tuple
 //
