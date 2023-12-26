@@ -18,7 +18,7 @@ crstl_module_export namespace crstl
 #if defined(CRSTL_COMPILER_CLANG)
 
 	template<int Index, typename ... Args>
-	struct type_pack_element
+	struct tuple_element
 	{
 		typedef __type_pack_element<Index, Args...> type;
 	};
@@ -40,7 +40,7 @@ crstl_module_export namespace crstl
 	};
 
 	template<int Index, typename ... Ts>
-	struct type_pack_element
+	struct tuple_element
 	{
 		typedef typename decltype(internal::parameter_pack_select<Index>(internal::parameter_pack_indexer<crstl::index_sequence_for<Ts...>, Ts...>{}))::type type;
 	};
@@ -153,9 +153,9 @@ crstl_module_export namespace crstl
 
 		// This does not conform to the standard but is a lot more convenient than the free get<>() function
 		template<int Index>
-		const typename type_pack_element<Index, T, Ts...>::type& get()
+		const typename tuple_element<Index, T, Ts...>::type& get()
 		{
-			return static_cast<tuple_leaf<Index, typename type_pack_element<Index, T, Ts...>::type>&>(m_implementation).get();
+			return static_cast<tuple_leaf<Index, typename tuple_element<Index, T, Ts...>::type>&>(m_implementation).get();
 		}
 
 		crstl_constexpr size_t size() const { return sizeof...(Ts) + 1; }
@@ -169,26 +169,28 @@ crstl_module_export namespace crstl
 	class tuple<>
 	{
 	public:
+
+		crstl_constexpr size_t size() const { return 0; }
 	};
 
 	// We get the type from the index using the type_pack_element helper, and using that type we cast
 	// m_implementation to the tuple_leaf with the corresponding index and type. Since m_implementation
 	// derives from all the possible tuple_leafs, we get a valid object and just call get() on it
 	template<int Index, typename... Ts>
-	typename type_pack_element<Index, Ts...>::type& get(tuple<Ts ...>& t)
+	typename tuple_element<Index, Ts...>::type& get(tuple<Ts ...>& t)
 	{
-		return static_cast<tuple_leaf<Index, typename type_pack_element<Index, Ts...>::type>&>(t.m_implementation).get();
+		return static_cast<tuple_leaf<Index, typename tuple_element<Index, Ts...>::type>&>(t.m_implementation).get();
 	}
 
 	template<int Index, typename... Ts>
-	const typename type_pack_element<Index, Ts...>::type& get(const tuple<Ts ...>& t)
+	const typename tuple_element<Index, Ts...>::type& get(const tuple<Ts ...>& t)
 	{
-		return static_cast<tuple_leaf<Index, typename type_pack_element<Index, Ts...>::type>&>(t.m_implementation).get();
+		return static_cast<tuple_leaf<Index, typename tuple_element<Index, Ts...>::type>&>(t.m_implementation).get();
 	}
 
 	template<int Index, typename... Ts>
-	typename type_pack_element<Index, Ts...>::type&& get(tuple<Ts ...>&& t)
+	typename tuple_element<Index, Ts...>::type&& get(tuple<Ts ...>&& t)
 	{
-		return static_cast<tuple_leaf<Index, typename type_pack_element<Index, Ts...>::type>&>(crstl::move(t.m_implementation)).get();
+		return static_cast<tuple_leaf<Index, typename tuple_element<Index, Ts...>::type>&>(crstl::move(t.m_implementation)).get();
 	}
 };
