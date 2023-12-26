@@ -29,25 +29,25 @@ crstl_module_export namespace crstl
 	template <size_t N, typename IndexSequence>
 	struct make_index_sequence_implementation;
 
-	template <size_t N, size_t... Is>
-	struct make_index_sequence_implementation<N, integer_sequence<size_t, Is...>>
+	template <size_t N, size_t... Indices>
+	struct make_index_sequence_implementation<N, integer_sequence<size_t, Indices...>>
 	{
-		typedef typename make_index_sequence_implementation<N - 1, integer_sequence<size_t, N - 1, Is...>>::type type;
+		typedef typename make_index_sequence_implementation<N - 1, integer_sequence<size_t, N - 1, Indices...>>::type type;
 	};
 
-	template <size_t... Is>
-	struct make_index_sequence_implementation<0, integer_sequence<size_t, Is...>>
+	template <size_t... Indices>
+	struct make_index_sequence_implementation<0, integer_sequence<size_t, Indices...>>
 	{
-		typedef integer_sequence<size_t, Is...> type;
+		typedef integer_sequence<size_t, Indices...> type;
 	};
 
 	template <typename Target, typename Sequence>
 	struct integer_sequence_convert_implementation;
 
-	template <typename Target, size_t... Is>
-	struct integer_sequence_convert_implementation<Target, integer_sequence<size_t, Is...>>
+	template <typename Target, size_t... Indices>
+	struct integer_sequence_convert_implementation<Target, integer_sequence<size_t, Indices...>>
 	{
-		typedef integer_sequence<Target, Is...> type;
+		typedef integer_sequence<Target, Indices...> type;
 	};
 
 	template <typename T, T N>
@@ -63,12 +63,12 @@ crstl_module_export namespace crstl
 
 	// An index sequence is an integer sequence with size_t
 
-	template <size_t... Ts>
-	using index_sequence = integer_sequence<size_t, Ts...>;
+	template <size_t... Vs>
+	using index_sequence = integer_sequence<size_t, Vs...>;
 
 	template <size_t Size>
 	using make_index_sequence = make_integer_sequence<size_t, Size>;
 
-	template <class... Ts>
+	template <typename... Ts>
 	using index_sequence_for = make_index_sequence<sizeof...(Ts)>;
 };
