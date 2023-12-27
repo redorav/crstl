@@ -41,15 +41,15 @@ namespace crstl
 		return (uint16_t)result;
 	}
 
-	inline float half2float(short h)
+	inline float half2float(uint16_t h)
 	{
-		const uint32_t e = (h & 0x7C00) >> 10; // exponent
-		const uint32_t m = (h & 0x03FF) << 13; // mantissa
+		const uint32_t e = (uint32_t)((h & 0x7C00) >> 10); // exponent
+		const uint32_t m = (uint32_t)((h & 0x03FF) << 13); // mantissa
 		const uint32_t v = float_bits((float)m).u >> 23; // evil log2 bit hack to count leading zeros in denormalized format
 		const uint32_t result = 
-			(h & 0x8000) << 16 | 
-			(e != 0) * ((e + 112) << 23 | m) | 
-			((e == 0) & (m != 0)) * ((v - 37) << 23 | ((m << (150 - v)) & 0x007FE000)); // sign : normalized : denormalized
+			(uint32_t)((h & 0x8000) << 16) | 
+			(uint32_t)((e != 0) * ((e + 112) << 23 | m)) |
+			(uint32_t)(((e == 0) & (m != 0)) * ((v - 37) << 23 | ((m << (150 - v)) & 0x007FE000))); // sign : normalized : denormalized
 
 		return float_bits(result).f;
 	}
