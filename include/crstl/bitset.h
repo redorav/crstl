@@ -6,7 +6,7 @@
 
 #include "crstl/crstldef.h"
 
-#include "crstl/internal/memory_ops.h"
+#include "crstl/utility/memory_ops.h"
 
 crstl_module_export namespace crstl
 {

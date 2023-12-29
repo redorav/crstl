@@ -4,7 +4,7 @@
 
 #include "crstl/crstldef.h"
 
-#include "crstl/string_common.h"
+#include "crstl/utility/string_common.h"
 
 namespace crstl
 {

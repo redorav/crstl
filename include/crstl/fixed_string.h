@@ -4,6 +4,8 @@
 
 #include "crstl/utility/string_common.h"
 
+#include "crstl/utility/string_utf.h"
+
 #include "crstl/utility/fixed_common.h"
 
 #include "crstl/utility/memory_ops.h"

@@ -10,9 +10,9 @@
 
 #include "crstl/type_builtins.h"
 
-#include "crstl/internal/fixed_common.h"
+#include "crstl/utility/fixed_common.h"
 
-#include "crstl/internal/memory_ops.h"
+#include "crstl/utility/memory_ops.h"
 
 #if defined(CRSTL_MODULE_DECLARATION)
 import <initializer_list>;
