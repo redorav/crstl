@@ -14,7 +14,7 @@ extern "C"
 
 #pragma intrinsic(__rdtsc)
 
-namespace crstl
+crstl_module_export namespace crstl
 {
 	inline uint64_t ticks_per_second()
 	{

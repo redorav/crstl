@@ -4,7 +4,7 @@
 
 #include <time.h>
 
-namespace crstl
+crstl_module_export namespace crstl
 {
 	// https://gist.github.com/savanovich/f07eda9dba9300eb9ccf
 	static inline uint64_t rdtsc_start(void)

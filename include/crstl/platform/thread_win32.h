@@ -66,7 +66,7 @@ extern "C"
 #define CRSTL_EXCEPTION_CONTINUE_SEARCH      0
 #define CRSTL_EXCEPTION_CONTINUE_EXECUTION (-1)
 
-namespace crstl
+crstl_module_export namespace crstl
 {
 	#pragma pack(push,8)
 	typedef struct tagTHREADNAME_INFO {

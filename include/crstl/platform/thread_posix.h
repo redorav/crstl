@@ -7,7 +7,7 @@ extern "C"
 	int usleep(uint32_t __useconds);
 }
 
-namespace crstl
+crstl_module_export namespace crstl
 {
 	template<typename Function, typename ... Args>
 	void* MainThreadFn(void* parameter)
