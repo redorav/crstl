@@ -6,9 +6,9 @@
 
 #include "crstl/tuple.h"
 
-namespace crstl
+crstl_module_export namespace crstl
 {
-	static const uint32_t DefaultStackSize = 32 * 1024;
+	const uint32_t DefaultStackSize = 32 * 1024;
 
 	namespace thread_priority
 	{
@@ -97,7 +97,7 @@ namespace crstl
 
 #if defined(CRSTL_OS_WINDOWS)
 #include "crstl/platform/thread_win32.h"
-#elif defined(CRSTL_OS_LINUX)
+#elif defined(CRSTL_OS_LINUX) || defined(CRSTL_OS_OSX)
 #include "crstl/platform/thread_posix.h"
 #endif
 
