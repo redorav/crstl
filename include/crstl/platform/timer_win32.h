@@ -6,8 +6,8 @@ union _LARGE_INTEGER;
 
 extern "C"
 {
-	int QueryPerformanceFrequency(_LARGE_INTEGER* lpFrequency);
-	int QueryPerformanceCounter(_LARGE_INTEGER* lpPerformanceCount);
+	__declspec(dllimport) int QueryPerformanceFrequency(_LARGE_INTEGER* lpFrequency);
+	__declspec(dllimport) int QueryPerformanceCounter(_LARGE_INTEGER* lpPerformanceCount);
 
 	unsigned __int64 __rdtsc();
 }
