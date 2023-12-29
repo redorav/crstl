@@ -395,13 +395,14 @@ crstl_module_export namespace crstl
 		// or the existing elements to destroy them
 		crstl_constexpr14 void resize_front(size_t length)
 		{
-			if (length > (size_t)m_length)
+			if (length > m_length)
 			{
-				ptrdiff_t capacity_increment = length - m_capacity_allocator.m_first;
+				crstl_assert(length > m_capacity_allocator.m_first);
+				size_t capacity_increment = length - m_capacity_allocator.m_first;
 
 				request_capacity_front(capacity_increment);
 
-				iterate(-capacity_increment, 0, [&](T& data)
+				iterate(-(ptrdiff_t)capacity_increment, 0, [&](T& data)
 				{
 					crstl_placement_new((void*)&data) T();
 				});
@@ -411,13 +412,13 @@ crstl_module_export namespace crstl
 				m_local_begin = (local_length_type)(global_begin - (global_begin / ChunkSize) * ChunkSize);
 				m_length = (local_length_type)length;
 			}
-			else if (length < (size_t)m_length)
+			else if (length < m_length)
 			{
 				crstl_constexpr_if(!crstl_is_trivially_destructible(T))
 				{
-					ptrdiff_t length_decrement = m_length - length;
+					size_t length_decrement = m_length - length;
 
-					iterate(0, length_decrement, [&](T& data)
+					iterate(0, (ptrdiff_t)length_decrement, [&](T& data)
 					{
 						data.~T();
 					});
@@ -458,8 +459,8 @@ crstl_module_export namespace crstl
 
 			for (ptrdiff_t i = begin; i < end; ++i)
 			{
-				ptrdiff_t global_begin = global_offset + i;
-				crstl_assert(global_begin >= 0);
+				crstl_assert((global_offset + i) >= 0);
+				size_t global_begin = (size_t)(global_offset + i);
 				function(m_chunk_array[global_begin / ChunkSize]->m_data[global_begin - (global_begin / ChunkSize) * ChunkSize]);
 			}
 		}
