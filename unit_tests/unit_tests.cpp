@@ -137,6 +137,7 @@ void RunUnitTestsPair();
 void RunUnitTestsPath();
 void RunUnitTestsSmartPtr();
 void RunUnitTestsString();
+void RunUnitTestsThread();
 void RunUnitTestsTimer();
 void RunUnitTestsVector();
 
@@ -162,6 +163,7 @@ extern "C"
 	RunUnitTestsPair();
 	RunUnitTestsSmartPtr();
 	RunUnitTestsString();
+	RunUnitTestsThread();
 	RunUnitTestsTimer();
 	RunUnitTestsVector();
 	RunUnitTestsPath();
