@@ -6,7 +6,7 @@
 
 #include "crstl/crstldef.h"
 
-#include "crstl/internal/memory_ops.h"
+#include "crstl/utility/memory_ops.h"
 
 // This include is very cheap in compile times and hard
 // to get right outside of its actual implementation

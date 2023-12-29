@@ -1,12 +1,12 @@
 #pragma once
 
-#include "crstl/string_common.h"
-
 #include "crstl/crstldef.h"
 
-#include "crstl/internal/fixed_common.h"
+#include "crstl/utility/string_common.h"
 
-#include "crstl/internal/memory_ops.h"
+#include "crstl/utility/fixed_common.h"
+
+#include "crstl/utility/memory_ops.h"
 
 // fixed_string
 //
