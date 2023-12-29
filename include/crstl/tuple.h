@@ -90,8 +90,8 @@ crstl_module_export namespace crstl
 	public:
 
 		tuple_leaf() crstl_constructor_default;
-		tuple_leaf(const ValueT& value) {}
-		tuple_leaf(ValueT&& value) {}
+		tuple_leaf(const ValueT& value) { crstl_unused(value); }
+		tuple_leaf(ValueT&& value) { crstl_unused(value); }
 		tuple_leaf(const tuple_leaf& other) : ValueT(other.get()) {}
 
 		template <typename OtherValueT>
