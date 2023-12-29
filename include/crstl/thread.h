@@ -69,6 +69,7 @@ crstl_module_export namespace crstl
 	template<typename Function, typename Tuple, size_t ... S>
 	void call(Function&& function, Tuple&& arguments, crstl::index_sequence<S...>)
 	{
+		crstl_unused(arguments); // For some reason some compilers seem to think arguments is unused when the tuple is empty
 		function(crstl::get<S>(arguments)...);
 	}
 

@@ -193,4 +193,10 @@ crstl_module_export namespace crstl
 	{
 		return static_cast<tuple_leaf<Index, typename tuple_element<Index, Ts...>::type>&&>(crstl::move(t.m_implementation)).get();
 	}
+
+	template<int Index, typename... Ts>
+	const typename tuple_element<Index, Ts...>::type&& get(const tuple<Ts ...>&& t)
+	{
+		return static_cast<const tuple_leaf<Index, const typename tuple_element<Index, Ts...>::type>&&>(crstl::move(t.m_implementation)).get();
+	}
 };
