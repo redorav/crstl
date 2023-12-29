@@ -4,6 +4,11 @@
 
 #include "crstl/crstldef.h"
 
+// crstl::half
+//
+// Implementation of a IEEE-754 16-bit floating point type
+//
+
 namespace crstl
 {
 	class half;

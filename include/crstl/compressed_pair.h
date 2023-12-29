@@ -4,7 +4,7 @@
 
 #include "crstl/type_builtins.h"
 
-// compressed_pair
+// crstl::compressed_pair
 //
 // Implements empty base class optimization for a pair of types 
 

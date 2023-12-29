@@ -8,6 +8,11 @@
 
 #include "crstl/utility/memory_ops.h"
 
+// crstl::bitset
+//
+// Replacement for std::bitset
+//
+
 crstl_module_export namespace crstl
 {
 	// http://graphics.stanford.edu/~seander/bithacks.html#CountBitsSetParallel

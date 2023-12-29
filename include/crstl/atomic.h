@@ -12,6 +12,11 @@
 #include "crstl/platform/atomic_clang_gcc.h"
 #endif
 
+// crstl::atomic
+//
+// Replacement for std::atomic
+//
+
 // These freestanding functions used to be called atomic_store, add, etc
 // but stdatomic.h seems to create defines for these names which is quite
 // unfortunate

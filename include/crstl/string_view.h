@@ -6,6 +6,11 @@
 
 #include "crstl/utility/string_common.h"
 
+// crstl::string_view
+//
+// Replacement for std::string_view
+//
+
 crstl_module_export namespace crstl
 {
 	template<typename CharT>

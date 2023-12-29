@@ -8,9 +8,9 @@
 
 #include "crstl/type_array.h"
 
-// unique_ptr
+// crstl::unique_ptr
 //
-// Simple replacement for std::unique_ptr, functionally the same
+// Replacement for std::unique_ptr, functionally the same
 // but with a very small compile time footprint
 // The move-only semantics remain the same
 //

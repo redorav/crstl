@@ -8,7 +8,7 @@
 
 #include "crstl/crstldef.h"
 
-// stack_vector
+// crstl::stack_vector
 //
 // Replacement for std::vector that doesn't manage its own memory.
 // Useful for using dynamically-size stack-allocated memory via

@@ -8,9 +8,9 @@
 
 #include "crstl/utility/sequence.h"
 
-// tuple
+// crstl::tuple
 //
-// crstl::tuple is replacement for std::tuple
+// Replacement for std::tuple
 //
 
 crstl_module_export namespace crstl

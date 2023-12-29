@@ -15,7 +15,7 @@
 // Only turn this on for development
 //#define CRSTL_DEQUE_EXHAUSTIVE_VALIDATION
 
-// deque
+// crstl::deque
 //
 // Replacement for std::deque
 //

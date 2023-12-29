@@ -4,7 +4,12 @@
 
 #include "crstl/crstldef.h"
 
-namespace crstl
+// crstl::allocator
+//
+// Replacement for std::allocator
+//
+
+crstl_module_export namespace crstl
 {
 	class allocator
 	{

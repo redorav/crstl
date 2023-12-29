@@ -4,6 +4,11 @@
 
 #include "crstl/crstldef.h"
 
+// crstl::array
+//
+// Replacement for std::array
+//
+
 crstl_module_export namespace crstl
 {
 	template<typename T, size_t N = 1>

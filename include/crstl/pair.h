@@ -4,6 +4,11 @@
 
 #include "crstl/move_forward.h"
 
+// crstl::pair
+//
+// Replacement for std::pair
+//
+
 crstl_module_export namespace crstl
 {
 	template<typename T1, typename T2>

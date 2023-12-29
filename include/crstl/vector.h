@@ -22,7 +22,7 @@ import <initializer_list>;
 #include <initializer_list>
 #endif
 
-// vector
+// crstl::vector
 //
 // Replacement for std::vector
 //

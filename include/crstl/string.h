@@ -12,7 +12,7 @@
 
 #include "crstl/utility/memory_ops.h"
 
-// string
+// crstl::string
 //
 // Replacement for std::string
 //

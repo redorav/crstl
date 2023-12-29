@@ -2,9 +2,9 @@
 
 #include "crstl/function_common.h"
 
-// fixed_function
+// crstl::fixed_function
 //
-// fixed_function is a fixed-memory replacement for std::function
+// Fixed replacement for std::function
 //
 // - The user supplies a size to the template object, which creates storage
 // - The storage is used to locally copy or instantiate functors

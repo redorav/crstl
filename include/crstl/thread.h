@@ -6,6 +6,18 @@
 
 #include "crstl/tuple.h"
 
+// crstl::thread
+//
+// Replacement for std::thread
+//
+// - Accepts a thread_parameters structure that configures the thread for initialization
+//   This allows the implementation to set a thread name for debugging or an initial priority
+// - There are extra functions not present in the standard such as
+//   - set_priority: sets thread priority
+//   - start: combine with with the delay_start parameter to start the thread at some other
+//     point after creation
+//
+
 crstl_module_export namespace crstl
 {
 	const uint32_t DefaultStackSize = 32 * 1024;

@@ -4,6 +4,11 @@
 
 #include "crstl/type_utils.h"
 
+// crstl::span
+//
+// Replacement for std::span
+//
+
 crstl_module_export namespace crstl
 {
 	template<typename T>

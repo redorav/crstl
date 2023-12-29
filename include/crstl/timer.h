@@ -10,6 +10,11 @@
 #include "crstl/platform/timer_posix.h"
 #endif
 
+// crstl::timer
+//
+// Replacement for std::chrono facilities
+//
+
 crstl_module_export namespace crstl
 {
 #if defined(CRSTL_OS_WINDOWS)

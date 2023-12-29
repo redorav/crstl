@@ -14,7 +14,7 @@
 
 #include "crstl/utility/memory_ops.h"
 
-// fixed_deque
+// crstl::fixed_deque
 //
 // Fixed replacement for std::deque
 //

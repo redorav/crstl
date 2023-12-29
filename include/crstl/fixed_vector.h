@@ -20,7 +20,7 @@ import <initializer_list>;
 #include <initializer_list>
 #endif
 
-// fixed_vector
+// crstl::fixed_vector
 //
 // Fixed replacement for std::vector
 //

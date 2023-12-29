@@ -2,11 +2,12 @@
 
 #include "crstl/function_common.h"
 
-// function
+// crstl::function
 //
-// function is a fixed-memory replacement for std::function
+// Replacement for std::function
 //
-// - function has a small configurable buffer
+// - function has a small configurable buffer that can be increased. However, if a larger size is necessary and known,
+//   consider using fixed_function
 
 // 0 has a special value in functor_storage that means the minimum to store a pointer, but it is customizable
 #if !defined(CRSTL_FUNCTION_INTERNAL_BUFFER_BYTES)

@@ -6,6 +6,11 @@
 
 #include "crstl/atomic.h"
 
+// crstl::intrusive_ptr
+//
+// Alternative to std::shared_ptr
+//
+
 crstl_module_export namespace crstl
 {
 	template<typename T>

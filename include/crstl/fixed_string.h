@@ -10,7 +10,7 @@
 
 #include "crstl/utility/memory_ops.h"
 
-// fixed_string
+// crstl::fixed_string
 //
 // Fixed replacement for std::string
 //
