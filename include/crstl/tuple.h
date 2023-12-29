@@ -28,18 +28,18 @@ crstl_module_export namespace crstl
 	namespace internal
 	{
 		// https://ldionne.com/2015/11/29/efficient-parameter-pack-indexing/
-		template <int Index, typename T> struct parameter_pack_indexed { using type = T; };
+		template <size_t Index, typename T> struct parameter_pack_indexed { using type = T; };
 
-		template <int Index, typename T>
-		parameter_pack_indexed<Index, T> parameter_pack_select(parameter_pack_indexed<Index, T>);
+		template <size_t Index, typename T>
+		parameter_pack_indexed<Index, T> parameter_pack_select(parameter_pack_indexed<Index, T>) {}
 
 		template <typename Indices, typename ... Ts> struct parameter_pack_indexer;
 
-		template <int ... Indices, typename ... Ts>
+		template <size_t ... Indices, typename ... Ts>
 		struct parameter_pack_indexer<integer_sequence<size_t, Indices...>, Ts...> : parameter_pack_indexed<Indices, Ts>... {};
 	};
 
-	template<int Index, typename ... Ts>
+	template<size_t Index, typename ... Ts>
 	struct tuple_element
 	{
 		typedef typename decltype(internal::parameter_pack_select<Index>(internal::parameter_pack_indexer<index_sequence_for<Ts...>, Ts...>{}))::type type;
