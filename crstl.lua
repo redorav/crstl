@@ -81,10 +81,12 @@ workspace('crstl')
 	
 		platforms { PlatformLinux64_GCC_Cpp11, PlatformLinux64_Clang_Cpp11, PlatformLinux64_GCC_Cpp14, PlatformLinux64_Clang_Cpp14 }
 		architecture('x64')
+		
+		links('pthread')
 
 		filter { 'platforms:'..PlatformLinux64_GCC_Cpp11 }
 			toolset('gcc')
-		buildoptions { '-std=c++11' }
+			buildoptions { '-std=c++11' }
 		
 		filter { 'platforms:'..PlatformLinux64_Clang_Cpp11 }
 			toolset('clang')
