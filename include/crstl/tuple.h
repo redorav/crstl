@@ -31,7 +31,7 @@ crstl_module_export namespace crstl
 		template <int Index, typename T> struct parameter_pack_indexed { using type = T; };
 
 		template <int Index, typename T>
-		static parameter_pack_indexed<Index, T> parameter_pack_select(parameter_pack_indexed<Index, T>);
+		parameter_pack_indexed<Index, T> parameter_pack_select(parameter_pack_indexed<Index, T>);
 
 		template <typename Indices, typename ... Ts> struct parameter_pack_indexer;
 
