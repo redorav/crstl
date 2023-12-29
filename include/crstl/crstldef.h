@@ -12,6 +12,8 @@ import <stddef.h>;
 #include <stddef.h>
 #endif
 
+// Helps with some compilers that don't define e.g. nullptr_t in the global namespace. For classes inside the crstl
+// namespace, these declarations help out and they aren't a big issue
 namespace crstl
 {
 	typedef decltype(nullptr) nullptr_t;
