@@ -118,9 +118,9 @@ namespace crstl
 	{
 	public:
 
-		thread() crstl_nodiscard : m_thread_handle((HANDLE)-1), m_thread_id(0) {}
+		thread() crstl_noexcept : m_thread_handle((HANDLE)-1), m_thread_id(0) {}
 
-		thread(thread&& other) crstl_nodiscard
+		thread(thread&& other) crstl_noexcept
 		{
 			m_thread_handle = other.m_thread_handle;
 			m_thread_id = other.m_thread_id;
