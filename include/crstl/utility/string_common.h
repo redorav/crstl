@@ -8,6 +8,8 @@
 
 #include "crstl/utility/memory_ops.h"
 
+#include "crstl/utility/string_length.h"
+
 // This include is very cheap in compile times and hard
 // to get right outside of its actual implementation
 #if defined(CRSTL_MODULE_DECLARATION)
@@ -16,28 +18,12 @@ import <stdarg.h>;
 #include <stdarg.h>
 #endif
 
-#if !defined(CRSTL_COMPILER_MSVC) && !defined(CRSTL_COMPILER_GCC)
-	#define CRSTL_BUILTIN_WCSLEN
-#endif
-
-#if !defined(CRSTL_COMPILER_MSVC)
-	#define CRSTL_BUILTIN_STRLEN
-#endif
-
 extern "C"
 {
 	crstl_2015_dllimport int vsnprintf(char* s, size_t n, const char* format, va_list arg) crstl_linux_wthrow;
 
 	crstl_dllimport int tolower(int c) crstl_linux_wthrow;
 	crstl_dllimport int toupper(int c) crstl_linux_wthrow;
-
-#if !defined(CRSTL_BUILTIN_STRLEN)
-	size_t strlen(const char* str);
-#endif
-
-#if !defined(CRSTL_BUILTIN_WCSLEN)
-	crstl_dllimport size_t wcslen(const wchar_t* str) crstl_linux_wthrow;
-#endif
 }
 
 crstl_module_export namespace crstl
@@ -64,47 +50,6 @@ crstl_module_export namespace crstl
 	struct ctor_concatenate {};
 
 	struct ctor_no_initialize {};
-
-	inline size_t string_length(const char* str)
-	{
-#if defined(CRSTL_BUILTIN_STRLEN)
-		return __builtin_strlen(str);
-#else
-		return strlen(str);
-#endif
-	}
-
-	inline size_t string_length(const char* str, size_t max_length)
-	{
-		size_t length = string_length(str);
-		return length < max_length ? length : max_length;
-	}
-
-	inline size_t string_length(const wchar_t* str)
-	{
-#if defined(CRSTL_BUILTIN_WCSLEN)
-		return __builtin_wcslen(str);
-#else
-		return wcslen(str);
-#endif
-	}
-
-	inline size_t string_length(const wchar_t* str, size_t max_length)
-	{
-		size_t length = string_length(str);
-		return length < max_length ? length : max_length;
-	}
-
-	inline size_t string_length(const char8_t* str)
-	{
-		return string_length((const char*)str);
-	}
-
-	inline size_t string_length(const char8_t* str, size_t max_length)
-	{
-		size_t length = string_length((const char*)str);
-		return length < max_length ? length : max_length;
-	}
 
 	// = 0   They compare equal
 	// < 0   Either the value of the first character that does not match is lower in the compared string, or all compared characters match but the compared string is shorter.
