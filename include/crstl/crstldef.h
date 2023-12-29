@@ -12,6 +12,12 @@ import <stddef.h>;
 #include <stddef.h>
 #endif
 
+namespace crstl
+{
+	typedef decltype(nullptr) nullptr_t;
+	typedef decltype(sizeof(1)) size_t;
+};
+
 #if !defined(CRSTL_CHAR8_TYPE)
 
 typedef unsigned char char8_t;
