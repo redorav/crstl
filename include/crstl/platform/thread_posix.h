@@ -151,7 +151,7 @@ crstl_module_export namespace crstl
 		// Yields timeslice back to the OS
 		inline void yield()
 		{
-			pthread_yield();
+			sched_yield(); // pthread_yield is deprecated
 		}
 
 		inline void sleep_for(uint32_t milliseconds)
