@@ -10,7 +10,7 @@
 #include "crstl/platform/timer_posix.h"
 #endif
 
-namespace crstl
+crstl_module_export namespace crstl
 {
 #if defined(CRSTL_OS_WINDOWS)
 
@@ -24,7 +24,7 @@ namespace crstl
 	uint64_t timer_globals<>::TicksPerSecond = ticks_per_second();
 
 	// This only gets initialized once. See https://youtu.be/xVT1y0xWgww?t=1320 for the trick
-	static uint64_t TicksPerSecond = timer_globals<>::TicksPerSecond;
+	const uint64_t TicksPerSecond = timer_globals<>::TicksPerSecond;
 
 #else
 	
@@ -38,9 +38,9 @@ namespace crstl
 
 		time() : m_ticks(0) {}
 
-		explicit time(int64_t ticks) : m_ticks(ticks) {}
+		explicit time(uint64_t ticks) : m_ticks(ticks) {}
 
-		int64_t ticks() const
+		uint64_t ticks() const
 		{
 			return m_ticks;
 		}
@@ -90,22 +90,22 @@ namespace crstl
 			m_ticks -= other.m_ticks; return *this;
 		}
 
-		inline time operator * (const int64_t other) const
+		inline time operator * (const uint64_t other) const
 		{
 			return time(m_ticks * other);
 		}
 
-		inline time& operator *= (const int64_t other)
+		inline time& operator *= (const uint64_t other)
 		{
 			m_ticks *= other; return *this;
 		}
 
-		inline time operator / (const int64_t other) const
+		inline time operator / (const uint64_t other) const
 		{
 			return time(m_ticks / other);
 		}
 
-		inline time& operator /= (const int64_t other)
+		inline time& operator /= (const uint64_t other)
 		{
 			m_ticks /= other; return *this;
 		}
@@ -142,7 +142,7 @@ namespace crstl
 
 	private:
 
-		int64_t m_ticks;
+		uint64_t m_ticks;
 	};
 
 	class timer
