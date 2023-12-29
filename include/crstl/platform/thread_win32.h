@@ -2,6 +2,10 @@
 
 #include "common_win32.h"
 
+#include "sdkddkver.h"
+
+#include "crstl/utility/string_length.h"
+
 typedef struct _SECURITY_ATTRIBUTES SECURITY_ATTRIBUTES;
 typedef unsigned long(*PTHREAD_START_ROUTINE)(void* lpThreadParameter);
 typedef PTHREAD_START_ROUTINE LPTHREAD_START_ROUTINE;
@@ -41,6 +45,16 @@ extern "C"
 	__declspec(dllimport) void RaiseException(crstl::DWORD dwExceptionCode, crstl::DWORD dwExceptionFlags, crstl::DWORD nNumberOfArguments, const crstl::ULONG_PTR* lpArguments);
 
 	unsigned long _exception_code(void);
+
+	__declspec(dllimport) int MultiByteToWideChar
+	(
+		crstl::UINT CodePage, 
+		crstl::DWORD dwFlags,
+		crstl::LPCCH lpMultiByteStr,
+		int cbMultiByte,
+		crstl::LPWSTR lpWideCharStr,
+		int cchWideChar
+	);
 };
 
 #define CRSTL_CREATE_SUSPENDED 0x00000004
@@ -99,8 +113,23 @@ crstl_module_export namespace crstl
 			{
 			}
 
+			#if WINVER >= _WIN32_WINNT_WIN10
+
+			static const size_t kMaxCharsWstr = 255;
+			wchar_t debug_name_wstr[kMaxCharsWstr];
+			int dwLength = MultiByteToWideChar
+			(
+				0 /*CP_ACP*/, 0, 
+				thread_data->parameters.debug_name, (int)crstl::string_length(thread_data->parameters.debug_name), 
+				debug_name_wstr, kMaxCharsWstr
+			);
+
+			debug_name_wstr[dwLength] = L'\0';
+			
 			// https://learn.microsoft.com/en-us/visualstudio/debugger/how-to-set-a-thread-name-in-native-code?view=vs-2022
-			HRESULT hResult = SetThreadDescription(GetCurrentThread(), L"ThisIsMyThreadName!"); (void)hResult;
+			HRESULT hResult = SetThreadDescription(GetCurrentThread(), debug_name_wstr); crstl_unused(hResult);
+
+			#endif
 		}
 
 		// TODO Do we need the result of the function
