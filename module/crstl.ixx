@@ -15,5 +15,7 @@ export module crstl;
 #include "crstl/stack_vector.h"
 #include "crstl/string.h"
 #include "crstl/string_view.h"
+#include "crstl/thread.h"
+#include "crstl/timer.h"
 #include "crstl/unique_ptr.h"
 #include "crstl/vector.h"
