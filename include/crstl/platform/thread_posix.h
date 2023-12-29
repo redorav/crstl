@@ -40,14 +40,12 @@ crstl_module_export namespace crstl
 	{
 	public:
 
-		thread() crstl_nodiscard : m_pthread(0), m_delayed_start(false) {}
+		thread() crstl_nodiscard : m_delayed_start(false), m_pthread(0) {}
 
 		thread(thread&& other) crstl_nodiscard
 		{
-			//m_thread_handle = other.m_thread_handle;
-			//m_thread_id = other.m_thread_id;
-			//other.m_thread_handle = (HANDLE)-1;
-			//other.m_thread_id = 0;
+			m_pthread = other.m_pthread;
+			other.m_pthread = 0;
 		}
 
 		template<typename Function, typename ... Args>
