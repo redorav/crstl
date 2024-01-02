@@ -147,13 +147,17 @@ crstl_module_export namespace crstl
 	{
 	public:
 
-		thread() crstl_noexcept : m_thread_handle((HANDLE)-1), m_thread_id(0) {}
+		#define crstl_thread_invalid_handle ((HANDLE)-1)
+
+		thread() crstl_noexcept : m_thread_handle(crstl_thread_invalid_handle), m_thread_id(0) {}
 
 		thread(thread&& other) crstl_noexcept
 		{
+			join();
+
 			m_thread_handle = other.m_thread_handle;
 			m_thread_id = other.m_thread_id;
-			other.m_thread_handle = (HANDLE)-1;
+			other.m_thread_handle = crstl_thread_invalid_handle;
 			other.m_thread_id = 0;
 		}
 
@@ -201,13 +205,12 @@ crstl_module_export namespace crstl
 
 		void join()
 		{
-			if (m_thread_handle)
+			if (m_thread_handle != crstl_thread_invalid_handle)
 			{
 				WaitForSingleObject(m_thread_handle, 0xffffffff);
+				CloseHandle(m_thread_handle);
+				m_thread_handle = crstl_thread_invalid_handle;
 			}
-
-			CloseHandle(m_thread_handle);
-			m_thread_handle = (HANDLE)-1;
 		}
 
 		void set_priority(thread_priority::t priority)
@@ -218,25 +221,26 @@ crstl_module_export namespace crstl
 
 				switch (priority)
 				{
-				case thread_priority::idle:
-					result = SetThreadPriority(m_thread_handle, CRSTL_THREAD_PRIORITY_IDLE);
-					break;
-				case thread_priority::lowest:
-					result = SetThreadPriority(m_thread_handle, CRSTL_THREAD_PRIORITY_LOWEST);
-					break;
-				case thread_priority::below_normal:
-					result = SetThreadPriority(m_thread_handle, CRSTL_THREAD_PRIORITY_BELOW_NORMAL);
-					break;
-				case thread_priority::normal:
-					result = SetThreadPriority(m_thread_handle, CRSTL_THREAD_PRIORITY_NORMAL);
-					break;
-				case thread_priority::abovenormal:
-					result = SetThreadPriority(m_thread_handle, CRSTL_THREAD_PRIORITY_ABOVE_NORMAL);
-					break;
-				case thread_priority::highest:
-					result = SetThreadPriority(m_thread_handle, CRSTL_THREAD_PRIORITY_HIGHEST);
-					break;
-				default: result = 0;
+					case thread_priority::idle:
+						result = SetThreadPriority(m_thread_handle, CRSTL_THREAD_PRIORITY_IDLE);
+						break;
+					case thread_priority::lowest:
+						result = SetThreadPriority(m_thread_handle, CRSTL_THREAD_PRIORITY_LOWEST);
+						break;
+					case thread_priority::below_normal:
+						result = SetThreadPriority(m_thread_handle, CRSTL_THREAD_PRIORITY_BELOW_NORMAL);
+						break;
+					case thread_priority::normal:
+						result = SetThreadPriority(m_thread_handle, CRSTL_THREAD_PRIORITY_NORMAL);
+						break;
+					case thread_priority::abovenormal:
+						result = SetThreadPriority(m_thread_handle, CRSTL_THREAD_PRIORITY_ABOVE_NORMAL);
+						break;
+					case thread_priority::highest:
+						result = SetThreadPriority(m_thread_handle, CRSTL_THREAD_PRIORITY_HIGHEST);
+						break;
+					default:
+						result = 0;
 				}
 
 				if (result)
@@ -248,10 +252,7 @@ crstl_module_export namespace crstl
 
 		~thread()
 		{
-			if (m_thread_handle != (HANDLE)-1)
-			{
-				join();
-			}
+			join();
 		}
 
 	private:

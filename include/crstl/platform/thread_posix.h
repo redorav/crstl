@@ -40,12 +40,18 @@ crstl_module_export namespace crstl
 	{
 	public:
 
-		thread() crstl_nodiscard : m_delayed_start(false), m_pthread(0) {}
+		#define crstl_thread_invalid_handle 0
+
+		thread() crstl_nodiscard : m_delayed_start(false), m_pthread(crstl_thread_invalid_handle) {}
 
 		thread(thread&& other) crstl_nodiscard
 		{
+			join();
+
 			m_pthread = other.m_pthread;
-			other.m_pthread = 0;
+			m_delayed_start = other.m_delayed_start;
+
+			other.m_pthread = crstl_thread_invalid_handle;
 		}
 
 		template<typename Function, typename ... Args>
@@ -120,10 +126,13 @@ crstl_module_export namespace crstl
 
 		void join()
 		{
-			void* value_pointer = nullptr;
-			int result = pthread_join(m_pthread, &value_pointer);
-			crstl_assert(result == 0);
-			m_pthread = 0;
+			if (m_pthread != crstl_thread_invalid_handle)
+			{
+				void* value_pointer = nullptr;
+				int result = pthread_join(m_pthread, &value_pointer);
+				crstl_assert(result == 0);
+				m_pthread = crstl_thread_invalid_handle;
+			}
 		}
 
 		~thread()
