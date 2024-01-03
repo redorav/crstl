@@ -55,6 +55,10 @@ extern "C"
 		crstl::LPWSTR lpWideCharStr,
 		int cchWideChar
 	);
+
+	__declspec(dllimport) crstl::FARPROC GetProcAddress(crstl::HMODULE hModule, crstl::LPCSTR lpProcName);
+
+	__declspec(dllimport) crstl::HMODULE GetModuleHandleA(crstl::LPCSTR lpModuleName);
 };
 
 #define CRSTL_CREATE_SUSPENDED 0x00000004
@@ -113,21 +117,27 @@ crstl_module_export namespace crstl
 			{
 			}
 
+			// https://learn.microsoft.com/en-us/visualstudio/debugger/how-to-set-a-thread-name-in-native-code?view=vs-2022
 			#if WINVER >= _WIN32_WINNT_WIN10
 
-			static const size_t kMaxCharsWstr = 255;
-			wchar_t debug_name_wstr[kMaxCharsWstr];
-			int dwLength = MultiByteToWideChar
-			(
-				0 /*CP_ACP*/, 0, 
-				thread_data->parameters.debug_name, (int)crstl::string_length(thread_data->parameters.debug_name), 
-				debug_name_wstr, kMaxCharsWstr
-			);
+			HRESULT(*SetThreadDescriptionFunction)(HANDLE, PCWSTR) =
+				reinterpret_cast<HRESULT(*)(HANDLE, PCWSTR)>(GetProcAddress(GetModuleHandleA("Kernel32.dll"), "SetThreadDescription"));
 
-			debug_name_wstr[dwLength] = L'\0';
-			
-			// https://learn.microsoft.com/en-us/visualstudio/debugger/how-to-set-a-thread-name-in-native-code?view=vs-2022
-			HRESULT hResult = SetThreadDescription(GetCurrentThread(), debug_name_wstr); crstl_unused(hResult);
+			if (SetThreadDescriptionFunction)
+			{
+				static const size_t kMaxCharsWstr = 255;
+				wchar_t debug_name_wstr[kMaxCharsWstr];
+				int dwLength = MultiByteToWideChar
+				(
+					0 /*CP_ACP*/, 0,
+					thread_data->parameters.debug_name, (int)crstl::string_length(thread_data->parameters.debug_name),
+					debug_name_wstr, kMaxCharsWstr
+				);
+
+				debug_name_wstr[dwLength] = L'\0';
+
+				HRESULT hResult = SetThreadDescriptionFunction(GetCurrentThread(), debug_name_wstr); crstl_unused(hResult);
+			}
 
 			#endif
 		}
