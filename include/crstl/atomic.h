@@ -17,10 +17,6 @@
 // Replacement for std::atomic
 //
 
-// These freestanding functions used to be called atomic_store, add, etc
-// but stdatomic.h seems to create defines for these names which is quite
-// unfortunate
-
 crstl_module_export namespace crstl
 {
 	// atomic_store: store value to variable pointed by target, and return its previous value
