@@ -7,6 +7,7 @@ PlatformMSVC64			= 'MSVC 64'
 PlatformMSVC64Modules	= 'MSVC 64 Modules'
 PlatformLLVM64			= 'LLVM 64'
 PlatformLLVM64Modules	= 'LLVM 64 Modules'
+PlatformLinux64			= 'Linux 64'
 
 -- MacOS x86/64
 PlatformOSX64Cpp11			= 'OSX 64 C++11'
@@ -106,6 +107,7 @@ workspace('crstl')
 		{
 			PlatformMSVC64,
 			PlatformLLVM64,
+			PlatformLinux64
 		}
 
 		-- Add modules platform if environment supports them
@@ -193,6 +195,19 @@ workspace('crstl')
 			vectorextensions('neon')
 			buildoptions { '-Wno-unused-variable' }
 			linkoptions { '-lm' } -- Link against the standard math library
+		
+		filter { 'platforms:'..PlatformLinux64 }
+			system('linux')
+			architecture('x64')
+			toolset('clang')
+			toolchainversion('wsl2')
+			
+			-- Make sure all files are copied to the same folder, without splitting by project
+			-- This works for both remote and WSL projects
+			remoterootdir("~/projects/crstl")
+			remoteprojectrelativedir("")
+			remoteprojectdir("$(RemoteRootDir)")
+			remotedeploydir("$(RemoteRootDir)/deploy")
 			
 		filter{}
 	end
