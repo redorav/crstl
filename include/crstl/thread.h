@@ -105,6 +105,8 @@ crstl_module_export namespace crstl
 	private:
 
 		thread_base(const thread_base& other) crstl_constructor_delete;
+
+		thread_base& operator = (const thread_base& other) crstl_constructor_delete;
 	};
 };
 
