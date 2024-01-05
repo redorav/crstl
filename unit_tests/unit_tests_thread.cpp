@@ -4,7 +4,7 @@
 import crstl;
 #else
 #include "crstl/thread.h"
-#include "crstl/function.h"
+#include "crstl/critical_section.h"
 #include "crstl/tuple.h"
 
 #include "crstl/timer.h" // For sleep timings
