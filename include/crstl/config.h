@@ -57,10 +57,12 @@
 #elif defined(__x86_64__) || defined(__amd64__) || defined(_M_X64)
 
 	#define CRSTL_ARCH_X86_64
+	#define CRSTL_ARCH_X86
 
 #elif defined(i386) || defined(__i386__) || defined(__i386) || defined(_M_IX86)
 
 	#define CRSTL_ARCH_X86_32
+	#define CRSTL_ARCH_X86
 
 #endif
 
@@ -80,13 +82,13 @@
 
 #endif
 
-#if defined(CRSTL_COMPILER_CLANG) || defined(CRSTL_COMPILER_GCC)
-
-	#define crstl_finline inline __attribute__((always_inline))
-
-#elif defined(CRSTL_COMPILER_MSVC)
+#if defined(CRSTL_COMPILER_MSVC)
 
 	#define crstl_finline __forceinline
+
+#else
+
+	#define crstl_finline inline __attribute__((always_inline))
 
 #endif
 
