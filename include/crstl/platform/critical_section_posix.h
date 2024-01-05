@@ -10,8 +10,13 @@ crstl_module_export namespace crstl
 
 		critical_section()
 		{
+			pthread_mutexattr_t attr;
+			pthread_mutexattr_init(&attr);
+
 			// A recursive mutex maintains a lock counter, just like the Windows critical sections
-			m_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
+			pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
+			pthread_mutex_init(&m_mutex, &attr);
+			pthread_mutexattr_destroy(&attr);
 		}
 
 		void enter()
