@@ -42,14 +42,25 @@
 #endif
 
 // Processor Architecture
+// https://stackoverflow.com/questions/152016/detecting-cpu-architecture-compile-time
 
-#if defined(_M_ARM) || defined(__arm__) || defined(_M_ARM64) || defined(__aarch64__)
+#if defined(__aarch64__) || defined(_M_ARM64)
 
+	#define CRSTL_ARCH_ARM64
 	#define CRSTL_ARCH_ARM
 
-#elif defined(_WIN32)
+#elif defined(__arm__) || defined(_M_ARM)
+
+	#define CRSTL_ARCH_ARM32
+	#define CRSTL_ARCH_ARM
+
+#elif defined(__x86_64__) || defined(__amd64__) || defined(_M_X64)
 
 	#define CRSTL_ARCH_X86_64
+
+#elif defined(i386) || defined(__i386__) || defined(__i386) || defined(_M_IX86)
+
+	#define CRSTL_ARCH_X86_32
 
 #endif
 
