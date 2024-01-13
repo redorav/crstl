@@ -13,7 +13,7 @@
 
 crstl_module_export namespace crstl
 {
-#if defined(CRSTL_OS_WINDOWS)
+#if defined(CRSTL_OS_WINDOWS) || defined(CRSTL_OS_OSX)
 
 	template<typename = void>
 	struct timer_globals

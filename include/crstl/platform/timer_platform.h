@@ -151,7 +151,7 @@ crstl_module_export namespace crstl
 
 	// https://stackoverflow.com/questions/5167269/clock-gettime-alternative-in-mac-os-x
 
-	crstl_constexpr uint64_t ticks_to_seconds()
+	inline uint64_t ticks_to_seconds()
 	{
 		mach_timebase_info_data_t timebase;
 		mach_timebase_info(&timebase);
