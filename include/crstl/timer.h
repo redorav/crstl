@@ -4,11 +4,7 @@
 
 #include "crstl/crstldef.h"
 
-#if defined(CRSTL_OS_WINDOWS)
-#include "crstl/platform/timer_win32.h"
-#elif defined(CRSTL_OS_LINUX) || defined(CRSTL_OS_OSX)
-#include "crstl/platform/timer_posix.h"
-#endif
+#include "crstl/platform/timer_platform.h"
 
 // crstl::timer
 //
@@ -22,18 +18,18 @@ crstl_module_export namespace crstl
 	template<typename = void>
 	struct timer_globals
 	{
-		static uint64_t TicksPerSecond;
+		static double TicksToSeconds;
 	};
 
 	template<>
-	uint64_t timer_globals<>::TicksPerSecond = ticks_per_second();
+	double timer_globals<>::TicksToSeconds = ticks_to_seconds();
 
 	// This only gets initialized once. See https://youtu.be/xVT1y0xWgww?t=1320 for the trick
-	const uint64_t TicksPerSecond = timer_globals<>::TicksPerSecond;
+	const double TicksToSeconds = timer_globals<>::TicksToSeconds;
 
 #else
 	
-	crstl_constexpr uint64_t TicksPerSecond = ticks_per_second();
+	crstl_constexpr double TicksToSeconds = ticks_to_seconds();
 
 #endif
 
@@ -57,22 +53,22 @@ crstl_module_export namespace crstl
 
 		double seconds() const
 		{
-			return (double)m_ticks / (double)TicksPerSecond;
+			return (double)m_ticks * TicksToSeconds;
 		}
 
 		double milliseconds() const
 		{
-			return (double)m_ticks * 1000.0 / (double)TicksPerSecond;
+			return (double)m_ticks * 1000.0 * TicksToSeconds;
 		}
 
 		double microseconds() const
 		{
-			return (double)m_ticks * 1000000.0 / (double)TicksPerSecond;
+			return (double)m_ticks * 1000000.0 * TicksToSeconds;
 		}
 
 		double frequency() const
 		{
-			return (double)TicksPerSecond / (double)m_ticks;
+			return 1.0 / ((double)m_ticks * TicksToSeconds);
 		}
 
 		inline time operator + (const time& other) const
