@@ -156,7 +156,7 @@ crstl_module_export namespace crstl
 		mach_timebase_info_data_t timebase;
 		mach_timebase_info(&timebase);
 
-		return (double)timebase.numer) / ((double)timebase.denom);
+		return (double)timebase.numer / ((double)timebase.denom);
 	}
 
 	inline uint64_t current_ticks()
