@@ -71,12 +71,12 @@ void RunUnitTestsThread()
 
 	crstl::thread crThread5 = crstl::thread(params, &ThreadFunctionWithParams, 1, 2, 3);
 
-	crstl::timer yieldTimer;
+	crstl::timer yieldTimer(true);
 	crstl::this_thread::yield();
 	printf("Yielded for %fms\n", yieldTimer.elapsed().milliseconds());
 
 	printf("Sleeping...\n");
-	crstl::timer leTimer;
+	crstl::timer leTimer(true);
 	crstl::this_thread::sleep_for(1000);
 	printf("Slept for %fms\n", leTimer.elapsed().milliseconds());
 
