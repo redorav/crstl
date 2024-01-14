@@ -150,9 +150,9 @@ crstl_module_export namespace crstl
 	{
 	public:
 
-		timer()
+		timer(bool immediate_start = false)
 		{
-			reset();
+			immediate_start ? start() : reset();
 		}
 
 		void reset()
