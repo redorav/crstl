@@ -21,9 +21,6 @@ import <stdarg.h>;
 extern "C"
 {
 	crstl_2015_dllimport int vsnprintf(char* s, size_t n, const char* format, va_list arg) crstl_linux_wthrow;
-
-	crstl_dllimport int tolower(int c) crstl_linux_wthrow;
-	crstl_dllimport int toupper(int c) crstl_linux_wthrow;
 }
 
 crstl_module_export namespace crstl
@@ -80,6 +77,26 @@ crstl_module_export namespace crstl
 		{
 			return length1 < length2 ? -1 : 1;
 		}
+	}
+
+	inline int tolower(int ch)
+	{
+		if (ch >= 'A' && ch <= 'Z')
+		{
+			return ch | 0x20;
+		}
+	
+		return ch;
+	}
+	
+	inline int toupper(int ch)
+	{
+		if (ch >= 'a' && ch <= 'z')
+		{
+			return ch ^ 0x20;
+		}
+	
+		return ch;
 	}
 
 	template<typename T>
