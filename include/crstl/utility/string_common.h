@@ -262,11 +262,11 @@ crstl_module_export namespace crstl
 
 		while (found_char)
 		{
-			const T* found_char_next = crstl::string_find_char(found_char + 1, needle_char, string_end - (found_char + 1));
+			const T* found_char_next = crstl::string_find_char(found_char + 1, needle_char, (size_t)(string_end - (found_char + 1)));
 			const T* block_src = found_char + 1;
 			const T* block_end = found_char_next ? found_char_next : string_end;
 
-			const size_t block_length = block_end - block_src;
+			const size_t block_length = (size_t)(block_end - block_src);
 
 			for (size_t i = 0; i < block_length; ++i)
 			{
@@ -292,10 +292,10 @@ crstl_module_export namespace crstl
 			// Try to find the string again. We only copy up to the block where the next string is, or the end of the string
 			// We copy in blocks, for instance if we have the following string: "thread needle thread needle" -> becomes "thread  thread "
 			// we'll copy the contents up to the next time we find needle, and so on until we reach the end
-			const T* found_string_next = crstl::string_find(found_string + 1, string_end - (found_string + 1), needle_string, needle_length);
+			const T* found_string_next = crstl::string_find(found_string + 1, (size_t)(string_end - (found_string + 1)), needle_string, needle_length);
 			const T* block_src = found_string + needle_length;
 			const T* block_end = found_string_next ? found_string_next : string_end;
-			const size_t block_length = block_end - block_src;
+			const size_t block_length = (size_t)(block_end - block_src);
 
 			for (size_t i = 0; i < block_length; ++i)
 			{

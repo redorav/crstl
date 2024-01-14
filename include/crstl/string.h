@@ -61,7 +61,7 @@ crstl_module_export namespace crstl
 
 		struct sso_size : detail::sso_padding<sizeof(CharT) - 1>
 		{
-			char value;
+			unsigned char value;
 		};
 
 		// View of string acting as small-string optimization
@@ -332,7 +332,7 @@ crstl_module_export namespace crstl
 
 				current_length += dst_decoded_length; // Add however many characters we managed to decode
 				m_layout_allocator.m_first.m_sso.data[current_length] = 0;
-				m_layout_allocator.m_first.m_sso.remaining_length.value = (char)(kSSOCapacity - current_length);
+				m_layout_allocator.m_first.m_sso.remaining_length.value = (unsigned char)(kSSOCapacity - current_length);
 			}
 
 			// Assume from here on that we're going to work with the heap
@@ -422,31 +422,35 @@ crstl_module_export namespace crstl
 			va_start(va_arguments, format);
 
 			// Try to copy, limiting the number of characters to what we have available
-			int char_count = vsnprintf(data + current_length, remaining_length + 1, format, va_arguments);
+			int snprintf_return = vsnprintf(data + current_length, remaining_length + 1, format, va_arguments);
 
 			va_end(va_arguments);
 
 			// It is a formatting error to return a negative number
-			crstl_assert(char_count >= 0);
+			crstl_assert(snprintf_return >= 0);
+
+			size_t char_count = (size_t)snprintf_return;
 
 			// If the number of characters we would have written is greater than what we had available, 
 			// we need to heap reallocate to have enough space, then try again. We would actually like
 			// this to continue where it left off but that's not possible with format specifiers
-			if ((size_t)char_count > remaining_length)
+			if (char_count > remaining_length)
 			{
 				reallocate_heap_larger(current_length + char_count); // When we reallocate, we always take the null terminator into account
 				va_start(va_arguments, format);
 
 				// We need to pass in char_count + 1 as it will try to leave space for the null terminator and we'd end up with one less character
-				char_count = vsnprintf(m_layout_allocator.m_first.m_heap.data + current_length, char_count + 1, format, va_arguments);
+				snprintf_return = vsnprintf(m_layout_allocator.m_first.m_heap.data + current_length, char_count + 1u, format, va_arguments);
 
 				va_end(va_arguments);
-				crstl_assert(char_count >= 0);
+				crstl_assert(snprintf_return >= 0);
+
+				char_count = (size_t)snprintf_return;
 			}
 
 			if (is_sso())
 			{
-				m_layout_allocator.m_first.m_sso.remaining_length.value = (char)(kSSOCapacity - char_count);
+				m_layout_allocator.m_first.m_sso.remaining_length.value = (unsigned char)(kSSOCapacity - char_count);
 			}
 			else
 			{
@@ -697,7 +701,7 @@ crstl_module_export namespace crstl
 			// Adjust the length
 			if (is_sso())
 			{
-				m_layout_allocator.m_first.m_sso.remaining_length.value += (char)length;
+				m_layout_allocator.m_first.m_sso.remaining_length.value += (unsigned char)length;
 				m_layout_allocator.m_first.m_sso.data[kSSOCapacity - m_layout_allocator.m_first.m_sso.remaining_length.value] = 0;
 			}
 			else
@@ -735,7 +739,7 @@ crstl_module_export namespace crstl
 
 			if (data_end)
 			{
-				set_length_and_terminator(data_end - current_data);
+				set_length_and_terminator((size_t)(data_end - current_data));
 			}
 
 			return *this;
@@ -751,7 +755,7 @@ crstl_module_export namespace crstl
 
 			if (data_end)
 			{
-				set_length_and_terminator(data_end - current_data);
+				set_length_and_terminator((size_t)(data_end - current_data));
 			}
 
 			return *this;
@@ -1241,7 +1245,7 @@ crstl_module_export namespace crstl
 			{
 				CharT* begin = m_layout_allocator.m_first.m_sso.data + current_length;
 				function(begin, begin + length);
-				m_layout_allocator.m_first.m_sso.remaining_length.value -= (char)length;
+				m_layout_allocator.m_first.m_sso.remaining_length.value -= (unsigned char)length;
 				m_layout_allocator.m_first.m_sso.data[target_length] = 0;
 			}
 			else
@@ -1267,7 +1271,7 @@ crstl_module_export namespace crstl
 			if (length < kSSOCapacity)
 			{
 				memory_copy(m_layout_allocator.m_first.m_sso.data, string, length * kCharSize);
-				m_layout_allocator.m_first.m_sso.remaining_length.value = (char)(kSSOCapacity - length);
+				m_layout_allocator.m_first.m_sso.remaining_length.value = (unsigned char)(kSSOCapacity - length);
 				m_layout_allocator.m_first.m_sso.data[length] = 0;
 			}
 			else
@@ -1355,7 +1359,7 @@ crstl_module_export namespace crstl
 
 		void set_length_sso(size_t length)
 		{
-			m_layout_allocator.m_first.m_sso.remaining_length.value = (char)(kSSOCapacity - length);
+			m_layout_allocator.m_first.m_sso.remaining_length.value = (unsigned char)(kSSOCapacity - length);
 		}
 
 		void set_length_heap(size_t length)
