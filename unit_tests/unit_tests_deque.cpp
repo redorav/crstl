@@ -14,7 +14,7 @@ import crstl;
 template<int k>
 struct static_sizeof;
 
-//crstl_constexpr void FixedDequeConstexprFunction()
+//crstl_constexpr14 void FixedDequeConstexprFunction()
 //{
 //	crstl::fixed_deque<int, 32> crFixedDeque;
 //
