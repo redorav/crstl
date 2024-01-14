@@ -142,6 +142,7 @@
 #if CRSTL_CPPVERSION >= CRSTL_CPP17
 
 	#define crstl_nodiscard [[nodiscard]]
+	#define CRSTL_INLINE_VARIABLES
 
 #else
 

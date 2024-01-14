@@ -13,23 +13,22 @@
 
 crstl_module_export namespace crstl
 {
-#if defined(CRSTL_OS_WINDOWS) || defined(CRSTL_OS_OSX)
+#if defined(CRSTL_INLINE_VARIABLES)
 
-	template<typename = void>
-	struct timer_globals
-	{
-		static double TicksToSeconds;
-	};
-
-	template<>
-	double timer_globals<>::TicksToSeconds = ticks_to_seconds();
-
-	// This only gets initialized once. See https://youtu.be/xVT1y0xWgww?t=1320 for the trick
-	const double TicksToSeconds = timer_globals<>::TicksToSeconds;
+	inline const double TicksToSeconds = ticks_to_seconds();
 
 #else
-	
-	crstl_constexpr double TicksToSeconds = ticks_to_seconds();
+
+	template<typename Dummy>
+	struct timer_globals { static const double TicksToSeconds; };
+
+	// This only gets initialized once. See https://youtu.be/xVT1y0xWgww?t=1320 for the trick and
+	// https://www.reddit.com/r/cpp/comments/e41t8r/stdnumeric_limits_members_functions_vs_constants/
+	// for the variation that works across compilers
+	template<typename Dummy>
+	const double timer_globals<Dummy>::TicksToSeconds = ticks_to_seconds();
+
+	const double TicksToSeconds = timer_globals<double>::TicksToSeconds;
 
 #endif
 
