@@ -38,23 +38,9 @@ extern "C"
 
 	__declspec(dllimport) crstl::HANDLE CreateEventA(SECURITY_ATTRIBUTES* lpEventAttributes, crstl::BOOL bManualReset, crstl::BOOL bInitialState, crstl::LPCSTR lpName);
 
-	__declspec(dllimport) crstl::DWORD WaitForSingleObject(crstl::HANDLE hHandle, crstl::DWORD dwMilliseconds);
-
-	__declspec(dllimport) crstl::BOOL CloseHandle(crstl::HANDLE hObject);
-
 	__declspec(dllimport) void RaiseException(crstl::DWORD dwExceptionCode, crstl::DWORD dwExceptionFlags, crstl::DWORD nNumberOfArguments, const crstl::ULONG_PTR* lpArguments);
 
 	unsigned long _exception_code(void);
-
-	__declspec(dllimport) int MultiByteToWideChar
-	(
-		crstl::UINT CodePage, 
-		crstl::DWORD dwFlags,
-		crstl::LPCCH lpMultiByteStr,
-		int cbMultiByte,
-		crstl::LPWSTR lpWideCharStr,
-		int cchWideChar
-	);
 
 	__declspec(dllimport) crstl::FARPROC GetProcAddress(crstl::HMODULE hModule, crstl::LPCSTR lpProcName);
 
@@ -126,17 +112,17 @@ crstl_module_export namespace crstl
 			if (SetThreadDescriptionFunction)
 			{
 				static const size_t kMaxCharsWstr = 255;
-				wchar_t debug_name_wstr[kMaxCharsWstr];
-				int dwLength = MultiByteToWideChar
+				wchar_t debug_name_w[kMaxCharsWstr];
+				int dw_length = MultiByteToWideChar
 				(
 					0 /*CP_ACP*/, 0,
 					thread_data->parameters.debug_name, (int)crstl::string_length(thread_data->parameters.debug_name),
-					debug_name_wstr, kMaxCharsWstr
+					debug_name_w, kMaxCharsWstr
 				);
 
-				debug_name_wstr[dwLength] = L'\0';
+				debug_name_w[dw_length] = L'\0';
 
-				HRESULT hResult = SetThreadDescriptionFunction(GetCurrentThread(), debug_name_wstr); crstl_unused(hResult);
+				HRESULT hResult = SetThreadDescriptionFunction(GetCurrentThread(), debug_name_w); crstl_unused(hResult);
 			}
 
 			#endif

@@ -28,6 +28,9 @@ namespace crstl
 	typedef unsigned __int64    DWORD64;
 	typedef unsigned __int64    UINT64;
 
+	typedef BYTE* LPBYTE;
+	typedef DWORD* LPDWORD;
+
 	typedef int BOOL;
 
 	typedef const CHAR* LPCCH, *PCCH;
@@ -45,6 +48,11 @@ namespace crstl
 	typedef void* HINSTANCE;
 	typedef void* HMODULE;
 
+	typedef HANDLE* PHANDLE;
+
+	typedef void* PVOID;
+	typedef void* LPVOID;
+
 	typedef __int64             INT_PTR;
 	typedef unsigned __int64    UINT_PTR;
 	typedef __int64             LONG_PTR;
@@ -59,4 +67,33 @@ namespace crstl
 	typedef int (*NEARPROC)();
 	typedef int (*PROC)();
 #endif
+};
+
+extern "C"
+{
+	__declspec(dllimport) int MultiByteToWideChar
+	(
+		crstl::UINT CodePage,
+		crstl::DWORD dwFlags,
+		crstl::LPCCH lpMultiByteStr,
+		int cbMultiByte,
+		crstl::LPWSTR lpWideCharStr,
+		int cchWideChar
+	);
+
+	__declspec(dllimport) crstl::BOOL CloseHandle(crstl::HANDLE hObject);
+
+	__declspec(dllimport) crstl::DWORD WaitForSingleObject(crstl::HANDLE hHandle, crstl::DWORD dwMilliseconds);
+};
+
+namespace crstl
+{
+	inline void close_handle_safe(void*& handle)
+	{
+		if (handle)
+		{
+			CloseHandle(handle);
+			handle = nullptr;
+		}
+	}
 };
