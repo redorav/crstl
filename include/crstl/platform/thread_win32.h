@@ -149,12 +149,22 @@ crstl_module_export namespace crstl
 
 		thread(thread&& other) crstl_noexcept
 		{
+			m_thread_handle = other.m_thread_handle;
+			m_thread_id = other.m_thread_id;
+			other.m_thread_handle = crstl_thread_invalid_handle;
+			other.m_thread_id = 0;
+		}
+
+		thread& operator = (thread&& other)
+		{
 			join();
 
 			m_thread_handle = other.m_thread_handle;
 			m_thread_id = other.m_thread_id;
 			other.m_thread_handle = crstl_thread_invalid_handle;
 			other.m_thread_id = 0;
+
+			return *this;
 		}
 
 		template<typename Function, typename ... Args>
