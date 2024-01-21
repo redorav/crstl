@@ -1,6 +1,6 @@
 #pragma once
 
-#include "crstl/platform/common_win32.h"
+#include "common_win32.h"
 
 // https://learn.microsoft.com/en-us/windows/win32/sync/critical-section-objects
 extern "C"
