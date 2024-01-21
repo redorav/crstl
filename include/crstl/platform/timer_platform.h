@@ -8,7 +8,7 @@
 #include <mach/mach_time.h>
 #elif defined(CRSTL_OS_LINUX)
 #include <time.h>
-#elif defined(CRSTL_OS_WINDOWS)
+#elif defined(CRSTL_COMPILER_MSVC)
 
 union _LARGE_INTEGER;
 
@@ -17,10 +17,8 @@ extern "C"
 	__declspec(dllimport) int QueryPerformanceFrequency(_LARGE_INTEGER* lpFrequency);
 	__declspec(dllimport) int QueryPerformanceCounter(_LARGE_INTEGER* lpPerformanceCount);
 
-#if !defined(_M_IX86)
 	unsigned __int64 __rdtsc();
 	#pragma intrinsic(__rdtsc)
-#endif
 };
 
 #endif
@@ -83,12 +81,12 @@ crstl_module_export namespace crstl
 	{
 #if defined(CRSTL_OS_OSX)
 		return mach_absolute_time();
+#elif defined(CRSTL_COMPILER_MSVC)
+		return __rdtsc();
 #elif defined(CRSTL_ARCH_X86_32)
 		uint64_t ret;
 		__asm__ volatile("rdtsc" : "=A"(ret));
 		return ret;
-#elif defined(CRSTL_COMPILER_MSVC)
-		return __rdtsc();
 #elif defined(CRSTL_ARCH_X86_64)
 		uint64_t low, high;
 		__asm__ volatile("rdtsc" : "=a"(low), "=d"(high));
