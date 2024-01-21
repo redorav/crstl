@@ -64,6 +64,14 @@
 	#define CRSTL_ARCH_X86_32
 	#define CRSTL_ARCH_X86
 
+#elif defined(__powerpc__)
+
+	#define CRSTL_ARCH_POWERPC
+
+#elif defined(__riscv)
+
+	#define CRSTL_ARCH_RISCV
+
 #endif
 
 // Operating System
