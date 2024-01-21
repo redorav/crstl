@@ -143,15 +143,13 @@ crstl_module_export namespace crstl
 	{
 	public:
 
-		#define crstl_thread_invalid_handle ((HANDLE)-1)
-
-		thread() crstl_noexcept : m_thread_handle(crstl_thread_invalid_handle), m_thread_id(0) {}
+		thread() crstl_noexcept : m_thread_handle(CRSTL_INVALID_HANDLE_VALUE), m_thread_id(0) {}
 
 		thread(thread&& other) crstl_noexcept
 		{
 			m_thread_handle = other.m_thread_handle;
 			m_thread_id = other.m_thread_id;
-			other.m_thread_handle = crstl_thread_invalid_handle;
+			other.m_thread_handle = CRSTL_INVALID_HANDLE_VALUE;
 			other.m_thread_id = 0;
 		}
 
@@ -161,7 +159,7 @@ crstl_module_export namespace crstl
 
 			m_thread_handle = other.m_thread_handle;
 			m_thread_id = other.m_thread_id;
-			other.m_thread_handle = crstl_thread_invalid_handle;
+			other.m_thread_handle = CRSTL_INVALID_HANDLE_VALUE;
 			other.m_thread_id = 0;
 
 			return *this;
@@ -211,11 +209,11 @@ crstl_module_export namespace crstl
 
 		void join()
 		{
-			if (m_thread_handle != crstl_thread_invalid_handle)
+			if (m_thread_handle != CRSTL_INVALID_HANDLE_VALUE)
 			{
 				WaitForSingleObject(m_thread_handle, 0xffffffff);
 				CloseHandle(m_thread_handle);
-				m_thread_handle = crstl_thread_invalid_handle;
+				m_thread_handle = CRSTL_INVALID_HANDLE_VALUE;
 			}
 		}
 

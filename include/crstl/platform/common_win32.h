@@ -1,5 +1,7 @@
 #pragma once
 
+#define CRSTL_INVALID_HANDLE_VALUE ((crstl::HANDLE)(crstl::LONG_PTR)-1)
+
 namespace crstl
 {
 	typedef char                CHAR;
