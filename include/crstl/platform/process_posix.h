@@ -8,6 +8,11 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#if defined(CRSTL_OS_OSX)
+#include <crt_externs.h>
+#define environ (*_NSGetEnviron())
+#endif
+
 crstl_module_export namespace crstl
 {
 	class process final : public process_base
