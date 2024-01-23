@@ -282,21 +282,24 @@ crstl_module_export namespace crstl
 			crstl_assert_msg(buffer_size > 0, "Invalid size");
 
 			DWORD total_bytes_read = 0;
-			
-			while (true)
+
+			if (m_state == process_state::launched || m_state == process_state::joined)
 			{
-				DWORD bytes_read = 0;
-				bool success = ReadFile(m_stdout_read_handle, buffer + total_bytes_read, (DWORD)(buffer_size - 1 - total_bytes_read), &bytes_read, nullptr);
-				total_bytes_read += bytes_read;
-
-				if (!success || bytes_read == 0 || total_bytes_read >= buffer_size - 1)
+				while (true)
 				{
-					break;
-				}
-			}
+					DWORD bytes_read = 0;
+					bool success = ReadFile(m_stdout_read_handle, buffer + total_bytes_read, (DWORD)(buffer_size - 1 - total_bytes_read), &bytes_read, nullptr);
+					total_bytes_read += bytes_read;
 
-			// Null terminate the buffer
-			buffer[total_bytes_read] = '\0';
+					if (!success || bytes_read == 0 || total_bytes_read >= buffer_size - 1)
+					{
+						break;
+					}
+				}
+
+				// Null terminate the buffer
+				buffer[total_bytes_read] = '\0';
+			}
 
 			return (int)total_bytes_read;
 		}
