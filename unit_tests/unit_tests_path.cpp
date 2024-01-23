@@ -15,6 +15,8 @@ import crstl;
 
 void RunUnitTestsPath()
 {
+	printf("RunUnitTestsPath\n");
+
 #if CRSTL_CPPVERSION >= CRSTL_CPP17
 	using namespace crstl_unit;
 

@@ -8,6 +8,8 @@ import crstl;
 
 void RunUnitTestsProcess()
 {
+	printf("RunUnitTestsProcess\n");
+
 	crstl::process p;
 	p = crstl::process("fxc.exe", "/?");
 

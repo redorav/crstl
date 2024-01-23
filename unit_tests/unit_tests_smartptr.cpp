@@ -17,6 +17,8 @@ std::vector<crstl::unique_ptr<Dummy>> crUniqueVector;
 
 void RunUnitTestsSmartPtr()
 {
+	printf("RunUnitTestsProcess\n");
+
 	// Unique pointer
 
 	std::unique_ptr<Dummy> stdUniquePtr = std::unique_ptr<Dummy>(new Dummy());

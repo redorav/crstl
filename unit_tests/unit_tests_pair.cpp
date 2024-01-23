@@ -10,6 +10,8 @@ import crstl;
 
 void RunUnitTestsPair()
 {
+	printf("RunUnitTestsPair\n");
+
 	struct DummyC
 	{
 		DummyC() : i(0), f(0.0f) {}

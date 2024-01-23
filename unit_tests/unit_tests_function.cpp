@@ -53,6 +53,8 @@ struct OperatorStruct
 
 void RunUnitTestsFunction()
 {
+	printf("RunUnitTestsFunction\n");
+
 	using namespace crstl_unit;
 
 	int a = 0;

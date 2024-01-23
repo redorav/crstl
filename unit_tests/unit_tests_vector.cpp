@@ -289,6 +289,8 @@ void RunUnitTestsVectorStdCompare()
 
 void RunUnitTestsVector()
 {
+	printf("RunUnitTestsVector\n");
+
 	RunUnitTestsVectorNoStd();
 	RunUnitTestsVectorStdCompare();
 }

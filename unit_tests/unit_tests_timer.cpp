@@ -6,6 +6,8 @@
 
 void RunUnitTestsTimer()
 {
+	printf("RunUnitTestsTimer\n");
+
 	crstl::timer crTimer;
 
 	crstl::time start_time = crTimer.elapsed();

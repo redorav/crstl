@@ -21,6 +21,8 @@ int ThreadFunctionWithParams(int a, int b, int c)
 
 void RunUnitTestsThread()
 {
+	printf("RunUnitTestsThread\n");
+
 	int i = 42;
 	int a = 2;
 	float b = 3.0f;

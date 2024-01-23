@@ -28,6 +28,7 @@ struct static_sizeof;
 
 void RunUnitTestsDeque()
 {
+	printf("RunUnitTestsDeque\n");
 	using namespace crstl_unit;
 
 	Dummy dummy(4, 5.0f);

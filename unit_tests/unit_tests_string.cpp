@@ -24,6 +24,8 @@ import crstl;
 
 void RunUnitTestsString()
 {
+	printf("RunUnitTestsSmartPtr\n");
+
 	using namespace crstl_unit;
 
 	// Utility Strings
