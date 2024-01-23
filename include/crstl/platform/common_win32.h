@@ -92,10 +92,10 @@ namespace crstl
 {
 	inline void close_handle_safe(void*& handle)
 	{
-		if (handle)
+		if (handle != CRSTL_INVALID_HANDLE_VALUE)
 		{
 			CloseHandle(handle);
-			handle = nullptr;
+			handle = CRSTL_INVALID_HANDLE_VALUE;
 		}
 	}
 };
