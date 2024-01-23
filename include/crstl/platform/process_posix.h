@@ -51,7 +51,11 @@ crstl_module_export namespace crstl
 				char* argv[] = { (char*)args, nullptr };
 				int spawn_return = posix_spawn(&m_child_pid, executable, &actions, nullptr/*attrp*/, argv, nullptr/*envp*/);
 
-				if (spawn_return != 0)
+				if (spawn_return == 0)
+				{
+					m_state = process_state::launched;
+				}
+				else
 				{
 					m_state = process_state::error_launch;
 				}
