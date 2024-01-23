@@ -57,6 +57,12 @@ crstl_module_export namespace crstl
 				}
 			}
 
+			// Close the write end of stdout as we'll only read it
+			close(stdoutfd[1]);
+
+			// Open the stdout as a readonly binary file
+			m_stdout_read_file = fdopen(stdoutfd[0], "rb");
+
 			posix_spawn_file_actions_destroy(&actions);
 		}
 
