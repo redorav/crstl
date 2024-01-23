@@ -8,6 +8,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+// https://www.gnu.org/software/gnulib/manual/html_node/environ.html
 #if defined(CRSTL_OS_OSX)
 #include <crt_externs.h>
 #define environ (*_NSGetEnviron())
