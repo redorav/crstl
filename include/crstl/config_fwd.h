@@ -32,13 +32,6 @@
 #define crstl_linux_wthrow
 #endif
 
-extern "C"
-{
-#if defined(CRSTL_COMPILER_MSVC)
-	void* _alloca(crstl::size_t size);
-#endif
-}
-
 // Create our own placement new to avoid including header <new> which is quite heavy
 // We pass in a dummy parameter to disambiguate from the global placement new. The
 // macro is there just for convenience
@@ -48,15 +41,9 @@ namespace crstl
 	{
 		placement_new_dummy
 	};
-}
+};
 
 crstl_nodiscard crstl_forceinline void* operator new (crstl::size_t, void* ptr, crstl::placement_new) crstl_noexcept { return ptr; }
 crstl_forceinline void operator delete (void*, void*, crstl::placement_new) crstl_noexcept {}
 
 #define crstl_placement_new(x) ::new(x, crstl::placement_new_dummy)
-
-#if defined(CRSTL_COMPILER_MSVC)
-#define crstl_alloca(size) (_alloca(size))
-#else
-#define crstl_alloca(size) (__builtin_alloca(size))
-#endif
