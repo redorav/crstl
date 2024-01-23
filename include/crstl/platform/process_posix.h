@@ -49,7 +49,7 @@ crstl_module_export namespace crstl
 			if (m_state == process_state::undefined)
 			{
 				char* argv[] = { (char*)args, nullptr };
-				int spawn_return = posix_spawn(&m_child_pid, executable, &actions, nullptr/*attrp*/, argv, nullptr/*envp*/);
+				int spawn_return = posix_spawn(&m_child_pid, executable, &actions, nullptr/*attrp*/, argv, environ/*envp*/);
 
 				if (spawn_return == 0)
 				{
@@ -151,7 +151,9 @@ crstl_module_export namespace crstl
 			
 			ssize_t bytes_read = 0;
 
-			if (m_state == process_state::launched || m_state == process_state::joined)
+			// We need to check whether the process is alive because it might have been killed by someone else
+			// before we're trying to access the stdout handle. There's not a lot we can do 
+			if ((m_state == process_state::launched || m_state == process_state::joined) && is_alive())
 			{
 				int fd = fileno(m_stdout_read_file);
 				bytes_read = read(fd, buffer, buffer_size);
