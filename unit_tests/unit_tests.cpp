@@ -135,6 +135,7 @@ void RunUnitTestsDeque();
 void RunUnitTestsFunction();
 void RunUnitTestsPair();
 void RunUnitTestsPath();
+void RunUnitTestsProcess();
 void RunUnitTestsSmartPtr();
 void RunUnitTestsString();
 void RunUnitTestsThread();
@@ -161,12 +162,13 @@ extern "C"
 	RunUnitTestsDeque();
 	RunUnitTestsFunction();
 	RunUnitTestsPair();
+	RunUnitTestsPath();
+	RunUnitTestsProcess();
 	RunUnitTestsSmartPtr();
 	RunUnitTestsString();
 	RunUnitTestsThread();
 	RunUnitTestsTimer();
 	RunUnitTestsVector();
-	RunUnitTestsPath();
 	
 }
 
