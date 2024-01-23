@@ -25,6 +25,8 @@
 
 #include "crstl/intrusive_ptr.h"
 
+#include <stdio.h>
+
 // Dummy structure with all the necessary constructors and operators to test different containers
 class Dummy : public crstl::intrusive_ptr_interface_delete
 {
