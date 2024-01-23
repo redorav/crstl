@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <spawn.h>
 #include <sys/wait.h>
+#include <unistd.h>
 
 crstl_module_export namespace crstl
 {
@@ -16,9 +17,13 @@ crstl_module_export namespace crstl
 		process() 
 			: process_base()
 			, m_child_pid(0)
+			, m_stdout_read_file(nullptr)
 		{}
 
-		process(const char* executable, const char* args) : process_base()
+		process(const char* executable, const char* args) 
+			: process_base()
+			, m_child_pid(0)
+			, m_stdout_read_file(nullptr)
 		{
 			int stdoutfd[2];
 			if (pipe(stdoutfd) != 0)
