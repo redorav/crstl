@@ -139,20 +139,20 @@ crstl_module_export namespace crstl
 			crstl_assert_msg(buffer != nullptr, "Buffer is null");
 			crstl_assert_msg(buffer_size > 0, "Invalid size");
 			
+			ssize_t bytes_read = 0;
+
 			if (m_state == process_state::launched || m_state == process_state::joined)
 			{
-				const int fd = fileno(m_stdout_read_file);
-				const ssize_t bytes_read = read(fd, buffer, buffer_size);
+				int fd = fileno(m_stdout_read_file);
+				bytes_read = read(fd, buffer, buffer_size);
 
-				if (bytes_read > 0)
+				if (bytes_read < 0)
 				{
-					return (int)bytes_read;
-				}
-				else
-				{
-					return 0;
+					bytes_read = 0;
 				}
 			}
+
+			return (int)bytes_read;
 		}
 
 		bool terminate()
