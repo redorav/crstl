@@ -80,6 +80,10 @@
 
 	#define CRSTL_OS_WINDOWS
 
+#elif defined(ANDROID) || defined(__ANDROID__)
+
+	#define CRSTL_OS_ANDROID
+
 #elif defined(__linux__)
 
 	#define CRSTL_OS_LINUX
