@@ -131,7 +131,7 @@ crstl_module_export namespace crstl
 		return (uint64_t)ticks;
 	}
 
-#elif defined(CRSTL_OS_LINUX)
+#elif defined(CRSTL_OS_LINUX) || defined(CRSTL_OS_ANDROID)
 
 	crstl_constexpr double ticks_to_seconds()
 	{
