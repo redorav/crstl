@@ -6,7 +6,7 @@
 
 #if defined(CRSTL_OS_OSX)
 #include <mach/mach_time.h>
-#elif defined(CRSTL_OS_LINUX)
+#elif defined(CRSTL_OS_LINUX) || defined(CRSTL_OS_ANDROID)
 #include <time.h>
 #elif defined(CRSTL_COMPILER_MSVC)
 
