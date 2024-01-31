@@ -63,9 +63,82 @@ crstl_module_export namespace crstl
 		crstl_constexpr const_iterator cbegin() const crstl_noexcept { return m_data; }
 		crstl_constexpr const_iterator cend() const crstl_noexcept { return m_data + m_length; }
 
+		//--------
+		// compare
+		//--------
+
+		crstl_constexpr int compare(const CharT* string) const crstl_noexcept
+		{
+			return crstl::string_compare(m_data, m_length, string, string_length(string));
+		}
+
+		crstl_constexpr int compare(const CharT* string, size_t string_length) const crstl_noexcept
+		{
+			return crstl::string_compare(m_data, m_length, string, string_length);
+		}
+
+		crstl_constexpr int compare(size_t pos, size_t length, const CharT* string) const crstl_noexcept
+		{
+			return crstl_assert(pos < m_length), crstl::string_compare(m_data + pos, clamp_length(pos, length), string, string_length(string));
+		}
+
+		crstl_constexpr int compare(size_t pos, size_t length, const CharT* string, size_t subpos, size_t sublen = npos) const crstl_noexcept
+		{
+			return crstl_assert(pos < m_length), crstl::string_compare(m_data + pos, clamp_length(pos, length), string + subpos, crstl::string_clamp_length(string_length(string), subpos, sublen));
+		}
+
 		crstl_constexpr int compare(const basic_string_view& sv) const crstl_noexcept
 		{
 			return crstl::string_compare(m_data, m_length, sv.m_data, sv.m_length);
+		}
+
+		crstl_constexpr int compare(size_t pos, size_t length, const basic_string_view& sv) const crstl_noexcept
+		{
+			return crstl_assert(pos < m_length), crstl::string_compare(m_data + pos, clamp_length(pos, length), sv.m_data, sv.m_length);
+		}
+
+		crstl_constexpr int compare(size_t pos, size_t length, const basic_string_view& sv, size_t subpos, size_t sublen = npos) const crstl_noexcept
+		{
+			return crstl_assert(pos < m_length), crstl::string_compare(m_data + pos, clamp_length(pos, length), sv.m_data + subpos, sv.clamp_length(subpos, sublen));
+		}
+
+		//---------
+		// comparei
+		//---------
+
+		crstl_constexpr int comparei(const CharT* string) const crstl_noexcept
+		{
+			return crstl::string_comparei(m_data, m_length, string, string_length(string));
+		}
+
+		crstl_constexpr int comparei(const CharT* string, size_t string_length) const crstl_noexcept
+		{
+			return crstl::string_comparei(m_data, m_length, string, string_length);
+		}
+
+		crstl_constexpr int comparei(size_t pos, size_t length, const CharT* string) const crstl_noexcept
+		{
+			return crstl_assert(pos < m_length), crstl::string_comparei(m_data + pos, clamp_length(pos, length), string, string_length(string));
+		}
+
+		crstl_constexpr int comparei(size_t pos, size_t length, const CharT* string, size_t subpos, size_t sublen = npos) const crstl_noexcept
+		{
+			return crstl_assert(pos < m_length), crstl::string_comparei(m_data + pos, clamp_length(pos, length), string + subpos, crstl::string_clamp_length(string_length(string), subpos, sublen));
+		}
+
+		crstl_constexpr int comparei(const basic_string_view& sv) const crstl_noexcept
+		{
+			return crstl::string_comparei(m_data, m_length, sv.m_data, sv.m_length);
+		}
+
+		crstl_constexpr int comparei(size_t pos, size_t length, const basic_string_view& sv) const crstl_noexcept
+		{
+			return crstl_assert(pos < m_length), crstl::string_comparei(m_data + pos, clamp_length(pos, length), sv.m_data, sv.m_length);
+		}
+
+		crstl_constexpr int comparei(size_t pos, size_t length, const basic_string_view& sv, size_t subpos, size_t sublen = npos) const crstl_noexcept
+		{
+			return crstl_assert(pos < m_length), crstl::string_comparei(m_data + pos, clamp_length(pos, length), sv.m_data + subpos, sv.clamp_length(subpos, sublen));
 		}
 
 		crstl_constexpr14 pointer data() crstl_noexcept { return m_data; }

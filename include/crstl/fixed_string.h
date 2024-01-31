@@ -412,6 +412,11 @@ crstl_module_export namespace crstl
 			return crstl::string_compare(m_data, m_length, string, string_length(string));
 		}
 
+		crstl_constexpr int compare(const CharT* string, size_t string_length) const crstl_noexcept
+		{
+			return crstl::string_compare(m_data, m_length, string, string_length);
+		}
+
 		crstl_constexpr int compare(size_t pos, size_t length, const CharT* string) const crstl_noexcept
 		{
 			return crstl_assert(pos < m_length),
@@ -446,6 +451,11 @@ crstl_module_export namespace crstl
 		crstl_constexpr int comparei(const CharT* string) const crstl_noexcept
 		{
 			return crstl::string_comparei(m_data, m_length, string, string_length(string));
+		}
+
+		crstl_constexpr int comparei(const CharT* string, size_t string_length) const crstl_noexcept
+		{
+			return crstl::string_comparei(m_data, m_length, string, string_length);
 		}
 
 		crstl_constexpr int comparei(size_t pos, size_t length, const CharT* string) const crstl_noexcept
