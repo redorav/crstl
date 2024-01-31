@@ -35,7 +35,7 @@
 
 #endif
 
-#if defined(__INTEL_COMPILER)
+#if defined(__INTEL_COMPILER) || defined (__INTEL_LLVM_COMPILER)
 
 	#define CRSTL_COMPILER_INTEL
 

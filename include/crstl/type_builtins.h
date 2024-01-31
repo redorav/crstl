@@ -32,7 +32,7 @@
 #define crstl_has_unique_object_representations(T) __has_unique_object_representations(T)
 
 // Whether class From can be implicitly converted to To
-#if defined(CRSTL_COMPILER_MSVC) || defined(CRSTL_COMPILER_INTEL)
+#if defined(CRSTL_COMPILER_MSVC)
 
 	#define crstl_is_convertible(From, To) __is_convertible_to(From, To)
 

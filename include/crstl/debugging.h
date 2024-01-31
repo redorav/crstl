@@ -21,7 +21,7 @@ crstl_module_export namespace crstl
 {
 	inline void breakpoint() crstl_noexcept
 	{
-#if defined(CRSTL_COMPILER_MSVC) || defined(CRSTL_COMPILER_INTEL)
+#if defined(CRSTL_COMPILER_MSVC)
 		__debugbreak();
 #elif defined(__has_builtin) && __has_builtin(__builtin_debugtrap) // Mostly the Clang compiler
 		__builtin_debugtrap();
