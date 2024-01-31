@@ -37,7 +37,7 @@ void RunUnitTestsPath()
 		"C:/foo.bar/foo.bar/foobar", // Path with dots ending in filename without extension
 	};
 
-	for (int i = 0; i < sizeof(examplePaths) / sizeof(examplePaths[0]); ++i)
+	for (size_t i = 0; i < sizeof(examplePaths) / sizeof(examplePaths[0]); ++i)
 	{
 		const crstl::string& examplePath = examplePaths[i];
 
