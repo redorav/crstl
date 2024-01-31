@@ -247,8 +247,10 @@ void RunUnitTestsString()
 
 #if CRSTL_CPPVERSION >= CRSTL_CPP17
 		std::basic_string_view<char> stdStringViewEmpty;
+		crstl_check(stdStringViewEmpty.size() == crStringViewEmpty.size());
 
 		std::basic_string_view<char> stdStringViewConstChar("String View");
+		crstl_check(crStringViewConstChar.compare(stdStringViewConstChar.data(), stdStringViewConstChar.length()) == 0);
 #endif
 	}
 	end_test();
