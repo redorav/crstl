@@ -9,6 +9,13 @@ import crstl;
 #include "crstl/span.h"
 #endif
 
+#include <vector>
+#include <stdio.h>
+
+#if CRSTL_CPPVERSION >= CRSTL_CPP20
+#include <span>
+#endif
+
 void RunUnitTestsVectorNoStd()
 {
 	using namespace crstl_unit;
@@ -22,13 +29,6 @@ void RunUnitTestsVectorNoStd()
 	}
 	end_test();
 }
-
-#include <vector>
-#include <stdio.h>
-
-#if CRSTL_CPPVERSION >= CRSTL_CPP20
-#include <span>
-#endif
 
 void LoopOverSpan(const crstl::span<Dummy>& dummySpan)
 {
