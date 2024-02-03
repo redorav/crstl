@@ -130,6 +130,7 @@ namespace crstl_unit
 
 void RunUnitTestsArray();
 void RunUnitTestsAssociative();
+void RunUnitTestsAtomic();
 void RunUnitTestsBitset();
 void RunUnitTestsDeque();
 void RunUnitTestsFunction();
@@ -158,6 +159,7 @@ extern "C"
 #endif
 {
 	RunUnitTestsArray();
+	RunUnitTestsAtomic();
 	RunUnitTestsBitset();
 	RunUnitTestsDeque();
 	RunUnitTestsFunction();

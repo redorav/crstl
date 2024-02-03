@@ -19,6 +19,10 @@
 		</Expand>
 	</Type>
 
+	<Type Name="crstl::atomic&lt;*&gt;">
+		<DisplayString>{m_value}</DisplayString>
+	</Type>
+	
 	<Type Name="crstl::basic_fixed_string&lt;*&gt;">
 		<DisplayString>{m_data} [length = {m_length}]</DisplayString>
 
