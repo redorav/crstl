@@ -34,7 +34,7 @@ crstl_module_export namespace crstl
 		typedef WordType word_type;
 
 		static const word_type kNumBits = NumBits;
-		static const word_type kBitsPerWord = sizeof(word_type) * 8;		
+		static const word_type kBitsPerWord = sizeof(word_type) * 8;
 		static const word_type kBitsPerWordMask = kBitsPerWord - 1; // Used as modulo for words
 		static const word_type kBitsPerWordShift =                  // How many bits to shift for this word type
 			(kBitsPerWord == 8) ? 3 :

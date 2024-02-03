@@ -96,6 +96,17 @@
 		</Expand>
 	</Type>
 
+	<Type Name="crstl::bitset&lt;*,*&gt;">
+		<DisplayString>[size = {$T1}]</DisplayString>
+		<DisplayString Condition="$T2 == 0">[{$T2}] {{}}</DisplayString>
+		<Expand>
+			<IndexListItems>
+				<Size>$T1</Size>
+				<ValueNode>m_data[$i / kBitsPerWord] &gt;&gt; ($i % kBitsPerWord)</ValueNode>
+			</IndexListItems>
+		</Expand>
+	</Type>
+
 	<Type Name="crstl::deque&lt;*,*,*&gt;">
 		<DisplayString>[size = {m_length}]</DisplayString>
 
