@@ -17,8 +17,8 @@ An alternative or complementary STL that focuses on fast compile times and runti
 ## Rationale
 
 - I come mainly from a game development background. Exceptions are rarely used in such an environment because they introduce a lot of complexity, are restrictive, and ultimately not good for performance. Since this library has performance-oriented goals, they are not allowed
-- Codebases are getting more bloated every day. Whether it's from the include mechanism or template metaprogramming, compilation in some popular codebases can take hours. This codebase makes no compromises to avoid external dependencies. The code is arguably uglier, but faster to compile
-- Debug code performance is important. Some codebases and the STL itself have deep, nested callstacks that make debug performance worse than is desirable. To that end this codebase will manually expand code or use macros as necessary
+- Codebases are getting more bloated every day. Whether it's from the include mechanism or template metaprogramming, compilation in some popular codebases can take hours. This codebase makes no compromises to avoid external dependencies. The code can be arguably uglier, but faster to compile
+- Debug performance is important. Some codebases and the STL itself have deep, nested callstacks that make debug performance worse than is desirable. To that end this codebase will manually expand code or use macros as necessary
 - Fixed containers should be used in many circumstances if the requirements allow it. They will not access the heap at any point and can take advantage of the knowledge of the length to save memory. They impose an upper bound on certain operations so make sure your requirements are clear from the beginning
 - The STL, Boost and other libraries aim to be as generic as possible and offer a wide range of functionality. Their codebases are large and complicated to try to achieve that. CRSTL does not have that aim. Instead, it uses as little template code as it can get away with, and tries to use simple constructs to achieve it
 - The STL is tied to C++ revisions, which makes upgrading the language and accesing STL features the same operation. CRSTL aims to offer functionality available in later C++ revisions to older compilers. This means codebases can upgrade without upgrading their C++ version
@@ -30,4 +30,4 @@ An alternative or complementary STL that focuses on fast compile times and runti
 
 - Template metaprogramming is avoided as much as possible, while acknowledging the fact that there are many instances where it is necessary. For example, unique_ptr for arrays can be done with a single class and enable_if, or with two classes that share functionality. The second approach is preferred in this library.
 
-- The STL in general is well designed. Therefore we maintain an interface similar to it and other libraries such as Boost or EASTL where it makes sense (e.g. function naming such as push_back or size). In many cases we'll include additional useful functions
+- The STL interface is well known, as is Boost or EASTL. Therefore we maintain an interface that is familiar where it makes sense (e.g. function naming such as push_back() or size()), but very often we'll include additional performance oriented functions such as push_back_uninitialized() or resize_uninitialized()
