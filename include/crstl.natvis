@@ -20,11 +20,11 @@
 	</Type>
 
 	<Type Name="crstl::atomic&lt;*&gt;">
-		<DisplayString>{m_value}</DisplayString>
+		<DisplayString>{ m_value }</DisplayString>
 	</Type>
 	
 	<Type Name="crstl::basic_fixed_string&lt;*&gt;">
-		<DisplayString>{m_data} [length = {m_length}]</DisplayString>
+		<DisplayString>{ m_data } [length = {m_length}]</DisplayString>
 
 		<Expand>
 			<Item Name="[length]">m_length</Item>
@@ -148,11 +148,11 @@
 	</Type>
 
 	<Type Name="crstl::fixed_deque&lt;*,*&gt;">
-		<DisplayString>[size = {m_length}]</DisplayString>
+		<DisplayString>[size = {(int)m_length}]</DisplayString>
 
 		<Expand>
 			<Item Name="[capacity]">$T2</Item>
-			<Item Name="[size]">m_length</Item>
+			<Item Name="[size]">(int)m_length</Item>
 	
 			<IndexListItems>
 				<Size>m_length</Size>
@@ -163,11 +163,11 @@
 	</Type>
 
 	<Type Name="crstl::fixed_vector&lt;*,*&gt;">
-		<DisplayString>[size = {m_length}]</DisplayString>
+		<DisplayString>[size = { (int)m_length }]</DisplayString>
 
 		<Expand>
 			<Item Name="[capacity]">$T2</Item>
-			<Item Name="[size]">m_length</Item>
+			<Item Name="[size]">(int)m_length</Item>
 			<ArrayItems>
 				<Size>m_length</Size>
 				<ValuePointer>m_data</ValuePointer>
@@ -227,6 +227,23 @@
 				<ValuePointer>m_data</ValuePointer>
 			</ArrayItems>
 		</Expand>
+	</Type>
+
+	<Type Name="crstl::time">
+		<DisplayString>[seconds = { m_ticks * TicksToSeconds }]</DisplayString>
+		<Expand>
+			<Item Name="[ms]">m_ticks * 1000.0 * TicksToSeconds</Item>
+			<Item Name="[us]">m_ticks * 1000000.0 * TicksToSeconds</Item>
+			<Item Name="[ns]">m_ticks * 1000000000.0 * TicksToSeconds</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="crstl::timer">
+		<DisplayString>[start_time = { m_start.m_ticks * TicksToSeconds }]</DisplayString>
+	</Type>
+
+	<Type Name="crstl::cycle_timer">
+		<DisplayString>[start_cycles = { m_start }]</DisplayString>
 	</Type>
 
 	<Type Name="crstl::vector&lt;*,*&gt;">
