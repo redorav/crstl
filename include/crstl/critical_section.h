@@ -44,12 +44,12 @@ crstl_module_export namespace crstl
 		scoped_critical_section_lock(critical_section& cs)
 			: m_critical_section(cs)
 		{
-			m_critical_section.enter();
+			m_critical_section.lock();
 		}
 		
 		~scoped_critical_section_lock()
 		{
-			m_critical_section.leave();
+			m_critical_section.unlock();
 		}
 
 	private:

@@ -73,17 +73,17 @@ crstl_module_export namespace crstl
 			InitializeCriticalSection((LPCRITICAL_SECTION)&m_critical_section);
 		}
 
-		void enter()
+		void lock()
 		{
 			EnterCriticalSection((LPCRITICAL_SECTION)&m_critical_section);
 		}
 
-		crstl_nodiscard bool try_enter()
+		crstl_nodiscard bool try_lock()
 		{
 			return TryEnterCriticalSection((LPCRITICAL_SECTION)&m_critical_section) != 0;
 		}
 
-		void leave()
+		void unlock()
 		{
 			LeaveCriticalSection((LPCRITICAL_SECTION)&m_critical_section);
 		}

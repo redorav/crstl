@@ -19,17 +19,17 @@ crstl_module_export namespace crstl
 			pthread_mutexattr_destroy(&attr);
 		}
 
-		void enter()
+		void lock()
 		{
 			pthread_mutex_lock(&m_mutex);
 		}
 
-		crstl_nodiscard bool try_enter()
+		crstl_nodiscard bool try_lock()
 		{
 			return pthread_mutex_trylock(&m_mutex) == 0;
 		}
 
-		void leave()
+		void unlock()
 		{
 			pthread_mutex_unlock(&m_mutex);
 		}
