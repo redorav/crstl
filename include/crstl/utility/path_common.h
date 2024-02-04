@@ -6,7 +6,7 @@
 
 #include "crstl/utility/string_common.h"
 
-namespace crstl
+crstl_module_export namespace crstl
 {
 	// Forward declarations to be able to convert between these
 	template<typename CharT, typename Allocator> class basic_string;

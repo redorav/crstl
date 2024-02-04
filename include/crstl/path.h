@@ -4,7 +4,7 @@
 
 #include "crstl/string.h"
 
-namespace crstl
+crstl_module_export namespace crstl
 {
 	typedef path_base<string> path;
 };

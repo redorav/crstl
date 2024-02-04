@@ -4,7 +4,7 @@
 
 #include "crstl/fixed_string.h"
 
-namespace crstl
+crstl_module_export namespace crstl
 {
 	typedef path_base<fixed_string16> fixed_path16;
 	typedef path_base<fixed_string32> fixed_path32;
