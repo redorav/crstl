@@ -202,25 +202,25 @@ crstl_module_export namespace crstl
 		// Pre-increment
 		value_type operator ++ ()
 		{
-			return atomic_add((operation_type*)&m_value, 1) + 1;
+			return (value_type)atomic_add((operation_type*)&m_value, operation_type(1)) + 1;
 		}
 
 		// Post-increment
 		value_type operator ++ (int)
 		{
-			return atomic_add((operation_type*)&m_value, 1);
+			return (value_type)atomic_add((operation_type*)&m_value, 1);
 		}
 
 		// Pre-decrement
 		value_type operator -- ()
 		{
-			return atomic_sub((operation_type*)&m_value, 1) - 1;
+			return (value_type)atomic_sub((operation_type*)&m_value, 1) - 1;
 		}
 
 		// Post-decrement
 		value_type operator -- (int)
 		{
-			return atomic_sub((operation_type*)&m_value, 1);
+			return (value_type)atomic_sub((operation_type*)&m_value, 1);
 		}
 
 		operator value_type() const

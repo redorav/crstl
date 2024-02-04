@@ -111,7 +111,7 @@ crstl_module_export namespace crstl
 			, m_stdout_read_handle(CRSTL_INVALID_HANDLE_VALUE)
 		{}
 
-		process(const char* executable, const char* args) : process_base()
+		process(const char* executable, const char* args) : process()
 		{
 			crstl_assert(executable != nullptr);
 

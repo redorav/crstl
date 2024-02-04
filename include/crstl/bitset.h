@@ -54,6 +54,11 @@ crstl_module_export namespace crstl
 
 			bit_reference(word_type& bit_word, size_t bit_index) : bit_word(bit_word), bit_index(bit_index) {}
 
+			bit_reference(const bit_reference& r)
+				: bit_word(r.bit_word)
+				, bit_index(r.bit_index)
+			{}
+
 			bit_reference& operator = (bool value)
 			{
 				if (value)
@@ -133,7 +138,7 @@ crstl_module_export namespace crstl
 			for (size_t i = 0; i < kNumWords; ++i)
 			{
 				#if defined(__GNUG__) || defined(__clang__)
-                n += __builtin_popcountll(m_data[i]);
+                n += (size_t)__builtin_popcountll(m_data[i]);
 				#else
 				n += count_bits(m_data[i]);
 				#endif
