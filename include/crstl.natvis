@@ -118,6 +118,13 @@
 		</Expand>
 	</Type>
 
+	<!-- Make all optional. The first to be successful will present the data-->
+	<Type Name="crstl::compressed_pair&lt;*,*&gt;">
+		<DisplayString Optional="true">{ m_first } { m_second }</DisplayString>
+		<DisplayString Optional="true">{ m_first }</DisplayString>
+		<DisplayString Optional="true">{ m_second }</DisplayString>
+	</Type>
+
 	<Type Name="crstl::critical_section">
 		<!-- MSVC Critical Section -->
 		<DisplayString Condition = "m_critical_section.RecursionCount != 0" Optional="true">locked (count = { m_critical_section.RecursionCount })</DisplayString>
@@ -162,6 +169,11 @@
 		</Expand>
 	</Type>
 
+	<Type Name="crstl::fixed_function&lt;*,*&gt;">
+		<DisplayString Condition="m_invoker == nullptr">empty</DisplayString>
+		<DisplayString Condition="m_invoker != nullptr">[size = { $T1 }] { *m_invoker }</DisplayString>
+	</Type>
+
 	<Type Name="crstl::fixed_vector&lt;*,*&gt;">
 		<DisplayString>[size = { (int)m_length }]</DisplayString>
 
@@ -173,6 +185,11 @@
 				<ValuePointer>m_data</ValuePointer>
 			</ArrayItems>
 		</Expand>
+	</Type>
+
+	<Type Name="crstl::function&lt;*&gt;">
+		<DisplayString Condition="m_invoker == nullptr">empty</DisplayString>
+		<DisplayString Condition="m_invoker != nullptr">{ *m_invoker }</DisplayString>
 	</Type>
 
 	<Type Name="crstl::half">
