@@ -139,6 +139,10 @@
 		</Expand>
 	</Type>
 
+	<Type Name="crstl::cycle_timer">
+		<DisplayString>[start_cycles = { m_start }]</DisplayString>
+	</Type>
+
 	<Type Name="crstl::deque&lt;*,*,*&gt;">
 		<DisplayString>[size = {m_length}]</DisplayString>
 
@@ -212,13 +216,8 @@
 		</Expand>
 	</Type>
 
-	<Type Name="crstl::unique_ptr&lt;*&gt;">
-		<DisplayString Condition="m_ptr != nullptr">({(void*)m_ptr} = {*m_ptr})</DisplayString>
-		<DisplayString Condition="m_ptr == nullptr">nullptr</DisplayString>
-		<Expand>
-			<Item Name="[pointer]">(void*)m_ptr</Item>
-			<Item Name="[value]">*m_ptr</Item>
-		</Expand>
+	<Type Name="crstl::pair&lt;*,*&gt;">
+		<DisplayString>[{ first }] [{ second }]</DisplayString>
 	</Type>
 
 	<Type Name="crstl::span&lt;*&gt;">
@@ -259,8 +258,13 @@
 		<DisplayString>[start_time = { m_start.m_ticks * TicksToSeconds }]</DisplayString>
 	</Type>
 
-	<Type Name="crstl::cycle_timer">
-		<DisplayString>[start_cycles = { m_start }]</DisplayString>
+	<Type Name="crstl::unique_ptr&lt;*&gt;">
+		<DisplayString Condition="m_ptr != nullptr">({(void*)m_ptr} = {*m_ptr})</DisplayString>
+		<DisplayString Condition="m_ptr == nullptr">nullptr</DisplayString>
+		<Expand>
+			<Item Name="[pointer]">(void*)m_ptr</Item>
+			<Item Name="[value]">*m_ptr</Item>
+		</Expand>
 	</Type>
 
 	<Type Name="crstl::vector&lt;*,*&gt;">
