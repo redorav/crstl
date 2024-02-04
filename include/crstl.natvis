@@ -96,6 +96,17 @@
 		</Expand>
 	</Type>
 
+	<Type Name="crstl::basic_string_view&lt;*&gt;">
+		<DisplayString>{m_data} [{m_length}]</DisplayString>
+
+		<Expand>
+			<ArrayItems>
+				<Size>m_length</Size>
+				<ValuePointer>m_data</ValuePointer>
+			</ArrayItems>
+		</Expand>
+	</Type>
+
 	<Type Name="crstl::bitset&lt;*,*&gt;">
 		<DisplayString>[size = {$T1}]</DisplayString>
 		<DisplayString Condition="$T2 == 0">[{$T2}] {{}}</DisplayString>
@@ -193,19 +204,6 @@
 		</Expand>
 	</Type>
 
-	<Type Name="crstl::vector&lt;*,*&gt;">
-		<DisplayString>[size = {m_length}]</DisplayString>
-
-		<Expand>
-			<Item Name="[capacity]">m_capacity_allocator.m_first</Item>
-			<Item Name="[size]">m_length</Item>
-			<ArrayItems>
-				<Size>m_length</Size>
-				<ValuePointer>m_data</ValuePointer>
-			</ArrayItems>
-		</Expand>
-	</Type>
-
 	<Type Name="crstl::span&lt;*&gt;">
 		<DisplayString>[size = {m_length}]</DisplayString>
 
@@ -223,6 +221,19 @@
 
 		<Expand>
 			<Item Name="[capacity]">m_capacity</Item>
+			<Item Name="[size]">m_length</Item>
+			<ArrayItems>
+				<Size>m_length</Size>
+				<ValuePointer>m_data</ValuePointer>
+			</ArrayItems>
+		</Expand>
+	</Type>
+
+	<Type Name="crstl::vector&lt;*,*&gt;">
+		<DisplayString>[size = {m_length}]</DisplayString>
+
+		<Expand>
+			<Item Name="[capacity]">m_capacity_allocator.m_first</Item>
 			<Item Name="[size]">m_length</Item>
 			<ArrayItems>
 				<Size>m_length</Size>
