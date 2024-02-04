@@ -207,7 +207,7 @@ workspace('crstl')
 			remoterootdir("~/projects/crstl")
 			remoteprojectrelativedir("")
 			remoteprojectdir("$(RemoteRootDir)")
-			remotedeploydir("$(RemoteRootDir)/deploy")
+			remotedeploydir("$(RemoteRootDir)")
 			
 		filter{}
 	end
