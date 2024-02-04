@@ -46,12 +46,22 @@ crstl_module_export namespace crstl
 
 		thread(thread&& other) crstl_nodiscard
 		{
+			m_pthread = other.m_pthread;
+			m_delayed_start = other.m_delayed_start;
+
+			other.m_pthread = crstl_thread_invalid_handle;
+		}
+
+		thread& operator = (thread&& other)
+		{
 			join();
 
 			m_pthread = other.m_pthread;
 			m_delayed_start = other.m_delayed_start;
 
 			other.m_pthread = crstl_thread_invalid_handle;
+
+			return *this;
 		}
 
 		template<typename Function, typename ... Args>
