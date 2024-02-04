@@ -107,6 +107,20 @@
 		</Expand>
 	</Type>
 
+	<Type Name="crstl::critical_section">
+		<!-- MSVC Critical Section -->
+		<DisplayString Condition = "m_critical_section.RecursionCount != 0" Optional="true">locked (count = { m_critical_section.RecursionCount })</DisplayString>
+		<DisplayString Condition = "m_critical_section.RecursionCount == 0" Optional="true">unlocked</DisplayString>
+
+		<!-- POSIX on MSVC Linux -->
+		<DisplayString Condition = "m_mutex.__data.__lock != 0" Optional="true">locked (count = { m_mutex.__data.__count })</DisplayString>
+		<DisplayString Condition = "m_mutex.__data.__lock == 0" Optional="true">unlocked</DisplayString>
+		<Expand>
+			<Item Condition = "m_critical_section.OwningThread != 0" Optional="true" Name="[owning_thread]">m_critical_section.OwningThread</Item>
+			<Item Condition = "m_mutex.__data.__owner != 0" Optional="true" Name="[owning_thread]">m_mutex.__data.__owner</Item>
+		</Expand>
+	</Type>
+
 	<Type Name="crstl::deque&lt;*,*,*&gt;">
 		<DisplayString>[size = {m_length}]</DisplayString>
 
