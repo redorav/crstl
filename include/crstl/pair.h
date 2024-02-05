@@ -20,16 +20,34 @@ crstl_module_export namespace crstl
 		typedef T2 second_type;
 
 		crstl_constexpr pair() crstl_noexcept : first(T1()), second(T2()) {}
-		crstl_constexpr pair(const T1& first, const T2& second) crstl_noexcept : first(first), second(second) {}
-		crstl_constexpr pair(const T1& first, T2&& second) crstl_noexcept : first(first), second(crstl::move(second)) {}
-		crstl_constexpr pair(T1&& first, const T2& second) crstl_noexcept : first(crstl::move(first)), second(second) {}
-		crstl_constexpr pair(T1&& first, T2&& second) crstl_noexcept : first(crstl::move(first)), second(crstl::move(second)) {}
 
-		template<typename O1, typename O2>
-		crstl_constexpr pair(const O1& first, const O2& second) crstl_noexcept : first(first), second(second) {}
+		template<typename U1, typename U2>
+		crstl_constexpr pair(const U1& first, const U2& second) crstl_noexcept : first(first), second(second) {}
 
-		template<typename O1, typename O2>
-		crstl_constexpr pair(O1&& first, O2&& second) crstl_noexcept : first(crstl::forward<O1>(first)), second(crstl::forward<O2>(second)) {}
+		template<typename U1, typename U2>
+		crstl_constexpr pair(U1&& first, U2&& second) crstl_noexcept : first(crstl::forward<U1>(first)), second(crstl::forward<U2>(second)) {}
+
+		template<typename U1, typename U2>
+		crstl_constexpr pair(const pair& other) crstl_noexcept : first(other.first), second(other.second) {}
+
+		template<typename U1, typename U2>
+		crstl_constexpr pair(pair<U1, U2>&& other) crstl_noexcept : first(crstl::forward<U1>(other.first)), second(crstl::forward<U2>(other.second)) {}
+
+		template<typename U1, typename U2>
+		pair<T1, T2>& operator = (const pair<U1, U2>& other)
+		{
+			first = other.first;
+			second = other.second;
+			return *this;
+		}
+
+		template<typename U1, typename U2>
+		pair<T1, T2>& operator = (pair<U1, U2>&& other)
+		{
+			first = crstl::forward<U1>(other.first);
+			second = crstl::forward<U2>(other.second);
+			return *this;
+		}
 
 		crstl_constexpr bool operator == (const pair& other) const { return first == other.first && second == other.second; }
 		crstl_constexpr bool operator != (const pair& other) const { return !(*this == other); }
