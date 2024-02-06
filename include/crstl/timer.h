@@ -13,12 +13,6 @@
 
 crstl_module_export namespace crstl
 {
-#if defined(CRSTL_INLINE_VARIABLES)
-
-	inline const double TicksToSeconds = ticks_to_seconds();
-
-#else
-
 	template<typename Dummy>
 	struct timer_globals { static const double TicksToSeconds; };
 
@@ -27,10 +21,6 @@ crstl_module_export namespace crstl
 	// for the variation that works across compilers
 	template<typename Dummy>
 	const double timer_globals<Dummy>::TicksToSeconds = ticks_to_seconds();
-
-	const double TicksToSeconds = timer_globals<double>::TicksToSeconds;
-
-#endif
 
 	class time
 	{
@@ -52,22 +42,22 @@ crstl_module_export namespace crstl
 
 		double seconds() const
 		{
-			return (double)m_ticks * TicksToSeconds;
+			return (double)m_ticks * timer_globals<Dummy>::TicksToSeconds;
 		}
 
 		double milliseconds() const
 		{
-			return (double)m_ticks * 1000.0 * TicksToSeconds;
+			return (double)m_ticks * 1000.0 * timer_globals<Dummy>::TicksToSeconds;
 		}
 
 		double microseconds() const
 		{
-			return (double)m_ticks * 1000000.0 * TicksToSeconds;
+			return (double)m_ticks * 1000000.0 * timer_globals<Dummy>::TicksToSeconds;
 		}
 
 		double frequency() const
 		{
-			return 1.0 / ((double)m_ticks * TicksToSeconds);
+			return 1.0 / ((double)m_ticks * timer_globals<Dummy>::TicksToSeconds);
 		}
 
 		inline time operator + (const time& other) const
