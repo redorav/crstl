@@ -232,8 +232,8 @@
 
 #else
 
-#define crstl_assert(x) void(0)
-#define crstl_assert_msg(x, msg) void(0)
+#define crstl_assert(x) (void)(x)
+#define crstl_assert_msg(x, msg) (void)(x)
 
 #endif
 
@@ -275,7 +275,7 @@
 
 #define crstl_restrict __restrict
 
-#define crstl_unused(x) (void)x
+#define crstl_unused(x) (void)(x)
 
 #if defined(CRSTL_COMPILER_MSVC)
 
