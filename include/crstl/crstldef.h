@@ -7,7 +7,7 @@
 #if defined(CRSTL_MODULE_DECLARATION)
 import <stdint.h>;
 import <stddef.h>;
-#elif defined(CRSTL_INITIALIZER_LISTS)
+#else
 #include <stdint.h>
 #include <stddef.h>
 #endif
