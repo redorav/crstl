@@ -19,4 +19,10 @@ crstl_module_export namespace crstl
 	template <typename T> struct remove_extent { typedef T type; };
 	template <typename T, size_t N> struct remove_extent<T[N]> { typedef T type; };
 	template <typename T> struct remove_extent<T[]> { typedef T type; };
+
+	template<typename T, size_t N>
+	crstl_constexpr size_t array_size(const T(&)[N]) crstl_noexcept
+	{
+		return N;
+	}
 };
