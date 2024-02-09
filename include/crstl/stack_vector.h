@@ -67,11 +67,11 @@ crstl_module_export namespace crstl
 			clear();
 		}
 
-		reference at(size_t i) { crstl_assert(i < m_length); return m_data[i]; }
-		const_reference at(size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
+		T& at(size_t i) { crstl_assert(i < m_length); return m_data[i]; }
+		const T& at(size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
 
-		reference back() { crstl_assert(m_length > 0); return m_data[m_length - 1]; }
-		const_reference back() const { crstl_assert(m_length > 0); return m_data[m_length - 1]; }
+		T& back() { crstl_assert(m_length > 0); return m_data[m_length - 1]; }
+		const T& back() const { crstl_assert(m_length > 0); return m_data[m_length - 1]; }
 
 		iterator begin() { return &m_data[0]; }
 		const_iterator begin() const { return &m_data[0]; }
@@ -184,8 +184,8 @@ crstl_module_export namespace crstl
 		crstl_constexpr const_iterator end() const { return &m_data[0] + m_length; }
 		crstl_constexpr const_iterator cend() const { return &m_data[0] + m_length; }
 
-		crstl_constexpr14 reference front() { return m_data[0]; }
-		crstl_constexpr const_reference front() const { return m_data[0]; }
+		crstl_constexpr14 T& front() { return m_data[0]; }
+		crstl_constexpr const T& front() const { return m_data[0]; }
 
 		void pop_back()
 		{
@@ -218,9 +218,9 @@ crstl_module_export namespace crstl
 
 		size_t size() const { return m_length; }
 
-		reference operator [] (size_t i) { crstl_assert(i < m_length); return m_data[i]; }
+		T& operator [] (size_t i) { crstl_assert(i < m_length); return m_data[i]; }
 
-		const_reference operator [] (size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
+		const T& operator [] (size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
 
 		//---------------------
 		// Comparison Operators

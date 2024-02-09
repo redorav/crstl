@@ -30,11 +30,11 @@ crstl_module_export namespace crstl
 
 		span(T* data, size_t length) : m_data(data), m_length(length) {}
 
-		reference at(size_t i) { crstl_assert(i < m_length); return m_data[i]; }
-		const_reference at(size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
+		T& at(size_t i) { crstl_assert(i < m_length); return m_data[i]; }
+		const T& at(size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
 
-		reference back() { crstl_assert(m_length > 0); return m_data[m_length - 1]; }
-		const_reference back() const { crstl_assert(m_length > 0); return m_data[m_length - 1]; }
+		T& back() { crstl_assert(m_length > 0); return m_data[m_length - 1]; }
+		const T& back() const { crstl_assert(m_length > 0); return m_data[m_length - 1]; }
 
 		iterator begin() { return &m_data[0]; }
 		const_iterator begin() const { return &m_data[0]; }
@@ -52,8 +52,8 @@ crstl_module_export namespace crstl
 
 		span first(size_t length) const { crstl_assert(length < m_length); return subspan(m_data + length, m_length - length); }
 
-		reference front() { m_data[0]; }
-		const_reference front() const { m_data[0]; }
+		T& front() { m_data[0]; }
+		const T& front() const { m_data[0]; }
 
 		span last(size_t length) const { crstl_assert(length < m_length); return subspan(m_data + (m_length - length), length); }
 
@@ -67,9 +67,9 @@ crstl_module_export namespace crstl
 			return span(m_data + offset, length);
 		}
 
-		reference operator [] (size_t i) { crstl_assert(i < m_length); return m_data[i]; }
+		T& operator [] (size_t i) { crstl_assert(i < m_length); return m_data[i]; }
 
-		const_reference operator [] (size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
+		const T& operator [] (size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
 
 	private:
 

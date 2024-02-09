@@ -131,11 +131,11 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
-		crstl_constexpr14 reference at(size_t i) { return crstl_assert(i < m_length), m_data[i]; }
-		crstl_constexpr const_reference at(size_t i) const { return crstl_assert(i < m_length), m_data[i]; }
+		crstl_constexpr14 T& at(size_t i) { return crstl_assert(i < m_length), m_data[i]; }
+		crstl_constexpr const T& at(size_t i) const { return crstl_assert(i < m_length), m_data[i]; }
 
-		crstl_constexpr14 reference back() { return crstl_assert(m_length > 0), m_data[m_length - 1]; }
-		crstl_constexpr const_reference back() const { return crstl_assert(m_length > 0), m_data[m_length - 1]; }
+		crstl_constexpr14 T& back() { return crstl_assert(m_length > 0), m_data[m_length - 1]; }
+		crstl_constexpr const T& back() const { return crstl_assert(m_length > 0), m_data[m_length - 1]; }
 
 		crstl_constexpr14 iterator begin() { return &m_data[0]; }
 		crstl_constexpr const_iterator begin() const { return &m_data[0]; }
@@ -241,8 +241,8 @@ crstl_module_export namespace crstl
 		crstl_constexpr const_iterator end() const { return &m_data[0] + m_length; }
 		crstl_constexpr const_iterator cend() const { return &m_data[0] + m_length; }
 
-		crstl_constexpr14 reference front() { return m_data[0]; }
-		crstl_constexpr const_reference front() const { return m_data[0]; }
+		crstl_constexpr14 T& front() { return m_data[0]; }
+		crstl_constexpr const T& front() const { return m_data[0]; }
 
 		crstl_constexpr size_t max_size() const { return NumElements; }
 
@@ -363,9 +363,9 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		crstl_constexpr14 reference operator [] (size_t i) { return crstl_assert(i < m_length), m_data[i]; }
+		crstl_constexpr14 T& operator [] (size_t i) { return crstl_assert(i < m_length), m_data[i]; }
 
-		crstl_constexpr const_reference operator [] (size_t i) const { return crstl_assert(i < m_length), m_data[i]; }
+		crstl_constexpr const T& operator [] (size_t i) const { return crstl_assert(i < m_length), m_data[i]; }
 
 		//---------------------
 		// Comparison Operators

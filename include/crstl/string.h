@@ -229,12 +229,12 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		crstl_constexpr14 reference at(size_t i) crstl_noexcept
+		crstl_constexpr14 CharT& at(size_t i) crstl_noexcept
 		{
 			return crstl_assert(i < length()), data()[i];
 		}
 
-		crstl_constexpr const_reference at(size_t i) const crstl_noexcept
+		crstl_constexpr const CharT& at(size_t i) const crstl_noexcept
 		{
 			return crstl_assert(i < length()), data()[i];
 		}
@@ -544,12 +544,12 @@ crstl_module_export namespace crstl
 			clear(); append_convert(n, c); return *this;
 		}
 
-		crstl_constexpr14 reference back() crstl_noexcept
+		crstl_constexpr14 CharT& back() crstl_noexcept
 		{
 			return crstl_assert(length() > 0), data()[length() - 1];
 		}
 
-		crstl_constexpr const_reference back() const crstl_noexcept
+		crstl_constexpr const CharT& back() const crstl_noexcept
 		{
 			return crstl_assert(length() > 0), data()[length() - 1];
 		}
@@ -890,8 +890,8 @@ crstl_module_export namespace crstl
 			return rfind(c, pos);
 		}
 
-		crstl_constexpr14 reference front() crstl_noexcept { return is_sso() ? m_layout_allocator.m_first.m_sso.data : m_layout_allocator.m_first.m_heap.data; }
-		crstl_constexpr const_reference front() const crstl_noexcept { return is_sso() ? m_layout_allocator.m_first.m_sso.data : m_layout_allocator.m_first.m_heap.data; }
+		crstl_constexpr14 CharT& front() crstl_noexcept { return is_sso() ? m_layout_allocator.m_first.m_sso.data : m_layout_allocator.m_first.m_heap.data; }
+		crstl_constexpr const CharT& front() const crstl_noexcept { return is_sso() ? m_layout_allocator.m_first.m_sso.data : m_layout_allocator.m_first.m_heap.data; }
 
 		crstl_constexpr14 void force_length(size_t length) crstl_noexcept
 		{
@@ -1135,12 +1135,12 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
-		crstl_constexpr14 reference operator [](size_t i) crstl_noexcept
+		crstl_constexpr14 CharT& operator [](size_t i) crstl_noexcept
 		{
 			return crstl_assert(i < length()), data()[i];
 		}
 
-		crstl_constexpr const_reference operator [](size_t i) const crstl_noexcept
+		crstl_constexpr const CharT& operator [](size_t i) const crstl_noexcept
 		{
 			return crstl_assert(i < length()), data()[i];
 		}

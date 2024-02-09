@@ -37,22 +37,22 @@ crstl_module_export namespace crstl
 
 		basic_string_view(const_pointer begin, const_pointer end) : m_data(begin), m_length(end - begin) {}
 
-		crstl_constexpr14 reference at(size_type i) crstl_noexcept
+		crstl_constexpr14 CharT& at(size_type i) crstl_noexcept
 		{
 			return crstl_assert(i < m_length), m_data[i];
 		}
 
-		crstl_constexpr const_reference at(size_type i) const crstl_noexcept
+		crstl_constexpr const CharT& at(size_type i) const crstl_noexcept
 		{
 			return crstl_assert(i < m_length), m_data[i];
 		}
 
-		crstl_constexpr14 reference back() crstl_noexcept
+		crstl_constexpr14 CharT& back() crstl_noexcept
 		{
 			return crstl_assert(m_length > 0), m_data[m_length - 1];
 		}
 
-		crstl_constexpr const_reference back() const crstl_noexcept
+		crstl_constexpr const CharT& back() const crstl_noexcept
 		{
 			return crstl_assert(m_length > 0), m_data[m_length - 1];
 		}
@@ -194,8 +194,8 @@ crstl_module_export namespace crstl
 			return find(needle_sv.m_data, pos, needle_sv.m_length);
 		}
 
-		crstl_constexpr14 reference front() crstl_noexcept { return m_data; }
-		crstl_constexpr const_reference front() const crstl_noexcept { return m_data; }
+		crstl_constexpr14 CharT& front() crstl_noexcept { return m_data; }
+		crstl_constexpr const CharT& front() const crstl_noexcept { return m_data; }
 
 		// Returns the length of the string, in terms of number of characters
 		crstl_constexpr size_type length() const crstl_noexcept { return m_length; }
@@ -217,12 +217,12 @@ crstl_module_export namespace crstl
 		// Operators
 		//----------
 
-		crstl_constexpr14 reference operator [](size_type i)
+		crstl_constexpr14 CharT& operator [](size_type i)
 		{
 			return crstl_assert(i < m_length), m_data[i];
 		}
 
-		crstl_constexpr const_reference operator [](size_type i) const crstl_noexcept
+		crstl_constexpr const CharT& operator [](size_type i) const crstl_noexcept
 		{
 			return crstl_assert(i < m_length), m_data[i];
 		}
