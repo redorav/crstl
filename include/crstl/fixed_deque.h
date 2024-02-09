@@ -177,7 +177,7 @@ crstl_module_export namespace crstl
 	#if defined(CRSTL_VARIADIC_TEMPLATES)
 
 		template<typename... Args>
-		crstl_constexpr14 reference emplace_back(Args&&... args)
+		crstl_constexpr14 T& emplace_back(Args&&... args)
 		{
 			crstl_assert(m_length < NumElements);
 			size_t current_end = m_end;
@@ -188,7 +188,7 @@ crstl_module_export namespace crstl
 		}
 
 		template<typename... Args>
-		crstl_constexpr14 reference emplace_front(Args&&... args)
+		crstl_constexpr14 T& emplace_front(Args&&... args)
 		{
 			crstl_assert(m_length < NumElements);
 			m_begin = (length_type)(size_t(m_begin - 1) > kLastElement ? kLastElement : m_begin - 1);
@@ -231,7 +231,7 @@ crstl_module_export namespace crstl
 		// push_back
 		//----------
 		
-		crstl_constexpr14 reference push_back()
+		crstl_constexpr14 T& push_back()
 		{
 			crstl_assert(m_length < NumElements);
 			length_type current_end = m_end;
@@ -241,7 +241,7 @@ crstl_module_export namespace crstl
 			return m_data[current_end];
 		}
 		
-		crstl_constexpr14 reference push_back_uninitialized()
+		crstl_constexpr14 T& push_back_uninitialized()
 		{
 			crstl_assert(m_length < NumElements);
 			length_type current_end = m_end;
@@ -270,7 +270,7 @@ crstl_module_export namespace crstl
 		// push_front
 		//-----------
 		
-		crstl_constexpr14 reference push_front()
+		crstl_constexpr14 T& push_front()
 		{
 			crstl_assert(m_length < NumElements);
 			m_begin = (length_type)(size_t(m_begin - 1) > kLastElement ? kLastElement : m_begin - 1);
@@ -279,7 +279,7 @@ crstl_module_export namespace crstl
 			return m_data[m_begin];
 		}
 		
-		crstl_constexpr14 reference push_front_uninitialized()
+		crstl_constexpr14 T& push_front_uninitialized()
 		{
 			crstl_assert(m_length < NumElements);
 			m_begin = (length_type)(size_t(m_begin - 1) > kLastElement ? kLastElement : m_begin - 1);

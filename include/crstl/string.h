@@ -928,7 +928,7 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		crstl_constexpr14 reference push_back(CharT c) { append(1, c); return back(); }
+		crstl_constexpr14 CharT& push_back(CharT c) { append(1, c); return back(); }
 
 		//--------
 		// replace

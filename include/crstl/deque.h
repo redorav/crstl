@@ -224,21 +224,21 @@ crstl_module_export namespace crstl
 #if defined(CRSTL_VARIADIC_TEMPLATES)
 
 		template<typename... Args>
-		crstl_constexpr14 reference emplace_back(Args&&... args)
+		crstl_constexpr14 T& emplace_back(Args&&... args)
 		{
 			request_capacity_back(1);
-			reference data = m_chunk_array[m_chunk_end]->m_data[m_local_end];
+			T& data = m_chunk_array[m_chunk_end]->m_data[m_local_end];
 			crstl_placement_new((void*)&data) T(crstl::forward<Args>(args)...);
 			increment_back();
 			return data;
 		}
 
 		template<typename... Args>
-		crstl_constexpr14 reference emplace_front(Args&&... args)
+		crstl_constexpr14 T& emplace_front(Args&&... args)
 		{
 			request_capacity_front(1);
 			increment_front();
-			reference data = m_chunk_array[m_chunk_begin]->m_data[m_local_begin]; 
+			T& data = m_chunk_array[m_chunk_begin]->m_data[m_local_begin];
 			crstl_placement_new((void*)&data) T(crstl::forward<Args>(args)...);
 			return data;
 		}
@@ -273,37 +273,37 @@ crstl_module_export namespace crstl
 		// push_back
 		//----------
 
-		crstl_constexpr14 reference push_back()
+		crstl_constexpr14 T& push_back()
 		{
 			request_capacity_back(1);
-			reference data = m_chunk_array[m_chunk_end]->m_data[m_local_end];
+			T& data = m_chunk_array[m_chunk_end]->m_data[m_local_end];
 			crstl_placement_new((void*)&data) T();
 			increment_back();
 			return data;
 		}
 
-		crstl_constexpr14 reference push_back(const T& v)
+		crstl_constexpr14 T& push_back(const T& v)
 		{
 			request_capacity_back(1);
-			reference data = m_chunk_array[m_chunk_end]->m_data[m_local_end];
+			T& data = m_chunk_array[m_chunk_end]->m_data[m_local_end];
 			crstl_placement_new((void*)&data) T(v);
 			increment_back();
 			return data;
 		}
 
-		crstl_constexpr14 reference push_back(T&& v)
+		crstl_constexpr14 T& push_back(T&& v)
 		{
 			request_capacity_back(1);
-			reference data = m_chunk_array[m_chunk_end]->m_data[m_local_end];
+			T& data = m_chunk_array[m_chunk_end]->m_data[m_local_end];
 			crstl_placement_new((void*)&data) T(crstl::move(v));
 			increment_back();
 			return data;
 		}
 
-		crstl_constexpr14 reference push_back_uninitialized()
+		crstl_constexpr14 T& push_back_uninitialized()
 		{
 			request_capacity_back(1);
-			reference data = m_chunk_array[m_chunk_end]->m_data[m_local_end];
+			T& data = m_chunk_array[m_chunk_end]->m_data[m_local_end];
 			increment_back();
 			return data;
 		}
@@ -312,38 +312,38 @@ crstl_module_export namespace crstl
 		// push_front
 		//-----------
 
-		crstl_constexpr14 reference push_front()
+		crstl_constexpr14 T& push_front()
 		{
 			request_capacity_front(1);
 			increment_front();
-			reference data = m_chunk_array[m_chunk_begin]->m_data[m_local_begin];
+			T& data = m_chunk_array[m_chunk_begin]->m_data[m_local_begin];
 			crstl_placement_new((void*)&data) T();
 			return data;
 		}
 
-		crstl_constexpr14 reference push_front(const T& v)
+		crstl_constexpr14 T& push_front(const T& v)
 		{
 			request_capacity_front(1);
 			increment_front();
-			reference data = m_chunk_array[m_chunk_begin]->m_data[m_local_begin];
+			T& data = m_chunk_array[m_chunk_begin]->m_data[m_local_begin];
 			crstl_placement_new((void*)&data) T(v);
 			return data;
 		}
 
-		crstl_constexpr14 reference push_front(T&& v)
+		crstl_constexpr14 T& push_front(T&& v)
 		{
 			request_capacity_front(1);
 			increment_front();
-			reference data = m_chunk_array[m_chunk_begin]->m_data[m_local_begin];
+			T& data = m_chunk_array[m_chunk_begin]->m_data[m_local_begin];
 			crstl_placement_new((void*)&data) T(crstl::move(v));
 			return data;
 		}
 
-		crstl_constexpr14 reference push_front_uninitialized()
+		crstl_constexpr14 T& push_front_uninitialized()
 		{
 			request_capacity_front(1);
 			increment_front();
-			reference data = m_chunk_array[m_chunk_begin]->m_data[m_local_begin];
+			T& data = m_chunk_array[m_chunk_begin]->m_data[m_local_begin];
 			return data;
 		}
 
