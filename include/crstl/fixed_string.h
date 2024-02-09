@@ -145,12 +145,12 @@ crstl_module_export namespace crstl
 		explicit crstl_constexpr14 basic_fixed_string(double value)             crstl_noexcept : basic_fixed_string() { append_sprintf("%f", value); }
 		explicit crstl_constexpr14 basic_fixed_string(long double value)        crstl_noexcept : basic_fixed_string() { append_sprintf("%Lf", value); }
 
-		crstl_constexpr14 T& at(size_t i) crstl_noexcept
+		crstl_constexpr14 CharT& at(size_t i) crstl_noexcept
 		{
 			return crstl_assert(i < m_length), m_data[i];
 		}
 
-		crstl_constexpr const T& at(size_t i) const crstl_noexcept
+		crstl_constexpr const CharT& at(size_t i) const crstl_noexcept
 		{
 			return crstl_assert(i < m_length), m_data[i];
 		}
@@ -370,12 +370,12 @@ crstl_module_export namespace crstl
 			assign(string, length); return *this;
 		}
 
-		crstl_constexpr14 T& back() crstl_noexcept
+		crstl_constexpr14 CharT& back() crstl_noexcept
 		{
 			return crstl_assert(m_length > 0), m_data[m_length - 1];
 		}
 
-		crstl_constexpr const T& back() const crstl_noexcept
+		crstl_constexpr const CharT& back() const crstl_noexcept
 		{
 			return crstl_assert(m_length > 0), m_data[m_length - 1];
 		}
@@ -671,8 +671,8 @@ crstl_module_export namespace crstl
 			return rfind(c, pos);
 		}
 
-		crstl_constexpr14 T& front() crstl_noexcept { return m_data[0]; }
-		crstl_constexpr const T& front() const crstl_noexcept { return m_data[0]; }
+		crstl_constexpr14 CharT& front() crstl_noexcept { return m_data[0]; }
+		crstl_constexpr const CharT& front() const crstl_noexcept { return m_data[0]; }
 
 		// Returns the length of the string, in terms of number of characters
 		crstl_constexpr size_t length() const crstl_noexcept { return m_length; }
@@ -685,7 +685,7 @@ crstl_module_export namespace crstl
 			m_length--;
 		}
 
-		crstl_constexpr14 reference push_back(CharT c) { append(1, c); return back(); }
+		crstl_constexpr14 CharT& push_back(CharT c) { append(1, c); return back(); }
 
 		//--------
 		// replace
@@ -859,12 +859,12 @@ crstl_module_export namespace crstl
 		// operators
 		//----------
 
-		crstl_constexpr14 T& operator [](size_t i)
+		crstl_constexpr14 CharT& operator [](size_t i)
 		{
 			return crstl_assert(i < m_length), m_data[i];
 		}
 
-		crstl_constexpr const T& operator [](size_t i) const crstl_noexcept
+		crstl_constexpr const CharT& operator [](size_t i) const crstl_noexcept
 		{
 			return crstl_assert(i < m_length), m_data[i];
 		}
