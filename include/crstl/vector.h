@@ -181,7 +181,7 @@ crstl_module_export namespace crstl
 		template<typename... Args>
 		crstl_constexpr14 reference emplace_back(Args&&... args)
 		{
-			reallocate_if_length_capacity();
+			reallocate_if_length_equals_capacity();
 
 			crstl_placement_new((void*)&m_data[m_length]) T(crstl::forward<Args>(args)...);
 			m_length++;
@@ -190,35 +190,35 @@ crstl_module_export namespace crstl
 #else
 		template<typename Arg0> reference emplace_back(Arg0&& arg0)
 		{
-			reallocate_if_length_capacity(); crstl_placement_new((void*)&m_data[m_length]) T(crstl::forward<Arg0>(arg0)); m_length++; return back();
+			reallocate_if_length_equals_capacity(); crstl_placement_new((void*)&m_data[m_length]) T(crstl::forward<Arg0>(arg0)); m_length++; return back();
 		}
 		
 		template<typename Arg0, typename Arg1> reference emplace_back(Arg0&& arg0, Arg1&& arg1)
 		{
-			reallocate_if_length_capacity(); crstl_placement_new((void*)&m_data[m_length]) T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1)); m_length++; return back();
+			reallocate_if_length_equals_capacity(); crstl_placement_new((void*)&m_data[m_length]) T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1)); m_length++; return back();
 		}
 		
 		template<typename Arg0, typename Arg1, typename Arg2> reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2)
 		{
-			reallocate_if_length_capacity(); crstl_placement_new((void*)&m_data[m_length]) T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2)); m_length++; return back();
+			reallocate_if_length_equals_capacity(); crstl_placement_new((void*)&m_data[m_length]) T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2)); m_length++; return back();
 		}
 		
 		template<typename Arg0, typename Arg1, typename Arg2, typename Arg3> reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2, Arg3&& arg3)
 		{
-			reallocate_if_length_capacity(); crstl_placement_new((void*)&m_data[m_length]) T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3));
+			reallocate_if_length_equals_capacity(); crstl_placement_new((void*)&m_data[m_length]) T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3));
 			m_length++; return back();
 		}
 		
 		template<typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4> reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2, Arg3&& arg3, Arg4&& arg4)
 		{
-			reallocate_if_length_capacity(); crstl_placement_new((void*)&m_data[m_length])
+			reallocate_if_length_equals_capacity(); crstl_placement_new((void*)&m_data[m_length])
 				T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3), crstl::forward<Arg4>(arg4));
 			m_length++; return back();
 		}
 		
 		template<typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5> reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2, Arg3&& arg3, Arg4&& arg4, Arg5&& arg5)
 		{
-			reallocate_if_length_capacity(); crstl_placement_new((void*)&m_data[m_length])
+			reallocate_if_length_equals_capacity(); crstl_placement_new((void*)&m_data[m_length])
 				T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3), crstl::forward<Arg4>(arg4), crstl::forward<Arg5>(arg5));
 			m_length++; return back();
 		}
@@ -226,7 +226,7 @@ crstl_module_export namespace crstl
 		template<typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6>
 		reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2, Arg3&& arg3, Arg4&& arg4, Arg5&& arg5, Arg6&& arg6)
 		{
-			reallocate_if_length_capacity(); crstl_placement_new((void*)&m_data[m_length])
+			reallocate_if_length_equals_capacity(); crstl_placement_new((void*)&m_data[m_length])
 				T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3), crstl::forward<Arg4>(arg4), crstl::forward<Arg5>(arg5), crstl::forward<Arg6>(arg6));
 			m_length++; return back();
 		}
@@ -234,7 +234,7 @@ crstl_module_export namespace crstl
 		template<typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6, typename Arg7>
 		reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2, Arg3&& arg3, Arg4&& arg4, Arg5&& arg5, Arg6&& arg6, Arg7&& arg7)
 		{
-			reallocate_if_length_capacity(); crstl_placement_new((void*)&m_data[m_length])
+			reallocate_if_length_equals_capacity(); crstl_placement_new((void*)&m_data[m_length])
 				T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3), crstl::forward<Arg4>(arg4), 
 				crstl::forward<Arg5>(arg5), crstl::forward<Arg6>(arg6), crstl::forward<Arg7>(arg7));
 			m_length++; return back();
@@ -243,7 +243,7 @@ crstl_module_export namespace crstl
 		template<typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6, typename Arg7, typename Arg8>
 		reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2, Arg3&& arg3, Arg4&& arg4, Arg5&& arg5, Arg6&& arg6, Arg7&& arg7, Arg8&& arg8)
 		{
-			reallocate_if_length_capacity(); crstl_placement_new((void*)&m_data[m_length])
+			reallocate_if_length_equals_capacity(); crstl_placement_new((void*)&m_data[m_length])
 				T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3), crstl::forward<Arg4>(arg4), 
 				crstl::forward<Arg5>(arg5), crstl::forward<Arg6>(arg6), crstl::forward<Arg7>(arg7), crstl::forward<Arg8>(arg8));
 			m_length++; return back();
@@ -252,7 +252,7 @@ crstl_module_export namespace crstl
 		template<typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6, typename Arg7, typename Arg8, typename Arg9>
 		reference emplace_back(Arg0&& arg0, Arg1&& arg1, Arg2&& arg2, Arg3&& arg3, Arg4&& arg4, Arg5&& arg5, Arg6&& arg6, Arg7&& arg7, Arg8&& arg8, Arg9&& arg9)
 		{
-			reallocate_if_length_capacity(); crstl_placement_new((void*)&m_data[m_length])
+			reallocate_if_length_equals_capacity(); crstl_placement_new((void*)&m_data[m_length])
 				T(crstl::forward<Arg0>(arg0), crstl::forward<Arg1>(arg1), crstl::forward<Arg2>(arg2), crstl::forward<Arg3>(arg3), crstl::forward<Arg4>(arg4), 
 				crstl::forward<Arg5>(arg5), crstl::forward<Arg6>(arg6), crstl::forward<Arg7>(arg7), crstl::forward<Arg8>(arg8), crstl::forward<Arg9>(arg9));
 			m_length++; return back();
@@ -286,7 +286,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 reference push_back()
 		{
-			reallocate_if_length_capacity();
+			reallocate_if_length_equals_capacity();
 			crstl_placement_new((void*)&m_data[m_length]) T();
 			m_length++;
 			return back();
@@ -294,21 +294,21 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 void push_back(const T& v)
 		{
-			reallocate_if_length_capacity();
+			reallocate_if_length_equals_capacity();
 			crstl_placement_new((void*)&m_data[m_length]) T(v);
 			m_length++;
 		}
 
 		crstl_constexpr14 void push_back(T&& v)
 		{
-			reallocate_if_length_capacity();
+			reallocate_if_length_equals_capacity();
 			crstl_placement_new((void*)&m_data[m_length]) T(crstl::move(v));
 			m_length++;
 		}
 
 		crstl_constexpr14 reference push_back_uninitialized()
 		{
-			reallocate_if_length_capacity();
+			reallocate_if_length_equals_capacity();
 			m_length++;
 			return back();
 		}
@@ -444,7 +444,7 @@ crstl_module_export namespace crstl
 
 		// Reallocate memory if length is the same as capacity. Mainly used for
 		// push and emplace functions
-		crstl_constexpr14 void reallocate_if_length_capacity()
+		crstl_constexpr14 void reallocate_if_length_equals_capacity()
 		{
 			if (m_length == m_capacity_allocator.m_first)
 			{
