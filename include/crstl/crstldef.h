@@ -6,10 +6,8 @@
 
 #if defined(CRSTL_MODULE_DECLARATION)
 import <stdint.h>;
-import <stddef.h>;
 #else
 #include <stdint.h>
-#include <stddef.h>
 #endif
 
 // Helps with some compilers that don't define e.g. nullptr_t in the global namespace. For classes inside the crstl
