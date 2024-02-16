@@ -96,11 +96,11 @@
 
 #if defined(CRSTL_COMPILER_MSVC)
 
-	#define crstl_finline __forceinline
+	#define crstl_forceinline __forceinline
 
 #else
 
-	#define crstl_finline inline __attribute__((always_inline))
+	#define crstl_forceinline inline __attribute__((always_inline))
 
 #endif
 
