@@ -280,9 +280,11 @@
 #if defined(CRSTL_COMPILER_MSVC)
 
 	#define crstl_forceinline __forceinline
+	#define crstl_noinline __declspec(noinline)
 
 #else
 
 	#define crstl_forceinline inline __attribute__((always_inline))
+	#define crstl_noinline __attribute__((noinline))
 
 #endif
