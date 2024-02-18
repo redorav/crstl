@@ -116,9 +116,10 @@ crstl_module_export namespace crstl
 		
 		bucket_iterator operator ++ (int) { bucket_iterator temp(*this); increment(); return temp; }
 		
-		bool operator == (const this_type& other) const { return m_bucket_index == other.m_bucket_index && m_node == other.m_node; }
+		// Check for node equality first as those are different more often than not and we can save the comparison of the bucket
+		bool operator == (const this_type& other) const { return m_node == other.m_node && m_bucket_index == other.m_bucket_index; }
 		
-		bool operator != (const this_type& other) const { return m_bucket_index != other.m_bucket_index || m_node != other.m_node; }
+		bool operator != (const this_type& other) const { return m_node != other.m_node || m_bucket_index != other.m_bucket_index; }
 		
 		const node_type* get_node() const { return m_node; }
 
@@ -181,26 +182,26 @@ crstl_module_export namespace crstl
 
 	// Use this selector class to determine whether to insert an already constructed object, or construct it in place given
 		// the variadic arguments. This is so that emplace only constructs the object if it really needs to
-	template<typename T, insert_emplace InsertEmplace>
+	template<typename KeyValueType, typename T, insert_emplace InsertEmplace>
 	struct node_create_function_selector;
 
-	template<typename T>
-	struct node_create_function_selector<T, insert_emplace::insert>
+	template<typename KeyValueType, typename T>
+	struct node_create_function_selector<KeyValueType, T, insert_emplace::insert>
 	{
 		template<typename NodeType, typename KeyType, typename ValueType>
 		crstl_forceinline static void create(NodeType* new_node, KeyType&& key, ValueType&& value)
 		{
-			new_node->key_value = pair<KeyType, ValueType>(crstl::forward<KeyType>(key), crstl::forward<ValueType>(value));
+			crstl_placement_new((void*)&(new_node->key_value)) KeyValueType(crstl::forward<KeyType>(key), crstl::forward<ValueType>(value));
 		}
 	};
 
-	template<typename T>
-	struct node_create_function_selector<T, insert_emplace::emplace>
+	template<typename KeyValueType, typename T>
+	struct node_create_function_selector<KeyValueType, T, insert_emplace::emplace>
 	{
 		template<typename NodeType, typename KeyType, typename... Args>
 		crstl_forceinline static void create(NodeType* new_node, KeyType&& key, Args&&... args)
 		{
-			new_node->key_value = pair<KeyType, T>(crstl::forward<KeyType>(key), T(crstl::forward<Args>(args)...));
+			crstl_placement_new((void*)&(new_node->key_value)) KeyValueType(crstl::forward<KeyType>(key), T(crstl::forward<Args>(args)...));
 		}
 	};
 
@@ -451,31 +452,17 @@ crstl_module_export namespace crstl
 		{
 			const size_t hash_value = compute_hash_value(key);
 			const size_t bucket_index = compute_bucket<BucketCount>(hash_value);
+			node_type* found_node = find_impl(bucket_index, crstl::forward<KeyType>(key));
+			return iterator(m_buckets, m_data, bucket_index, found_node);
+		}
 
-			size_t current_node_offset = m_buckets[bucket_index];
-		
-			if (current_node_offset != kInvalidNodeIndex)
-			{
-				node_type* current_node = &m_data[current_node_offset];
-
-				while (true)
-				{
-					if (current_node->key_value.first == key)
-					{
-						return iterator(m_buckets, m_data, bucket_index, current_node);
-					}
-					else if (current_node->is_end())
-					{
-						break;
-					}
-					else
-					{
-						current_node = &m_data[current_node->get_next()];
-					}
-				}
-			}
-		
-			return end();
+		template<typename KeyType>
+		const_iterator find(KeyType&& key) const
+		{
+			const size_t hash_value = compute_hash_value(key);
+			const size_t bucket_index = compute_bucket<BucketCount>(hash_value);
+			node_type* found_node = find_impl(bucket_index, crstl::forward<KeyType>(key));
+			return const_iterator(m_buckets, m_data, bucket_index, found_node);
 		}
 
 		//-------
@@ -484,13 +471,13 @@ crstl_module_export namespace crstl
 
 		pair<iterator, bool> insert(const pair<Key, T>& key_value) { return insert_impl<exists_behavior::find>(key_value.first, key_value.second); }
 
-		pair<iterator, bool> insert(pair<Key, T>&& key_value) { return insert_impl<exists_behavior::find>(crstl::move(key_value.first), crstl::move(key_value.second)); }
+		pair<iterator, bool> insert(pair<Key, T>&& key_value) { return insert_impl<exists_behavior::find>(crstl::forward<Key>(key_value.first), crstl::move(key_value.second)); }
 
 		template<typename ValueType>
 		pair<iterator, bool> insert(const Key& key, ValueType&& value) { return insert_impl<exists_behavior::find>(key, crstl::forward<ValueType>(value)); }
 
 		template<typename ValueType>
-		pair<iterator, bool> insert(Key&& key, ValueType&& value) { return insert_impl<exists_behavior::find>(crstl::move(key), crstl::forward<ValueType>(value)); }
+		pair<iterator, bool> insert(Key&& key, ValueType&& value) { return insert_impl<exists_behavior::find>(crstl::forward<Key>(key), crstl::forward<ValueType>(value)); }
 
 		//-----------------
 		// insert_or_assign
@@ -498,13 +485,13 @@ crstl_module_export namespace crstl
 
 		pair<iterator, bool> insert_or_assign(const pair<Key, T>& key_value) { return insert_impl<exists_behavior::assign>(key_value.first, key_value.second); }
 		
-		pair<iterator, bool> insert_or_assign(pair<Key, T>&& key_value) { return insert_impl<exists_behavior::assign>(crstl::move(key_value.first), crstl::move(key_value.second)); }
+		pair<iterator, bool> insert_or_assign(pair<Key, T>&& key_value) { return insert_impl<exists_behavior::assign>(crstl::forward<Key>(key_value.first), crstl::move(key_value.second)); }
 		
 		template<typename ValueType>
 		pair<iterator, bool> insert_or_assign(const Key& key, ValueType&& value) { return insert_impl<exists_behavior::assign>(key, crstl::forward<ValueType>(value)); }
 
 		template<typename ValueType>
-		pair<iterator, bool> insert_or_assign(Key&& key, ValueType&& value) { return insert_impl<exists_behavior::assign>(crstl::move(key), crstl::forward<ValueType>(value)); }
+		pair<iterator, bool> insert_or_assign(Key&& key, ValueType&& value) { return insert_impl<exists_behavior::assign>(crstl::forward<Key>(key), crstl::forward<ValueType>(value)); }
 
 		size_t max_size() const { return sizeof(length_type) - 2; }
 
@@ -570,7 +557,7 @@ crstl_module_export namespace crstl
 							}
 
 							// Create the new one
-							node_create_function_selector<T, InsertEmplace>::create(current_node, crstl::forward<KeyType>(key), crstl::forward<InsertEmplaceArgs>(insert_emplace_args)...);
+							node_create_function_selector<key_value_type, T, InsertEmplace>::create(current_node, crstl::forward<KeyType>(key), crstl::forward<InsertEmplaceArgs>(insert_emplace_args)...);
 						}
 
 						// Return true in the second parameter if insertion happened, false otherwise
@@ -584,7 +571,7 @@ crstl_module_export namespace crstl
 						{
 							length_type empty_node_index = find_empty_node_index(bucket_index * kNodesPerBucket);
 							node_type* empty_node = &m_data[empty_node_index];
-							node_create_function_selector<T, InsertEmplace>::create(empty_node, crstl::forward<KeyType>(key), crstl::forward<InsertEmplaceArgs>(insert_emplace_args)...);
+							node_create_function_selector<key_value_type, T, InsertEmplace>::create(empty_node, crstl::forward<KeyType>(key), crstl::forward<InsertEmplaceArgs>(insert_emplace_args)...);
 							empty_node->set_end();
 
 							current_node->set_next(empty_node_index);
@@ -611,7 +598,7 @@ crstl_module_export namespace crstl
 
 				// Create new node and mark as end
 				node_type* empty_node = &m_data[empty_node_index];
-				node_create_function_selector<T, InsertEmplace>::create(empty_node, crstl::forward<KeyType>(key), crstl::forward<InsertEmplaceArgs>(insert_emplace_args)...);
+				node_create_function_selector<key_value_type, T, InsertEmplace>::create(empty_node, crstl::forward<KeyType>(key), crstl::forward<InsertEmplaceArgs>(insert_emplace_args)...);
 				empty_node->set_end();
 
 				m_length++;
@@ -655,11 +642,40 @@ crstl_module_export namespace crstl
 				}
 			}
 
-			found_candidate:
+		found_candidate:
 
 			crstl_assert(candidate_node_index != kInvalidNodeIndex);
 
 			return candidate_node_index;
+		}
+
+		template<typename KeyType>
+		node_type* find_impl(size_t bucket_index, KeyType&& key)
+		{
+			size_t current_node_offset = m_buckets[bucket_index];
+
+			if (current_node_offset != kInvalidNodeIndex)
+			{
+				node_type* current_node = &m_data[current_node_offset];
+
+				while (true)
+				{
+					if (current_node->key_value.first == key)
+					{
+						return current_node;
+					}
+					else if (current_node->is_end())
+					{
+						break;
+					}
+					else
+					{
+						current_node = &m_data[current_node->get_next()];
+					}
+				}
+			}
+
+			return nullptr;
 		}
 
 		crstl_constexpr14 size_t compute_hash_value(const Key& key)
