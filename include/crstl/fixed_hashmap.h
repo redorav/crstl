@@ -179,6 +179,31 @@ crstl_module_export namespace crstl
 		emplace
 	};
 
+	// Use this selector class to determine whether to insert an already constructed object, or construct it in place given
+		// the variadic arguments. This is so that emplace only constructs the object if it really needs to
+	template<typename T, insert_emplace InsertEmplace>
+	struct node_create_function_selector;
+
+	template<typename T>
+	struct node_create_function_selector<T, insert_emplace::insert>
+	{
+		template<typename NodeType, typename KeyType, typename ValueType>
+		crstl_forceinline static void create(NodeType* new_node, KeyType&& key, ValueType&& value)
+		{
+			new_node->key_value = pair<KeyType, ValueType>(crstl::forward<KeyType>(key), crstl::forward<ValueType>(value));
+		}
+	};
+
+	template<typename T>
+	struct node_create_function_selector<T, insert_emplace::emplace>
+	{
+		template<typename NodeType, typename KeyType, typename... Args>
+		crstl_forceinline static void create(NodeType* new_node, KeyType&& key, Args&&... args)
+		{
+			new_node->key_value = pair<KeyType, T>(crstl::forward<KeyType>(key), T(crstl::forward<Args>(args)...));
+		}
+	};
+
 	// It is recommended to use a power of 2 for buckets as it is faster to find
 	template
 	<
@@ -510,31 +535,6 @@ crstl_module_export namespace crstl
 
 	private:
 
-		// Use this selector class to determine whether to insert an already constructed object, or construct it in place given
-		// the variadic arguments. This is so that emplace only constructs the object if it really needs to
-		template<insert_emplace InsertEmplace>
-		struct node_create_function_selector;
-
-		template<>
-		struct node_create_function_selector<insert_emplace::insert>
-		{
-			template<typename KeyType, typename ValueType>
-			crstl_forceinline static void create(node_type* new_node, KeyType&& key, ValueType&& value)
-			{
-				new_node->key_value = pair<KeyType, ValueType>(crstl::forward<KeyType>(key), crstl::forward<ValueType>(value));
-			}
-		};
-
-		template<>
-		struct node_create_function_selector<insert_emplace::emplace>
-		{
-			template<typename KeyType, typename... Args>
-			crstl_forceinline static void create(node_type* new_node, KeyType&& key, Args&&... args)
-			{
-				new_node->key_value = pair<KeyType, T>(crstl::forward<KeyType>(key), T(crstl::forward<Args>(args)...));
-			}
-		};
-
 		// This function tries to find an empty space in the hashmap by checking whether the bucket is empty or finding an empty space in the
 		// bucket if it already has something in it. If we find the object we're looking for, there are a series of different actions we can
 		// take. If we are simply inserting (or emplacing) we just return the object that was there already
@@ -570,7 +570,7 @@ crstl_module_export namespace crstl
 							}
 
 							// Create the new one
-							node_create_function_selector<InsertEmplace>::create(current_node, crstl::forward<KeyType>(key), crstl::forward<InsertEmplaceArgs>(insert_emplace_args)...);
+							node_create_function_selector<T, InsertEmplace>::create(current_node, crstl::forward<KeyType>(key), crstl::forward<InsertEmplaceArgs>(insert_emplace_args)...);
 						}
 
 						// Return true in the second parameter if insertion happened, false otherwise
@@ -584,7 +584,7 @@ crstl_module_export namespace crstl
 						{
 							length_type empty_node_index = find_empty_node_index(bucket_index * kNodesPerBucket);
 							node_type* empty_node = &m_data[empty_node_index];
-							node_create_function_selector<InsertEmplace>::create(empty_node, crstl::forward<KeyType>(key), crstl::forward<InsertEmplaceArgs>(insert_emplace_args)...);
+							node_create_function_selector<T, InsertEmplace>::create(empty_node, crstl::forward<KeyType>(key), crstl::forward<InsertEmplaceArgs>(insert_emplace_args)...);
 							empty_node->set_end();
 
 							current_node->set_next(empty_node_index);
@@ -611,7 +611,7 @@ crstl_module_export namespace crstl
 
 				// Create new node and mark as end
 				node_type* empty_node = &m_data[empty_node_index];
-				node_create_function_selector<InsertEmplace>::create(empty_node, crstl::forward<KeyType>(key), crstl::forward<InsertEmplaceArgs>(insert_emplace_args)...);
+				node_create_function_selector<T, InsertEmplace>::create(empty_node, crstl::forward<KeyType>(key), crstl::forward<InsertEmplaceArgs>(insert_emplace_args)...);
 				empty_node->set_end();
 
 				m_length++;

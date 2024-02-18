@@ -30,7 +30,35 @@ namespace crstl
 
 	template<> struct hash<unsigned long long> { size_t operator()(unsigned long long value) const { return static_cast<size_t>(value); } };
 
-	template<> struct hash<float> { size_t operator()(float value) { size_t bits = *(size_t*)&value; return static_cast<size_t>(bits); } };
+	template<> struct hash<float>
+	{
+		size_t operator()(float value)
+		{
+			union
+			{
+				float f;
+				uint32_t u;
+			} u;
 
-	template<> struct hash<double> { size_t operator()(double value) { size_t bits = *(size_t*)&value; return static_cast<size_t>(bits); } };
+			u.f = value;
+
+			return static_cast<size_t>(u.u);
+		}
+	};
+
+	template<> struct hash<double>
+	{
+		size_t operator()(double value)
+		{
+			union
+			{
+				double d;
+				size_t u;
+			} u;
+
+			u.d = value;
+
+			return static_cast<size_t>(u.u);
+		}
+	};
 };
