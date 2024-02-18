@@ -91,6 +91,65 @@ public:
 	~RefCountDummy();
 };
 
+struct Example
+{
+	int a;
+	float b;
+
+	Example()
+	{
+		a = 0;
+		b = 1.0f;
+	}
+
+	Example(int _a, float _b)
+	{
+		a = _a;
+		b = _b;
+	}
+
+	Example(const Example& other)
+	{
+		a = other.a;
+		b = other.b;
+	}
+
+	Example(Example&& other) crstl_noexcept
+	{
+		a = other.a;
+		b = other.b;
+		other.a = 10000;
+		other.b = 10000.0f;
+	}
+
+	Example& operator = (const Example& other)
+	{
+		a = other.a;
+		b = other.b;
+		return *this;
+	}
+
+	Example& operator = (Example&& other) crstl_noexcept
+	{
+		a = other.a;
+		b = other.b;
+		other.a = 10000;
+		other.b = 10000.0f;
+		return *this;
+	}
+
+	bool operator == (const Example& other) const
+	{
+		return a == other.a && b == other.b;
+	}
+
+	//~Example()
+	//{
+	//	a = -1;
+	//	b = -1.0f;
+	//}
+};
+
 namespace crstl_unit
 {
 	void begin_test_impl(const char* name);

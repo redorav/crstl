@@ -159,6 +159,7 @@ extern "C"
 #endif
 {
 	RunUnitTestsArray();
+	RunUnitTestsAssociative();
 	RunUnitTestsAtomic();
 	RunUnitTestsBitset();
 	RunUnitTestsDeque();

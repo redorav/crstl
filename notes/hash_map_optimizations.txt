@@ -1,0 +1,75 @@
+Optimization 1 - Avoid the bitfield
+We have only two values now, end and empty
+
+MSVC
+
+	VERSION1
+	std::unordered_map took 1398.798300 ms with 0 elements
+	robin_hood::unordered_map took 169.284600 ms with 0 elements
+	eastl::hash_map took 843.420000 ms with 0 elements
+	ankerl::unordered_dense::map took 172.053700 ms with 0 elements
+	crstl::fixed_bucket_map took 128.931300 ms with 0 elements
+	
+	VERSION2
+	std::unordered_map took 1172.118700 ms with 0 elements
+	robin_hood::unordered_map took 157.321900 ms with 0 elements
+	eastl::hash_map took 1005.509400 ms with 0 elements
+	ankerl::unordered_dense::map took 166.000600 ms with 0 elements
+	crstl::fixed_bucket_map took 104.077600 ms with 0 elements
+
+LLVM
+	
+	VERSION1
+	std::unordered_map took 1154.207400 ms with 0 elements
+	robin_hood::unordered_map took 164.929600 ms with 0 elements
+	eastl::hash_map took 897.046000 ms with 0 elements
+	ankerl::unordered_dense::map took 89.928600 ms with 0 elements
+	crstl::fixed_bucket_map took 137.407700 ms with 0 elements
+
+	VERSION2
+
+	LLVM
+	std::unordered_map took 1107.045100 ms with 0 elements
+	robin_hood::unordered_map took 137.653100 ms with 0 elements
+	eastl::hash_map took 817.834800 ms with 0 elements
+	ankerl::unordered_dense::map took 87.025800 ms with 0 elements
+	crstl::fixed_bucket_map took 116.744400 ms with 0 elements
+
+Optimization 1 - Avoid the if in erase()
+We need to statically assert that end value of end and the invalid value for the bucket are the same
+
+MSVC
+
+	VERSION1
+
+	std::unordered_map took 1183.788800 ms with 0 elements
+	robin_hood::unordered_map took 200.514600 ms with 0 elements
+	eastl::hash_map took 1152.385000 ms with 0 elements
+	ankerl::unordered_dense::map took 175.657400 ms with 0 elements
+	crstl::fixed_bucket_map took 104.420400 ms with 0 elements
+	
+	VERSION2
+	
+	std::unordered_map took 1262.597900 ms with 0 elements
+	robin_hood::unordered_map took 216.315100 ms with 0 elements
+	eastl::hash_map took 954.657800 ms with 0 elements
+	ankerl::unordered_dense::map took 161.239000 ms with 0 elements
+	crstl::fixed_bucket_map took 89.889000 ms with 0 elements
+	
+LLVM
+
+	VERSION1
+	
+	std::unordered_map took 1046.381000 ms with 0 elements
+	robin_hood::unordered_map took 122.325400 ms with 0 elements
+	eastl::hash_map took 823.489400 ms with 0 elements
+	ankerl::unordered_dense::map took 99.672700 ms with 0 elements
+	crstl::fixed_bucket_map took 119.462000 ms with 0 elements
+	
+	VERSION2
+	
+	std::unordered_map took 1035.251400 ms with 0 elements
+	robin_hood::unordered_map took 141.170100 ms with 0 elements
+	eastl::hash_map took 925.701400 ms with 0 elements
+	ankerl::unordered_dense::map took 102.253400 ms with 0 elements
+	crstl::fixed_bucket_map took 87.121800 ms with 0 elements
