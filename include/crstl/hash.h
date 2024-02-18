@@ -8,6 +8,8 @@ namespace crstl
 {
 	template<typename T> struct hash;
 
+	template <typename T> struct hash<T*> { size_t operator()(T* p) const { return size_t(uintptr_t(p)); } };
+
 	template<> struct hash<bool> { size_t operator()(bool value) const { return static_cast<size_t>(value); } };
 
 	template<> struct hash<char> { size_t operator()(char value) const { return static_cast<size_t>(value); } };
