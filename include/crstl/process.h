@@ -21,10 +21,17 @@ crstl_module_export namespace crstl
 
 	struct process_parameters
 	{
+		process_parameters() 
+		: command_line(nullptr)
+		, args(nullptr)
+		, read_stdout(true)
+		, write_stdin(true)
+			{}
+
 		const char* command_line;
 		const char* args;
-		bool read_stdout = true;
-		bool write_stdin = false;
+		bool read_stdout;
+		bool write_stdin;
 	};
 
 	class process_base
