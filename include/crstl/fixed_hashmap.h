@@ -25,7 +25,7 @@ import <initializer_list>;
 // - The number of nodes and buckets is specified at compile time
 // - The bucket count should ideally be a power of 2 as it's faster to compute the bucket
 // - The function signature for emplace varies with respect to std::unordered_map.
-//   It behaves like std::vector's template or std::unordered_map's try_emplace
+//   It behaves like std::vector's emplace or std::unordered_map's try_emplace, meaning it won't construct the object if it's already in the hashmap
 // - We have the option to store the key or just the hash, provided
 //   1) The key is guaranteed to be unique
 //   2) The user doesn't need the actual value of the key
@@ -36,15 +36,13 @@ crstl_module_export namespace crstl
 {
 	// Node in the hashmap. Stores metadata that is useful to know the current state of the node
 
-	template<typename Key, typename T, typename LengthType>
+	template<typename Key, typename T>
 	struct bucket_node
 	{
-		typedef LengthType length_type;
-
-		enum node_meta : length_type
+		enum node_meta : size_t
 		{
-			end   = (length_type)-1, // Indicates the last node in the list for any given bucket
-			empty = (length_type)-2, // Indicates an empty node
+			end   = (size_t)-1, // Indicates the last node in the list for any given bucket
+			empty = (size_t)-2, // Indicates an empty node
 		};
 
 		size_t get_next() const
@@ -82,35 +80,36 @@ crstl_module_export namespace crstl
 			next = node_meta::end;
 		}
 
-		pair<Key, T> key_value;
+		pair<const Key, T> key_value;
 
-		length_type next;
+		size_t next;
 	};
 
-	template<typename Key, typename T, size_t BucketCount, typename LengthType>
+	template<typename Key, typename T, size_t BucketCount, bool IsConst>
 	struct bucket_iterator
 	{
 	public:
 
-		typedef bucket_iterator<Key, T, BucketCount, LengthType> this_type;
-		typedef bucket_node<Key, T, LengthType> node_type;
-		typedef LengthType length_type;
+		typedef bucket_iterator<Key, T, BucketCount, IsConst> this_type;
+		typedef bucket_node<Key, T> node_type;
+		typedef typename hashmap_type_select<IsConst, const pair<const Key, T>*, pair<const Key, T>*>::type pointer;
+		typedef typename hashmap_type_select<IsConst, const pair<const Key, T>&, pair<const Key, T>&>::type reference;
 
-		static const length_type kInvalidNodeIndex = (length_type)-1;
+		static const size_t kInvalidNodeIndex = (size_t)-1;
 
 		// We rely on this to avoid a branch when deleting a value
 		static_assert(kInvalidNodeIndex == node_type::node_meta::end, "Make sure the invalid node and the value of end are the same");
 
-		bucket_iterator(const length_type* buckets, const node_type* nodes, length_type bucket_start, const node_type* node_start)
+		bucket_iterator(const size_t* buckets, const node_type* nodes, size_t bucket_start, node_type* node_start)
 			: m_buckets(buckets), m_bucket_index(bucket_start), m_data(nodes), m_node(node_start)
 		{
 			// A bucket index of BucketCount means invalid bucket, i.e. the end iterator
 			crstl_assert(m_bucket_index <= BucketCount);
 		}
 
-		const pair<Key, T>* operator -> () const { crstl_assert(m_node != nullptr); return &(m_node->key_value); }
+		pointer operator -> () const { crstl_assert(m_node != nullptr); return &(m_node->key_value); }
 		
-		const pair<Key, T>& operator * () const { crstl_assert(m_node != nullptr); return m_node->key_value; }
+		reference operator * () const { crstl_assert(m_node != nullptr); return m_node->key_value; }
 		
 		bucket_iterator& operator ++ () { increment(); return *this; }
 		
@@ -127,7 +126,7 @@ crstl_module_export namespace crstl
 		{
 			if (m_node->is_valid())
 			{
-				m_node = &m_data[m_node->get_next()];
+				m_node = (node_type*)&m_data[m_node->get_next()];
 			}
 			else
 			{
@@ -149,7 +148,7 @@ crstl_module_export namespace crstl
 
 			if (m_bucket_index < BucketCount)
 			{
-				m_node = &m_data[m_buckets[m_bucket_index]];
+				m_node = (node_type*)&m_data[m_buckets[m_bucket_index]];
 			}
 			else
 			{
@@ -159,11 +158,11 @@ crstl_module_export namespace crstl
 
 	private:
 
-		const length_type* m_buckets;
-		length_type m_bucket_index;
+		const size_t* m_buckets;
+		size_t m_bucket_index;
 
 		const node_type* m_data; // Points to the main data. This is so we can index via the offset
-		const node_type* m_node;
+		node_type* m_node;
 	};
 
 	// Behavior to run when node exists already
@@ -181,12 +180,12 @@ crstl_module_export namespace crstl
 	};
 
 	// Use this selector class to determine whether to insert an already constructed object, or construct it in place given
-		// the variadic arguments. This is so that emplace only constructs the object if it really needs to
+	// the variadic arguments. This is so that emplace only constructs the object if it really needs to
 	template<typename KeyValueType, typename T, insert_emplace InsertEmplace>
-	struct node_create_function_selector;
+	struct node_create_selector;
 
 	template<typename KeyValueType, typename T>
-	struct node_create_function_selector<KeyValueType, T, insert_emplace::insert>
+	struct node_create_selector<KeyValueType, T, insert_emplace::insert>
 	{
 		template<typename NodeType, typename KeyType, typename ValueType>
 		crstl_forceinline static void create(NodeType* new_node, KeyType&& key, ValueType&& value)
@@ -196,7 +195,7 @@ crstl_module_export namespace crstl
 	};
 
 	template<typename KeyValueType, typename T>
-	struct node_create_function_selector<KeyValueType, T, insert_emplace::emplace>
+	struct node_create_selector<KeyValueType, T, insert_emplace::emplace>
 	{
 		template<typename NodeType, typename KeyType, typename... Args>
 		crstl_forceinline static void create(NodeType* new_node, KeyType&& key, Args&&... args)
@@ -221,24 +220,21 @@ crstl_module_export namespace crstl
 		static_assert(NodeCount >= 1 && BucketCount >= 1, "Must have at least one node and one bucket");
 		static_assert(NodeCount > BucketCount, "Must have at least one node per bucket");
 
-		// Making length_type smaller than size_t has an effect on performance, so if we ever
-		// change this make sure we profile first and make sure we distinguish storage from runtime
-		typedef size_t                                                  length_type;
-		typedef Key                                                     key_type;
-		typedef T                                                       mapped_type;
-		typedef pair<Key, T>                                            value_type;
-		typedef size_t                                                  size_type;
-		typedef Hasher                                                  hasher;
-		typedef bucket_iterator<Key, T, BucketCount, length_type>       iterator;
-		typedef const bucket_iterator<Key, T, BucketCount, length_type> const_iterator;
-		typedef bucket_node<Key, T, length_type>                        node_type;
+		typedef Key                                              key_type;
+		typedef T                                                mapped_type;
+		typedef pair<const Key, T>                               key_value_type;
+		typedef size_t                                           size_type;
+		typedef Hasher                                           hasher;
+		typedef bucket_iterator<Key, T, BucketCount, false>      iterator;
+		typedef bucket_iterator<Key, T, BucketCount, true>       const_iterator;
+		typedef bucket_node<Key, T>                              node_type;
 
-		static const length_type kInvalidNodeIndex = (length_type)-1;
+		static const size_t kInvalidNodeIndex = (size_t)-1;
 		static const size_t kNodesPerBucket = NodeCount / BucketCount;
 
 		crstl_constexpr14 fixed_hashmap() crstl_noexcept : m_length(0)
 		{
-			// (length_type)-1 is the invalid value for buckets
+			// (size_t)-1 is the invalid value for buckets
 			memory_set(m_buckets, 0xff, BucketCount * sizeof(m_buckets[0]));
 
 			for (size_t i = 0; i < NodeCount; ++i)
@@ -249,7 +245,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 fixed_hashmap(const fixed_hashmap& other) crstl_noexcept : fixed_hashmap()
 		{
-			for (const value_type& iter : other)
+			for (const key_value_type& iter : other)
 			{
 				insert(iter);
 			}
@@ -257,11 +253,11 @@ crstl_module_export namespace crstl
 			m_length = other.m_length;
 		}
 
-		crstl_constexpr14 fixed_hashmap(std::initializer_list<value_type> ilist) crstl_noexcept : fixed_hashmap()
+		crstl_constexpr14 fixed_hashmap(std::initializer_list<key_value_type> ilist) crstl_noexcept : fixed_hashmap()
 		{
 			crstl_assert(ilist.size() <= NodeCount);
 
-			for (const value_type& iter : ilist)
+			for (const key_value_type& iter : ilist)
 			{
 				insert(crstl::move(iter));
 			}
@@ -272,7 +268,7 @@ crstl_module_export namespace crstl
 			// Only destroy the value, no need to destroy buckets or nodes
 			crstl_constexpr_if(!crstl_is_trivially_destructible(T))
 			{
-				for (const value_type& iter : *this)
+				for (const key_value_type& iter : *this)
 				{
 					iter.second.~T();
 				}
@@ -283,7 +279,7 @@ crstl_module_export namespace crstl
 		{
 			clear();
 
-			for (const value_type& iter : other)
+			for (const key_value_type& iter : other)
 			{
 				insert(iter);
 			}
@@ -324,7 +320,7 @@ crstl_module_export namespace crstl
 				}
 			}
 
-			return const_iterator(m_buckets, m_data, first_valid_bucket, first_valid_node);
+			return const_iterator(m_buckets, m_data, first_valid_bucket, (node_type*)first_valid_node);
 		}
 
 		crstl_constexpr14 const_iterator cbegin() const crstl_noexcept { return begin(); }
@@ -333,7 +329,7 @@ crstl_module_export namespace crstl
 		{
 			crstl_constexpr_if(!crstl_is_trivially_destructible(T))
 			{
-				for (const value_type& iter : *this)
+				for (const key_value_type& iter : *this)
 				{
 					iter.second.~T();
 				}
@@ -407,9 +403,9 @@ crstl_module_export namespace crstl
 					if (current_node->key_value.first == key)
 					{
 						// Destroy existing value only if there's a destructor
-						crstl_constexpr_if(!crstl_is_trivially_destructible(value_type))
+						crstl_constexpr_if(!crstl_is_trivially_destructible(key_value_type))
 						{
-							current_node->key_value.~value_type();
+							current_node->key_value.~key_value_type();
 						}
 
 						// If there is no previous node, see what to do with the bucket
@@ -469,9 +465,9 @@ crstl_module_export namespace crstl
 		// insert
 		//-------
 
-		pair<iterator, bool> insert(const pair<Key, T>& key_value) { return insert_impl<exists_behavior::find>(key_value.first, key_value.second); }
+		pair<iterator, bool> insert(const key_value_type& key_value) { return insert_impl<exists_behavior::find>(key_value.first, key_value.second); }
 
-		pair<iterator, bool> insert(pair<Key, T>&& key_value) { return insert_impl<exists_behavior::find>(crstl::forward<Key>(key_value.first), crstl::move(key_value.second)); }
+		pair<iterator, bool> insert(key_value_type&& key_value) { return insert_impl<exists_behavior::find>(crstl::forward<Key>(key_value.first), crstl::move(key_value.second)); }
 
 		template<typename ValueType>
 		pair<iterator, bool> insert(const Key& key, ValueType&& value) { return insert_impl<exists_behavior::find>(key, crstl::forward<ValueType>(value)); }
@@ -483,9 +479,9 @@ crstl_module_export namespace crstl
 		// insert_or_assign
 		//-----------------
 
-		pair<iterator, bool> insert_or_assign(const pair<Key, T>& key_value) { return insert_impl<exists_behavior::assign>(key_value.first, key_value.second); }
-		
-		pair<iterator, bool> insert_or_assign(pair<Key, T>&& key_value) { return insert_impl<exists_behavior::assign>(crstl::forward<Key>(key_value.first), crstl::move(key_value.second)); }
+		pair<iterator, bool> insert_or_assign(const key_value_type& key_value) { return insert_impl<exists_behavior::assign>(key_value.first, key_value.second); }
+
+		pair<iterator, bool> insert_or_assign(key_value_type&& key_value) { return insert_impl<exists_behavior::assign>(crstl::forward<Key>(key_value.first), crstl::move(key_value.second)); }
 		
 		template<typename ValueType>
 		pair<iterator, bool> insert_or_assign(const Key& key, ValueType&& value) { return insert_impl<exists_behavior::assign>(key, crstl::forward<ValueType>(value)); }
@@ -493,7 +489,7 @@ crstl_module_export namespace crstl
 		template<typename ValueType>
 		pair<iterator, bool> insert_or_assign(Key&& key, ValueType&& value) { return insert_impl<exists_behavior::assign>(crstl::forward<Key>(key), crstl::forward<ValueType>(value)); }
 
-		size_t max_size() const { return sizeof(length_type) - 2; }
+		size_t max_size() const { return ((size_t)-1) - 2; }
 
 		crstl_constexpr size_t size() const
 		{
@@ -529,7 +525,7 @@ crstl_module_export namespace crstl
 		crstl_forceinline crstl_constexpr14 pair<iterator, bool> find_create_impl(KeyType&& key, InsertEmplaceArgs&&... insert_emplace_args)
 		{
 			// Get the type of the key_value member of the node. We need it to feed it to the macro
-			typedef decltype(node_type::key_value) key_value_type;
+			typedef decltype(node_type::key_value) KeyValueType;
 
 			const size_t hash_value = compute_hash_value(key);
 			const size_t bucket_index = compute_bucket<BucketCount>(hash_value);
@@ -551,13 +547,13 @@ crstl_module_export namespace crstl
 						crstl_constexpr_if(Behavior == exists_behavior::assign)
 						{
 							// Destroy existing value
-							crstl_constexpr_if(!crstl_is_trivially_destructible(key_value_type))
+							crstl_constexpr_if(!crstl_is_trivially_destructible(KeyValueType))
 							{
-								current_node->key_value.~key_value_type();
+								current_node->key_value.~KeyValueType();
 							}
 
 							// Create the new one
-							node_create_function_selector<key_value_type, T, InsertEmplace>::create(current_node, crstl::forward<KeyType>(key), crstl::forward<InsertEmplaceArgs>(insert_emplace_args)...);
+							node_create_selector<KeyValueType, T, InsertEmplace>::create(current_node, crstl::forward<KeyType>(key), crstl::forward<InsertEmplaceArgs>(insert_emplace_args)...);
 						}
 
 						// Return true in the second parameter if insertion happened, false otherwise
@@ -569,9 +565,9 @@ crstl_module_export namespace crstl
 						// now find an empty space to put it in
 						if (current_node->is_end())
 						{
-							length_type empty_node_index = find_empty_node_index(bucket_index * kNodesPerBucket);
+							size_t empty_node_index = find_empty_node_index(bucket_index * kNodesPerBucket);
 							node_type* empty_node = &m_data[empty_node_index];
-							node_create_function_selector<key_value_type, T, InsertEmplace>::create(empty_node, crstl::forward<KeyType>(key), crstl::forward<InsertEmplaceArgs>(insert_emplace_args)...);
+							node_create_selector<KeyValueType, T, InsertEmplace>::create(empty_node, crstl::forward<KeyType>(key), crstl::forward<InsertEmplaceArgs>(insert_emplace_args)...);
 							empty_node->set_end();
 
 							current_node->set_next(empty_node_index);
@@ -591,14 +587,14 @@ crstl_module_export namespace crstl
 			else
 			{
 				// Find empty node index
-				length_type empty_node_index = find_empty_node_index(bucket_index * kNodesPerBucket);
+				size_t empty_node_index = find_empty_node_index(bucket_index * kNodesPerBucket);
 
 				// Make bucket point to it
 				m_buckets[bucket_index] = empty_node_index;
 
 				// Create new node and mark as end
 				node_type* empty_node = &m_data[empty_node_index];
-				node_create_function_selector<key_value_type, T, InsertEmplace>::create(empty_node, crstl::forward<KeyType>(key), crstl::forward<InsertEmplaceArgs>(insert_emplace_args)...);
+				node_create_selector<KeyValueType, T, InsertEmplace>::create(empty_node, crstl::forward<KeyType>(key), crstl::forward<InsertEmplaceArgs>(insert_emplace_args)...);
 				empty_node->set_end();
 
 				m_length++;
@@ -620,9 +616,9 @@ crstl_module_export namespace crstl
 		}
 
 		// TODO Make this a bit more clever to find nodes faster
-		crstl_forceinline length_type find_empty_node_index(size_t search_start)
+		crstl_forceinline size_t find_empty_node_index(size_t search_start)
 		{
-			length_type candidate_node_index = kInvalidNodeIndex;
+			size_t candidate_node_index = kInvalidNodeIndex;
 
 			for (size_t i = search_start; i < NodeCount; ++i)
 			{
@@ -683,7 +679,7 @@ crstl_module_export namespace crstl
 			return hasher()(key);
 		}
 
-		length_type m_buckets[BucketCount];
+		size_t m_buckets[BucketCount];
 
 		crstl_warning_anonymous_struct_union_begin
 		union
@@ -692,6 +688,6 @@ crstl_module_export namespace crstl
 		};
 		crstl_warning_anonymous_struct_union_end
 
-		length_type m_length;
+		size_t m_length;
 	};
 };

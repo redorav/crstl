@@ -27,4 +27,11 @@ crstl_module_export namespace crstl
 		crstl_assert(bucket_index < BucketCount);
 		return bucket_index;
 	}
+
+	// To be able to select between a const and a non-const object for const and non-const iterators
+	template <bool Condition, class IsTrueType, class IsFalseType>
+	struct hashmap_type_select { typedef IsTrueType type; };
+
+	template <typename IsTrueType, class IsFalseType>
+	struct hashmap_type_select<false, IsTrueType, IsFalseType> { typedef IsFalseType type; };
 };
