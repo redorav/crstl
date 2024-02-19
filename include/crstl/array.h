@@ -16,13 +16,22 @@ crstl_module_export namespace crstl
 	{
 	public:
 
-		crstl_constexpr14 T* begin() { return m_data; }
-		crstl_constexpr const T* begin() const { return m_data; }
-		crstl_constexpr const T* cbegin() const { return m_data; }
+		typedef array<T, N>   this_type;
+		typedef T&            reference;
+		typedef const T&      const_reference;
+		typedef T*            pointer;
+		typedef const T*      const_pointer;
+		typedef T*            iterator;
+		typedef const T*      const_iterator;
+		typedef uint32_t      length_type;
 
-		crstl_constexpr14 T* end() { return m_data + N; }
-		crstl_constexpr const T* end() const { return m_data + N; }
-		crstl_constexpr const T* cend() const { return m_data + N; }
+		crstl_constexpr14 iterator begin() { return m_data; }
+		crstl_constexpr const_iterator begin() const { return m_data; }
+		crstl_constexpr const_iterator cbegin() const { return m_data; }
+
+		crstl_constexpr14 iterator end() { return m_data + N; }
+		crstl_constexpr const_iterator end() const { return m_data + N; }
+		crstl_constexpr const_iterator cend() const { return m_data + N; }
 
 		crstl_nodiscard
 		crstl_constexpr bool empty() const { return N == 0; }
