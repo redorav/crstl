@@ -359,7 +359,7 @@ crstl_module_export namespace crstl
 		template<typename... Args>
 		crstl_constexpr14 pair<iterator, bool> emplace(Key&& key, Args&&... args)
 		{
-			return emplace_impl<exists_behavior::find>(crstl::move(key), crstl::forward<Args>(args)...);
+			return emplace_impl<exists_behavior::find>(crstl::forward<Key>(key), crstl::forward<Args>(args)...);
 		}
 
 		template<typename... Args>
@@ -371,7 +371,7 @@ crstl_module_export namespace crstl
 		template<typename... Args>
 		crstl_constexpr14 pair<iterator, bool> emplace_or_assign(Key&& key, Args&&... args)
 		{
-			return emplace_impl<exists_behavior::assign>(crstl::move(key), crstl::forward<Args>(args)...);
+			return emplace_impl<exists_behavior::assign>(crstl::forward<Key>(key), crstl::forward<Args>(args)...);
 		}
 
 		crstl_constexpr bool empty() const { return m_length == 0; }
@@ -467,7 +467,7 @@ crstl_module_export namespace crstl
 
 		pair<iterator, bool> insert(const key_value_type& key_value) { return insert_impl<exists_behavior::find>(key_value.first, key_value.second); }
 
-		pair<iterator, bool> insert(key_value_type&& key_value) { return insert_impl<exists_behavior::find>(crstl::forward<Key>(key_value.first), crstl::move(key_value.second)); }
+		pair<iterator, bool> insert(key_value_type&& key_value) { return insert_impl<exists_behavior::find>(crstl::forward<Key>(key_value.first), crstl::forward<T>(key_value.second)); }
 
 		template<typename ValueType>
 		pair<iterator, bool> insert(const Key& key, ValueType&& value) { return insert_impl<exists_behavior::find>(key, crstl::forward<ValueType>(value)); }
