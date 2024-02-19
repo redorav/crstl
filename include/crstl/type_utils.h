@@ -36,6 +36,4 @@ crstl_module_export namespace crstl
 
 	template<typename, typename> struct is_same { static const bool value = false; };
 	template<typename T> struct is_same<T, T> { static const bool value = true; };
-
-	template <typename T> struct is_empty { static const bool value = crstl_is_empty(T); };
 };
