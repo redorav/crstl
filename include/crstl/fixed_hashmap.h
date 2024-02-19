@@ -115,10 +115,11 @@ crstl_module_export namespace crstl
 		
 		bucket_iterator operator ++ (int) { bucket_iterator temp(*this); increment(); return temp; }
 		
-		// Check for node equality first as those are different more often than not and we can save the comparison of the bucket
-		bool operator == (const this_type& other) const { return m_node == other.m_node && m_bucket_index == other.m_bucket_index; }
+		// Check for node equality only, by definition if the nodes are equal the buckets have to be equal, and if the nodes
+		// are not equal, then we don't care what the bucket index is, to be able to tell them apart
+		bool operator == (const this_type& other) const { return m_node == other.m_node; }
 		
-		bool operator != (const this_type& other) const { return m_node != other.m_node || m_bucket_index != other.m_bucket_index; }
+		bool operator != (const this_type& other) const { return m_node != other.m_node; }
 		
 		const node_type* get_node() const { return m_node; }
 
