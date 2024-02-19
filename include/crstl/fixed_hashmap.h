@@ -36,7 +36,7 @@ crstl_module_export namespace crstl
 {
 	// Node in the hashmap. Stores metadata that is useful to know the current state of the node
 
-	template<typename Key, typename T>
+	template<typename KeyValueType>
 	struct bucket_node
 	{
 		enum node_meta : size_t
@@ -80,20 +80,20 @@ crstl_module_export namespace crstl
 			next = node_meta::end;
 		}
 
-		pair<const Key, T> key_value;
+		KeyValueType key_value;
 
 		size_t next;
 	};
 
-	template<typename Key, typename T, size_t BucketCount, bool IsConst>
+	template<typename KeyValueType, size_t BucketCount, bool IsConst>
 	struct bucket_iterator
 	{
 	public:
 
-		typedef bucket_iterator<Key, T, BucketCount, IsConst> this_type;
-		typedef bucket_node<Key, T> node_type;
-		typedef typename hashmap_type_select<IsConst, const pair<const Key, T>*, pair<const Key, T>*>::type pointer;
-		typedef typename hashmap_type_select<IsConst, const pair<const Key, T>&, pair<const Key, T>&>::type reference;
+		typedef bucket_iterator<KeyValueType, BucketCount, IsConst> this_type;
+		typedef bucket_node<KeyValueType> node_type;
+		typedef typename hashmap_type_select<IsConst, const KeyValueType*, KeyValueType*>::type pointer;
+		typedef typename hashmap_type_select<IsConst, const KeyValueType&, KeyValueType&>::type reference;
 
 		static const size_t kInvalidNodeIndex = (size_t)-1;
 
@@ -220,14 +220,14 @@ crstl_module_export namespace crstl
 		static_assert(NodeCount >= 1 && BucketCount >= 1, "Must have at least one node and one bucket");
 		static_assert(NodeCount > BucketCount, "Must have at least one node per bucket");
 
-		typedef Key                                              key_type;
-		typedef T                                                mapped_type;
-		typedef pair<const Key, T>                               key_value_type;
-		typedef size_t                                           size_type;
-		typedef Hasher                                           hasher;
-		typedef bucket_iterator<Key, T, BucketCount, false>      iterator;
-		typedef bucket_iterator<Key, T, BucketCount, true>       const_iterator;
-		typedef bucket_node<Key, T>                              node_type;
+		typedef Key                                                 key_type;
+		typedef T                                                   mapped_type;
+		typedef pair<const Key, T>                                  key_value_type;
+		typedef size_t                                              size_type;
+		typedef Hasher                                              hasher;
+		typedef bucket_iterator<key_value_type, BucketCount, false> iterator;
+		typedef bucket_iterator<key_value_type, BucketCount, true>  const_iterator;
+		typedef bucket_node<key_value_type>                         node_type;
 
 		static const size_t kInvalidNodeIndex = (size_t)-1;
 		static const size_t kNodesPerBucket = NodeCount / BucketCount;
