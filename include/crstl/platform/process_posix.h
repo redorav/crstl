@@ -16,7 +16,7 @@
 
 crstl_module_export namespace crstl
 {
-	class process final : public process_base
+	class process : public process_base
 	{
 	public:
 

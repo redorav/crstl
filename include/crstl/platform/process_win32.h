@@ -101,7 +101,7 @@ crstl_module_export namespace crstl
 		} SECURITY_ATTRIBUTES, * PSECURITY_ATTRIBUTES, * LPSECURITY_ATTRIBUTES;
 	};
 
-	class process final : public process_base
+	class process : public process_base
 	{
 	public:
 
