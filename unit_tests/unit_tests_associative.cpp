@@ -68,6 +68,22 @@ void RunUnitTestsAssociative()
 	
 	crstl_check(crFixedBucketmapInt.size() == crstl::array_size(ManualKeys));
 
+	// Clear via iterators
+	for (auto iter = crFixedBucketmapInt.begin(), end = crFixedBucketmapInt.end(); iter != end;)
+	{
+		iter = crFixedBucketmapInt.erase(iter);
+	}
+
+	crstl_check(crFixedBucketmapInt.size() == 0);
+
+	// Emplace or assign objects
+	for (size_t i = 0; i < crstl::array_size(ManualKeys); ++i)
+	{
+		crFixedBucketmapInt.emplace_or_assign(ManualKeys[i], 1, 2.0f);
+	}
+
+	crstl_check(crFixedBucketmapInt.size() == crstl::array_size(ManualKeys));
+
 	// Find the inserted elements
 	size_t findElementCount = 0;
 	for (size_t i = 0; i < crstl::array_size(ManualKeys); ++i)
@@ -91,14 +107,24 @@ void RunUnitTestsAssociative()
 
 	crstl_check(crFixedBucketmapInt.size() == findElementIter);
 	
-	size_t findElementRangedFor = 0;
+	size_t findElementRangedForConst = 0;
 	for (const auto& iter : crFixedBucketmapInt)
 	{
-		findElementRangedFor++;
-		printf("[Ranged For] Key %i\n", iter.first);
+		findElementRangedForConst++;
+		printf("[Ranged For Const] Key %i\n", iter.first);
 	}
 
-	crstl_check(crFixedBucketmapInt.size() == findElementRangedFor);
+	crstl_check(crFixedBucketmapInt.size() == findElementRangedForConst);
+
+	size_t findElementRangedForNonConst = 0;
+	for (auto& iter : crFixedBucketmapInt)
+	{
+		findElementRangedForNonConst++;
+		iter.second = Example(1, 4.0f);
+		printf("[Ranged For Non-Const] Key %i\n", iter.first);
+	}
+
+	crstl_check(crFixedBucketmapInt.size() == findElementRangedForNonConst);
 
 	// Copy constructor
 	crstl::fixed_hashmap<int, Example, 64> crFixedBucketmapInt2(crFixedBucketmapInt);

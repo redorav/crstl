@@ -52,7 +52,7 @@ crstl_module_export namespace crstl
 
 		void set_next(size_t offset)
 		{
-			next = offset;
+			next = (node_meta)offset;
 		}
 
 		bool is_empty() const
@@ -82,7 +82,8 @@ crstl_module_export namespace crstl
 
 		KeyValueType key_value;
 
-		size_t next;
+		// Make this node_meta for debugging
+		node_meta next;
 	};
 
 	template<typename KeyValueType, size_t BucketCount, bool IsConst>
@@ -100,8 +101,8 @@ crstl_module_export namespace crstl
 		// We rely on this to avoid a branch when deleting a value
 		static_assert(kInvalidNodeIndex == node_type::node_meta::end, "Make sure the invalid node and the value of end are the same");
 
-		bucket_iterator(const size_t* buckets, const node_type* nodes, size_t bucket_start, node_type* node_start)
-			: m_buckets(buckets), m_bucket_index(bucket_start), m_data(nodes), m_node(node_start)
+		bucket_iterator(const size_t* buckets, const node_type* nodes, size_t bucket_start, node_type* node_start, node_type* node_previous)
+			: m_buckets(buckets), m_bucket_index(bucket_start), m_data(nodes), m_node(node_start), m_previous_node(node_previous)
 		{
 			// A bucket index of BucketCount means invalid bucket, i.e. the end iterator
 			crstl_assert(m_bucket_index <= BucketCount);
@@ -121,7 +122,11 @@ crstl_module_export namespace crstl
 		
 		bool operator != (const this_type& other) const { return m_node != other.m_node; }
 		
-		const node_type* get_node() const { return m_node; }
+		node_type* get_node() const { return m_node; }
+
+		node_type* get_previous_node() const { return m_previous_node; }
+
+		size_t get_bucket_index() const { return m_bucket_index; }
 
 		void increment()
 		{
@@ -164,6 +169,7 @@ crstl_module_export namespace crstl
 
 		const node_type* m_data; // Points to the main data. This is so we can index via the offset
 		node_type* m_node;
+		node_type* m_previous_node; // Used for when we call erase using an iterator, so we can relink the nodes
 	};
 
 	// Behavior to run when node exists already
@@ -292,7 +298,8 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 iterator begin() crstl_noexcept
 		{
-			size_t first_valid_bucket = BucketCount; node_type* first_valid_node = nullptr;
+			size_t first_valid_bucket = BucketCount;
+			node_type* first_valid_node = nullptr;
 
 			for (size_t i = 0; i < BucketCount; ++i)
 			{
@@ -304,24 +311,25 @@ crstl_module_export namespace crstl
 				}
 			}
 
-			return iterator(m_buckets, m_data, first_valid_bucket, first_valid_node);
+			return iterator(m_buckets, m_data, first_valid_bucket, first_valid_node, nullptr);
 		}
 		
 		crstl_constexpr14 const_iterator begin() const crstl_noexcept
 		{
-			size_t first_valid_bucket = BucketCount; const node_type* first_valid_node = nullptr;
+			size_t first_valid_bucket = BucketCount;
+			node_type* first_valid_node = nullptr;
 
 			for (size_t i = 0; i < BucketCount; ++i)
 			{
 				if (m_buckets[i] != kInvalidNodeIndex)
 				{
 					first_valid_bucket = i;
-					first_valid_node = &m_data[m_buckets[i]];
+					first_valid_node = (node_type*)&m_data[m_buckets[i]];
 					break;
 				}
 			}
 
-			return const_iterator(m_buckets, m_data, first_valid_bucket, (node_type*)first_valid_node);
+			return const_iterator(m_buckets, m_data, first_valid_bucket, first_valid_node, nullptr);
 		}
 
 		crstl_constexpr14 const_iterator cbegin() const crstl_noexcept { return begin(); }
@@ -377,54 +385,49 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr bool empty() const { return m_length == 0; }
 		
-		crstl_constexpr14 iterator end() { return iterator(m_buckets, m_data, BucketCount, nullptr); }
+		crstl_constexpr14 iterator end() { return iterator(m_buckets, m_data, BucketCount, nullptr, nullptr); }
 
-		crstl_constexpr const_iterator end() const { return const_iterator(m_buckets, m_data, BucketCount, nullptr); }
+		crstl_constexpr const_iterator end() const { return const_iterator(m_buckets, m_data, BucketCount, nullptr, nullptr); }
 
 		crstl_constexpr const_iterator cend() const { return end(); }
 		
+		crstl_constexpr14 iterator erase(iterator pos)
+		{
+			crstl_assert(pos != end());
+			iterator next_iter = pos; ++next_iter;
+			erase_iter_impl(pos.get_node(), pos.get_previous_node(), pos.get_bucket_index());
+			return next_iter;
+		}
+
+		crstl_constexpr14 iterator erase(const_iterator pos)
+		{
+			crstl_assert(pos != end());
+			const_iterator next_iter = pos; ++next_iter;
+			erase_iter_impl(pos.get_node(), pos.get_previous_node(), pos.get_bucket_index());
+			return next_iter;
+		}
+
 		template<typename KeyType>
-		crstl_noinline crstl_constexpr14 size_t erase(KeyType&& key)
+		crstl_forceinline crstl_constexpr14 size_t erase(KeyType&& key)
 		{
 			const size_t hash_value = compute_hash_value(key);
 			const size_t bucket_index = compute_bucket<BucketCount>(hash_value);
 			
 			size_t current_node_offset = m_buckets[bucket_index];
-			size_t previous_node_offset = kInvalidNodeIndex;
 			
 			if (current_node_offset != kInvalidNodeIndex)
 			{
 				while (1)
 				{
 					node_type* current_node = &m_data[current_node_offset];
+					node_type* previous_node = nullptr;
 
 					crstl_assert(!current_node->is_empty());
 
 					// If the key matches, delete this node and reconnect the rest
 					if (current_node->key_value.first == key)
 					{
-						// Destroy existing value only if there's a destructor
-						crstl_constexpr_if(!crstl_is_trivially_destructible(key_value_type))
-						{
-							current_node->key_value.~key_value_type();
-						}
-
-						// If there is no previous node, see what to do with the bucket
-						if (previous_node_offset == kInvalidNodeIndex)
-						{
-							// We rely on the fact that the value of an end node is the same as the value
-							// for an invalid bucket. This is equivalent to
-							// m_buckets[bucket_index] = current_node->is_end() ? kInvalidNodeIndex : current_node->get_next();
-							m_buckets[bucket_index] = current_node->get_next();
-						}
-						else
-						{
-							m_data[previous_node_offset].set_next(current_node->get_next());
-						}
-
-						current_node->set_empty();
-						m_length--;
-
+						erase_iter_impl(current_node, previous_node, bucket_index);
 						return 1;
 					}
 					// If this is the last node, we've finished our search
@@ -435,7 +438,7 @@ crstl_module_export namespace crstl
 					// Otherwise, look for the next node
 					else
 					{
-						previous_node_offset = current_node_offset;
+						previous_node = current_node;
 						current_node_offset = current_node->get_next();
 					}
 				}
@@ -449,8 +452,9 @@ crstl_module_export namespace crstl
 		{
 			const size_t hash_value = compute_hash_value(key);
 			const size_t bucket_index = compute_bucket<BucketCount>(hash_value);
-			node_type* found_node = find_impl(bucket_index, crstl::forward<const KeyType>(key));
-			return iterator(m_buckets, m_data, bucket_index, found_node);
+			node_type* found_node; node_type* previous_node;
+			find_impl(bucket_index, crstl::forward<const KeyType>(key), found_node, previous_node);
+			return iterator(m_buckets, m_data, bucket_index, found_node, previous_node);
 		}
 
 		template<typename KeyType>
@@ -458,8 +462,9 @@ crstl_module_export namespace crstl
 		{
 			const size_t hash_value = compute_hash_value(key);
 			const size_t bucket_index = compute_bucket<BucketCount>(hash_value);
-			node_type* found_node = find_impl(bucket_index, crstl::forward<const KeyType>(key));
-			return const_iterator(m_buckets, m_data, bucket_index, found_node);
+			node_type* found_node; node_type* previous_node;
+			find_impl(bucket_index, crstl::forward<const KeyType>(key), found_node, previous_node);
+			return const_iterator(m_buckets, m_data, bucket_index, found_node, previous_node);
 		}
 
 		//-------
@@ -519,6 +524,32 @@ crstl_module_export namespace crstl
 
 	private:
 
+		// Implementation of deletion given a node, its previous node (if any) and the bucket index
+		crstl_forceinline crstl_constexpr14 void erase_iter_impl(node_type* current_node, node_type* previous_node, size_t bucket_index)
+		{
+			// Destroy existing value only if there's a destructor
+			crstl_constexpr_if(!crstl_is_trivially_destructible(key_value_type))
+			{
+				current_node->key_value.~key_value_type();
+			}
+
+			// Relink previous node if we have one
+			if (previous_node)
+			{
+				previous_node->set_next(current_node->get_next());
+			}
+			else
+			{
+				// We rely on the fact that the value of an end node is the same as the value
+				// for an invalid bucket. This is equivalent to
+				// m_buckets[bucket_index] = current_node->is_end() ? kInvalidNodeIndex : current_node->get_next();
+				m_buckets[bucket_index] = current_node->get_next();
+			}
+
+			current_node->set_empty();
+			m_length--;
+		}
+
 		// This function tries to find an empty space in the hashmap by checking whether the bucket is empty or finding an empty space in the
 		// bucket if it already has something in it. If we find the object we're looking for, there are a series of different actions we can
 		// take. If we are simply inserting (or emplacing) we just return the object that was there already
@@ -538,6 +569,7 @@ crstl_module_export namespace crstl
 			if (current_node_offset != kInvalidNodeIndex)
 			{
 				node_type* current_node = &m_data[current_node_offset];
+				node_type* previous_node = nullptr;
 
 				while (1)
 				{
@@ -558,7 +590,7 @@ crstl_module_export namespace crstl
 						}
 
 						// Return true in the second parameter if insertion happened, false otherwise
-						return pair<iterator, bool>(iterator(m_buckets, m_data, bucket_index, current_node), Behavior == exists_behavior::assign);
+						return pair<iterator, bool>(iterator(m_buckets, m_data, bucket_index, current_node, previous_node), Behavior == exists_behavior::assign);
 					}
 					else
 					{
@@ -575,11 +607,12 @@ crstl_module_export namespace crstl
 
 							m_length++;
 
-							return pair<iterator, bool>(iterator(m_buckets, m_data, bucket_index, current_node), true);
+							return pair<iterator, bool>(iterator(m_buckets, m_data, bucket_index, current_node, previous_node), true);
 						}
 						// Otherwise, we might still find it in the next iteration
 						else
 						{
+							previous_node = current_node;
 							current_node = &m_data[current_node->get_next()];
 						}
 					}
@@ -600,7 +633,7 @@ crstl_module_export namespace crstl
 
 				m_length++;
 
-				return pair<iterator, bool>(iterator(m_buckets, m_data, bucket_index, empty_node), true);
+				return pair<iterator, bool>(iterator(m_buckets, m_data, bucket_index, empty_node, nullptr), true);
 			}
 		}
 
@@ -647,8 +680,11 @@ crstl_module_export namespace crstl
 		}
 
 		template<typename KeyType>
-		node_type* find_impl(size_t bucket_index, KeyType&& key) const
+		void find_impl(size_t bucket_index, KeyType&& key, node_type*& found_node, node_type*& previous_node) const
 		{
+			found_node = nullptr;
+			previous_node = nullptr;
+
 			size_t current_node_offset = m_buckets[bucket_index];
 
 			if (current_node_offset != kInvalidNodeIndex)
@@ -659,20 +695,20 @@ crstl_module_export namespace crstl
 				{
 					if (current_node->key_value.first == key)
 					{
-						return current_node;
+						found_node = current_node;
+						return;
 					}
 					else if (current_node->is_end())
 					{
-						break;
+						return;
 					}
 					else
 					{
+						previous_node = current_node;
 						current_node = (node_type*)&m_data[current_node->get_next()];
 					}
 				}
 			}
-
-			return nullptr;
 		}
 
 		static crstl_constexpr14 size_t compute_hash_value(const Key& key)
