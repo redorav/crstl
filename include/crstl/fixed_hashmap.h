@@ -190,7 +190,7 @@ crstl_module_export namespace crstl
 		template<typename NodeType, typename KeyType, typename ValueType>
 		crstl_forceinline static void create(NodeType* new_node, KeyType&& key, ValueType&& value)
 		{
-			crstl_placement_new((void*)&(new_node->key_value)) KeyValueType(crstl::forward<KeyType>(key), crstl::forward<ValueType>(value));
+			crstl_placement_new((void*)&(new_node->key_value)) KeyValueType(crstl::forward<const KeyType>(key), crstl::forward<ValueType>(value));
 		}
 	};
 
@@ -200,7 +200,7 @@ crstl_module_export namespace crstl
 		template<typename NodeType, typename KeyType, typename... Args>
 		crstl_forceinline static void create(NodeType* new_node, KeyType&& key, Args&&... args)
 		{
-			crstl_placement_new((void*)&(new_node->key_value)) KeyValueType(crstl::forward<KeyType>(key), T(crstl::forward<Args>(args)...));
+			crstl_placement_new((void*)&(new_node->key_value)) KeyValueType(crstl::forward<const KeyType>(key), T(crstl::forward<Args>(args)...));
 		}
 	};
 
@@ -448,7 +448,7 @@ crstl_module_export namespace crstl
 		{
 			const size_t hash_value = compute_hash_value(key);
 			const size_t bucket_index = compute_bucket<BucketCount>(hash_value);
-			node_type* found_node = find_impl(bucket_index, crstl::forward<KeyType>(key));
+			node_type* found_node = find_impl(bucket_index, crstl::forward<const KeyType>(key));
 			return iterator(m_buckets, m_data, bucket_index, found_node);
 		}
 
@@ -457,7 +457,7 @@ crstl_module_export namespace crstl
 		{
 			const size_t hash_value = compute_hash_value(key);
 			const size_t bucket_index = compute_bucket<BucketCount>(hash_value);
-			node_type* found_node = find_impl(bucket_index, crstl::forward<KeyType>(key));
+			node_type* found_node = find_impl(bucket_index, crstl::forward<const KeyType>(key));
 			return const_iterator(m_buckets, m_data, bucket_index, found_node);
 		}
 
@@ -646,13 +646,13 @@ crstl_module_export namespace crstl
 		}
 
 		template<typename KeyType>
-		node_type* find_impl(size_t bucket_index, KeyType&& key)
+		node_type* find_impl(size_t bucket_index, KeyType&& key) const
 		{
 			size_t current_node_offset = m_buckets[bucket_index];
 
 			if (current_node_offset != kInvalidNodeIndex)
 			{
-				node_type* current_node = &m_data[current_node_offset];
+				node_type* current_node = (node_type*)&m_data[current_node_offset];
 
 				while (true)
 				{
@@ -666,7 +666,7 @@ crstl_module_export namespace crstl
 					}
 					else
 					{
-						current_node = &m_data[current_node->get_next()];
+						current_node = (node_type*)&m_data[current_node->get_next()];
 					}
 				}
 			}
@@ -674,7 +674,7 @@ crstl_module_export namespace crstl
 			return nullptr;
 		}
 
-		crstl_constexpr14 size_t compute_hash_value(const Key& key)
+		static crstl_constexpr14 size_t compute_hash_value(const Key& key)
 		{
 			return hasher()(key);
 		}
