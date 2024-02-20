@@ -219,9 +219,11 @@ void RunUnitTestsVectorStdCompare()
 
 		crstl_check(crVector.size() <= crVector.capacity());
 
+		// Vector reservation tests
 		{
 			Dummy dummyCompare(20, 70.0f, nullptr);
-			crstl::vector<Dummy> crResizeVector; crResizeVector.resize(10, dummyCompare);
+			crstl::vector<Dummy> crResizeVector;
+			crResizeVector.resize(10, dummyCompare);
 			for (uint32_t i = 0; i < crResizeVector.size(); ++i)
 			{
 				crstl_check(crResizeVector[i] == dummyCompare);
@@ -261,6 +263,17 @@ void RunUnitTestsVectorStdCompare()
 		{
 			crstl_check(crVectorResize[i]->get_ref() == 1);
 		}
+
+		crstl::vector<Dummy> crVectorInitializerList =
+		{
+			Dummy(1, 2.0f),
+			Dummy(5, 67.0f),
+			Dummy(3, 98.0f),
+			Dummy(0, 13.0f),
+			Dummy(54, 90.0f)
+		};
+
+		crstl_check(crVectorInitializerList.size() == 5);
 	}
 	end_test();
 
