@@ -152,7 +152,7 @@
 
 			<IndexListItems>
 				<Size>m_length</Size>
-				<ValueNode>m_chunk_array[(m_chunk_begin * $T3 + m_local_begin + $i) / $T3]->m_data[(m_chunk_begin * $T3 + m_local_begin + $i) % $T3]</ValueNode>
+				<ValueNode>m_chunk_array[(m_chunk_front * $T3 + m_local_front + $i) / $T3]->m_data[(m_chunk_front * $T3 + m_local_front + $i) % $T3]</ValueNode>
 			</IndexListItems>
 
 		</Expand>
