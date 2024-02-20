@@ -505,14 +505,10 @@ crstl_module_export namespace crstl
 					temp[i] = chunk_ptr_src_tmp[i];
 				}
 
-				// This should be guaranteed not to overflow by construction
-				size_t current_chunk_count = m_chunk_back - m_chunk_front + 1;
-				crstl_assert(current_chunk_count > 0);
-
 				// Move existing used chunks to make space
-				chunk_type** chunk_ptr_src = m_chunk_array + m_chunk_front;
-				chunk_type** chunk_ptr_dst = m_chunk_array + m_chunk_front - refit_chunks;
-				for (size_t i = 0; i < current_chunk_count; ++i)
+				chunk_type** chunk_ptr_src = m_chunk_array;
+				chunk_type** chunk_ptr_dst = m_chunk_array - refit_chunks;
+				for (size_t i = m_chunk_front; i < m_chunk_back; ++i)
 				{
 					chunk_ptr_dst[i] = chunk_ptr_src[i];
 				}
