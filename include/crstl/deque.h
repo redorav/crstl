@@ -166,14 +166,14 @@ crstl_module_export namespace crstl
 
 		~deque()
 		{
-			size_t current_chunk_count = m_capacity_allocator.m_first / ChunkSize;
+			size_t current_chunk_capacity = m_capacity_allocator.m_first / ChunkSize;
 
-			for (size_t i = 0; i < current_chunk_count; ++i)
+			for (size_t i = 0; i < current_chunk_capacity; ++i)
 			{
 				m_capacity_allocator.second().deallocate(m_chunk_array[i], sizeof(chunk_type));
 			}
 
-			m_capacity_allocator.second().deallocate(m_chunk_array, current_chunk_count * sizeof(chunk_type*));
+			m_capacity_allocator.second().deallocate(m_chunk_array, current_chunk_capacity * sizeof(chunk_type*));
 		}
 
 		crstl_constexpr14 T& at(size_t i)
@@ -539,21 +539,21 @@ crstl_module_export namespace crstl
 				size_t growth_chunk_count = (new_capacity + ChunkSize - 1) / ChunkSize;
 
 				// 2. Allocate chunk pointers
-				chunk_type** temp_array = (chunk_type**)m_capacity_allocator.second().allocate(growth_chunk_count * sizeof(chunk_type*));
+				chunk_type** new_chunk_array = (chunk_type**)m_capacity_allocator.second().allocate(growth_chunk_count * sizeof(chunk_type*));
 				
 				#if defined(CRSTL_DEQUE_EXHAUSTIVE_VALIDATION)
-					memory_set(temp_array, 0, growth_chunk_count * sizeof(chunk_type*));
+					memory_set(new_chunk_array, 0, growth_chunk_count * sizeof(chunk_type*));
 				#endif
 
 				// 3. Copy existing chunk pointers
 				for (size_t i = m_chunk_front; i < m_chunk_back; ++i)
 				{
-					temp_array[i] = m_chunk_array[i];
+					new_chunk_array[i] = m_chunk_array[i];
 				}
 
 				// 4. Deallocate old array and point to new one
 				m_capacity_allocator.second().deallocate(m_chunk_array, current_chunk_capacity * sizeof(chunk_type*));
-				m_chunk_array = temp_array;
+				m_chunk_array = new_chunk_array;
 
 				// 5. Allocate new chunks
 				for (size_t i = m_chunk_back; i < growth_chunk_count; ++i)
@@ -595,7 +595,7 @@ crstl_module_export namespace crstl
 			// If we have the number of chunks available at the front, copy them over to the back
 			if (refit_chunks <= remaining_chunks_back)
 			{
-				// Copy chunk pointers to temporary memory. We shouldn't normally need this many
+				// Copy chunk pointers to temporary memory. We shouldn't normally need too many
 				chunk_type** temp = (chunk_type**)crstl_alloca(refit_chunks * sizeof(chunk_type*));
 				chunk_type** chunk_ptr_src_tmp = m_chunk_array + m_chunk_back + 1;
 				for (size_t i = 0; i < refit_chunks; ++i)
@@ -633,17 +633,17 @@ crstl_module_export namespace crstl
 				size_t growth_chunk_count = (new_capacity + ChunkSize - 1) / ChunkSize;
 
 				// 2. Allocate chunk pointers
-				chunk_type** temp_array = (chunk_type**)m_capacity_allocator.second().allocate(growth_chunk_count * sizeof(chunk_type*));
+				chunk_type** new_chunk_array = (chunk_type**)m_capacity_allocator.second().allocate(growth_chunk_count * sizeof(chunk_type*));
 
 				#if defined(CRSTL_DEQUE_EXHAUSTIVE_VALIDATION)
-					memory_set(temp_array, 0, growth_chunk_count * sizeof(chunk_type*));
+					memory_set(new_chunk_array, 0, growth_chunk_count * sizeof(chunk_type*));
 				#endif
 
 				// 3. Copy existing chunk pointers
 
 				size_t new_chunk_count = growth_chunk_count - current_chunk_capacity;
 
-				chunk_type** chunk_ptr_dst = temp_array + new_chunk_count;
+				chunk_type** chunk_ptr_dst = new_chunk_array + new_chunk_count;
 				for (size_t i = 0; i < current_chunk_capacity; ++i)
 				{
 					chunk_ptr_dst[i] = m_chunk_array[i];
@@ -651,14 +651,14 @@ crstl_module_export namespace crstl
 
 				// 4. Deallocate old array and point to new one
 				m_capacity_allocator.second().deallocate(m_chunk_array, current_chunk_capacity * sizeof(chunk_type*));
+				m_chunk_array = new_chunk_array;
 
 				// 5. Allocate new chunks
 				for (size_t i = 0; i < new_chunk_count; ++i)
 				{
-					temp_array[i] = (chunk_type*)m_capacity_allocator.second().allocate(sizeof(chunk_type));
+					m_chunk_array[i] = (chunk_type*)m_capacity_allocator.second().allocate(sizeof(chunk_type));
 				}
 
-				m_chunk_array = temp_array;
 				m_capacity_allocator.m_first = growth_chunk_count * ChunkSize;
 
 				m_chunk_front += new_chunk_count;
