@@ -260,15 +260,19 @@ crstl_module_export namespace crstl
 			m_length = other.m_length;
 		}
 
+#if defined(CRSTL_INITIALIZER_LISTS)
+
 		crstl_constexpr14 fixed_hashmap(std::initializer_list<key_value_type> ilist) crstl_noexcept : fixed_hashmap()
 		{
 			crstl_assert(ilist.size() <= NodeCount);
 
 			for (const key_value_type& iter : ilist)
 			{
-				insert(crstl::move(iter));
+				insert(iter);
 			}
 		}
+
+#endif
 
 		~fixed_hashmap() crstl_noexcept
 		{

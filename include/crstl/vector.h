@@ -115,9 +115,9 @@ crstl_module_export namespace crstl
 
 			m_data = allocate(ilist_length);
 
-			for (const T* ptr = ilist.begin(), *end = ilist.end(); ptr != end; ++ptr)
+			for (const T& iter : ilist)
 			{
-				push_back(*ptr);
+				push_back(iter);
 			}
 		}
 #endif
