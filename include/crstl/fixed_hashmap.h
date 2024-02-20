@@ -680,7 +680,7 @@ crstl_module_export namespace crstl
 		}
 
 		template<typename KeyType>
-		void find_impl(size_t bucket_index, KeyType&& key, node_type*& found_node, node_type*& previous_node) const
+		crstl_forceinline void find_impl(size_t bucket_index, KeyType&& key, node_type*& found_node, node_type*& previous_node) const
 		{
 			found_node = nullptr;
 			previous_node = nullptr;
