@@ -1,5 +1,5 @@
 [![AppVeyor](https://ci.appveyor.com/api/projects/status/7ig4jp76wia7xn1k?svg=true)](https://ci.appveyor.com/project/redorav/crstl)
-
+<div align="justify">
 # CRSTL
 An alternative or complementary STL that focuses on fast compile times and runtime, focusing on fixed size alternatives for containers and functionality. **This is a work in progress and will be for the time being**. Some of the guiding goals are:
 
@@ -31,3 +31,4 @@ An alternative or complementary STL that focuses on fast compile times and runti
 - Template metaprogramming is avoided as much as possible, while acknowledging the fact that there are many instances where it is necessary. For example, unique_ptr for arrays can be done with a single class and enable_if, or with two classes that share functionality. The second approach is preferred in this library.
 
 - The STL interface is well known, as is Boost or EASTL. Therefore we maintain an interface that is familiar where it makes sense (e.g. function naming such as push_back() or size()), but very often we'll include additional performance oriented functions such as push_back_uninitialized() or resize_uninitialized()
+</div>
