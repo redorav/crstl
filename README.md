@@ -32,5 +32,5 @@ An alternative or complementary STL that focuses on fast compile times and runti
 - Template metaprogramming is avoided as much as possible, while acknowledging the fact that there are many instances where it is necessary. For example, unique_ptr for arrays can be done with a single class and enable_if, or with two classes that share functionality. The second approach is preferred in this library.
 
 - The STL interface is well known, as is Boost or EASTL. Therefore we maintain an interface that is familiar where it makes sense (e.g. function naming such as push_back() or size()), but very often we'll include additional performance oriented functions such as push_back_uninitialized() or resize_uninitialized()
-- 
+
 </div>
