@@ -125,7 +125,7 @@ crstl_module_export namespace crstl
 		}
 	}
 
-	inline size_t string_clamp_length(size_t maxLength, size_t pos, size_t length)
+	crstl_forceinline size_t string_clamp_length(size_t maxLength, size_t pos, size_t length)
 	{
 		return length > maxLength - pos ? maxLength - pos : length;
 	}
