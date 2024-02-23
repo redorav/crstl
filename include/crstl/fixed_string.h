@@ -208,7 +208,7 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 basic_fixed_string& append(const basic_fixed_string& string, size_t subpos, size_t sublen = npos) crstl_noexcept
 		{
 			crstl_assert(string.length() + subpos + sublen < basic_fixed_string::kCharacterCapacityWithZero);
-			append(string.m_data + subpos, sublen);
+			append(string.m_data + subpos, string.clamped_length(subpos, sublen));
 			return *this;
 		}
 
@@ -245,6 +245,13 @@ crstl_module_export namespace crstl
 			return append_convert(string, crstl::string_length(string));
 		}
 
+		// If we append_convert with our own type, just use append, no need for conversion
+		crstl_constexpr14 basic_fixed_string& append_convert(const_pointer string, size_t length) crstl_noexcept
+		{
+			append(string, length);
+			return *this;
+		}
+
 		template<typename OtherCharT, int OtherN>
 		crstl_constexpr14 basic_fixed_string& append_convert(const basic_fixed_string<OtherCharT, OtherN>& string) crstl_noexcept
 		{
@@ -252,10 +259,11 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
-		// If we append_convert with our own type, just use append, no need for conversion
-		crstl_constexpr14 basic_fixed_string& append_convert(const_pointer string, size_t length) crstl_noexcept
+		template<typename OtherCharT, int OtherN>
+		crstl_constexpr14 basic_fixed_string& append_convert(const basic_fixed_string<OtherCharT, OtherN>& string, size_t subpos, size_t sublen = npos) crstl_noexcept
 		{
-			append(string, length);
+			crstl_assert(string.length() + subpos + sublen < basic_fixed_string::kCharacterCapacityWithZero);
+			append_convert(string.m_data + subpos, string.clamped_length(subpos, sublen));
 			return *this;
 		}
 
@@ -420,13 +428,13 @@ crstl_module_export namespace crstl
 		crstl_constexpr int compare(size_t pos, size_t length, const CharT* string) const crstl_noexcept
 		{
 			return crstl_assert(pos < m_length),
-			crstl::string_compare(m_data + pos, clamp_length(pos, length), string, string_length(string));
+			crstl::string_compare(m_data + pos, clamped_length(pos, length), string, string_length(string));
 		}
 
 		crstl_constexpr int compare(size_t pos, size_t length, const CharT* string, size_t subpos, size_t sublen = npos) const crstl_noexcept
 		{
 			return crstl_assert(pos < m_length), 
-			crstl::string_compare(m_data + pos, clamp_length(pos, length), string + subpos, crstl::string_clamp_length(string_length(string), subpos, sublen));
+			crstl::string_compare(m_data + pos, clamped_length(pos, length), string + subpos, crstl::string_clamp_length(string_length(string), subpos, sublen));
 		}
 
 		crstl_constexpr int compare(const basic_fixed_string& string) const crstl_noexcept
@@ -436,12 +444,12 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr int compare(size_t pos, size_t length, const basic_fixed_string& string) const crstl_noexcept
 		{
-			return crstl_assert(pos < m_length), crstl::string_compare(m_data + pos, clamp_length(pos, length), string.m_data, string.m_length);
+			return crstl_assert(pos < m_length), crstl::string_compare(m_data + pos, clamped_length(pos, length), string.m_data, string.m_length);
 		}
 
 		crstl_constexpr int compare(size_t pos, size_t length, const basic_fixed_string& string, size_t subpos, size_t sublen = npos) const crstl_noexcept
 		{
-			return crstl_assert(pos < m_length), crstl::string_compare(m_data + pos, clamp_length(pos, length), string.m_data + subpos, string.clamp_length(subpos, sublen));
+			return crstl_assert(pos < m_length), crstl::string_compare(m_data + pos, clamped_length(pos, length), string.m_data + subpos, string.clamped_length(subpos, sublen));
 		}
 
 		//---------
@@ -460,12 +468,12 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr int comparei(size_t pos, size_t length, const CharT* string) const crstl_noexcept
 		{
-			return crstl_assert(pos < m_length), crstl::string_comparei(m_data + pos, clamp_length(pos, length), string, string_length(string));
+			return crstl_assert(pos < m_length), crstl::string_comparei(m_data + pos, clamped_length(pos, length), string, string_length(string));
 		}
 
 		crstl_constexpr int comparei(size_t pos, size_t length, const CharT* string, size_t subpos, size_t sublen = npos) const crstl_noexcept
 		{
-			return crstl_assert(pos < m_length), crstl::string_comparei(m_data + pos, clamp_length(pos, length), string + subpos, crstl::string_clamp_length(string_length(string), subpos, sublen));
+			return crstl_assert(pos < m_length), crstl::string_comparei(m_data + pos, clamped_length(pos, length), string + subpos, crstl::string_clamp_length(string_length(string), subpos, sublen));
 		}
 
 		crstl_constexpr int comparei(const basic_fixed_string& string) const crstl_noexcept
@@ -475,12 +483,12 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr int comparei(size_t pos, size_t length, const basic_fixed_string& string) const crstl_noexcept
 		{
-			return crstl_assert(pos < m_length), crstl::string_comparei(m_data + pos, clamp_length(pos, length), string.m_data, string.m_length);
+			return crstl_assert(pos < m_length), crstl::string_comparei(m_data + pos, clamped_length(pos, length), string.m_data, string.m_length);
 		}
 
 		crstl_constexpr int comparei(size_t pos, size_t length, const basic_fixed_string& string, size_t subpos, size_t sublen = npos) const crstl_noexcept
 		{
-			return crstl_assert(pos < m_length), crstl::string_comparei(m_data + pos, clamp_length(pos, length), string.m_data + subpos, string.clamp_length(subpos, sublen));
+			return crstl_assert(pos < m_length), crstl::string_comparei(m_data + pos, clamped_length(pos, length), string.m_data + subpos, string.clamped_length(subpos, sublen));
 		}
 
 		crstl_constexpr14 pointer data() crstl_noexcept { return m_data; }
@@ -924,7 +932,7 @@ crstl_module_export namespace crstl
 		}
 
 		// Given a position and a length, return the length that fits the string
-		crstl_constexpr size_t clamp_length(size_t pos, size_t length) const crstl_noexcept
+		crstl_forceinline crstl_constexpr size_t clamped_length(size_t pos, size_t length) const crstl_noexcept
 		{
 			return crstl::string_clamp_length(m_length, pos, length);
 		}
