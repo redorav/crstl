@@ -61,7 +61,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 basic_fixed_string() crstl_noexcept : m_length(0)
 		{
-			m_data[0] = 0;
+			m_data[0] = '\0';
 		}
 
 		crstl_constexpr14 basic_fixed_string(const_pointer string, size_t length) crstl_noexcept

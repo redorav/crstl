@@ -256,8 +256,6 @@ crstl_module_export namespace crstl
 			{
 				insert(iter);
 			}
-
-			m_length = other.m_length;
 		}
 
 #if defined(CRSTL_INITIALIZER_LISTS)
@@ -294,8 +292,6 @@ crstl_module_export namespace crstl
 			{
 				insert(iter);
 			}
-
-			m_length = other.m_length;
 
 			return *this;
 		}
