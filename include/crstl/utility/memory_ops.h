@@ -73,7 +73,12 @@ namespace crstl
 	template<typename T, bool CanMemset = false>
 	struct default_initialize_or_memset_zero_select
 	{
-		static void default_initialize_or_memset_zero(T* crstl_restrict destination, size_t count)
+		crstl_constexpr static void default_initialize_or_memset_zero(T& destination)
+		{
+			crstl_placement_new((void*)&destination) T();
+		}
+
+		crstl_constexpr static void default_initialize_or_memset_zero(T* crstl_restrict destination, size_t count)
 		{
 			for (size_t i = 0; i < count; ++i)
 			{
@@ -85,14 +90,25 @@ namespace crstl
 	template<typename T>
 	struct default_initialize_or_memset_zero_select<T, true>
 	{
-		static void default_initialize_or_memset_zero(T* crstl_restrict destination, size_t count)
+		crstl_constexpr static void default_initialize_or_memset_zero(T& destination)
+		{
+			destination = 0;
+		}
+
+		crstl_constexpr static void default_initialize_or_memset_zero(T* crstl_restrict destination, size_t count)
 		{
 			memory_set(destination, 0, sizeof(T) * count);
 		}
 	};
 
 	template<typename T>
-	void default_initialize_or_memset_zero(T* crstl_restrict destination, size_t count)
+	crstl_constexpr void default_initialize_or_memset_zero(T& destination)
+	{
+		default_initialize_or_memset_zero_select<T, crstl_is_trivially_constructible(T)>::default_initialize_or_memset_zero(destination);
+	}
+
+	template<typename T>
+	crstl_constexpr void default_initialize_or_memset_zero(T* crstl_restrict destination, size_t count)
 	{
 		default_initialize_or_memset_zero_select<T, crstl_is_trivially_constructible(T)>::default_initialize_or_memset_zero(destination, count);
 	}
@@ -162,7 +178,12 @@ namespace crstl
 	template<typename T, bool CanMemcpy = false>
 	struct copy_initialize_or_memcpy_select
 	{
-		static void copy_initialize_or_memcpy(T* crstl_restrict destination, const T* crstl_restrict source, size_t count)
+		crstl_constexpr static void copy_initialize_or_memcpy(T& destination, const T& source)
+		{
+			crstl_placement_new((void*)&destination) T(source);
+		}
+
+		crstl_constexpr static void copy_initialize_or_memcpy(T* crstl_restrict destination, const T* crstl_restrict source, size_t count)
 		{
 			for (size_t i = 0; i < count; ++i)
 			{
@@ -174,14 +195,25 @@ namespace crstl
 	template<typename T>
 	struct copy_initialize_or_memcpy_select<T, true>
 	{
-		static void copy_initialize_or_memcpy(T* crstl_restrict destination, const T* crstl_restrict source, size_t count)
+		crstl_constexpr static void copy_initialize_or_memcpy(T& destination, const T& source)
+		{
+			memory_copy(&destination, &source, sizeof(T));
+		}
+
+		crstl_constexpr static void copy_initialize_or_memcpy(T* crstl_restrict destination, const T* crstl_restrict source, size_t count)
 		{
 			memory_copy(destination, source, sizeof(T) * count);
 		}
 	};
 
 	template<typename T>
-	void copy_initialize_or_memcpy(T* crstl_restrict destination, const T* crstl_restrict source, size_t count)
+	crstl_constexpr void copy_initialize_or_memcpy(T& destination, const T& source)
+	{
+		copy_initialize_or_memcpy_select<T, crstl_is_trivially_copyable(T)>::copy_initialize_or_memcpy(destination, source);
+	}
+
+	template<typename T>
+	crstl_constexpr void copy_initialize_or_memcpy(T* crstl_restrict destination, const T* crstl_restrict source, size_t count)
 	{
 		copy_initialize_or_memcpy_select<T, crstl_is_trivially_copyable(T)>::copy_initialize_or_memcpy(destination, source, count);
 	}
@@ -191,7 +223,7 @@ namespace crstl
 	//-----------------------------------------------------
 
 	template<typename T>
-	static void destruct_or_ignore(T& destination)
+	crstl_constexpr static void destruct_or_ignore(T& destination)
 	{
 		crstl_constexpr_if(!crstl_is_trivially_destructible(T))
 		{
@@ -200,7 +232,7 @@ namespace crstl
 	}
 
 	template<typename T>
-	static void destruct_or_ignore(T* destination, size_t count)
+	crstl_constexpr static void destruct_or_ignore(T* destination, size_t count)
 	{
 		crstl_constexpr_if(!crstl_is_trivially_destructible(T))
 		{
