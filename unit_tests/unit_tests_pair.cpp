@@ -55,7 +55,7 @@ void RunUnitTestsPair()
 
 	DummyC dummyC;
 
-#if defined(CRSTL_INITIALIZER_LISTS)
+#if defined(CRSTL_FEATURE_INITIALIZER_LISTS)
 
 	std::pair<DummyA, DummyB> stdInitPair = { 3, 4.0f }; crstl_unit_unused(stdInitPair);
 	crstl::pair<DummyA, DummyB> crInitPair = { 3, 4.0f }; crstl_unit_unused(crInitPair);

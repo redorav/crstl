@@ -18,7 +18,7 @@
 
 #if defined(CRSTL_MODULE_DECLARATION)
 import <initializer_list>;
-#elif defined(CRSTL_INITIALIZER_LISTS)
+#elif defined(CRSTL_FEATURE_INITIALIZER_LISTS)
 #include <initializer_list>
 #endif
 
@@ -105,7 +105,7 @@ crstl_module_export namespace crstl
 			m_length = (length_type)iter_length;
 		}
 
-#if defined(CRSTL_INITIALIZER_LISTS)
+#if defined(CRSTL_FEATURE_INITIALIZER_LISTS)
 
 		crstl_constexpr14 vector(std::initializer_list<T> ilist) crstl_noexcept : m_length(0)
 		{

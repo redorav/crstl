@@ -12,7 +12,7 @@
 
 #if defined(CRSTL_MODULE_DECLARATION)
 import <initializer_list>;
-#elif defined(CRSTL_INITIALIZER_LISTS)
+#elif defined(CRSTL_FEATURE_INITIALIZER_LISTS)
 #include <initializer_list>
 #endif
 

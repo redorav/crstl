@@ -111,6 +111,8 @@
 
 #if defined(__cpp_constexpr)
 
+	#define CRSTL_FEATURE_CONSTEXPR
+
 	#define crstl_constexpr constexpr
 	
 	// In C++11, functions marked as constexpr are also considered const. Because of that, a function marked constexpr
@@ -217,7 +219,7 @@
 
 #if defined(__cpp_initializer_lists)
 	
-	#define CRSTL_INITIALIZER_LISTS
+	#define CRSTL_FEATURE_INITIALIZER_LISTS
 
 #endif
 

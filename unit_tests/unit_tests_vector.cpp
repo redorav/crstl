@@ -125,7 +125,7 @@ void RunUnitTestsVectorStdCompare()
 		crstl::fixed_vector<Dummy*, 32> crFixedVectorPointer;
 		crFixedVectorPointer.push_back(new DummyChild());
 
-#if defined(CRSTL_INITIALIZER_LISTS)
+#if defined(CRSTL_FEATURE_INITIALIZER_LISTS)
 
 		crFixedVector = { Dummy(), Dummy(), Dummy() };
 		stdVector = { Dummy(), Dummy(), Dummy() };
