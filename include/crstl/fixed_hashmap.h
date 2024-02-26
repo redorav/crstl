@@ -258,7 +258,7 @@ crstl_module_export namespace crstl
 			}
 		}
 
-#if defined(CRSTL_INITIALIZER_LISTS)
+#if defined(CRSTL_FEATURE_INITIALIZER_LISTS)
 
 		crstl_constexpr14 fixed_hashmap(std::initializer_list<key_value_type> ilist) crstl_noexcept : fixed_hashmap()
 		{

@@ -115,7 +115,7 @@
 
 	#define crstl_constexpr constexpr
 	
-	// In C++11, functions marked as constexpr are also considered const. Because of that, a function marked constexpr
+	// In C++11, member functions marked as constexpr are also considered const. Therefore a function marked constexpr
 	// and a function marked const are considered to be the same thing. It's an unfortunate change of behavior that
 	// causes compilation errors so we need to disambiguate. We should only mark non-const functions with this define
 	#if CRSTL_CPPVERSION >= CRSTL_CPP14
