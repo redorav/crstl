@@ -204,7 +204,7 @@ namespace crstl
 	template<typename T, bool CanMemcpy = false>
 	struct copy_initialize_or_memcpy_select
 	{
-		crstl_constexpr static void copy_initialize_or_memcpy(T* crstl_restrict destination, const T* crstl_restrict source, size_t count)
+		crstl_constexpr14 static void copy_initialize_or_memcpy(T* crstl_restrict destination, const T* crstl_restrict source, size_t count)
 		{
 			for (size_t i = 0; i < count; ++i)
 			{
@@ -216,14 +216,14 @@ namespace crstl
 	template<typename T>
 	struct copy_initialize_or_memcpy_select<T, true>
 	{
-		crstl_constexpr static void copy_initialize_or_memcpy(T* crstl_restrict destination, const T* crstl_restrict source, size_t count)
+		crstl_constexpr14 static void copy_initialize_or_memcpy(T* crstl_restrict destination, const T* crstl_restrict source, size_t count)
 		{
 			memory_copy(destination, source, sizeof(T) * count);
 		}
 	};
 
 	template<typename T>
-	crstl_constexpr void copy_initialize_or_memcpy(T* crstl_restrict destination, const T* crstl_restrict source, size_t count)
+	crstl_constexpr14 void copy_initialize_or_memcpy(T* crstl_restrict destination, const T* crstl_restrict source, size_t count)
 	{
 		copy_initialize_or_memcpy_select<T, crstl_is_trivially_copyable(T)>::copy_initialize_or_memcpy(destination, source, count);
 	}
@@ -233,7 +233,7 @@ namespace crstl
 	//-----------------------------------------------------
 
 	template<typename T>
-	crstl_constexpr static void destruct_or_ignore(T& destination)
+	crstl_constexpr14 static void destruct_or_ignore(T& destination)
 	{
 		crstl_constexpr_if(!crstl_is_trivially_destructible(T))
 		{
@@ -242,7 +242,7 @@ namespace crstl
 	}
 
 	template<typename T>
-	crstl_constexpr static void destruct_or_ignore(T* destination, size_t count)
+	crstl_constexpr14 static void destruct_or_ignore(T* destination, size_t count)
 	{
 		crstl_constexpr_if(!crstl_is_trivially_destructible(T))
 		{
