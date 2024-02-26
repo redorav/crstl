@@ -131,13 +131,7 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 this_type& operator = (const this_type& other) crstl_noexcept
 		{
 			// Call destructors for all existing objects
-			crstl_constexpr_if(!crstl_is_trivially_destructible(T))
-			{
-				for (size_t i = 0; i < m_length; ++i)
-				{
-					m_data[i].~T();
-				}
-			}
+			destruct_or_ignore(m_data, m_length);
 
 			// If we don't have enough capacity, create more space
 			if (m_capacity_allocator.m_first < other.m_length)
@@ -273,10 +267,7 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 void pop_back()
 		{
 			crstl_assert(m_length > 0);
-			crstl_constexpr_if(!crstl_is_trivially_destructible(T))
-			{
-				back().~T();
-			}
+			destruct_or_ignore(back());
 			m_length--;
 		}
 

@@ -249,10 +249,7 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 void pop_back()
 		{
 			crstl_assert(m_length > 0);
-			crstl_constexpr_if(!crstl_is_trivially_destructible(T))
-			{
-				back().~T();
-			}
+			destruct_or_ignore(back());
 			m_length--;
 		}
 

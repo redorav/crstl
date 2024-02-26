@@ -191,6 +191,15 @@ namespace crstl
 	//-----------------------------------------------------
 
 	template<typename T>
+	static void destruct_or_ignore(T& destination)
+	{
+		crstl_constexpr_if(!crstl_is_trivially_destructible(T))
+		{
+			destination.~T();
+		}
+	}
+
+	template<typename T>
 	static void destruct_or_ignore(T* destination, size_t count)
 	{
 		crstl_constexpr_if(!crstl_is_trivially_destructible(T))

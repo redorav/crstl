@@ -10,14 +10,11 @@
 
 // crstl::stack_vector
 //
-// Replacement for std::vector that doesn't manage its own memory.
-// Useful for using dynamically-size stack-allocated memory via
-// the alloca macro, but any other source of externally managed 
-// memory works too. stack_vector does not deallocate or free
-// memory.
+// Replacement for std::vector that doesn't manage its own memory. Useful for using dynamically-size stack-allocated memory via
+// the alloca macro, but any other source of externally managed memory works too. stack_vector does not deallocate or free
+// memory, but it does call the destructor of objects it created
 //
-// Remember that alloca has function-scope lifetime, not braced!
-// Also, reserving too much stack memory can cause a stack overflow,
+// Remember that alloca has function-scope lifetime, not braced. Also, reserving too much stack memory can cause a stack overflow,
 // so use with care.
 // 
 // - Example usage with stack memory
@@ -81,14 +78,7 @@ crstl_module_export namespace crstl
 
 		void clear()
 		{
-			crstl_constexpr_if(!crstl_is_trivially_destructible(T))
-			{
-				for (size_t i = 0; i < m_length; ++i)
-				{
-					m_data[i].~T();
-				}
-			}
-
+			destruct_or_ignore(m_data, m_length);
 			m_length = 0;
 		}
 
@@ -190,7 +180,7 @@ crstl_module_export namespace crstl
 		void pop_back()
 		{
 			crstl_assert(m_length > 0);
-			back().~T();
+			destruct_or_ignore(back());
 			m_length--;
 		}
 
