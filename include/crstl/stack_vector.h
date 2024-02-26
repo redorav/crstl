@@ -8,6 +8,8 @@
 
 #include "crstl/crstldef.h"
 
+#include "crstl/utility/memory_ops.h"
+
 // crstl::stack_vector
 //
 // Replacement for std::vector that doesn't manage its own memory. Useful for using dynamically-size stack-allocated memory via
@@ -54,7 +56,7 @@ crstl_module_export namespace crstl
 		typedef T*              iterator;
 		typedef const T*        const_iterator;
 
-		stack_vector(transient_memory_t<T> init)
+		crstl_constexpr14 stack_vector(transient_memory_t<T> init)
 			: m_data((T*)init.memory)
 			, m_capacity(init.capacity)
 			, m_length(0) {}
@@ -64,30 +66,30 @@ crstl_module_export namespace crstl
 			clear();
 		}
 
-		T& at(size_t i) { crstl_assert(i < m_length); return m_data[i]; }
-		const T& at(size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
+		crstl_constexpr14 T& at(size_t i) { crstl_assert(i < m_length); return m_data[i]; }
+		crstl_constexpr14 const T& at(size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
 
-		T& back() { crstl_assert(m_length > 0); return m_data[m_length - 1]; }
-		const T& back() const { crstl_assert(m_length > 0); return m_data[m_length - 1]; }
+		crstl_constexpr14 T& back() { crstl_assert(m_length > 0); return m_data[m_length - 1]; }
+		crstl_constexpr14 const T& back() const { crstl_assert(m_length > 0); return m_data[m_length - 1]; }
 
-		iterator begin() { return &m_data[0]; }
-		const_iterator begin() const { return &m_data[0]; }
-		const_iterator cbegin() const { return &m_data[0]; }
+		crstl_constexpr14 iterator begin() { return &m_data[0]; }
+		crstl_constexpr14 const_iterator begin() const { return &m_data[0]; }
+		crstl_constexpr14 const_iterator cbegin() const { return &m_data[0]; }
 
-		size_t capacity() const { return m_capacity; }
+		crstl_constexpr14 size_t capacity() const { return m_capacity; }
 
-		void clear()
+		crstl_constexpr14 void clear()
 		{
 			destruct_or_ignore(m_data, m_length);
 			m_length = 0;
 		}
 
-		pointer data() { return &m_data[0]; }
-		const_pointer data() const { return &m_data[0]; }
+		crstl_constexpr14 pointer data() { return &m_data[0]; }
+		crstl_constexpr14 const_pointer data() const { return &m_data[0]; }
 
 #if defined(CRSTL_VARIADIC_TEMPLATES)
 		template<typename... Args>
-		T& emplace_back(Args&&... args)
+		crstl_constexpr14 T& emplace_back(Args&&... args)
 		{
 			crstl_assert(m_length < m_capacity);
 			crstl_placement_new((void*)&m_data[m_length]) T(crstl::forward<Args>(args)...);
@@ -177,14 +179,14 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 T& front() { return m_data[0]; }
 		crstl_constexpr const T& front() const { return m_data[0]; }
 
-		void pop_back()
+		crstl_constexpr14 void pop_back()
 		{
 			crstl_assert(m_length > 0);
 			destruct_or_ignore(back());
 			m_length--;
 		}
 
-		T& push_back()
+		crstl_constexpr14 T& push_back()
 		{
 			crstl_assert(m_length < m_capacity);
 			default_initialize_or_memset_zero(m_data[m_length]);
@@ -192,25 +194,25 @@ crstl_module_export namespace crstl
 			return back();
 		}
 
-		void push_back(const T& v)
+		crstl_constexpr14 void push_back(const T& v)
 		{
 			crstl_assert(m_length < m_capacity);
 			set_initialize_or_memset(m_data[m_length], v);
 			m_length++;
 		}
 
-		void push_back(T&& v)
+		crstl_constexpr14 void push_back(T&& v)
 		{
 			crstl_assert(m_length < m_capacity);
 			crstl_placement_new((void*)&m_data[m_length]) T(crstl::move(v));
 			m_length++;
 		}
 
-		size_t size() const { return m_length; }
+		crstl_constexpr14 size_t size() const { return m_length; }
 
-		T& operator [] (size_t i) { crstl_assert(i < m_length); return m_data[i]; }
+		crstl_constexpr14 T& operator [] (size_t i) { crstl_assert(i < m_length); return m_data[i]; }
 
-		const T& operator [] (size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
+		crstl_constexpr14 const T& operator [] (size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
 
 		//---------------------
 		// Comparison Operators

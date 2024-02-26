@@ -50,6 +50,11 @@ void LoopOverSpan(const crstl::span<Dummy>& dummySpan)
 //#endif
 //}
 
+// Explicit instantiation to help catch errors
+template class crstl::vector<int, crstl::allocator>;
+template class crstl::fixed_vector<int, 32>;
+template class crstl::stack_vector<int>;
+
 void RunUnitTestsVectorStdCompare()
 {
 	using namespace crstl_unit;
