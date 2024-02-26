@@ -195,7 +195,7 @@ crstl_module_export namespace crstl
 		void push_back(const T& v)
 		{
 			crstl_assert(m_length < m_capacity);
-			copy_initialize_or_memcpy(m_data[m_length]);
+			set_initialize_or_memset(m_data[m_length], v);
 			m_length++;
 		}
 

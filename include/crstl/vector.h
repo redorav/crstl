@@ -286,7 +286,7 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 void push_back(const T& v)
 		{
 			reallocate_if_length_equals_capacity();
-			copy_initialize_or_memcpy(m_data[m_length], v);
+			set_initialize_or_memset(m_data[m_length], v);
 			m_length++;
 		}
 
