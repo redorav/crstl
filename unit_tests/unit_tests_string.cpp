@@ -22,6 +22,10 @@ import crstl;
 //	constexpr crstl::string crConstexprString = "Hello";
 //}
 
+// Explicit instantiation to help catch errors
+template class crstl::basic_string<char, crstl::allocator>;
+template class crstl::basic_fixed_string<char, 64>;
+
 void RunUnitTestsString()
 {
 	printf("RunUnitTestsString\n");
