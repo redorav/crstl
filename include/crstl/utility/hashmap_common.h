@@ -11,13 +11,13 @@ crstl_module_export namespace crstl
 	template<bool IsPowerOfTwo = false>
 	struct compute_bucket_function
 	{
-		static size_t compute_bucket(size_t hash_value, size_t BucketCount) { return hash_value % BucketCount; }
+		static size_t compute_bucket(size_t hash_value, size_t bucket_count) { return hash_value % bucket_count; }
 	};
 
 	template<>
 	struct compute_bucket_function<true>
 	{
-		static size_t compute_bucket(size_t hash_value, size_t BucketCount) { return hash_value & (BucketCount - 1); }
+		static size_t compute_bucket(size_t hash_value, size_t bucket_count) { return hash_value & (bucket_count - 1); }
 	};
 
 	template<size_t BucketCount>

@@ -234,8 +234,8 @@
 
 #else
 
-#define crstl_assert(x) (void)(x)
-#define crstl_assert_msg(x, msg) (void)(x)
+#define crstl_assert(x) (void)(0)
+#define crstl_assert_msg(x, msg) (void)(0)
 
 #endif
 
