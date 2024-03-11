@@ -276,7 +276,7 @@ crstl_module_export namespace crstl
 			{
 				char lastCharacter = m_path_string.back();
 
-				if (lastCharacter != '/' || lastCharacter == '.')
+				if (lastCharacter != '/')
 				{
 					m_path_string += "/";
 				}
