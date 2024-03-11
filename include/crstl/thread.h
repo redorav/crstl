@@ -92,7 +92,9 @@ crstl_module_export namespace crstl
 
 		thread_base()
 		: m_started(false) 
-		, m_priority(thread_priority::count) {}
+		, m_priority(thread_priority::count)
+		, m_stack_bytes(0)
+		{}
 
 	protected:
 
