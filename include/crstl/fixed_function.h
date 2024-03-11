@@ -56,22 +56,16 @@ crstl_module_export namespace crstl
 
 		fixed_function(fixed_function&& other) crstl_noexcept
 		{
-			if (this != &other)
-			{
-				m_functor_storage = other.m_functor_storage;
-				m_invoker = other.m_invoker;
-				m_manager = other.m_manager;
-				other.m_invoker = nullptr;
-				other.m_manager = nullptr;
-			}
+			m_functor_storage = other.m_functor_storage;
+			m_invoker = other.m_invoker;
+			m_manager = other.m_manager;
+			other.m_invoker = nullptr;
+			other.m_manager = nullptr;
 		}
 
 		fixed_function(const fixed_function& other) crstl_noexcept
 		{
-			if (this != &other)
-			{
-				copy(other);
-			}
+			copy(other);
 		}
 
 		template<int NewSizeBytes>
@@ -98,17 +92,24 @@ crstl_module_export namespace crstl
 
 		fixed_function& operator = (fixed_function&& other)
 		{
-			m_functor_storage = other.m_functor_storage;
-			m_invoker = other.m_invoker;
-			m_manager = other.m_manager;
-			other.m_invoker = nullptr;
-			other.m_manager = nullptr;
+			if (this != &other)
+			{
+				m_functor_storage = other.m_functor_storage;
+				m_invoker = other.m_invoker;
+				m_manager = other.m_manager;
+				other.m_invoker = nullptr;
+				other.m_manager = nullptr;
+			}
 			return *this;
 		}
 
 		fixed_function& operator = (const fixed_function& other)
 		{
-			copy(other);
+			if (this != &other)
+			{
+				copy(other);
+			}
+
 			return *this;
 		}
 		

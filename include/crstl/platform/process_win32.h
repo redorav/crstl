@@ -204,7 +204,7 @@ crstl_module_export namespace crstl
 			close_handle_safe(m_stdout_read_handle);
 		}
 
-		process(process&& other)
+		process(process&& other) crstl_noexcept
 		{
 			m_process_handle = other.m_process_handle;
 			m_stdout_read_handle = other.m_stdout_read_handle;
@@ -215,7 +215,7 @@ crstl_module_export namespace crstl
 			other.m_state = process_state::undefined;
 		}
 
-		process& operator = (process&& other)
+		process& operator = (process&& other) crstl_noexcept
 		{
 			join();
 

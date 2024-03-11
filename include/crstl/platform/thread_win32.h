@@ -143,23 +143,27 @@ crstl_module_export namespace crstl
 	{
 	public:
 
-		thread() crstl_noexcept : m_thread_handle(CRSTL_INVALID_HANDLE_VALUE), m_thread_id(0) {}
+		thread() crstl_noexcept : m_thread_handle(CRSTL_INVALID_HANDLE_VALUE), m_finished_event(CRSTL_INVALID_HANDLE_VALUE), m_thread_id(0) {}
 
 		thread(thread&& other) crstl_noexcept
 		{
 			m_thread_handle = other.m_thread_handle;
+			m_finished_event = other.m_finished_event;
 			m_thread_id = other.m_thread_id;
 			other.m_thread_handle = CRSTL_INVALID_HANDLE_VALUE;
+			other.m_finished_event = CRSTL_INVALID_HANDLE_VALUE;
 			other.m_thread_id = 0;
 		}
 
-		thread& operator = (thread&& other)
+		thread& operator = (thread&& other) crstl_noexcept
 		{
 			join();
 
 			m_thread_handle = other.m_thread_handle;
 			m_thread_id = other.m_thread_id;
+			m_finished_event = other.m_finished_event;
 			other.m_thread_handle = CRSTL_INVALID_HANDLE_VALUE;
+			other.m_finished_event = CRSTL_INVALID_HANDLE_VALUE;
 			other.m_thread_id = 0;
 
 			return *this;

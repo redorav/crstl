@@ -57,22 +57,16 @@ crstl_module_export namespace crstl
 
 		function(function&& other) crstl_noexcept
 		{
-			if (this != &other)
-			{
-				m_functor_storage = other.m_functor_storage;
-				m_invoker = other.m_invoker;
-				m_manager = other.m_manager;
-				other.m_invoker = nullptr;
-				other.m_manager = nullptr;
-			}
+			m_functor_storage = other.m_functor_storage;
+			m_invoker = other.m_invoker;
+			m_manager = other.m_manager;
+			other.m_invoker = nullptr;
+			other.m_manager = nullptr;
 		}
 
 		function(const function& other) crstl_noexcept
 		{
-			if (this != &other)
-			{
-				copy(other);
-			}
+			copy(other);
 		}
 
 		~function() crstl_noexcept
@@ -85,17 +79,24 @@ crstl_module_export namespace crstl
 
 		function& operator = (function&& other)
 		{
-			m_functor_storage = other.m_functor_storage;
-			m_invoker = other.m_invoker;
-			m_manager = other.m_manager;
-			other.m_invoker = nullptr;
-			other.m_manager = nullptr;
+			if (this != &other)
+			{
+				m_functor_storage = other.m_functor_storage;
+				m_invoker = other.m_invoker;
+				m_manager = other.m_manager;
+				other.m_invoker = nullptr;
+				other.m_manager = nullptr;
+			}
 			return *this;
 		}
 
 		function& operator = (const function& other)
 		{
-			copy(other);
+			if (this != &other)
+			{
+				copy(other);
+			}
+
 			return *this;
 		}
 
