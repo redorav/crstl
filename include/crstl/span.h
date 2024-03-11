@@ -52,8 +52,8 @@ crstl_module_export namespace crstl
 
 		span first(size_t length) const { crstl_assert(length < m_length); return subspan(m_data + length, m_length - length); }
 
-		T& front() { m_data[0]; }
-		const T& front() const { m_data[0]; }
+		T& front() { return m_data[0]; }
+		const T& front() const { return m_data[0]; }
 
 		span last(size_t length) const { crstl_assert(length < m_length); return subspan(m_data + (m_length - length), length); }
 
