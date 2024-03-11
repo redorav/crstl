@@ -120,14 +120,18 @@ crstl_module_export namespace crstl
 
 		this_type& operator = (this_type&& other) crstl_noexcept
 		{
-			m_length = other.m_length;
-
-			for (size_t i = 0; i < other.m_length; ++i)
+			if (this != &other)
 			{
-				crstl_placement_new((void*)&m_data[i]) T(crstl::move(other.m_data[i]));
-			}
+				m_length = other.m_length;
 
-			other.m_length = 0;
+				for (size_t i = 0; i < other.m_length; ++i)
+				{
+					crstl_placement_new((void*)&m_data[i]) T(crstl::move(other.m_data[i]));
+				}
+
+				other.m_length = 0;
+			}
+			
 			return *this;
 		}
 

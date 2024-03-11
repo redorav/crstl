@@ -150,6 +150,22 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
+		crstl_constexpr14 this_type& operator = (this_type&& other) crstl_noexcept
+		{
+			if (this != &other)
+			{
+				// Swap relevant data
+				m_data = other.m_data;
+				m_length = other.m_length;
+				m_capacity_allocator = other.m_capacity_allocator;
+
+				other.m_data = nullptr;
+				other.m_length = 0;
+			}
+
+			return *this;
+		}
+
 		crstl_constexpr14 T& at(size_t i) { return crstl_assert(i < m_length), m_data[i]; }
 		crstl_constexpr const T& at(size_t i) const { return crstl_assert(i < m_length), m_data[i]; }
 
