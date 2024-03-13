@@ -16,11 +16,11 @@ import <initializer_list>;
 #include <initializer_list>
 #endif
 
-// fixed_hashmap
+// fixed_bucket_hashmap
 //
 // Fixed replacement for std::unordered_map
 //
-// fixed_hashmap doesn't allocate memory, instead manages an internal array
+// fixed_bucket_hashmap doesn't allocate memory, instead manages an internal array
 //
 // - The number of nodes and buckets is specified at compile time
 // - The bucket count should ideally be a power of 2 as it's faster to compute the bucket
@@ -220,7 +220,7 @@ crstl_module_export namespace crstl
 		size_t BucketCount = ((NodeCount / 2) > 0 ? (NodeCount / 2) : 1),
 		typename Hasher = crstl::hash<Key>
 	>
-	class fixed_hashmap
+	class fixed_bucket_hashmap
 	{
 	public:
 
@@ -239,7 +239,7 @@ crstl_module_export namespace crstl
 		static const size_t kInvalidNodeIndex = (size_t)-1;
 		static const size_t kNodesPerBucket = NodeCount / BucketCount;
 
-		crstl_constexpr14 fixed_hashmap() crstl_noexcept : m_length(0)
+		crstl_constexpr14 fixed_bucket_hashmap() crstl_noexcept : m_length(0)
 		{
 			// (size_t)-1 is the invalid value for buckets
 			memory_set(m_buckets, 0xff, BucketCount * sizeof(m_buckets[0]));
@@ -250,7 +250,7 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		crstl_constexpr14 fixed_hashmap(const fixed_hashmap& other) crstl_noexcept : fixed_hashmap()
+		crstl_constexpr14 fixed_bucket_hashmap(const fixed_bucket_hashmap& other) crstl_noexcept : fixed_bucket_hashmap()
 		{
 			for (const key_value_type& iter : other)
 			{
@@ -260,7 +260,7 @@ crstl_module_export namespace crstl
 
 #if defined(CRSTL_FEATURE_INITIALIZER_LISTS)
 
-		crstl_constexpr14 fixed_hashmap(std::initializer_list<key_value_type> ilist) crstl_noexcept : fixed_hashmap()
+		crstl_constexpr14 fixed_bucket_hashmap(std::initializer_list<key_value_type> ilist) crstl_noexcept : fixed_bucket_hashmap()
 		{
 			crstl_assert(ilist.size() <= NodeCount);
 
@@ -272,7 +272,7 @@ crstl_module_export namespace crstl
 
 #endif
 
-		~fixed_hashmap() crstl_noexcept
+		~fixed_bucket_hashmap() crstl_noexcept
 		{
 			// Only destroy the value, no need to destroy buckets or nodes
 			crstl_constexpr_if(!crstl_is_trivially_destructible(T))
@@ -284,7 +284,7 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		crstl_constexpr14 fixed_hashmap& operator = (const fixed_hashmap& other)
+		crstl_constexpr14 fixed_bucket_hashmap& operator = (const fixed_bucket_hashmap& other)
 		{
 			clear();
 

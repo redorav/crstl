@@ -1,8 +1,7 @@
 #include "unit_tests.h"
 
-#include "crstl/fixed_hashmap.h"
+#include "crstl/fixed_bucket_hashmap.h"
 
-#include "crstl/hash.h"
 #include "crstl/timer.h"
 
 #include <functional>
@@ -26,7 +25,7 @@ void RunUnitTestsAssociative()
 
 	using namespace crstl_unit;
 
-	crstl::fixed_hashmap<int, Example, 64> crFixedBucketmapInt;
+	crstl::fixed_bucket_hashmap<int, Example, 64> crFixedBucketmapInt;
 
 	crstl_check(crFixedBucketmapInt.size() == 0);
 
@@ -127,7 +126,7 @@ void RunUnitTestsAssociative()
 	crstl_check(crFixedBucketmapInt.size() == findElementRangedForNonConst);
 
 	// Copy constructor
-	crstl::fixed_hashmap<int, Example, 64> crFixedBucketmapInt2(crFixedBucketmapInt);
+	crstl::fixed_bucket_hashmap<int, Example, 64> crFixedBucketmapInt2(crFixedBucketmapInt);
 	crstl_check(crFixedBucketmapInt.size() == crFixedBucketmapInt2.size());
 
 	// Iterate over the copied hashmap to check that they were copied correctly
@@ -137,7 +136,7 @@ void RunUnitTestsAssociative()
 	}
 
 	// Copy assignment
-	crstl::fixed_hashmap<int, Example, 64> crFixedBucketmapInt3;
+	crstl::fixed_bucket_hashmap<int, Example, 64> crFixedBucketmapInt3;
 	crFixedBucketmapInt3 = crFixedBucketmapInt;
 	crstl_check(crFixedBucketmapInt.size() == crFixedBucketmapInt3.size());
 
@@ -151,7 +150,7 @@ void RunUnitTestsAssociative()
 	
 	crFixedBucketmapInt.debug_validate_empty();
 	
-	crstl::fixed_hashmap<int, Example, 8> crFixedBucketmapIntInitializerList =
+	crstl::fixed_bucket_hashmap<int, Example, 8> crFixedBucketmapIntInitializerList =
 	{
 		{ 7, Example() },
 		{ 17, Example() },
@@ -164,7 +163,7 @@ void RunUnitTestsAssociative()
 	crstl_check(crFixedBucketmapIntInitializerList.size() == 6);
 
 	// Check that insert_or_assign assigns properly
-	crstl::fixed_hashmap<int, Example, 8> crFixedHashmapInsertAssign;
+	crstl::fixed_bucket_hashmap<int, Example, 8> crFixedHashmapInsertAssign;
 	crFixedHashmapInsertAssign.insert(7, Example(1, 2.0f));
 	crFixedHashmapInsertAssign.insert_or_assign(7, Example(1, 3.0f));
 	crstl_check(crFixedHashmapInsertAssign.find(7)->second == Example(1, 3.0f));
