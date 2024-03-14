@@ -225,7 +225,6 @@ crstl_module_export namespace crstl
 	public:
 
 		static_assert(NodeCount >= 1 && BucketCount >= 1, "Must have at least one node and one bucket");
-		static_assert(NodeCount > BucketCount, "Must have at least one node per bucket");
 
 		typedef Key                                                 key_type;
 		typedef T                                                   mapped_type;
@@ -417,7 +416,7 @@ crstl_module_export namespace crstl
 			
 			if (current_node_offset != kInvalidNodeIndex)
 			{
-				while (1)
+				while (true)
 				{
 					node_type* current_node = &m_data[current_node_offset];
 					node_type* previous_node = nullptr;
@@ -473,7 +472,7 @@ crstl_module_export namespace crstl
 
 		pair<iterator, bool> insert(const key_value_type& key_value) { return insert_impl<exists_behavior::find>(key_value.first, key_value.second); }
 
-		pair<iterator, bool> insert(key_value_type&& key_value) { return insert_impl<exists_behavior::find>(crstl::forward<const Key>(key_value.first), crstl::forward<T>(key_value.second)); }
+		pair<iterator, bool> insert(key_value_type&& key_value) { return insert_impl<exists_behavior::find>(crstl::forward<key_value_type>(key_value).first, crstl::forward<key_value_type>(key_value).second); }
 
 		template<typename ValueType>
 		pair<iterator, bool> insert(const Key& key, ValueType&& value) { return insert_impl<exists_behavior::find>(key, crstl::forward<ValueType>(value)); }
@@ -487,7 +486,7 @@ crstl_module_export namespace crstl
 
 		pair<iterator, bool> insert_or_assign(const key_value_type& key_value) { return insert_impl<exists_behavior::assign>(key_value.first, key_value.second); }
 
-		pair<iterator, bool> insert_or_assign(key_value_type&& key_value) { return insert_impl<exists_behavior::assign>(crstl::forward<const Key>(key_value.first), crstl::move(key_value.second)); }
+		pair<iterator, bool> insert_or_assign(key_value_type&& key_value) { return insert_impl<exists_behavior::assign>(crstl::forward<key_value_type>(key_value).first, crstl::forward<key_value_type>(key_value).second); }
 		
 		template<typename ValueType>
 		pair<iterator, bool> insert_or_assign(const Key& key, ValueType&& value) { return insert_impl<exists_behavior::assign>(key, crstl::forward<ValueType>(value)); }
@@ -571,7 +570,7 @@ crstl_module_export namespace crstl
 				node_type* current_node = &m_data[current_node_offset];
 				node_type* previous_node = nullptr;
 
-				while (1)
+				while (true)
 				{
 					// TODO For complex types keep the key and check if it is the same. If it is, then compare the value
 					if (current_node->key_value.first == key)
