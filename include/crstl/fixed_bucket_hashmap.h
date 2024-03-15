@@ -398,7 +398,7 @@ crstl_module_export namespace crstl
 			return next_iter;
 		}
 
-		crstl_constexpr14 iterator erase(const_iterator pos)
+		crstl_constexpr14 const_iterator erase(const_iterator pos)
 		{
 			crstl_assert(pos != end());
 			const_iterator next_iter = pos; ++next_iter;

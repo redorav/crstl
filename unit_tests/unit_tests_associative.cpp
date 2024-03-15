@@ -19,6 +19,8 @@ namespace crstl
 
 int ManualKeys[] = { 16, 48, 80, 76, 86, 96, 106, 116, 126, 136, 146, 156, 166, 176, 186, 196 };
 
+// Explicit instantiation to help catch errors
+template class crstl::fixed_bucket_hashmap<int, int, 64>;
 void RunUnitTestsAssociative()
 {
 	printf("RunUnitTestsAssociative\n");
