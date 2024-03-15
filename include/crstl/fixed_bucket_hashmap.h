@@ -400,7 +400,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 const_iterator erase(const_iterator pos)
 		{
-			crstl_assert(pos != end());
+			crstl_assert(pos != cend());
 			const_iterator next_iter = pos; ++next_iter;
 			erase_iter_impl(pos.get_node(), pos.get_previous_node(), pos.get_bucket_index());
 			return next_iter;
@@ -470,29 +470,53 @@ crstl_module_export namespace crstl
 		// insert
 		//-------
 
-		pair<iterator, bool> insert(const key_value_type& key_value) { return insert_impl<exists_behavior::find>(key_value.first, key_value.second); }
+		pair<iterator, bool> insert(const key_value_type& key_value)
+		{
+			return insert_impl<exists_behavior::find>(key_value.first, key_value.second);
+		}
 
-		pair<iterator, bool> insert(key_value_type&& key_value) { return insert_impl<exists_behavior::find>(crstl::forward<key_value_type>(key_value).first, crstl::forward<key_value_type>(key_value).second); }
+		pair<iterator, bool> insert(key_value_type&& key_value)
+		{
+			return insert_impl<exists_behavior::find>(crstl::forward<key_value_type>(key_value).first, crstl::forward<key_value_type>(key_value).second);
+		}
 
 		template<typename ValueType>
-		pair<iterator, bool> insert(const Key& key, ValueType&& value) { return insert_impl<exists_behavior::find>(key, crstl::forward<ValueType>(value)); }
+		pair<iterator, bool> insert(const Key& key, ValueType&& value)
+		{
+			return insert_impl<exists_behavior::find>(key, crstl::forward<ValueType>(value));
+		}
 
 		template<typename ValueType>
-		pair<iterator, bool> insert(Key&& key, ValueType&& value) { return insert_impl<exists_behavior::find>(crstl::forward<const Key>(key), crstl::forward<ValueType>(value)); }
+		pair<iterator, bool> insert(Key&& key, ValueType&& value)
+		{
+			return insert_impl<exists_behavior::find>(crstl::forward<const Key>(key), crstl::forward<ValueType>(value));
+		}
 
 		//-----------------
 		// insert_or_assign
 		//-----------------
 
-		pair<iterator, bool> insert_or_assign(const key_value_type& key_value) { return insert_impl<exists_behavior::assign>(key_value.first, key_value.second); }
+		pair<iterator, bool> insert_or_assign(const key_value_type& key_value)
+		{
+			return insert_impl<exists_behavior::assign>(key_value.first, key_value.second);
+		}
 
-		pair<iterator, bool> insert_or_assign(key_value_type&& key_value) { return insert_impl<exists_behavior::assign>(crstl::forward<key_value_type>(key_value).first, crstl::forward<key_value_type>(key_value).second); }
+		pair<iterator, bool> insert_or_assign(key_value_type&& key_value)
+		{
+			return insert_impl<exists_behavior::assign>(crstl::forward<key_value_type>(key_value).first, crstl::forward<key_value_type>(key_value).second);
+		}
 		
 		template<typename ValueType>
-		pair<iterator, bool> insert_or_assign(const Key& key, ValueType&& value) { return insert_impl<exists_behavior::assign>(key, crstl::forward<ValueType>(value)); }
+		pair<iterator, bool> insert_or_assign(const Key& key, ValueType&& value)
+		{
+			return insert_impl<exists_behavior::assign>(key, crstl::forward<ValueType>(value));
+		}
 
 		template<typename ValueType>
-		pair<iterator, bool> insert_or_assign(Key&& key, ValueType&& value) { return insert_impl<exists_behavior::assign>(crstl::forward<const Key>(key), crstl::forward<ValueType>(value)); }
+		pair<iterator, bool> insert_or_assign(Key&& key, ValueType&& value)
+		{
+			return insert_impl<exists_behavior::assign>(crstl::forward<const Key>(key), crstl::forward<ValueType>(value));
+		}
 
 		size_t max_size() const { return ((size_t)-1) - 2; }
 
