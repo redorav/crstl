@@ -447,22 +447,22 @@ crstl_module_export namespace crstl
 		}
 
 		template<typename KeyType>
-		iterator find(KeyType&& key)
+		iterator find(const KeyType& key)
 		{
 			const size_t hash_value = compute_hash_value(key);
 			const size_t bucket_index = compute_bucket<BucketCount>(hash_value);
 			node_type* found_node; node_type* previous_node;
-			find_impl(bucket_index, crstl::forward<const KeyType>(key), found_node, previous_node);
+			find_impl(bucket_index, key, found_node, previous_node);
 			return iterator(m_buckets, m_data, bucket_index, found_node, previous_node);
 		}
 
 		template<typename KeyType>
-		const_iterator find(KeyType&& key) const
+		const_iterator find(const KeyType& key) const
 		{
 			const size_t hash_value = compute_hash_value(key);
 			const size_t bucket_index = compute_bucket<BucketCount>(hash_value);
 			node_type* found_node; node_type* previous_node;
-			find_impl(bucket_index, crstl::forward<const KeyType>(key), found_node, previous_node);
+			find_impl(bucket_index, key, found_node, previous_node);
 			return const_iterator(m_buckets, m_data, bucket_index, found_node, previous_node);
 		}
 
@@ -703,7 +703,7 @@ crstl_module_export namespace crstl
 		}
 
 		template<typename KeyType>
-		crstl_forceinline void find_impl(size_t bucket_index, KeyType&& key, node_type*& found_node, node_type*& previous_node) const
+		crstl_forceinline void find_impl(size_t bucket_index, const KeyType& key, node_type*& found_node, node_type*& previous_node) const
 		{
 			found_node = nullptr;
 			previous_node = nullptr;
