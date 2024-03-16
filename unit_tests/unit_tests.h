@@ -143,11 +143,16 @@ struct Example
 		return a == other.a && b == other.b;
 	}
 
-	//~Example()
-	//{
-	//	a = -1;
-	//	b = -1.0f;
-	//}
+	operator int ()
+	{
+		return a;
+	}
+
+	~Example()
+	{
+		a = -1;
+		b = -1.0f;
+	}
 };
 
 namespace crstl_unit
