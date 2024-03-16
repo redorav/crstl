@@ -7,6 +7,8 @@ export module crstl;
 #include "crstl/deque.h"
 #include "crstl/fixed_deque.h"
 #include "crstl/fixed_function.h"
+#include "crstl/fixed_bucket_hashmap.h"
+#include "crstl/fixed_open_hashmap.h"
 #include "crstl/fixed_path.h"
 #include "crstl/fixed_string.h"
 #include "crstl/fixed_vector.h"
