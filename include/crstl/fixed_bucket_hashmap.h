@@ -172,45 +172,6 @@ crstl_module_export namespace crstl
 		node_type* m_previous_node; // Used for when we call erase using an iterator, so we can relink the nodes
 	};
 
-	// Behavior to run when node exists already
-	enum class exists_behavior : size_t
-	{
-		find,
-		assign
-	};
-
-	// Whether to insert or emplace
-	enum class insert_emplace : size_t
-	{
-		insert,
-		emplace
-	};
-
-	// Use this selector class to determine whether to insert an already constructed object, or construct it in place given
-	// the variadic arguments. This is so that emplace only constructs the object if it really needs to
-	template<typename KeyValueType, typename T, insert_emplace InsertEmplace>
-	struct node_create_selector;
-
-	template<typename KeyValueType, typename T>
-	struct node_create_selector<KeyValueType, T, insert_emplace::insert>
-	{
-		template<typename NodeType, typename KeyType, typename ValueType>
-		crstl_forceinline static void create(NodeType* new_node, KeyType&& key, ValueType&& value)
-		{
-			crstl_placement_new((void*)&(new_node->key_value)) KeyValueType(crstl::forward<const KeyType>(key), crstl::forward<ValueType>(value));
-		}
-	};
-
-	template<typename KeyValueType, typename T>
-	struct node_create_selector<KeyValueType, T, insert_emplace::emplace>
-	{
-		template<typename NodeType, typename KeyType, typename... Args>
-		crstl_forceinline static void create(NodeType* new_node, KeyType&& key, Args&&... args)
-		{
-			crstl_placement_new((void*)&(new_node->key_value)) KeyValueType(crstl::forward<const KeyType>(key), T(crstl::forward<Args>(args)...));
-		}
-	};
-
 	// It is recommended to use a power of 2 for buckets as it is faster to find
 	template
 	<
