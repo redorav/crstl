@@ -1,6 +1,7 @@
 #include "unit_tests.h"
 
 #include "crstl/fixed_bucket_hashmap.h"
+#include "crstl/fixed_open_hashmap.h"
 
 #include "crstl/timer.h"
 
@@ -21,24 +22,25 @@ int ManualKeys[] = { 16, 48, 80, 76, 86, 96, 106, 116, 126, 136, 146, 156, 166, 
 
 // Explicit instantiation to help catch errors
 template class crstl::fixed_bucket_hashmap<int, int, 64>;
-void RunUnitTestsAssociative()
-{
-	printf("RunUnitTestsAssociative\n");
+template class crstl::fixed_open_hashmap<int, int, 64>;
 
+template<typename Hashmap>
+void RunUnitTestAssociativeT()
+{
 	using namespace crstl_unit;
 
-	crstl::fixed_bucket_hashmap<int, Example, 64> crFixedBucketmapInt;
+	Hashmap crFixedBucketmapInt;
 
 	crstl_check(crFixedBucketmapInt.size() == 0);
 
 	// Insert a temporary object
 	for (size_t i = 0; i < crstl::array_size(ManualKeys); ++i)
 	{
-		crFixedBucketmapInt.insert(ManualKeys[i], Example());
+		crFixedBucketmapInt.insert({ ManualKeys[i], Example() });
 	}
 
 	crstl_check(crFixedBucketmapInt.size() == crstl::array_size(ManualKeys));
-	
+
 	// Erase all objects manually
 	for (size_t i = 0; i < crstl::array_size(ManualKeys); ++i)
 	{
@@ -66,7 +68,7 @@ void RunUnitTestsAssociative()
 	{
 		crFixedBucketmapInt.emplace(ManualKeys[i], 1, 2.0f);
 	}
-	
+
 	crstl_check(crFixedBucketmapInt.size() == crstl::array_size(ManualKeys));
 
 	// Clear via iterators
@@ -98,7 +100,7 @@ void RunUnitTestsAssociative()
 	}
 
 	crstl_check(crFixedBucketmapInt.size() == findElementCount);
-	
+
 	size_t findElementIter = 0;
 	for (auto iter = crFixedBucketmapInt.begin(), end = crFixedBucketmapInt.end(); iter != end; ++iter)
 	{
@@ -107,7 +109,7 @@ void RunUnitTestsAssociative()
 	}
 
 	crstl_check(crFixedBucketmapInt.size() == findElementIter);
-	
+
 	size_t findElementRangedForConst = 0;
 	for (const auto& iter : crFixedBucketmapInt)
 	{
@@ -128,7 +130,7 @@ void RunUnitTestsAssociative()
 	crstl_check(crFixedBucketmapInt.size() == findElementRangedForNonConst);
 
 	// Copy constructor
-	crstl::fixed_bucket_hashmap<int, Example, 64> crFixedBucketmapInt2(crFixedBucketmapInt);
+	Hashmap crFixedBucketmapInt2(crFixedBucketmapInt);
 	crstl_check(crFixedBucketmapInt.size() == crFixedBucketmapInt2.size());
 
 	// Iterate over the copied hashmap to check that they were copied correctly
@@ -138,7 +140,7 @@ void RunUnitTestsAssociative()
 	}
 
 	// Copy assignment
-	crstl::fixed_bucket_hashmap<int, Example, 64> crFixedBucketmapInt3;
+	Hashmap crFixedBucketmapInt3;
 	crFixedBucketmapInt3 = crFixedBucketmapInt;
 	crstl_check(crFixedBucketmapInt.size() == crFixedBucketmapInt3.size());
 
@@ -149,10 +151,10 @@ void RunUnitTestsAssociative()
 	}
 
 	crFixedBucketmapInt.clear();
-	
-	crFixedBucketmapInt.debug_validate_empty();
-	
-	crstl::fixed_bucket_hashmap<int, Example, 8> crFixedBucketmapIntInitializerList =
+
+	//crFixedBucketmapInt.debug_validate_empty();
+
+	Hashmap crFixedBucketmapIntInitializerList =
 	{
 		{ 7, Example() },
 		{ 17, Example() },
@@ -165,7 +167,7 @@ void RunUnitTestsAssociative()
 	crstl_check(crFixedBucketmapIntInitializerList.size() == 6);
 
 	// Check that insert_or_assign assigns properly
-	crstl::fixed_bucket_hashmap<int, Example, 8> crFixedHashmapInsertAssign;
+	Hashmap crFixedHashmapInsertAssign;
 	crFixedHashmapInsertAssign.insert(7, Example(1, 2.0f));
 	crFixedHashmapInsertAssign.insert_or_assign(7, Example(1, 3.0f));
 	crstl_check(crFixedHashmapInsertAssign.find(7)->second == Example(1, 3.0f));
@@ -174,4 +176,12 @@ void RunUnitTestsAssociative()
 	crFixedHashmapInsertAssign.emplace(18, 3, 6.0f);
 	crFixedHashmapInsertAssign.emplace_or_assign(18, Example(4, 25.0f));
 	crstl_check(crFixedHashmapInsertAssign.find(18)->second == Example(4, 25.0f));
+}
+
+void RunUnitTestsAssociative()
+{
+	printf("RunUnitTestsAssociative\n");
+
+	RunUnitTestAssociativeT<crstl::fixed_open_hashmap<int, Example, 64>>();
+	RunUnitTestAssociativeT<crstl::fixed_bucket_hashmap<int, Example, 64>>();
 }

@@ -35,7 +35,7 @@ void RunUnitTestsArray()
 		count++;
 	}
 
-	crstl_assert(crArray32.size() == count);
+	crstl_assert(crArray32.size() == count); crstl_unused(count);
 
 #endif
 
