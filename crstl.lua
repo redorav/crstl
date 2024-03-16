@@ -7,6 +7,7 @@ PlatformMSVC64			= 'MSVC 64'
 PlatformMSVC64Modules	= 'MSVC 64 Modules'
 PlatformLLVM64			= 'LLVM 64'
 PlatformLLVM64Modules	= 'LLVM 64 Modules'
+PlatformIntel64			= 'ICC 64'
 PlatformLinux64			= 'Linux 64'
 
 -- MacOS x86/64
@@ -107,6 +108,7 @@ workspace('crstl')
 		{
 			PlatformMSVC64,
 			PlatformLLVM64,
+			PlatformIntel64,
 			PlatformLinux64
 		}
 
@@ -161,6 +163,12 @@ workspace('crstl')
 			defines { '__SSE4_1__', 'CRSTL_USE_CPP_MODULE' }
 			buildoptions { '/permissive-' }
 			
+		filter { 'platforms:'..PlatformLLVM64 }
+			toolset(llvmToolset)
+			architecture('x64')
+			vectorextensions('avx')
+			buildoptions { '-Wno-unused-variable -mavx' }
+			
 		filter { 'platforms:'..PlatformLLVM64Modules }
 			cppdialect('C++20')
 			toolset(llvmToolset)
@@ -168,11 +176,11 @@ workspace('crstl')
 			vectorextensions('sse4.1')
 			defines { '__SSE4_1__', 'CRSTL_USE_CPP_MODULE' }
 			
-		filter { 'platforms:'..PlatformLLVM64 }
-			toolset(llvmToolset)
+		filter { 'platforms:'..PlatformIntel64 }
+			toolset('msc-Intel C++ Compiler 2024')
 			architecture('x64')
-			vectorextensions('avx')
-			buildoptions { '-Wno-unused-variable -mavx' }
+			vectorextensions('sse4.1')
+			defines { '__SSE4_1__' }
 			
 		filter { 'platforms:'..PlatformARM }
 			architecture('arm')
