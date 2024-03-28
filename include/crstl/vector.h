@@ -98,7 +98,7 @@ crstl_module_export namespace crstl
 			crstl_assert(iter1 != nullptr && iter2 != nullptr);
 			crstl_assert(iter2 >= iter1);
 
-			size_t iter_length = iter2 - iter1;
+			size_t iter_length = (size_t)(iter2 - iter1);
 			m_data = allocate(iter_length);
 
 			copy_initialize_or_memcpy(m_data, iter1, iter_length);
@@ -111,7 +111,7 @@ crstl_module_export namespace crstl
 		{
 			crstl_assert(ilist.end() >= ilist.begin());
 
-			size_t ilist_length = ilist.end() - ilist.begin();
+			size_t ilist_length = (size_t)(ilist.end() - ilist.begin());
 
 			m_data = allocate(ilist_length);
 
