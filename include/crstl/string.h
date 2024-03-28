@@ -129,7 +129,7 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 basic_string(const_pointer begin, const_pointer end) crstl_noexcept
 		{
 			crstl_assert(end >= begin);
-			initialize_string(begin, end - begin);
+			initialize_string(begin, (size_t)(end - begin));
 		}
 
 		crstl_constexpr14 basic_string(const basic_string& string) crstl_noexcept
@@ -200,7 +200,7 @@ crstl_module_export namespace crstl
 
 			if (capacity < kSSOCapacity)
 			{
-				m_layout_allocator.m_first.m_sso.remaining_length.value = (char)(kSSOCapacity - length);
+				m_layout_allocator.m_first.m_sso.remaining_length.value = (unsigned char)(kSSOCapacity - length);
 				m_layout_allocator.m_first.m_sso.data[length] = 0;
 			}
 			else
