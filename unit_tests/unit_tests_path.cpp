@@ -13,6 +13,8 @@ import crstl;
 #include <filesystem>
 #endif
 
+#include <stdio.h>
+
 void RunUnitTestsPath()
 {
 	printf("RunUnitTestsPath\n");

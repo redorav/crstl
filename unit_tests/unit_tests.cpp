@@ -2,6 +2,7 @@
 
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 Dummy::Dummy() : a(4), b(5.0f), ptr(nullptr)
 {

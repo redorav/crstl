@@ -25,8 +25,6 @@
 
 #include "crstl/intrusive_ptr.h"
 
-#include <stdio.h>
-
 // Dummy structure with all the necessary constructors and operators to test different containers
 class Dummy : public crstl::intrusive_ptr_interface_delete
 {
@@ -162,9 +160,9 @@ namespace crstl_unit
 	void end_test();
 
 	#define crstl_check(x) \
-		begin_test_case(#x, __LINE__, __FILE__); \
-		check_condition(x); \
-		end_test_case();
+		crstl_unit::begin_test_case(#x, __LINE__, __FILE__); \
+		crstl_unit::check_condition(x); \
+		crstl_unit::end_test_case();
 
 	#define begin_test(x)
 	

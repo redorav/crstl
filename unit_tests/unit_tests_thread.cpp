@@ -10,7 +10,9 @@ import crstl;
 #include "crstl/timer.h" // For sleep timings
 #endif
 
+#include <thread>
 #include <stdio.h>
+#include <mutex>
 
 int ThreadFunctionWithParams(int a, int b, int c)
 {

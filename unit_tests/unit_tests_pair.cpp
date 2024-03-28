@@ -8,6 +8,8 @@ import crstl;
 
 #include <utility>
 
+#include <stdio.h>
+
 void RunUnitTestsPair()
 {
 	printf("RunUnitTestsPair\n");

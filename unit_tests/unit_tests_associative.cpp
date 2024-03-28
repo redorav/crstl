@@ -4,13 +4,12 @@
 #include "crstl/fixed_open_hashmap.h"
 
 #include "crstl/timer.h"
+#include "crstl/type_array.h"
 
 #include <functional>
 #include <unordered_map>
 #include <string>
-
-#include "crstl/timer.h"
-#include "crstl/type_array.h"
+#include <stdio.h>
 
 namespace crstl
 {

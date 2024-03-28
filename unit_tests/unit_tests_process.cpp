@@ -6,6 +6,8 @@ import crstl;
 #include "crstl/process.h"
 #endif
 
+#include <stdio.h>
+
 void RunUnitTestsProcess()
 {
 	printf("RunUnitTestsProcess\n");

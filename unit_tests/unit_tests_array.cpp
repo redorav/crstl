@@ -19,6 +19,8 @@ crstl_constexpr crstl::array<int, 3> constexprArray = MyFunction();
 
 #endif
 
+#include <stdio.h>
+
 void RunUnitTestsArray()
 {
 	printf("RunUnitTestsArray\n");

@@ -7,6 +7,7 @@ import crstl;
 #endif
 
 #include <bitset>
+#include <stdio.h>
 
 void RunUnitTestsBitset()
 {

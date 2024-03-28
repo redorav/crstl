@@ -12,6 +12,7 @@ import crstl;
 #include <ctype.h>
 #include <string>
 #include <cstring>
+#include <stdio.h>
 
 #if CRSTL_CPPVERSION >= CRSTL_CPP17
 #include <string_view>
