@@ -181,7 +181,6 @@ extern "C"
 	RunUnitTestsThread();
 	RunUnitTestsTimer();
 	RunUnitTestsVector();
-	
 }
 
 #if defined(__ANDROID__)

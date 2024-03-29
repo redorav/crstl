@@ -42,22 +42,22 @@ crstl_module_export namespace crstl
 
 		double seconds() const
 		{
-			return (double)m_ticks * timer_globals<Dummy>::TicksToSeconds;
+			return (double)m_ticks * timer_globals<uint64_t>::TicksToSeconds;
 		}
 
 		double milliseconds() const
 		{
-			return (double)m_ticks * 1000.0 * timer_globals<Dummy>::TicksToSeconds;
+			return (double)m_ticks * 1000.0 * timer_globals<uint64_t>::TicksToSeconds;
 		}
 
 		double microseconds() const
 		{
-			return (double)m_ticks * 1000000.0 * timer_globals<Dummy>::TicksToSeconds;
+			return (double)m_ticks * 1000000.0 * timer_globals<uint64_t>::TicksToSeconds;
 		}
 
 		double frequency() const
 		{
-			return 1.0 / ((double)m_ticks * timer_globals<Dummy>::TicksToSeconds);
+			return 1.0 / ((double)m_ticks * timer_globals<uint64_t>::TicksToSeconds);
 		}
 
 		inline time operator + (const time& other) const
