@@ -10,7 +10,7 @@
 
 #include "crstl/utility/fixed_common.h"
 
-#include "crstl/utility/placemet_new.h"
+#include "crstl/utility/placement_new.h"
 
 #include "crstl/utility/memory_ops.h"
 
