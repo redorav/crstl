@@ -25,6 +25,7 @@ struct static_sizeof;
 //}
 
 #include <stdlib.h>
+#include <stdio.h>
 
 void RunUnitTestsDeque()
 {

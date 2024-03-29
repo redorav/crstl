@@ -1,10 +1,13 @@
 #include "unit_tests.h"
 
+#if defined(CRSTL_UNIT_MODULES)
+import crstl;
+#else
 #include "crstl/fixed_bucket_hashmap.h"
 #include "crstl/fixed_open_hashmap.h"
-
 #include "crstl/timer.h"
 #include "crstl/type_array.h"
+#endif
 
 #include <functional>
 #include <unordered_map>

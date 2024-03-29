@@ -1,6 +1,10 @@
 #include "unit_tests.h"
 
+#if defined(CRSTL_UNIT_MODULES)
+import crstl;
+#else
 #include "crstl/timer.h"
+#endif
 
 #include <stdio.h>
 

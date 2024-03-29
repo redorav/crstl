@@ -1,5 +1,11 @@
 #pragma once
 
+#if defined(CRSTL_UNIT_MODULES)
+import crstl;
+#else
+#include "crstl/intrusive_ptr.h"
+#endif
+
 // We use this to disable some unit tests on old compilers just so they compile
 // and run the rest of the tests. Put here so we don't accidentally use it in 
 // the actual library
@@ -20,10 +26,6 @@
 #define crstl_unit_unused(x) (void)x
 
 #include "crstl/config.h"
-
-#include "crstl/config_fwd.h"
-
-#include "crstl/intrusive_ptr.h"
 
 // Dummy structure with all the necessary constructors and operators to test different containers
 class Dummy : public crstl::intrusive_ptr_interface_delete

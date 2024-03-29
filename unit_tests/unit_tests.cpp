@@ -1,5 +1,13 @@
 #include "unit_tests.h"
 
+#if defined(CRSTL_UNIT_MODULES)
+import crstl;
+#else
+#include "crstl/debugging.h"
+#include "crstl/half.h"
+#include "crstl/bit.h"
+#endif
+
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
