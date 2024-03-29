@@ -8,9 +8,9 @@
 
 #include "crstl/compressed_pair.h"
 
-#include "crstl/config_fwd.h"
-
 #include "crstl/move_forward.h"
+
+#include "crstl/utility/placement_new.h"
 
 #include "crstl/utility/memory_ops.h"
 

@@ -2,6 +2,8 @@
 
 #include "crstl/config.h"
 
+#include "crstl/utility/placement_new.h"
+
 #define crstl_is_pow2(n) (!((n) & ((n) - 1)))
 
 crstl_module_export namespace crstl

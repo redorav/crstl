@@ -4,13 +4,13 @@
 
 #include "crstl/crstldef.h"
 
-#include "crstl/config_fwd.h"
-
 #include "crstl/move_forward.h"
 
 #include "crstl/type_builtins.h"
 
 #include "crstl/utility/fixed_common.h"
+
+#include "crstl/utility/placemet_new.h"
 
 #include "crstl/utility/memory_ops.h"
 

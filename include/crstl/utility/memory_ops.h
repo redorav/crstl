@@ -8,6 +8,8 @@
 
 #include "crstl/crstldef.h"
 
+#include "crstl/utility/placement_new.h"
+
 extern "C"
 {
 #if defined(CRSTL_COMPILER_MSVC)

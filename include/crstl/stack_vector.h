@@ -2,11 +2,11 @@
 
 #include "crstl/config.h"
 
-#include "crstl/config_fwd.h"
+#include "crstl/crstldef.h"
 
 #include "crstl/move_forward.h"
 
-#include "crstl/crstldef.h"
+#include "crstl/utility/placement_new.h"
 
 #include "crstl/utility/memory_ops.h"
 

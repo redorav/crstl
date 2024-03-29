@@ -2,8 +2,6 @@
 
 #include "crstl/config.h"
 
-#include "crstl/config_fwd.h"
-
 #include "crstl/crstldef.h"
 
 #include "crstl/utility/memory_ops.h"
