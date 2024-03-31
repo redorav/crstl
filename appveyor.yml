@@ -38,6 +38,11 @@ environment:
       build: off
       
     - vsversion: 2022
+      platform: MSVC ARM64
+      configuration: Release
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+      
+    - vsversion: 2022
       platform: MSVC 64
       configuration: Release
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
