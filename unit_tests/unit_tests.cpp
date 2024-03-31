@@ -5,7 +5,6 @@ import crstl;
 #else
 #include "crstl/debugging.h"
 #include "crstl/half.h"
-#include "crstl/bit.h"
 #endif
 
 #include <assert.h>
