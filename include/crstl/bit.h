@@ -39,9 +39,6 @@ extern "C"
 	unsigned short __popcnt16(unsigned short);
 	unsigned int __popcnt(unsigned int);
 	unsigned __int64 __popcnt64(unsigned __int64);
-#elif defined(CRSTL_ARCH_ARM)
-	__n64 neon_cnt(__n64);
-	__n8 neon_addv8(__n64);
 #endif
 }
 
@@ -69,8 +66,8 @@ crstl_module_export namespace crstl
 	#define crstl_byteswap32(x) _byteswap_ulong(x)
 	#define crstl_byteswap64(x) _byteswap_uint64(x)
 
-#elif defined(CRSTL_COMPILER_CLANG)
-	
+#elif crstl_has_builtin(__builtin_rotateleft8) // Mostly the Clang compiler
+
 	#define crstl_rotate_left8(x, s) __builtin_rotateleft8(x, s)
 	#define crstl_rotate_left16(x, s) __builtin_rotateleft16(x, s)
 	#define crstl_rotate_left32(x, s) __builtin_rotateleft32(x, s)
@@ -85,7 +82,7 @@ crstl_module_export namespace crstl
 	#define crstl_byteswap32(x) __builtin_bswap32(x)
 	#define crstl_byteswap64(x) __builtin_bswap64(x)
 
-#elif defined(CRSTL_COMPILER_GCC)
+#else
 
 namespace crstl
 {
