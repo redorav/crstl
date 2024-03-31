@@ -94,7 +94,7 @@ namespace crstl
 	{
 		crstl_constexpr14 static void default_initialize_or_memset_zero(T& destination)
 		{
-			destination = 0;
+			destination = {};
 		}
 
 		crstl_constexpr14 static void default_initialize_or_memset_zero(T* crstl_restrict destination, size_t count)
