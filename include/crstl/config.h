@@ -290,3 +290,11 @@
 	#define crstl_noinline __attribute__((noinline))
 
 #endif
+
+// It doesn't look like we can do if defined(__has_builtin) && __has_builtin(x) so
+// wrap the macro this way to avoid the double evaluation and compile error
+#if defined(__has_builtin)
+	#define crstl_has_builtin(x) __has_builtin(x)
+#else
+	#define crstl_has_builtin(x) 0
+#endif

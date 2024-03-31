@@ -23,7 +23,7 @@ crstl_module_export namespace crstl
 	{
 #if defined(CRSTL_COMPILER_MSVC)
 		__debugbreak();
-#elif defined(__has_builtin) && __has_builtin(__builtin_debugtrap) // Mostly the Clang compiler
+#elif crstl_has_builtin(__builtin_debugtrap) // Mostly the Clang compiler
 		__builtin_debugtrap();
 #elif defined(CRSTL_ARCH_X86)
 		__asm__ volatile("int $0x03");
