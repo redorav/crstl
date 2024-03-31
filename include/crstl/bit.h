@@ -47,6 +47,12 @@ extern "C"
 
 #endif
 
+crstl_module_export namespace crstl
+{
+	template<typename T>
+	crstl_constexpr int bitsize() { return sizeof(T) * 8; }
+};
+
 #if defined(CRSTL_COMPILER_MSVC)
 
 	#define crstl_rotate_left8(x, s) _rotl8(x, s)
@@ -63,7 +69,7 @@ extern "C"
 	#define crstl_byteswap32(x) _byteswap_ulong(x)
 	#define crstl_byteswap64(x) _byteswap_uint64(x)
 
-#else
+#elif defined(CRSTL_COMPILER_CLANG)
 	
 	#define crstl_rotate_left8(x, s) __builtin_rotateleft8(x, s)
 	#define crstl_rotate_left16(x, s) __builtin_rotateleft16(x, s)
@@ -79,13 +85,48 @@ extern "C"
 	#define crstl_byteswap32(x) __builtin_bswap32(x)
 	#define crstl_byteswap64(x) __builtin_bswap64(x)
 
+#elif defined(CRSTL_COMPILER_GCC)
+
+namespace crstl
+{
+	namespace detail
+	{
+		template<typename T>
+		T rotl(const T x, int s)
+		{
+			crstl_constexpr const unsigned int digits = bitsize<T>();
+			const unsigned int us = s;
+			return (x << (us % digits)) | (x >> ((-us) % digits));
+		}
+
+		template<typename T>
+		T rotr(const T x, int s)
+		{
+			crstl_constexpr const unsigned int digits = bitsize<T>();
+			const unsigned us = s;
+			return (x >> (us % digits)) | (x << ((-us) % digits));
+		}
+	};
+};
+
+	#define crstl_rotate_left8(x, s)  crstl::detail::rotl<uint8_t>(x, s)
+	#define crstl_rotate_left16(x, s) crstl::detail::rotl<uint16_t>(x, s)
+	#define crstl_rotate_left32(x, s) crstl::detail::rotl<uint32_t>(x, s)
+	#define crstl_rotate_left64(x, s) crstl::detail::rotl<uint64_t>(x, s)
+
+	#define crstl_rotate_right8(x, s)  crstl::detail::rotr<uint8_t>(x, s)
+	#define crstl_rotate_right16(x, s) crstl::detail::rotr<uint16_t>(x, s)
+	#define crstl_rotate_right32(x, s) crstl::detail::rotr<uint32_t>(x, s)
+	#define crstl_rotate_right64(x, s) crstl::detail::rotr<uint64_t>(x, s)
+
+	#define crstl_byteswap16(x) __builtin_bswap16(x)
+	#define crstl_byteswap32(x) __builtin_bswap32(x)
+	#define crstl_byteswap64(x) __builtin_bswap64(x)
+
 #endif
 
 crstl_module_export namespace crstl
 {
-	template<typename T>
-	crstl_constexpr int bitsize() { return sizeof(T) * 8; }
-
 #if defined(CRSTL_COMPILER_MSVC)
 
 	namespace detail
