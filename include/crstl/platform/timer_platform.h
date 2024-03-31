@@ -8,7 +8,9 @@
 #include <mach/mach_time.h>
 #elif defined(CRSTL_OS_LINUX) || defined(CRSTL_OS_ANDROID)
 #include <time.h>
-#elif defined(CRSTL_COMPILER_MSVC)
+#endif
+
+#if defined(CRSTL_COMPILER_MSVC)
 
 union _LARGE_INTEGER;
 
@@ -17,8 +19,31 @@ extern "C"
 	__declspec(dllimport) int QueryPerformanceFrequency(_LARGE_INTEGER* lpFrequency);
 	__declspec(dllimport) int QueryPerformanceCounter(_LARGE_INTEGER* lpPerformanceCount);
 
+#if defined(CRSTL_ARCH_X86)
 	unsigned __int64 __rdtsc();
 	#pragma intrinsic(__rdtsc)
+#elif defined(CRSTL_ARCH_ARM)
+
+	#define CRSTL_ARM64_SYSREG(op0, op1, crn, crm, op2) \
+        ( ((op0 & 1) << 14) | \
+          ((op1 & 7) << 11) | \
+          ((crn & 15) << 7) | \
+          ((crm & 15) << 3) | \
+          ((op2 & 7) << 0) )
+
+	#define CRSTL_ARM64_PMCCNTR_EL0       CRSTL_ARM64_SYSREG(3,3, 9,13,0)  // Cycle Count Register [CP15_PMCCNTR]
+	#define CRSTL_ARM64_CNTVCT            CRSTL_ARM64_SYSREG(3,3,14, 0,2)  // Generic Timer counter register
+
+	#if defined(CRSTL_ARCH_ARM64)
+
+	__int64 _ReadStatusReg(int);
+
+	#elif defined(CRSTL_ARCH_ARM32)
+
+	int _ReadStatusReg(int);
+
+	#endif
+#endif
 };
 
 #endif
@@ -82,7 +107,16 @@ crstl_module_export namespace crstl
 #if defined(CRSTL_OS_OSX)
 		return mach_absolute_time();
 #elif defined(CRSTL_COMPILER_MSVC)
+
+	// Inline assembly is not supported in MSVC so do our best to use the available intrinsics here
+	#if defined(CRSTL_ARCH_X86)
 		return __rdtsc();
+	#elif defined(CRSTL_ARCH_ARM64)
+		return _ReadStatusReg(CRSTL_ARM64_CNTVCT);
+	#elif defined(CRSTL_ARCH_ARM32)
+		return 0; // _ReadStatusReg(CRSTL_ARM64_PMCCNTR_EL0);
+	#endif
+
 #elif defined(CRSTL_ARCH_X86_32)
 		uint64_t ret;
 		__asm__ volatile("rdtsc" : "=A"(ret));
