@@ -8,7 +8,8 @@ PlatformMSVC64Modules	= 'MSVC 64 Modules'
 PlatformLLVM64			= 'LLVM 64'
 PlatformLLVM64Modules	= 'LLVM 64 Modules'
 PlatformIntel64			= 'ICC 64'
-PlatformLinux64			= 'Linux 64'
+PlatformWSL64GCC		= 'Linux 64 GCC'
+PlatformWSL64Clang		= 'Linux 64 Clang'
 
 -- MacOS x86/64
 PlatformOSX64Cpp11			= 'OSX 64 C++11'
@@ -109,7 +110,8 @@ workspace('crstl')
 			PlatformMSVC64,
 			PlatformLLVM64,
 			PlatformIntel64,
-			PlatformLinux64
+			PlatformWSL64GCC,
+			PlatformWSL64Clang
 		}
 
 		-- Add modules platform if environment supports them
@@ -204,10 +206,9 @@ workspace('crstl')
 			buildoptions { '-Wno-unused-variable' }
 			linkoptions { '-lm' } -- Link against the standard math library
 		
-		filter { 'platforms:'..PlatformLinux64 }
+		filter { 'platforms:'..PlatformWSL64GCC..' or '..PlatformWSL64Clang}
 			system('linux')
 			architecture('x64')
-			toolset('clang')
 			toolchainversion('wsl2')
 			
 			-- Make sure all files are copied to the same folder, without splitting by project
@@ -216,6 +217,12 @@ workspace('crstl')
 			remoteprojectrelativedir("")
 			remoteprojectdir("$(RemoteRootDir)")
 			remotedeploydir("$(RemoteRootDir)")
+			
+		filter { 'platforms:'..PlatformWSL64GCC}
+			toolset('gcc')
+			
+		filter { 'platforms:'..PlatformWSL64Clang}
+			toolset('clang')
 			
 		filter{}
 	end
