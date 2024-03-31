@@ -2,6 +2,7 @@ export module crstl;
 
 #define CRSTL_MODULE_DECLARATION
 #include "crstl/array.h"
+#include "crstl/bit.h"
 #include "crstl/bitset.h"
 #include "crstl/critical_section.h"
 #include "crstl/debugging.h"
