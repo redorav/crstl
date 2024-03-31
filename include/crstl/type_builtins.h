@@ -43,15 +43,15 @@
 #endif
 
 // Whether type is trivially constructible and destructible
-#if (defined(CRSTL_COMPILER_MSVC) && (CRSTL_MSVC_VERSION < CRSTL_MSVC_2015)) || defined(CRSTL_COMPILER_GCC)
-
-	#define crstl_is_trivially_constructible(T) __has_trivial_constructor(T)
-	#define crstl_is_trivially_destructible(T) __has_trivial_destructor(T)
-
-#else
+#if crstl_has_builtin(__is_trivially_destructible) || (defined(CRSTL_COMPILER_MSVC) && CRSTL_MSVC_VERSION >= CRSTL_MSVC_2015)
 
 	#define crstl_is_trivially_constructible(T) __is_trivially_constructible(T)
 	#define crstl_is_trivially_destructible(T) __is_trivially_destructible(T)
+
+#else
+
+	#define crstl_is_trivially_constructible(T) __has_trivial_constructor(T)
+	#define crstl_is_trivially_destructible(T) __has_trivial_destructor(T)
 
 #endif
 

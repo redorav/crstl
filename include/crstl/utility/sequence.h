@@ -18,12 +18,12 @@ crstl_module_export namespace crstl
 
 	// An index sequence is integer_sequence with T as size_t
 
-#if defined(CRSTL_COMPILER_GCC)
+#if defined(CRSTL_COMPILER_CLANG) || defined(CRSTL_COMPILER_MSVC)
+	template <class T, T N>
+	using make_integer_sequence = __make_integer_seq<integer_sequence, T, N>; 
+#elif defined(CRSTL_COMPILER_GCC)
 	template <typename T, T N>
 	using make_integer_sequence = integer_sequence<T, __integer_pack(N)...>;
-#elif defined(CRSTL_COMPILER_CLANG) || defined(CRSTL_COMPILER_MSVC)
-	template <class T, T N>
-	using make_integer_sequence = __make_integer_seq<integer_sequence, T, N>;
 #else
 
 	template <size_t N, typename IndexSequence>
