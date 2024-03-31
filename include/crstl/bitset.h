@@ -21,7 +21,7 @@ crstl_module_export namespace crstl
 		v = (v & (T)~(T)0 / 15 * 3) + ((v >> 2) & (T)~(T)0 / 15 * 3);
 		v = (v + (v >> 4)) & (T)~(T)0 / 255 * 15;
 		T c = (T)(v * ((T)~(T)0 / 255)) >> (sizeof(T) - 1) * 8 /*CHAR_BIT*/;
-		return c;
+		return (size_t)c;
 	}
 
 	template<size_t NumBits, typename WordType>
