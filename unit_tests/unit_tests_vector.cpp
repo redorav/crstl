@@ -80,10 +80,11 @@ void RunUnitTestsVectorStdCompare()
 		crFixedVector.pop_back();
 		stdVector.pop_back();
 
-		crFixedVector.emplace_back(0, 1.0f, 2, 3, 4, 5, 6, 7, 8, 9);
 #if defined(CRSTL_VARIADIC_TEMPLATES)
+		crFixedVector.emplace_back(0, 1.0f, 2, 3, 4, 5, 6, 7, 8, 9);
 		stdVector.emplace_back(0, 1.0f, 2, 3, 4, 5, 6, 7, 8, 9);
 #else
+		crFixedVector.push_back(Dummy(0, 1.0f, 2, 3, 4, 5, 6, 7, 8, 9));
 		stdVector.push_back(Dummy(0, 1.0f, 2, 3, 4, 5, 6, 7, 8, 9));
 #endif
 		crstl_check(crFixedVector.size() == stdVector.size());
@@ -112,9 +113,11 @@ void RunUnitTestsVectorStdCompare()
 		stdVector.push_back(Dummy());
 		crstl_check(crFixedVector.size() == stdVector.size());
 
+#if defined(CRSTL_VARIADIC_TEMPLATES)
 		crFixedVector.emplace_back(Dummy());
 		stdVector.emplace_back(Dummy());
 		crstl_check(crFixedVector.size() == stdVector.size());
+#endif
 
 		crFixedVector.clear();
 		crFixedVector.push_back(crstl::move(Dummy()));
@@ -201,8 +204,8 @@ void RunUnitTestsVectorStdCompare()
 
 		crstl_check(crVector.size() == stdVector.size());
 
-		crVector.emplace_back(9, 20.0f);
 #if defined(CRSTL_VARIADIC_TEMPLATES)
+		crVector.emplace_back(9, 20.0f);
 		stdVector.emplace_back(9, 20.0f);
 #else
 		stdVector.push_back(Dummy(9, 20.0f));
@@ -269,6 +272,7 @@ void RunUnitTestsVectorStdCompare()
 			crstl_check(crVectorResize[i]->get_ref() == 1);
 		}
 
+#if defined(CRSTL_FEATURE_INITIALIZER_LISTS)
 		crstl::vector<Dummy> crVectorInitializerList =
 		{
 			Dummy(1, 2.0f),
@@ -279,6 +283,7 @@ void RunUnitTestsVectorStdCompare()
 		};
 
 		crstl_check(crVectorInitializerList.size() == 5);
+#endif
 	}
 	end_test();
 
