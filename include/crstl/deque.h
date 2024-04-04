@@ -230,7 +230,7 @@ crstl_module_export namespace crstl
 		{
 			request_capacity_back(1);
 			T& data = m_chunk_array[m_chunk_back]->m_data[m_local_back];
-			crstl_placement_new((void*)&data) T(crstl::forward<Args>(args)...);
+			crstl_placement_new((void*)&data) T(crstl_forward(Args, args)...);
 			increment_back();
 			return data;
 		}
@@ -241,7 +241,7 @@ crstl_module_export namespace crstl
 			request_capacity_front(1);
 			increment_front();
 			T& data = m_chunk_array[m_chunk_front]->m_data[m_local_front];
-			crstl_placement_new((void*)&data) T(crstl::forward<Args>(args)...);
+			crstl_placement_new((void*)&data) T(crstl_forward(Args, args)...);
 			return data;
 		}
 
@@ -297,7 +297,7 @@ crstl_module_export namespace crstl
 		{
 			request_capacity_back(1);
 			T& data = m_chunk_array[m_chunk_back]->m_data[m_local_back];
-			crstl_placement_new((void*)&data) T(crstl::move(v));
+			crstl_placement_new((void*)&data) T(crstl_move(v));
 			increment_back();
 			return data;
 		}
@@ -337,7 +337,7 @@ crstl_module_export namespace crstl
 			request_capacity_front(1);
 			increment_front();
 			T& data = m_chunk_array[m_chunk_front]->m_data[m_local_front];
-			crstl_placement_new((void*)&data) T(crstl::move(v));
+			crstl_placement_new((void*)&data) T(crstl_move(v));
 			return data;
 		}
 

@@ -70,7 +70,7 @@ crstl_module_export namespace crstl
 		template <typename OtherValueT>
 		tuple_leaf& operator = (OtherValueT&& t)
 		{
-			m_value = crstl::forward<OtherValueT>(t);
+			m_value = crstl_forward(OtherValueT, t);
 			return *this;
 		}
 
@@ -130,7 +130,7 @@ crstl_module_export namespace crstl
 		crstl_constexpr tuple_implementation() crstl_constructor_default;
 
 		template <typename... ValueTs>
-		explicit tuple_implementation(integer_sequence<size_t, Indices...>, ValueTs&&... values) : tuple_leaf<Indices, Ts>(crstl::forward<ValueTs>(values))... {}
+		explicit tuple_implementation(integer_sequence<size_t, Indices...>, ValueTs&&... values) : tuple_leaf<Indices, Ts>(crstl_forward(ValueTs, values))... {}
 
 		template <typename... ValueTs>
 		explicit tuple_implementation(integer_sequence<size_t, Indices...>, const ValueTs&... values) : tuple_leaf<Indices, Ts>(values)... {}
@@ -148,7 +148,7 @@ crstl_module_export namespace crstl
 	
 		crstl_constexpr tuple() crstl_constructor_default;
 	
-		tuple(T&& arg1, Ts&& ... args) : m_implementation(make_integer_sequence<size_t, sizeof...(Ts) + 1>{}, crstl::forward<T>(arg1), crstl::forward<Ts>(args)...) {}
+		tuple(T&& arg1, Ts&& ... args) : m_implementation(make_integer_sequence<size_t, sizeof...(Ts) + 1>{}, crstl_forward(T, arg1), crstl_forward(Ts, args)...) {}
 
 		tuple(const T& arg1, const Ts& ... args) : m_implementation(make_integer_sequence<size_t, sizeof...(Ts) + 1>{}, arg1, args...) {}
 
@@ -192,12 +192,12 @@ crstl_module_export namespace crstl
 	template<int Index, typename... Ts>
 	typename tuple_element<Index, Ts...>::type&& get(tuple<Ts ...>&& t)
 	{
-		return static_cast<tuple_leaf<Index, typename tuple_element<Index, Ts...>::type>&&>(crstl::move(t.m_implementation)).get();
+		return static_cast<tuple_leaf<Index, typename tuple_element<Index, Ts...>::type>&&>(crstl_move(t.m_implementation)).get();
 	}
 
 	template<int Index, typename... Ts>
 	const typename tuple_element<Index, Ts...>::type&& get(const tuple<Ts ...>&& t)
 	{
-		return static_cast<const tuple_leaf<Index, const typename tuple_element<Index, Ts...>::type>&&>(crstl::move(t.m_implementation)).get();
+		return static_cast<const tuple_leaf<Index, const typename tuple_element<Index, Ts...>::type>&&>(crstl_move(t.m_implementation)).get();
 	}
 };

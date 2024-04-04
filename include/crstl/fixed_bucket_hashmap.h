@@ -322,25 +322,25 @@ crstl_module_export namespace crstl
 		template<typename... Args>
 		crstl_constexpr14 pair<iterator, bool> emplace(const Key& key, Args&&... args)
 		{
-			return emplace_impl<exists_behavior::find>(key, crstl::forward<Args>(args)...);
+			return emplace_impl<exists_behavior::find>(key, crstl_forward(Args, args)...);
 		}
 
 		template<typename... Args>
 		crstl_constexpr14 pair<iterator, bool> emplace(Key&& key, Args&&... args)
 		{
-			return emplace_impl<exists_behavior::find>(crstl::forward<const Key>(key), crstl::forward<Args>(args)...);
+			return emplace_impl<exists_behavior::find>(crstl_forward(const Key, key), crstl_forward(Args, args)...);
 		}
 
 		template<typename... Args>
 		crstl_constexpr14 pair<iterator, bool> emplace_or_assign(const Key& key, Args&&... args)
 		{
-			return emplace_impl<exists_behavior::assign>(key, crstl::forward<Args>(args)...);
+			return emplace_impl<exists_behavior::assign>(key, crstl_forward(Args, args)...);
 		}
 
 		template<typename... Args>
 		crstl_constexpr14 pair<iterator, bool> emplace_or_assign(Key&& key, Args&&... args)
 		{
-			return emplace_impl<exists_behavior::assign>(crstl::forward<const Key>(key), crstl::forward<Args>(args)...);
+			return emplace_impl<exists_behavior::assign>(crstl_forward(const Key, key), crstl_forward(Args, args)...);
 		}
 
 		crstl_constexpr bool empty() const { return m_length == 0; }
@@ -438,19 +438,19 @@ crstl_module_export namespace crstl
 
 		pair<iterator, bool> insert(key_value_type&& key_value)
 		{
-			return insert_impl<exists_behavior::find>(crstl::forward<key_value_type>(key_value).first, crstl::forward<key_value_type>(key_value).second);
+			return insert_impl<exists_behavior::find>(crstl_forward(key_value_type, key_value).first, crstl_forward(key_value_type, key_value).second);
 		}
 
 		template<typename ValueType>
 		pair<iterator, bool> insert(const Key& key, ValueType&& value)
 		{
-			return insert_impl<exists_behavior::find>(key, crstl::forward<ValueType>(value));
+			return insert_impl<exists_behavior::find>(key, crstl_forward(ValueType, value));
 		}
 
 		template<typename ValueType>
 		pair<iterator, bool> insert(Key&& key, ValueType&& value)
 		{
-			return insert_impl<exists_behavior::find>(crstl::forward<const Key>(key), crstl::forward<ValueType>(value));
+			return insert_impl<exists_behavior::find>(crstl_forward(const Key, key), crstl_forward(ValueType, value));
 		}
 
 		//-----------------
@@ -464,19 +464,19 @@ crstl_module_export namespace crstl
 
 		pair<iterator, bool> insert_or_assign(key_value_type&& key_value)
 		{
-			return insert_impl<exists_behavior::assign>(crstl::forward<key_value_type>(key_value).first, crstl::forward<key_value_type>(key_value).second);
+			return insert_impl<exists_behavior::assign>(crstl_forward(key_value_type, key_value).first, crstl_forward(key_value_type, key_value).second);
 		}
 		
 		template<typename ValueType>
 		pair<iterator, bool> insert_or_assign(const Key& key, ValueType&& value)
 		{
-			return insert_impl<exists_behavior::assign>(key, crstl::forward<ValueType>(value));
+			return insert_impl<exists_behavior::assign>(key, crstl_forward(ValueType, value));
 		}
 
 		template<typename ValueType>
 		pair<iterator, bool> insert_or_assign(Key&& key, ValueType&& value)
 		{
-			return insert_impl<exists_behavior::assign>(crstl::forward<const Key>(key), crstl::forward<ValueType>(value));
+			return insert_impl<exists_behavior::assign>(crstl_forward(const Key, key), crstl_forward(ValueType, value));
 		}
 
 		size_t max_size() const { return ((size_t)-1) - 2; }
@@ -570,7 +570,7 @@ crstl_module_export namespace crstl
 							}
 
 							// Create the new one
-							node_create_selector<KeyValueType, T, InsertEmplace>::create(current_node, crstl::forward<KeyType>(key), crstl::forward<InsertEmplaceArgs>(insert_emplace_args)...);
+							node_create_selector<KeyValueType, T, InsertEmplace>::create(current_node, crstl_forward(KeyType, key), crstl_forward(InsertEmplaceArgs, insert_emplace_args)...);
 						}
 
 						// Return true in the second parameter if insertion happened, false otherwise
@@ -584,7 +584,7 @@ crstl_module_export namespace crstl
 						{
 							size_t empty_node_index = find_empty_node_index(bucket_index * kNodesPerBucket);
 							node_type* empty_node = &m_data[empty_node_index];
-							node_create_selector<KeyValueType, T, InsertEmplace>::create(empty_node, crstl::forward<KeyType>(key), crstl::forward<InsertEmplaceArgs>(insert_emplace_args)...);
+							node_create_selector<KeyValueType, T, InsertEmplace>::create(empty_node, crstl_forward(KeyType, key), crstl_forward(InsertEmplaceArgs, insert_emplace_args)...);
 							empty_node->set_end();
 
 							current_node->set_next(empty_node_index);
@@ -612,7 +612,7 @@ crstl_module_export namespace crstl
 
 				// Create new node and mark as end
 				node_type* empty_node = &m_data[empty_node_index];
-				node_create_selector<KeyValueType, T, InsertEmplace>::create(empty_node, crstl::forward<KeyType>(key), crstl::forward<InsertEmplaceArgs>(insert_emplace_args)...);
+				node_create_selector<KeyValueType, T, InsertEmplace>::create(empty_node, crstl_forward(KeyType, key), crstl_forward(InsertEmplaceArgs, insert_emplace_args)...);
 				empty_node->set_end();
 
 				m_length++;
@@ -624,13 +624,13 @@ crstl_module_export namespace crstl
 		template<exists_behavior Behavior, typename KeyType, typename... Args>
 		crstl_forceinline crstl_constexpr14 pair<iterator, bool> emplace_impl(KeyType&& key, Args&&... args)
 		{
-			return find_create_impl<Behavior, insert_emplace::emplace>(crstl::forward<KeyType>(key), crstl::forward<Args>(args)...);
+			return find_create_impl<Behavior, insert_emplace::emplace>(crstl_forward(KeyType, key), crstl_forward(Args, args)...);
 		}
 
 		template<exists_behavior Behavior, typename KeyType, typename ValueType>
 		crstl_forceinline crstl_constexpr14 pair<iterator, bool> insert_impl(KeyType&& key, ValueType&& value)
 		{
-			return find_create_impl<Behavior, insert_emplace::insert>(crstl::forward<KeyType>(key), crstl::forward<ValueType>(value));
+			return find_create_impl<Behavior, insert_emplace::insert>(crstl_forward(KeyType, key), crstl_forward(ValueType, value));
 		}
 
 		// TODO Make this a bit more clever to find nodes faster

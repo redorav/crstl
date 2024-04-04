@@ -25,13 +25,13 @@ crstl_module_export namespace crstl
 		crstl_constexpr pair(const U1& first, const U2& second) crstl_noexcept : first(first), second(second) {}
 
 		template<typename U1, typename U2>
-		crstl_constexpr pair(U1&& first, U2&& second) crstl_noexcept : first(crstl::forward<U1>(first)), second(crstl::forward<U2>(second)) {}
+		crstl_constexpr pair(U1&& first, U2&& second) crstl_noexcept : first(crstl_forward(U1, first)), second(crstl_forward(U2, second)) {}
 
 		template<typename U1, typename U2>
 		crstl_constexpr pair(const pair& other) crstl_noexcept : first(other.first), second(other.second) {}
 
 		template<typename U1, typename U2>
-		crstl_constexpr pair(pair<U1, U2>&& other) crstl_noexcept : first(crstl::forward<U1>(other.first)), second(crstl::forward<U2>(other.second)) {}
+		crstl_constexpr pair(pair<U1, U2>&& other) crstl_noexcept : first(crstl_forward(U1, other.first)), second(crstl_forward(U2, other.second)) {}
 
 		template<typename U1, typename U2>
 		pair<T1, T2>& operator = (const pair<U1, U2>& other)
@@ -44,8 +44,8 @@ crstl_module_export namespace crstl
 		template<typename U1, typename U2>
 		pair<T1, T2>& operator = (pair<U1, U2>&& other)
 		{
-			first = crstl::forward<U1>(other.first);
-			second = crstl::forward<U2>(other.second);
+			first = crstl_forward(U1, other.first);
+			second = crstl_forward(U2, other.second);
 			return *this;
 		}
 

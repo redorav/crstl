@@ -75,7 +75,7 @@ crstl_module_export namespace crstl
 				this,
 				parameters,
 				func,
-				crstl::tuple<Args...>(crstl::forward<Args>(args)...)
+				crstl::tuple<Args...>(crstl_forward(Args, args)...)
 			};
 
 			m_delayed_start = parameters.delay_start;

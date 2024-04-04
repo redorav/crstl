@@ -44,7 +44,7 @@ crstl_module_export namespace crstl
 		{
 			if (!handler<FunctorT>::empty_function(functor))
 			{
-				handler<FunctorT>::template create<FunctorT>(m_functor_storage, crstl::forward<FunctorT>(functor));
+				handler<FunctorT>::template create<FunctorT>(m_functor_storage, crstl_forward(FunctorT, functor));
 				m_invoker = &handler<FunctorT>::invoke;
 				m_manager = &handler<FunctorT>::manage;
 			}
@@ -103,7 +103,7 @@ crstl_module_export namespace crstl
 		Result operator()(Args... args) const crstl_noexcept
 		{
 			crstl_assert(m_invoker != nullptr);
-			return m_invoker(&m_functor_storage, crstl::forward<Args>(args)...);
+			return m_invoker(&m_functor_storage, crstl_forward(Args, args)...);
 		}
 
 		explicit operator bool() const crstl_noexcept

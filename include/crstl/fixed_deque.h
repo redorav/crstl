@@ -181,7 +181,7 @@ crstl_module_export namespace crstl
 		{
 			crstl_assert(m_length < NumElements);
 			size_t current_end = m_end;
-			crstl_placement_new((void*)&m_data[current_end]) T(crstl::forward<Args>(args)...);
+			crstl_placement_new((void*)&m_data[current_end]) T(crstl_forward(Args, args)...);
 			m_end = (length_type)(size_t(m_end + 1) > kLastElement ? 0 : m_end + 1);
 			m_length++;
 			return m_data[current_end];
@@ -192,7 +192,7 @@ crstl_module_export namespace crstl
 		{
 			crstl_assert(m_length < NumElements);
 			m_begin = (length_type)(size_t(m_begin - 1) > kLastElement ? kLastElement : m_begin - 1);
-			crstl_placement_new((void*)&m_data[m_begin]) T(crstl::forward<Args>(args)...);
+			crstl_placement_new((void*)&m_data[m_begin]) T(crstl_forward(Args, args)...);
 			m_length++;
 			return m_data[m_begin];
 		}
@@ -261,7 +261,7 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 void push_back(T&& v)
 		{
 			crstl_assert(m_length < NumElements);
-			crstl_placement_new((void*)&m_data[m_end]) T(crstl::move(v));
+			crstl_placement_new((void*)&m_data[m_end]) T(crstl_move(v));
 			m_end = size_t(m_end + 1) > kLastElement ? 0 : m_end + 1;
 			m_length++;
 		}
@@ -299,7 +299,7 @@ crstl_module_export namespace crstl
 		{
 			crstl_assert(m_length < NumElements);
 			m_begin = (length_type)(size_t(m_begin - 1) > kLastElement ? kLastElement : m_begin - 1);
-			crstl_placement_new((void*)&m_data[m_begin]) T(crstl::move(v));
+			crstl_placement_new((void*)&m_data[m_begin]) T(crstl_move(v));
 			m_length++;
 		}
 

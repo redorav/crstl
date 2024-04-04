@@ -235,25 +235,25 @@ crstl_module_export namespace crstl
 		template<typename... Args>
 		crstl_constexpr14 pair<iterator, bool> emplace(const Key& key, Args&&... args)
 		{
-			return emplace_impl<exists_behavior::find>(key, crstl::forward<Args>(args)...);
+			return emplace_impl<exists_behavior::find>(key, crstl_forward(Args, args)...);
 		}
 
 		template<typename... Args>
 		crstl_constexpr14 pair<iterator, bool> emplace(Key&& key, Args&&... args)
 		{
-			return emplace_impl<exists_behavior::find>(crstl::forward<const Key>(key), crstl::forward<Args>(args)...);
+			return emplace_impl<exists_behavior::find>(crstl_forward(const Key, key), crstl_forward(Args, args)...);
 		}
 
 		template<typename... Args>
 		crstl_constexpr14 pair<iterator, bool> emplace_or_assign(const Key& key, Args&&... args)
 		{
-			return emplace_impl<exists_behavior::assign>(key, crstl::forward<Args>(args)...);
+			return emplace_impl<exists_behavior::assign>(key, crstl_forward(Args, args)...);
 		}
 
 		template<typename... Args>
 		crstl_constexpr14 pair<iterator, bool> emplace_or_assign(Key&& key, Args&&... args)
 		{
-			return emplace_impl<exists_behavior::assign>(crstl::forward<const Key>(key), crstl::forward<Args>(args)...);
+			return emplace_impl<exists_behavior::assign>(crstl_forward(const Key, key), crstl_forward(Args, args)...);
 		}
 
 		crstl_constexpr bool empty() const { return m_length == 0; }
@@ -332,13 +332,13 @@ crstl_module_export namespace crstl
 
 		pair<iterator, bool> insert(const key_value_type& key_value) { return insert_impl<exists_behavior::find>(key_value.first, key_value.second); }
 
-		pair<iterator, bool> insert(key_value_type&& key_value) { return insert_impl<exists_behavior::find>(crstl::forward<const Key>(key_value.first), crstl::forward<T>(key_value.second)); }
+		pair<iterator, bool> insert(key_value_type&& key_value) { return insert_impl<exists_behavior::find>(crstl_forward(const Key, key_value.first), crstl_forward(T, key_value.second)); }
 
 		template<typename ValueType>
-		pair<iterator, bool> insert(const Key& key, ValueType&& value) { return insert_impl<exists_behavior::find>(key, crstl::forward<ValueType>(value)); }
+		pair<iterator, bool> insert(const Key& key, ValueType&& value) { return insert_impl<exists_behavior::find>(key, crstl_forward(ValueType, value)); }
 
 		template<typename ValueType>
-		pair<iterator, bool> insert(Key&& key, ValueType&& value) { return insert_impl<exists_behavior::find>(crstl::forward<const Key>(key), crstl::forward<ValueType>(value)); }
+		pair<iterator, bool> insert(Key&& key, ValueType&& value) { return insert_impl<exists_behavior::find>(crstl_forward(const Key, key), crstl_forward(ValueType, value)); }
 
 		//-----------------
 		// insert_or_assign
@@ -346,13 +346,13 @@ crstl_module_export namespace crstl
 
 		pair<iterator, bool> insert_or_assign(const key_value_type& key_value) { return insert_impl<exists_behavior::assign>(key_value.first, key_value.second); }
 
-		pair<iterator, bool> insert_or_assign(key_value_type&& key_value) { return insert_impl<exists_behavior::assign>(crstl::forward<const Key>(key_value.first), crstl::move(key_value.second)); }
+		pair<iterator, bool> insert_or_assign(key_value_type&& key_value) { return insert_impl<exists_behavior::assign>(crstl_forward(const Key, key_value.first), crstl_move(key_value.second)); }
 
 		template<typename ValueType>
-		pair<iterator, bool> insert_or_assign(const Key& key, ValueType&& value) { return insert_impl<exists_behavior::assign>(key, crstl::forward<ValueType>(value)); }
+		pair<iterator, bool> insert_or_assign(const Key& key, ValueType&& value) { return insert_impl<exists_behavior::assign>(key, crstl_forward(ValueType, value)); }
 
 		template<typename ValueType>
-		pair<iterator, bool> insert_or_assign(Key&& key, ValueType&& value) { return insert_impl<exists_behavior::assign>(crstl::forward<const Key>(key), crstl::forward<ValueType>(value)); }
+		pair<iterator, bool> insert_or_assign(Key&& key, ValueType&& value) { return insert_impl<exists_behavior::assign>(crstl_forward(const Key, key), crstl_forward(ValueType, value)); }
 
 		crstl_nodiscard
 		size_t size() const { return m_length; }
@@ -397,7 +397,7 @@ crstl_module_export namespace crstl
 					node_type* empty_node = first_tombstone ? first_tombstone : (node_type*)current_node;
 
 					empty_node->set_hash(hash_value);
-					node_create_selector<KeyValueType, T, InsertEmplace>::create(empty_node, crstl::forward<KeyType>(key), crstl::forward<InsertEmplaceArgs>(insert_emplace_args)...);
+					node_create_selector<KeyValueType, T, InsertEmplace>::create(empty_node, crstl_forward(KeyType, key), crstl_forward(InsertEmplaceArgs, insert_emplace_args)...);
 					m_length++;
 					return { iterator(m_data, empty_node), true };
 				}
@@ -418,7 +418,7 @@ crstl_module_export namespace crstl
 
 						// Create the new one
 						current_node->set_hash(hash_value);
-						node_create_selector<KeyValueType, T, InsertEmplace>::create(current_node, crstl::forward<KeyType>(key), crstl::forward<InsertEmplaceArgs>(insert_emplace_args)...);
+						node_create_selector<KeyValueType, T, InsertEmplace>::create(current_node, crstl_forward(KeyType, key), crstl_forward(InsertEmplaceArgs, insert_emplace_args)...);
 					}
 
 					return { iterator(m_data, current_node), Behavior == exists_behavior::assign };
@@ -435,13 +435,13 @@ crstl_module_export namespace crstl
 		template<exists_behavior Behavior, typename KeyType, typename... Args>
 		crstl_forceinline crstl_constexpr14 pair<iterator, bool> emplace_impl(KeyType&& key, Args&&... args)
 		{
-			return find_create_impl<Behavior, insert_emplace::emplace>(crstl::forward<KeyType>(key), crstl::forward<Args>(args)...);
+			return find_create_impl<Behavior, insert_emplace::emplace>(crstl_forward(KeyType, key), crstl_forward(Args, args)...);
 		}
 
 		template<exists_behavior Behavior, typename KeyType, typename ValueType>
 		crstl_forceinline crstl_constexpr14 pair<iterator, bool> insert_impl(KeyType&& key, ValueType&& value)
 		{
-			return find_create_impl<Behavior, insert_emplace::insert>(crstl::forward<KeyType>(key), crstl::forward<ValueType>(value));
+			return find_create_impl<Behavior, insert_emplace::insert>(crstl_forward(KeyType, key), crstl_forward(ValueType, value));
 		}
 
 		template<typename KeyType>

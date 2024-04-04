@@ -82,11 +82,11 @@ namespace crstl
 
 			crstl_constexpr_if(static_local)
 			{
-				crstl_placement_new(destination.data()) FunctorT(crstl::forward<Fn>(fn));
+				crstl_placement_new(destination.data()) FunctorT(crstl_forward(Fn, fn));
 			}
 			else
 			{
-				destination.template data<FunctorT*>() = new FunctorT(crstl::forward<Fn>(fn));
+				destination.template data<FunctorT*>() = new FunctorT(crstl_forward(Fn, fn));
 			}
 		}
 
@@ -105,12 +105,12 @@ namespace crstl
 		template<typename Fn>
 		static void init_functor(functor_storage<Size>& functor, Fn&& f) crstl_noexcept
 		{
-			create(functor, crstl::forward<Fn>(f));
+			create(functor, crstl_forward(Fn, f));
 		}
 
 		static Result invoke(const void* functor, Args&&... args)
 		{
-			return (*get_pointer(*((const functor_storage<Size>*)functor)))(crstl::forward<Args>(args)...);
+			return (*get_pointer(*((const functor_storage<Size>*)functor)))(crstl_forward(Args, args)...);
 		}
 
 		static void manage(void* destination, const void* source, manager_operation::t operation)
