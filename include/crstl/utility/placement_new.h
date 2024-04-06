@@ -7,13 +7,16 @@
 // macro is there just for convenience
 crstl_module_export namespace crstl
 {
-	enum class placement_new
+	namespace placement_new
 	{
-		dummy
+		enum t
+		{
+			dummy
+		};
 	};
 };
 
-crstl_module_export inline void* operator new (crstl::size_t, crstl::placement_new, void* ptr) { return ptr; }
-crstl_module_export inline void operator delete (void*, crstl::placement_new, void*) crstl_noexcept {}
+crstl_module_export inline void* operator new (crstl::size_t, crstl::placement_new::t, void* ptr) { return ptr; }
+crstl_module_export inline void operator delete (void*, crstl::placement_new::t, void*) crstl_noexcept {}
 
 #define crstl_placement_new(x) ::new(crstl::placement_new::dummy, x)
