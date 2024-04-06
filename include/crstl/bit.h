@@ -163,6 +163,7 @@ crstl_module_export namespace crstl
 	
 
 	template<typename T>
+	crstl_nodiscard
 	inline int firstbitlow(const T x)
 	{
 		unsigned long index = detail::bitscan_forward(x);
@@ -170,6 +171,7 @@ crstl_module_export namespace crstl
 	}
 
 	template<typename T>
+	crstl_nodiscard
 	inline int firstbithigh(const T x)
 	{
 		unsigned long index = detail::bitscan_reverse(x);
@@ -177,6 +179,7 @@ crstl_module_export namespace crstl
 	}
 
 	template<typename T>
+	crstl_nodiscard
 	inline int countr_zero(const T x)
 	{
 		crstl_constexpr const int digits = bitsize<T>();
@@ -185,6 +188,7 @@ crstl_module_export namespace crstl
 	}
 
 	template<typename T>
+	crstl_nodiscard
 	inline int countl_zero(const T x)
 	{
 		crstl_constexpr const int digits = bitsize<T>();
@@ -193,6 +197,7 @@ crstl_module_export namespace crstl
 	}
 
 	template<typename T>
+	crstl_nodiscard
 	inline int popcount(const T x)
 	{
 #if defined(CRSTL_ARCH_ARM)
@@ -344,18 +349,21 @@ crstl_module_export namespace crstl
 	}
 
 	template<typename T>
+	crstl_nodiscard
 	inline int countr_one(const T x)
 	{
 		return crstl::countr_zero(~x);
 	}
 
 	template<typename T>
+	crstl_nodiscard
 	inline int countl_one(const T x)
 	{
 		return crstl::countl_zero(~x);
 	}
 
 	template<typename T>
+	crstl_nodiscard
 	inline T rotl(const T x, int s)
 	{
 		crstl_constexpr const int digits = bitsize<T>();
@@ -379,6 +387,7 @@ crstl_module_export namespace crstl
 	}
 
 	template<typename T>
+	crstl_nodiscard
 	inline T rotr(const T x, int s)
 	{
 		crstl_constexpr const int digits = bitsize<T>();
@@ -402,6 +411,7 @@ crstl_module_export namespace crstl
 	}
 
 	template<typename T>
+	crstl_nodiscard
 	inline T byteswap(const T x)
 	{
 		crstl_constexpr const int digits = bitsize<T>();
@@ -426,18 +436,21 @@ crstl_module_export namespace crstl
 
 	// Functionally equivalent to has_single_bit but it's much clearer what we want to know
 	template<typename T>
+	crstl_nodiscard
 	crstl_constexpr inline bool is_pow2(const T x)
 	{
 		return x != 0 && (x & (x - 1)) == 0;
 	}
 
 	template<typename T>
+	crstl_nodiscard
 	crstl_constexpr inline bool has_single_bit(const T x)
 	{
 		return is_pow2(x);
 	}
 
 	template<typename T>
+	crstl_nodiscard
 	crstl_constexpr14 inline T bit_ceil(const T x) crstl_noexcept
 	{
 		if (x <= 1U)
@@ -450,6 +463,7 @@ crstl_module_export namespace crstl
 	}
 
 	template <typename T>
+	crstl_nodiscard
 	crstl_constexpr14 T bit_floor(const T x) crstl_noexcept
 	{
 		if (x == 0)
@@ -462,6 +476,7 @@ crstl_module_export namespace crstl
 	}
 
 	template <typename T>
+	crstl_nodiscard
 	crstl_constexpr T bit_width(const T x) crstl_noexcept
 	{
 		return static_cast<T>(bitsize<T>() - crstl::countl_zero(x));
