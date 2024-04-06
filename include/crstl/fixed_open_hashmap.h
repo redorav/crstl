@@ -228,6 +228,8 @@ crstl_module_export namespace crstl
 			m_length = 0;
 		}
 
+#if defined(CRSTL_VARIADIC_TEMPLATES)
+
 		//--------
 		// emplace
 		//--------
@@ -255,6 +257,8 @@ crstl_module_export namespace crstl
 		{
 			return emplace_impl<exists_behavior::assign>(crstl_forward(const Key, key), crstl_forward(Args, args)...);
 		}
+
+#endif
 
 		crstl_constexpr bool empty() const { return m_length == 0; }
 
