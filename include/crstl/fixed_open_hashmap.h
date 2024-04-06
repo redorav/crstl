@@ -80,7 +80,10 @@ crstl_module_export namespace crstl
 			do
 			{
 				m_node++;
-			} while (!m_node->is_valid() && m_node < m_data + NodeCount);
+			}
+			// The order of operations is important here, we cannot dereference the end node to check
+			// if it's valid or not before we've checked if it's within the valid range of data
+			while (m_node < m_data + NodeCount && !m_node->is_valid());
 		}
 
 	private:
