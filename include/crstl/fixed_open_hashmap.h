@@ -304,6 +304,10 @@ crstl_module_export namespace crstl
 				{
 					break;
 				}
+				else if (current_node->is_tombstone())
+				{
+					// Skip over tombstones
+				}
 				// If the key matches, delete this node and reconnect the rest
 				else if (current_node->key_value.first == key)
 				{
