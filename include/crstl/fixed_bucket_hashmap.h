@@ -537,7 +537,7 @@ crstl_module_export namespace crstl
 		// This function tries to find an empty space in the hashmap by checking whether the bucket is empty or finding an empty space in the
 		// bucket if it already has something in it. If we find the object we're looking for, there are a series of different actions we can
 		// take. If we are simply inserting (or emplacing) we just return the object that was there already
-		template<exists_behavior Behavior, insert_emplace InsertEmplace, typename KeyType, typename... InsertEmplaceArgs>
+		template<exists_behavior::t Behavior, insert_emplace::t InsertEmplace, typename KeyType, typename... InsertEmplaceArgs>
 		crstl_forceinline crstl_constexpr14 pair<iterator, bool> find_create_impl(KeyType&& key, InsertEmplaceArgs&&... insert_emplace_args)
 		{
 			// Get the type of the key_value member of the node. We need it to feed it to the macro
@@ -621,13 +621,13 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		template<exists_behavior Behavior, typename KeyType, typename... Args>
+		template<exists_behavior::t Behavior, typename KeyType, typename... Args>
 		crstl_forceinline crstl_constexpr14 pair<iterator, bool> emplace_impl(KeyType&& key, Args&&... args)
 		{
 			return find_create_impl<Behavior, insert_emplace::emplace>(crstl_forward(KeyType, key), crstl_forward(Args, args)...);
 		}
 
-		template<exists_behavior Behavior, typename KeyType, typename ValueType>
+		template<exists_behavior::t Behavior, typename KeyType, typename ValueType>
 		crstl_forceinline crstl_constexpr14 pair<iterator, bool> insert_impl(KeyType&& key, ValueType&& value)
 		{
 			return find_create_impl<Behavior, insert_emplace::insert>(crstl_forward(KeyType, key), crstl_forward(ValueType, value));

@@ -38,22 +38,28 @@ crstl_module_export namespace crstl
 	struct hashmap_type_select<false, IsTrueType, IsFalseType> { typedef IsFalseType type; };
 
 	// Behavior to run when node exists already
-	enum class exists_behavior : size_t
+	namespace exists_behavior
 	{
-		find,
-		assign
+		enum t
+		{
+			find,
+			assign
+		};
 	};
 
 	// Whether to insert or emplace
-	enum class insert_emplace : size_t
+	namespace insert_emplace
 	{
-		insert,
-		emplace
+		enum t
+		{
+			insert,
+			emplace
+		};
 	};
 
 	// Use this selector class to determine whether to insert an already constructed object, or construct it in place given
 	// the variadic arguments. This is so that emplace only constructs the object if it really needs to
-	template<typename KeyValueType, typename T, insert_emplace InsertEmplace>
+	template<typename KeyValueType, typename T, insert_emplace::t InsertEmplace>
 	struct node_create_selector;
 
 	// TODO Rework this to not pass NodeType but pass a pointer to key_value instead
