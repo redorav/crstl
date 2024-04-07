@@ -102,6 +102,10 @@ void RunUnitTestsVectorStdCompare()
 		stdVector.resize(5);
 		crstl_check(crFixedVector.size() == stdVector.size());
 
+		crFixedVector.push_back_uninitialized();
+		stdVector.push_back(Dummy());
+		crstl_check(crFixedVector.size() == stdVector.size());
+
 		crFixedVector.clear();
 		stdVector.clear();
 
@@ -118,6 +122,9 @@ void RunUnitTestsVectorStdCompare()
 		stdVector.emplace_back(Dummy());
 		crstl_check(crFixedVector.size() == stdVector.size());
 #endif
+
+		crFixedVector = crFixedVector2;
+		crstl_check(crFixedVector == crFixedVector2);
 
 		crFixedVector.clear();
 		crFixedVector.push_back(crstl::move(Dummy()));

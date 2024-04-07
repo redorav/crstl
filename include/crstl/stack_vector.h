@@ -1,14 +1,8 @@
 #pragma once
 
 #include "crstl/config.h"
-
 #include "crstl/crstldef.h"
-
-#include "crstl/move_forward.h"
-
-#include "crstl/utility/placement_new.h"
-
-#include "crstl/utility/memory_ops.h"
+#include "crstl/vector_base.h"
 
 // crstl::stack_vector
 //
@@ -43,133 +37,75 @@ crstl_module_export namespace crstl
 	};
 
 	template<typename T>
-	class stack_vector
+	class stack_vector_storage
 	{
 	public:
 
-		typedef stack_vector<T> this_type;
-		typedef uint32_t        length_type;
-		typedef T&              reference;
-		typedef const T&        const_reference;
-		typedef T*              pointer;
-		typedef const T*        const_pointer;
-		typedef T*              iterator;
-		typedef const T*        const_iterator;
+		typedef size_t length_type;
+
+		stack_vector_storage() : m_data(nullptr), m_length(0), m_capacity(0) {}
+
+		size_t get_capacity() const { return m_capacity; }
+
+		void reallocate_if_length_equals_capacity()
+		{
+			crstl_assert(m_length < m_capacity);
+		}
+
+		void reallocate_if_length_greater_than_capacity(size_t length)
+		{
+			crstl_unused(length);
+			crstl_assert(length <= m_capacity);
+		}
+
+	protected:
+
+		T* m_data;
+
+		length_type m_length;
+
+		size_t m_capacity;
+	};
+
+	template<typename T>
+	class stack_vector : public vector_base<T, stack_vector_storage<T>>
+	{
+	public:
+
+		typedef vector_base<T, stack_vector_storage<T>> base_type;
+		typedef stack_vector<T>                         this_type;
+
+		typedef typename base_type::length_type     length_type;
+		typedef typename base_type::reference       reference;
+		typedef typename base_type::const_reference const_reference;
+		typedef typename base_type::iterator        iterator;
+		typedef typename base_type::const_iterator  const_iterator;
+		typedef typename base_type::pointer         pointer;
+		typedef typename base_type::const_pointer   const_pointer;
+
+		using base_type::m_length;
+		using base_type::m_data;
+		using base_type::m_capacity;
+
+		using base_type::clear;
 
 		crstl_constexpr14 stack_vector(transient_memory_t<T> init)
-			: m_data((T*)init.memory)
-			, m_capacity(init.capacity)
-			, m_length(0) {}
+		{
+			m_data = (T*)init.memory;
+			m_length = 0;
+			m_capacity = init.capacity;
+		}
 		
 		~stack_vector()
 		{
 			clear();
 		}
 
-		crstl_constexpr14 T& at(size_t i) { crstl_assert(i < m_length); return m_data[i]; }
-		crstl_constexpr14 const T& at(size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
-
-		crstl_constexpr14 T& back() { crstl_assert(m_length > 0); return m_data[m_length - 1]; }
-		crstl_constexpr14 const T& back() const { crstl_assert(m_length > 0); return m_data[m_length - 1]; }
-
-		crstl_constexpr14 iterator begin() { return &m_data[0]; }
-		crstl_constexpr14 const_iterator begin() const { return &m_data[0]; }
-		crstl_constexpr14 const_iterator cbegin() const { return &m_data[0]; }
-
-		crstl_constexpr14 size_t capacity() const { return m_capacity; }
-
-		crstl_constexpr14 void clear()
-		{
-			destruct_or_ignore(m_data, m_length);
-			m_length = 0;
-		}
-
-		crstl_constexpr14 pointer data() { return &m_data[0]; }
-		crstl_constexpr14 const_pointer data() const { return &m_data[0]; }
-
-#if defined(CRSTL_VARIADIC_TEMPLATES)
-		template<typename... Args>
-		crstl_constexpr14 T& emplace_back(Args&&... args)
-		{
-			crstl_assert(m_length < m_capacity);
-			crstl_placement_new((void*)&m_data[m_length]) T(crstl_forward(Args, args)...);
-			m_length++;
-			return back();
-		}
-#endif
-
-		crstl_nodiscard
-		crstl_constexpr bool empty() const { return m_length == 0; }
-
-		crstl_constexpr14 iterator end() { return &m_data[0] + m_length; }
-		crstl_constexpr const_iterator end() const { return &m_data[0] + m_length; }
-		crstl_constexpr const_iterator cend() const { return &m_data[0] + m_length; }
-
-		crstl_constexpr14 T& front() { return m_data[0]; }
-		crstl_constexpr const T& front() const { return m_data[0]; }
-
-		crstl_constexpr14 void pop_back()
-		{
-			crstl_assert(m_length > 0);
-			destruct_or_ignore(back());
-			m_length--;
-		}
-
-		crstl_constexpr14 T& push_back()
-		{
-			crstl_assert(m_length < m_capacity);
-			default_initialize_or_memset_zero(m_data[m_length]);
-			m_length++;
-			return back();
-		}
-
-		crstl_constexpr14 void push_back(const T& v)
-		{
-			crstl_assert(m_length < m_capacity);
-			set_initialize_or_memset(m_data[m_length], v);
-			m_length++;
-		}
-
-		crstl_constexpr14 void push_back(T&& v)
-		{
-			crstl_assert(m_length < m_capacity);
-			crstl_placement_new((void*)&m_data[m_length]) T(crstl_move(v));
-			m_length++;
-		}
-
-		crstl_constexpr14 size_t size() const { return m_length; }
-
-		crstl_constexpr14 T& operator [] (size_t i) { crstl_assert(i < m_length); return m_data[i]; }
-
-		crstl_constexpr14 const T& operator [] (size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
-
-		//---------------------
-		// Comparison Operators
-		//---------------------
-
-		crstl_constexpr14 bool operator == (const this_type& other) const crstl_noexcept
-		{
-			if (m_length == other.m_length)
-			{
-				for (size_t i = 0; i < m_length; ++i)
-				{
-					if (!(m_data[i] == other.m_data[i])) { return false; }
-				}
-
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-		crstl_constexpr14 bool operator != (const this_type& other) const crstl_noexcept
-		{
-			return !(*this == other);
-		}
-
 	private:
+
+		using base_type::resize;
+
+		using base_type::reserve;
 
 		// Stack vectors are meant to be transient. They are allocated on the stack and given stack
 		// memory for their operations. Because of that, we don't allow default construction or copy
@@ -178,11 +114,5 @@ crstl_module_export namespace crstl
 		stack_vector(const stack_vector& other) crstl_constructor_delete;
 
 		stack_vector(const stack_vector&& other) crstl_constructor_delete;
-
-		T* m_data;
-
-		size_t m_capacity;
-
-		size_t m_length;
 	};
 };
