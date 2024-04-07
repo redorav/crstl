@@ -43,14 +43,14 @@ crstl_module_export namespace crstl
 
 	protected:
 
-		size_t get_capacity() const { return NumElements; }
+		crstl_constexpr14 size_t get_capacity() const { return NumElements; }
 
-		void reallocate_if_length_equals_capacity()
+		crstl_constexpr14 void reallocate_if_length_equals_capacity()
 		{
 			crstl_assert(m_length < NumElements);
 		}
 
-		void reallocate_if_length_greater_than_capacity(size_t length)
+		crstl_constexpr14 void reallocate_if_length_greater_than_capacity(size_t length)
 		{
 			crstl_unused(length);
 			crstl_assert(length <= NumElements);
@@ -217,6 +217,10 @@ crstl_module_export namespace crstl
 		}
 
 		operator span<T>() const;
+
+	private:
+
+		using base_type::reserve;
 	};
 
 	template<typename T, size_t NumElements>
