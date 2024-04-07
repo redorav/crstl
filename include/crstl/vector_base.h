@@ -24,7 +24,7 @@ namespace crstl
 		typedef T&            reference;
 		typedef const T&      const_reference;
 
-		typedef typename VectorStorage::length_type length_type;
+		typedef typename base_type::length_type length_type;
 
 		using base_type::m_length;
 		using base_type::m_data;

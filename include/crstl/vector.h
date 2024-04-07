@@ -37,8 +37,10 @@ crstl_module_export namespace crstl
 	class span;
 
 	template<typename T, typename Allocator = crstl::allocator>
-	struct vector_storage
+	class vector_storage
 	{
+	public:
+
 		typedef uint32_t               length_type;
 
 		static const size_t kDataSize = sizeof(T);
@@ -133,16 +135,6 @@ crstl_module_export namespace crstl
 		typedef typename base_type::const_iterator  const_iterator;
 		typedef typename base_type::pointer         pointer;
 		typedef typename base_type::const_pointer   const_pointer;
-
-		using base_type::m_length;
-		using base_type::m_data;
-		using base_type::m_capacity_allocator;
-
-		using base_type::allocate;
-		using base_type::deallocate;
-		using base_type::reallocate_larger;
-		using base_type::reallocate_if_length_equals_capacity;
-		using base_type::reallocate_if_length_greater_than_capacity;
 
 		using base_type::back;
 		using base_type::clear;
@@ -274,6 +266,15 @@ crstl_module_export namespace crstl
 		}
 
 		operator span<T>() const;
+
+	private:
+
+		using base_type::allocate;
+		using base_type::deallocate;
+
+		using base_type::m_length;
+		using base_type::m_data;
+		using base_type::m_capacity_allocator;
 	};
 
 	template<typename T, typename Allocator>

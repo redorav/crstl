@@ -87,9 +87,6 @@ crstl_module_export namespace crstl
 		typedef typename base_type::const_iterator  const_iterator;
 		typedef typename base_type::pointer         pointer;
 		typedef typename base_type::const_pointer   const_pointer;
-		
-		using base_type::m_length;
-		using base_type::m_data;
 
 		using base_type::clear;
 		using base_type::push_back;
@@ -224,6 +221,9 @@ crstl_module_export namespace crstl
 	private:
 
 		using base_type::reserve;
+
+		using base_type::m_length;
+		using base_type::m_data;
 	};
 
 	template<typename T, size_t NumElements>
