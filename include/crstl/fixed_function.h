@@ -92,23 +92,22 @@ crstl_module_export namespace crstl
 
 		fixed_function& operator = (fixed_function&& other)
 		{
-			if (this != &other)
-			{
-				m_functor_storage = other.m_functor_storage;
-				m_invoker = other.m_invoker;
-				m_manager = other.m_manager;
-				other.m_invoker = nullptr;
-				other.m_manager = nullptr;
-			}
+			crstl_assert(this != &other);
+
+			m_functor_storage = other.m_functor_storage;
+			m_invoker = other.m_invoker;
+			m_manager = other.m_manager;
+			other.m_invoker = nullptr;
+			other.m_manager = nullptr;
+
 			return *this;
 		}
 
 		fixed_function& operator = (const fixed_function& other)
 		{
-			if (this != &other)
-			{
-				copy(other);
-			}
+			crstl_assert(this != &other);
+
+			copy(other);
 
 			return *this;
 		}

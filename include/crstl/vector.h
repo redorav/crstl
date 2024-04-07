@@ -221,6 +221,8 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 this_type& operator = (const this_type& other) crstl_noexcept
 		{
+			crstl_assert(this != &other);
+
 			// Call destructors for all existing objects
 			destruct_or_ignore(m_data, m_length);
 
@@ -243,16 +245,15 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 this_type& operator = (this_type&& other) crstl_noexcept
 		{
-			if (this != &other)
-			{
-				// Swap relevant data
-				m_data = other.m_data;
-				m_length = other.m_length;
-				m_capacity_allocator = other.m_capacity_allocator;
+			crstl_assert(this != &other);
 
-				other.m_data = nullptr;
-				other.m_length = 0;
-			}
+			// Swap relevant data
+			m_data = other.m_data;
+			m_length = other.m_length;
+			m_capacity_allocator = other.m_capacity_allocator;
+
+			other.m_data = nullptr;
+			other.m_length = 0;
 
 			return *this;
 		}

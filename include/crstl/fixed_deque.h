@@ -122,11 +122,10 @@ crstl_module_export namespace crstl
 
 		this_type& operator = (const this_type& other) crstl_noexcept
 		{
-			if (this != &other)
-			{
-				clear();
-				copy_other(other);
-			}
+			crstl_assert(this != &other);
+
+			clear();
+			copy_other(other);
 
 			return *this;
 		}

@@ -148,7 +148,6 @@ crstl_module_export namespace crstl
 		}
 
 #endif
-
 		~fixed_vector() crstl_noexcept
 		{
 			clear();
@@ -156,6 +155,11 @@ crstl_module_export namespace crstl
 
 		this_type& operator = (const this_type& other) crstl_noexcept
 		{
+			crstl_assert(this != &other);
+
+			// Call destructors for all existing objects
+			destruct_or_ignore(m_data, m_length);
+
 			copy_initialize_or_memcpy<T>(m_data, other.m_data, other.m_length);
 			m_length = other.m_length;
 			return *this;
@@ -163,17 +167,16 @@ crstl_module_export namespace crstl
 
 		this_type& operator = (this_type&& other) crstl_noexcept
 		{
-			if (this != &other)
+			crstl_assert(this != &other);
+			
+			m_length = other.m_length;
+
+			for (size_t i = 0; i < other.m_length; ++i)
 			{
-				m_length = other.m_length;
-
-				for (size_t i = 0; i < other.m_length; ++i)
-				{
-					crstl_placement_new((void*)&m_data[i]) T(crstl_move(other.m_data[i]));
-				}
-
-				other.m_length = 0;
+				crstl_placement_new((void*)&m_data[i]) T(crstl_move(other.m_data[i]));
 			}
+
+			other.m_length = 0;
 			
 			return *this;
 		}
