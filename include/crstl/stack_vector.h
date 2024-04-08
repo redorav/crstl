@@ -73,7 +73,7 @@ crstl_module_export namespace crstl
 	public:
 
 		typedef vector_base<T, stack_vector_storage<T>> base_type;
-		typedef stack_vector<T>                         this_type;
+		typedef stack_vector                            this_type;
 
 		typedef typename base_type::length_type     length_type;
 		typedef typename base_type::reference       reference;

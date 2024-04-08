@@ -124,7 +124,7 @@ crstl_module_export namespace crstl
 	public:
 
 		typedef vector_base<T, vector_storage<T, Allocator>> base_type;
-		typedef vector<T, Allocator>                         this_type;
+		typedef vector                                       this_type;
 
 		typedef typename base_type::length_type     length_type;
 		typedef typename base_type::reference       reference;

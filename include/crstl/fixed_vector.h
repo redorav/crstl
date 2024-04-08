@@ -78,7 +78,7 @@ crstl_module_export namespace crstl
 	public:
 
 		typedef vector_base<T, fixed_vector_storage<T, NumElements>> base_type;
-		typedef fixed_vector<T, NumElements>                         this_type;
+		typedef fixed_vector                                         this_type;
 
 		typedef typename base_type::length_type     length_type;
 		typedef typename base_type::reference       reference;
