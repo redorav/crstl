@@ -102,18 +102,18 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr fixed_vector() crstl_noexcept : base_type() {}
 
-		crstl_constexpr14 fixed_vector(size_t initialLength) crstl_noexcept : base_type()
+		crstl_constexpr14 fixed_vector(size_t initial_length) crstl_noexcept : base_type()
 		{
-			crstl_assert(initialLength < NumElements);
-			default_initialize_or_memset_zero(m_data, initialLength);
-			m_length = (length_type)initialLength;
+			crstl_assert(initial_length < NumElements);
+			default_initialize_or_memset_zero(m_data, initial_length);
+			m_length = (length_type)initial_length;
 		}
 
-		crstl_constexpr14 fixed_vector(size_t initialLength, const T& value) crstl_noexcept : base_type()
+		crstl_constexpr14 fixed_vector(size_t initial_length, const T& value) crstl_noexcept : base_type()
 		{
-			crstl_assert(initialLength < NumElements);
-			set_initialize_or_memset(m_data, value, initialLength);
-			m_length = (length_type)initialLength;
+			crstl_assert(initial_length < NumElements);
+			set_initialize_or_memset(m_data, value, initial_length);
+			m_length = (length_type)initial_length;
 		}
 
 		crstl_constexpr14 fixed_vector(const this_type& other) crstl_noexcept { *this = other; }

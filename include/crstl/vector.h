@@ -39,7 +39,7 @@ crstl_module_export namespace crstl
 	template<typename T, typename Allocator = crstl::allocator>
 	class vector_storage
 	{
-	public:
+	protected:
 
 		typedef uint32_t               length_type;
 
@@ -68,8 +68,6 @@ crstl_module_export namespace crstl
 				reallocate_larger(length);
 			}
 		}
-
-	protected:
 
 		// Reallocate vector to a quantity larger than the current one, or the capacity adjusted
 		// with the growth factor, whichever is larger
@@ -144,18 +142,18 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr vector() crstl_noexcept : base_type() {}
 
-		crstl_constexpr14 vector(size_t initialLength)
+		crstl_constexpr14 vector(size_t initial_length)
 		{
-			m_data = allocate(initialLength);
-			default_initialize_or_memset_zero(m_data, initialLength);
-			m_length = (length_type)initialLength;
+			m_data = allocate(initial_length);
+			default_initialize_or_memset_zero(m_data, initial_length);
+			m_length = (length_type)initial_length;
 		}
 
-		crstl_constexpr14 vector(size_t initialLength, const T& value)
+		crstl_constexpr14 vector(size_t initial_length, const T& value)
 		{
-			m_data = allocate(initialLength);
-			set_initialize_or_memset(m_data, value, initialLength);
-			m_length = (length_type)initialLength;
+			m_data = allocate(initial_length);
+			set_initialize_or_memset(m_data, value, initial_length);
+			m_length = (length_type)initial_length;
 		}
 
 		crstl_constexpr14 vector(const this_type& other) crstl_noexcept
