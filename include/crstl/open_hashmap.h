@@ -16,8 +16,6 @@ import <initializer_list>;
 #include <initializer_list>
 #endif
 
-#include <immintrin.h>
-
 crstl_module_export namespace crstl
 {
 	template<typename Key, typename T, typename Hasher, typename Allocator>
