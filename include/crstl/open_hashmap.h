@@ -1,13 +1,9 @@
 #pragma once
 
-#include "crstl/config.h"
-#include "crstl/pair.h"
-#include "crstl/hash.h"
-#include "crstl/type_array.h"
+#include "crstl/open_hashmap_base.h"
+
 #include "crstl/allocator.h"
 #include "crstl/compressed_pair.h"
-
-#include "crstl/utility/memory_ops.h"
 #include "crstl/utility/hashmap_common.h"
 
 #if defined(CRSTL_MODULE_DECLARATION)

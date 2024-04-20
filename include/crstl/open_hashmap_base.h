@@ -1,6 +1,10 @@
 #pragma once
 
-#include "crstl/bit.h"
+#include "crstl/config.h"
+#include "crstl/hash.h"
+#include "crstl/move_forward.h"
+#include "crstl/pair.h"
+#include "crstl/utility/placement_new.h"
 
 namespace crstl
 {
