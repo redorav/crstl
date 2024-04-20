@@ -2,11 +2,8 @@
 
 #include "crstl/config.h"
 #include "crstl/crstldef.h"
-#include "crstl/move_forward.h"
 #include "crstl/allocator.h"
 #include "crstl/compressed_pair.h"
-#include "crstl/type_builtins.h"
-#include "crstl/utility/placement_new.h"
 #include "crstl/utility/memory_ops.h"
 
 #if defined(CRSTL_MODULE_DECLARATION)
@@ -14,6 +11,8 @@ import <initializer_list>;
 #elif defined(CRSTL_FEATURE_INITIALIZER_LISTS)
 #include <initializer_list>
 #endif
+
+#include "crstl/vector_base.h"
 
 // crstl::vector
 //
