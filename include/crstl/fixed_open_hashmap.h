@@ -31,8 +31,6 @@ crstl_module_export namespace crstl
 		typedef open_iterator<key_value_type, true>  const_iterator;
 		typedef open_node<key_value_type>            node_type;
 
-		static const bool kCanReallocateRehash = false;
-
 		fixed_open_hashmap_storage() : m_length(0) {}
 
 		~fixed_open_hashmap_storage() {}
