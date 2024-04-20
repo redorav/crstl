@@ -32,6 +32,7 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 open_hashmap_storage() crstl_noexcept
 			: m_data(&m_dummy)
 			, m_length(0)
+			, m_bucket_count(1) // Need this to work with m_dummy
 			, m_capacity_allocator()
 		{
 			m_dummy.set_empty();
@@ -40,12 +41,12 @@ crstl_module_export namespace crstl
 		// Assume our buckets are power of 2
 		size_t compute_bucket(size_t hash_value) const
 		{
-			return compute_bucket_function<true>::compute_bucket(hash_value, m_capacity_allocator.m_first);
+			return compute_bucket_function<true>::compute_bucket(hash_value, m_bucket_count);
 		}
 
 		size_t get_bucket_count() const
 		{
-			return m_capacity_allocator.m_first;
+			return m_bucket_count;
 		}
 
 		template<typename RehashFunction>
@@ -113,6 +114,7 @@ crstl_module_export namespace crstl
 		{
 			m_data = allocate(capacity);
 			m_capacity_allocator.m_first = capacity;
+			m_bucket_count = capacity;
 		}
 		
 		crstl_constexpr14 void deallocate_internal()
@@ -120,6 +122,7 @@ crstl_module_export namespace crstl
 			deallocate(m_data, m_capacity_allocator.m_first);
 			m_capacity_allocator.m_first = 0;
 			m_data = &m_dummy;
+			m_bucket_count = 1;
 		}
 
 		crstl_constexpr14 size_t compute_new_capacity(size_t old_capacity) const
@@ -134,6 +137,8 @@ crstl_module_export namespace crstl
 		node_type m_dummy;
 
 		size_t m_length;
+
+		size_t m_bucket_count;
 
 		compressed_pair<size_t, Allocator> m_capacity_allocator;
 	};
