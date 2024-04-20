@@ -39,7 +39,6 @@ crstl_module_export namespace crstl
 		// Assume our buckets are power of 2
 		size_t compute_bucket(size_t hash_value) const
 		{
-			// todo ensure pow2
 			return compute_bucket_function<true>::compute_bucket(hash_value, m_capacity_allocator.m_first);
 		}
 
