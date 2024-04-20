@@ -38,6 +38,8 @@ crstl_module_export namespace crstl
 			m_dummy.set_empty();
 		}
 
+		~open_hashmap_storage() {}
+
 		// Assume our buckets are power of 2
 		size_t compute_bucket(size_t hash_value) const
 		{
@@ -134,7 +136,12 @@ crstl_module_export namespace crstl
 
 		// Use this dummy value to avoid having to check for m_data == nullptr during find and erase
 		// We just initialize this to be an always-empty node
-		node_type m_dummy;
+		crstl_warning_anonymous_struct_union_begin
+		union
+		{
+			struct { node_type m_dummy; };
+		};
+		crstl_warning_anonymous_struct_union_end
 
 		size_t m_length;
 
