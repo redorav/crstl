@@ -26,13 +26,6 @@ namespace crstl
 
 		typedef typename base_type::length_type length_type;
 
-		using base_type::m_length;
-		using base_type::m_data;
-
-		using base_type::get_capacity;
-		using base_type::reallocate_if_length_equals_capacity;
-		using base_type::reallocate_if_length_greater_than_capacity;
-
 		crstl_constexpr14 T& at(size_t i) { return crstl_assert(i < m_length), m_data[i]; }
 		crstl_constexpr const T& at(size_t i) const { return crstl_assert(i < m_length), m_data[i]; }
 
@@ -203,5 +196,14 @@ namespace crstl
 		{
 			return !(*this == other);
 		}
+
+	protected:
+
+		using base_type::get_capacity;
+		using base_type::reallocate_if_length_equals_capacity;
+		using base_type::reallocate_if_length_greater_than_capacity;
+
+		using base_type::m_length;
+		using base_type::m_data;
 	};
 };

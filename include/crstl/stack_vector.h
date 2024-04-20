@@ -99,7 +99,6 @@ crstl_module_export namespace crstl
 
 	private:
 
-		using base_type::resize;
 		using base_type::reserve;
 
 		using base_type::m_length;
