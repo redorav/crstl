@@ -4,7 +4,6 @@
 
 #include "crstl/allocator.h"
 #include "crstl/compressed_pair.h"
-#include "crstl/utility/hashmap_common.h"
 
 #if defined(CRSTL_MODULE_DECLARATION)
 import <initializer_list>;

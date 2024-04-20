@@ -5,6 +5,7 @@
 #include "crstl/move_forward.h"
 #include "crstl/pair.h"
 #include "crstl/utility/placement_new.h"
+#include "crstl/utility/hashmap_common.h"
 
 namespace crstl
 {
