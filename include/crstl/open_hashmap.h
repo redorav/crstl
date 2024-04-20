@@ -42,7 +42,7 @@ crstl_module_export namespace crstl
 			return compute_bucket_function<true>::compute_bucket(hash_value, m_capacity_allocator.m_first);
 		}
 
-		size_t get_capacity() const
+		size_t get_bucket_count() const
 		{
 			return m_capacity_allocator.m_first;
 		}
@@ -53,7 +53,7 @@ crstl_module_export namespace crstl
 			if (length > m_capacity_allocator.m_first)
 			{
 				node_type* current_data = m_data;
-				size_t current_capacity = get_capacity();
+				size_t current_capacity = get_bucket_count();
 				size_t new_capacity = length;
 
 				m_data = nullptr;
@@ -80,7 +80,7 @@ crstl_module_export namespace crstl
 			if (m_length >= length_threshold)
 			{
 				node_type* current_data = m_data;
-				size_t current_capacity = get_capacity();
+				size_t current_capacity = get_bucket_count();
 				size_t new_capacity = compute_new_capacity(current_capacity);
 
 				m_data = nullptr;

@@ -48,7 +48,7 @@ crstl_module_export namespace crstl
 			return crstl::compute_bucket<NodeCount>(hash_value);
 		}
 
-		crstl_constexpr14 size_t get_capacity() const { return NodeCount; }
+		crstl_constexpr14 size_t get_bucket_count() const { return NodeCount; }
 
 	protected:
 

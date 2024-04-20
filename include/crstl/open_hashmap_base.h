@@ -100,25 +100,25 @@ namespace crstl
 		using storage_type::m_length;
 
 		using storage_type::compute_bucket;
-		using storage_type::get_capacity;
+		using storage_type::get_bucket_count;
 		using storage_type::reallocate_rehash_if_length_above_threshold;
 
 		crstl_nodiscard
 		crstl_constexpr14 iterator begin() crstl_noexcept
 		{
-			return iterator(m_data, m_data + get_capacity(), begin_impl());
+			return iterator(m_data, m_data + get_bucket_count(), begin_impl());
 		}
 
 		crstl_nodiscard
 		crstl_constexpr14 const_iterator begin() const crstl_noexcept
 		{
-			return const_iterator(m_data, m_data + get_capacity(), begin_impl());
+			return const_iterator(m_data, m_data + get_bucket_count(), begin_impl());
 		}
 
 		crstl_nodiscard
 		crstl_constexpr14 const_iterator cbegin() const crstl_noexcept
 		{
-			return const_iterator(m_data, m_data + get_capacity(), begin_impl());
+			return const_iterator(m_data, m_data + get_bucket_count(), begin_impl());
 		}
 
 		crstl_constexpr14 void clear()
@@ -132,7 +132,7 @@ namespace crstl
 			}
 
 			// Clear m_data. This helps if we're going to reuse the hashmap to clear any tombstones
-			for (size_t i = 0; i < get_capacity(); ++i)
+			for (size_t i = 0; i < get_bucket_count(); ++i)
 			{
 				m_data[i].set_empty();
 			}
@@ -143,13 +143,13 @@ namespace crstl
 		crstl_constexpr bool empty() const { return m_length == 0; }
 
 		crstl_nodiscard
-		crstl_constexpr14 iterator end() { return iterator(m_data, (node_type*)(m_data + get_capacity()), (node_type*)(m_data + get_capacity())); }
+		crstl_constexpr14 iterator end() { return iterator(m_data, (node_type*)(m_data + get_bucket_count()), (node_type*)(m_data + get_bucket_count())); }
 
 		crstl_nodiscard
-		crstl_constexpr const_iterator end() const { return const_iterator(m_data, (node_type*)(m_data + get_capacity()), (node_type*)(m_data + get_capacity())); }
+		crstl_constexpr const_iterator end() const { return const_iterator(m_data, (node_type*)(m_data + get_bucket_count()), (node_type*)(m_data + get_bucket_count())); }
 
 		crstl_nodiscard
-		crstl_constexpr const_iterator cend() const { return const_iterator(m_data, (node_type*)(m_data + get_capacity()), (node_type*)(m_data + get_capacity())); }
+		crstl_constexpr const_iterator cend() const { return const_iterator(m_data, (node_type*)(m_data + get_bucket_count()), (node_type*)(m_data + get_bucket_count())); }
 
 #if defined(CRSTL_VARIADIC_TEMPLATES)
 
@@ -211,7 +211,7 @@ namespace crstl
 
 			node_type* start_node = m_data + bucket_index;
 			node_type* current_node = start_node;
-			const node_type* end_node = m_data + get_capacity();
+			const node_type* end_node = m_data + get_bucket_count();
 
 			do
 			{
@@ -242,14 +242,14 @@ namespace crstl
 		crstl_nodiscard iterator find(const KeyType& key) crstl_noexcept
 		{
 			node_type* found_node = find_impl(key);
-			return iterator(m_data, m_data + get_capacity(), found_node);
+			return iterator(m_data, m_data + get_bucket_count(), found_node);
 		}
 
 		template<typename KeyType>
 		crstl_nodiscard const_iterator find(const KeyType& key) const crstl_noexcept
 		{
 			node_type* found_node = find_impl(key);
-			return const_iterator(m_data, m_data + get_capacity(), found_node);
+			return const_iterator(m_data, m_data + get_bucket_count(), found_node);
 		}
 
 		//-------
@@ -333,10 +333,10 @@ namespace crstl
 
 			const size_t hash_value = compute_hash_value(key);
 			const size_t bucket_index = compute_bucket(hash_value);
-			crstl_assert(bucket_index <= get_capacity());
+			crstl_assert(bucket_index <= get_bucket_count());
 
 			node_type* const start_node = m_data + bucket_index;
-			node_type* const end_node = m_data + get_capacity();
+			node_type* const end_node = m_data + get_bucket_count();
 			node_type* current_node = start_node;
 
 			do
@@ -365,10 +365,10 @@ namespace crstl
 
 			const size_t hash_value = compute_hash_value(key);
 			const size_t bucket_index = compute_bucket(hash_value);
-			crstl_assert(bucket_index <= get_capacity());
+			crstl_assert(bucket_index <= get_bucket_count());
 			
 			node_type* const start_node = m_data + bucket_index;
-			node_type* const end_node = m_data + get_capacity();
+			node_type* const end_node = m_data + get_bucket_count();
 			node_type* current_node = start_node;
 			node_type* first_tombstone = nullptr;
 
@@ -382,7 +382,7 @@ namespace crstl
 					empty_node->set_valid();
 					node_create_selector<KeyValueType, mapped_type, InsertEmplace>::create(empty_node, crstl_forward(KeyType, key), crstl_forward(InsertEmplaceArgs, insert_emplace_args)...);
 					m_length++;
-					return { iterator(m_data, m_data + get_capacity(), empty_node), true };
+					return { iterator(m_data, m_data + get_bucket_count(), empty_node), true };
 				}
 				else if (current_node->is_tombstone())
 				{
@@ -404,7 +404,7 @@ namespace crstl
 						node_create_selector<KeyValueType, mapped_type, InsertEmplace>::create(current_node, crstl_forward(KeyType, key), crstl_forward(InsertEmplaceArgs, insert_emplace_args)...);
 					}
 
-					return { iterator(m_data, m_data + get_capacity(), current_node), Behavior == exists_behavior::assign };
+					return { iterator(m_data, m_data + get_bucket_count(), current_node), Behavior == exists_behavior::assign };
 				}
 			
 				current_node++;
@@ -412,7 +412,7 @@ namespace crstl
 			
 			} while(current_node != start_node);
 
-			return { iterator(m_data, m_data + get_capacity(), nullptr), false };
+			return { iterator(m_data, m_data + get_bucket_count(), nullptr), false };
 		}
 
 		template<typename KeyType>
@@ -423,7 +423,7 @@ namespace crstl
 
 			node_type* const data = (node_type*)m_data;
 			node_type* const start_node = data + bucket_index;
-			node_type* const end_node = data + get_capacity();
+			node_type* const end_node = data + get_bucket_count();
 			node_type* crstl_restrict current_node = start_node;
 
 			do
@@ -461,7 +461,7 @@ namespace crstl
 		{
 			if (empty())
 			{
-				return (node_type*)(m_data + get_capacity());
+				return (node_type*)(m_data + get_bucket_count());
 			}
 			else
 			{
