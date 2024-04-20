@@ -52,50 +52,42 @@ crstl_module_export namespace crstl
 		{
 			if (length > m_capacity_allocator.m_first)
 			{
-				node_type* current_data = m_data;
-				size_t current_capacity = get_bucket_count();
-				size_t new_capacity = length;
-
-				m_data = nullptr;
-				m_length = 0;
-				allocate_internal(new_capacity);
-
-				for (size_t i = 0; i < new_capacity; ++i)
-				{
-					m_data[i].set_empty();
-				}
-
-				rehash_function(current_data, current_data + current_capacity);
-
-				deallocate(current_data, current_capacity);
+				reallocate_rehash(length, rehash_function);
 			}
 		}
 
 		template<typename RehashFunction>
-		crstl_forceinline crstl_constexpr14 void reallocate_rehash_if_length_above_threshold(RehashFunction rehash_function)
+		crstl_forceinline crstl_constexpr14 void reallocate_rehash_if_length_above_load_factor(RehashFunction rehash_function)
 		{
 			// length * 0.75
 			size_t length_threshold = (m_capacity_allocator.m_first >> 1) + (m_capacity_allocator.m_first >> 2);
 
 			if (m_length >= length_threshold)
 			{
-				node_type* current_data = m_data;
 				size_t current_capacity = get_bucket_count();
 				size_t new_capacity = compute_new_capacity(current_capacity);
-
-				m_data = nullptr;
-				m_length = 0;
-				allocate_internal(new_capacity);
-
-				for (size_t i = 0; i < new_capacity; ++i)
-				{
-					m_data[i].set_empty();
-				}
-
-				rehash_function(current_data, current_data + current_capacity);
-
-				deallocate(current_data, current_capacity);
+				reallocate_rehash(new_capacity, rehash_function);
 			}
+		}
+
+		template<typename RehashFunction>
+		crstl_forceinline crstl_constexpr14 void reallocate_rehash(size_t new_capacity, RehashFunction rehash_function)
+		{
+			node_type* current_data = m_data;
+			size_t current_capacity = get_bucket_count();
+
+			m_data = nullptr;
+			m_length = 0;
+			allocate_internal(new_capacity);
+
+			for (size_t i = 0; i < new_capacity; ++i)
+			{
+				m_data[i].set_empty();
+			}
+
+			rehash_function(current_data, current_data + current_capacity);
+
+			deallocate(current_data, current_capacity);
 		}
 
 		static inline size_t align(size_t x, size_t alignment) crstl_noexcept

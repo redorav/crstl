@@ -101,7 +101,8 @@ namespace crstl
 
 		using storage_type::compute_bucket;
 		using storage_type::get_bucket_count;
-		using storage_type::reallocate_rehash_if_length_above_threshold;
+		using storage_type::reallocate_rehash_if_length_above_load_factor;
+		using storage_type::reallocate_rehash_if_length_above_capacity;
 
 		crstl_nodiscard
 		crstl_constexpr14 iterator begin() crstl_noexcept
@@ -282,7 +283,10 @@ namespace crstl
 
 		void reserve(size_t capacity)
 		{
-			//reserve_capacity();
+			reallocate_rehash_if_length_above_capacity(capacity, [this](node_type* crstl_restrict current_node, const node_type* const end_node)
+			{
+				reinsert_all_impl(this, current_node, end_node);
+			});
 		}
 
 		crstl_nodiscard
@@ -305,20 +309,9 @@ namespace crstl
 		template<exists_behavior::t Behavior, insert_emplace::t InsertEmplace, typename KeyType, typename... InsertEmplaceArgs>
 		crstl_forceinline crstl_constexpr14 pair<iterator, bool> find_create_reallocate(KeyType&& key, InsertEmplaceArgs&&... insert_emplace_args)
 		{
-			reallocate_rehash_if_length_above_threshold([this](node_type* crstl_restrict current_node, const node_type* const end_node)
+			reallocate_rehash_if_length_above_load_factor([this](node_type* crstl_restrict current_node, const node_type* const end_node)
 			{
-				for (; current_node != end_node; ++current_node)
-				{
-					if (current_node->is_valid())
-					{
-						reinsert_impl(crstl_move(current_node->key_value.first), crstl_move(current_node->key_value.second));
-
-						crstl_constexpr_if(!crstl_is_trivially_destructible(node_type))
-						{
-							current_node->~node_type();
-						}
-					}
-				}
+				reinsert_all_impl(this, current_node, end_node);
 			});
 
 			return find_create_impl<Behavior, InsertEmplace>(crstl_forward(KeyType, key), crstl_forward(InsertEmplaceArgs, insert_emplace_args)...);
@@ -358,7 +351,7 @@ namespace crstl
 		// bucket if it already has something in it. If we find the object we're looking for, there are a series of different actions we can
 		// take. If we are simply inserting (or emplacing) we just return the object that was there already
 		template<exists_behavior::t Behavior, insert_emplace::t InsertEmplace, typename KeyType, typename... InsertEmplaceArgs>
-		inline crstl_constexpr14 pair<iterator, bool> find_create_impl(KeyType&& key, InsertEmplaceArgs&&... insert_emplace_args)
+		crstl_forceinline crstl_constexpr14 pair<iterator, bool> find_create_impl(KeyType&& key, InsertEmplaceArgs&&... insert_emplace_args)
 		{
 			// Get the type of the key_value member of the node. We need it to feed it to the macro
 			typedef decltype(node_type::key_value) KeyValueType;
@@ -474,6 +467,22 @@ namespace crstl
 					}
 
 					valid_node++;
+				}
+			}
+		}
+
+		void reinsert_all_impl(this_type* hashmap, node_type* crstl_restrict current_node, const node_type* const end_node)
+		{
+			for (; current_node != end_node; ++current_node)
+			{
+				if (current_node->is_valid())
+				{
+					hashmap->reinsert_impl(crstl_move(current_node->key_value.first), crstl_move(current_node->key_value.second));
+
+					crstl_constexpr_if(!crstl_is_trivially_destructible(node_type))
+					{
+						current_node->~node_type();
+					}
 				}
 			}
 		}

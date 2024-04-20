@@ -38,9 +38,16 @@ crstl_module_export namespace crstl
 		~fixed_open_hashmap_storage() {}
 
 		template<typename HashmapType>
-		crstl_constexpr14 void reallocate_rehash_if_length_above_threshold(HashmapType)
+		crstl_constexpr14 void reallocate_rehash_if_length_above_load_factor(HashmapType)
 		{
-			crstl_assert(m_length < NodeCount);
+			crstl_assert(m_length <= NodeCount);
+		}
+
+		template<typename HashmapType>
+		crstl_constexpr14 void reallocate_rehash_if_length_above_capacity(size_t capacity, HashmapType)
+		{
+			crstl_unused(capacity);
+			crstl_assert(capacity <= NodeCount);
 		}
 
 		crstl_constexpr14 size_t compute_bucket(size_t hash_value) const
