@@ -5,6 +5,7 @@ import crstl;
 #else
 #include "crstl/fixed_bucket_hashmap.h"
 #include "crstl/fixed_open_hashmap.h"
+#include "crstl/open_hashmap.h"
 #include "crstl/timer.h"
 #include "crstl/type_array.h"
 #endif
@@ -20,7 +21,7 @@ namespace crstl
 	template<> struct hash<std::string> { size_t operator()(const std::string& value) { std::hash<std::string> hasher; return hasher(value); } };
 };
 
-int ManualKeys[] = { 16, 48, 80, 76, 86, 96, 106, 116, 126, 136, 146, 156, 166, 176, 186, 196 };
+int ManualKeys[] = { 16, 48, 80, 76, 86, 96, 106, 116, 126, 136, 146, 156, 166, 176, 186, 196, 213, 236, 254, 268, 272 };
 
 // Explicit instantiation to help catch errors
 template class crstl::fixed_bucket_hashmap<int, int, 64>;
@@ -72,6 +73,14 @@ void RunUnitTestAssociativeT()
 	}
 
 	crstl_check(crFixedBucketmapInt.size() == crstl::array_size(ManualKeys));
+
+	// Count iteration count
+	size_t iter_count = 0;
+	for (auto iter = crFixedBucketmapInt.begin(), end = crFixedBucketmapInt.end(); iter != end; ++iter)
+	{
+		iter_count++;
+	}
+	crstl_check(iter_count == crstl::array_size(ManualKeys));
 
 	// Clear via iterators
 	for (auto iter = crFixedBucketmapInt.begin(), end = crFixedBucketmapInt.end(); iter != end;)
@@ -184,6 +193,9 @@ void RunUnitTestsAssociative()
 {
 	printf("RunUnitTestsAssociative\n");
 
+	crstl::fixed_open_hashmap<int, Example, 64> p;
+
+	RunUnitTestAssociativeT<crstl::open_hashmap<int, Example>>();
 	RunUnitTestAssociativeT<crstl::fixed_open_hashmap<int, Example, 64>>();
 	RunUnitTestAssociativeT<crstl::fixed_bucket_hashmap<int, Example, 64>>();
 }
