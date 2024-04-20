@@ -212,12 +212,18 @@ namespace crstl
 		template<typename KeyType>
 		crstl_constexpr14 size_t erase(KeyType&& key)
 		{
+			if (m_data == nullptr)
+			{
+				return 0;
+			}
+
 			const size_t hash_value = compute_hash_value(key);
 			const size_t bucket_index = compute_bucket(hash_value);
 
-			node_type* start_node = m_data + bucket_index;
-			node_type* current_node = start_node;
-			const node_type* end_node = m_data + get_bucket_count();
+			node_type* const data = m_data;
+			node_type* const start_node = data + bucket_index;
+			node_type* const end_node = data + get_bucket_count();
+			node_type* crstl_restrict current_node = start_node;
 
 			do
 			{
@@ -238,7 +244,7 @@ namespace crstl
 
 				// Otherwise, look for the next node
 				current_node++;
-				current_node = (current_node == end_node) ? m_data : current_node;
+				current_node = (current_node == end_node) ? data : current_node;
 			} while (current_node != start_node);
 
 			return 0;
@@ -333,9 +339,10 @@ namespace crstl
 			const size_t bucket_index = compute_bucket(hash_value);
 			crstl_assert(bucket_index <= get_bucket_count());
 
+			node_type* const data = m_data;
 			node_type* const start_node = m_data + bucket_index;
 			node_type* const end_node = m_data + get_bucket_count();
-			node_type* current_node = start_node;
+			node_type* crstl_restrict current_node = start_node;
 
 			do
 			{
@@ -348,7 +355,7 @@ namespace crstl
 				}
 
 				current_node++;
-				current_node = (current_node == end_node) ? m_data : current_node;
+				current_node = (current_node == end_node) ? data : current_node;
 			} while(current_node != start_node);
 		}
 
@@ -414,14 +421,19 @@ namespace crstl
 		}
 
 		template<typename KeyType>
-		crstl_forceinline node_type* find_impl(const KeyType& key) const
+		crstl_forceinline node_type* find_impl(const KeyType& key)
 		{
+			if (m_data == nullptr)
+			{
+				return nullptr;
+			}
+
 			const size_t hash_value = compute_hash_value(key);
 			const size_t bucket_index = compute_bucket(hash_value);
 
-			node_type* const data = (node_type*)m_data;
-			node_type* const start_node = data + bucket_index;
+			node_type* const data = m_data;
 			node_type* const end_node = data + get_bucket_count();
+			node_type* const start_node = data + bucket_index;
 			node_type* crstl_restrict current_node = start_node;
 
 			do
