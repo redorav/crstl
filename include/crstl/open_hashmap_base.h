@@ -416,12 +416,12 @@ namespace crstl
 		}
 
 		template<typename KeyType>
-		crstl_forceinline node_type* find_impl(const KeyType& key)
+		crstl_forceinline node_type* find_impl(const KeyType& key) const
 		{
 			const size_t hash_value = compute_hash_value(key);
 			const size_t bucket_index = compute_bucket(hash_value);
 
-			node_type* const data = m_data;
+			node_type* const data = (node_type*)m_data;
 			node_type* const end_node = data + get_bucket_count();
 			node_type* const start_node = data + bucket_index;
 			node_type* crstl_restrict current_node = start_node;
