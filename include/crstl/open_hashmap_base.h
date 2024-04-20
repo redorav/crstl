@@ -280,7 +280,7 @@ namespace crstl
 		template<typename ValueType>
 		pair<iterator, bool> insert_or_assign(key_type&& key, ValueType&& value) { return insert_impl<exists_behavior::assign>(crstl_forward(const key_type, key), crstl_forward(ValueType, value)); }
 
-		bool reserve(size_t capacity)
+		void reserve(size_t capacity)
 		{
 			//reserve_capacity();
 		}

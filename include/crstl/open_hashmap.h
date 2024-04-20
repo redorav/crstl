@@ -25,7 +25,7 @@ crstl_module_export namespace crstl
 
 		typedef Key                                  key_type;
 		typedef T                                    mapped_type;
-		typedef pair<Key, T>                   key_value_type;
+		typedef pair<Key, T>                         key_value_type;
 		typedef size_t                               size_type;
 		typedef Hasher                               hasher;
 		typedef open_iterator<key_value_type, false> iterator;
