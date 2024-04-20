@@ -212,11 +212,6 @@ namespace crstl
 		template<typename KeyType>
 		crstl_constexpr14 size_t erase(KeyType&& key)
 		{
-			if (m_data == nullptr)
-			{
-				return 0;
-			}
-
 			const size_t hash_value = compute_hash_value(key);
 			const size_t bucket_index = compute_bucket(hash_value);
 
@@ -423,11 +418,6 @@ namespace crstl
 		template<typename KeyType>
 		crstl_forceinline node_type* find_impl(const KeyType& key)
 		{
-			if (m_data == nullptr)
-			{
-				return nullptr;
-			}
-
 			const size_t hash_value = compute_hash_value(key);
 			const size_t bucket_index = compute_bucket(hash_value);
 

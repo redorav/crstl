@@ -29,7 +29,13 @@ crstl_module_export namespace crstl
 
 		static const size_t kNodeSize = sizeof(node_type);
 
-		crstl_constexpr14 open_hashmap_storage() crstl_noexcept : m_data(nullptr), m_length(0), m_capacity_allocator() {}
+		crstl_constexpr14 open_hashmap_storage() crstl_noexcept
+			: m_data(&m_dummy)
+			, m_length(0)
+			, m_capacity_allocator()
+		{
+			m_dummy.set_empty();
+		}
 
 		// Assume our buckets are power of 2
 		size_t compute_bucket(size_t hash_value) const
@@ -71,8 +77,6 @@ crstl_module_export namespace crstl
 			node_type* current_data = m_data;
 			size_t current_capacity = get_bucket_count();
 
-			m_data = nullptr;
-			m_length = 0;
 			allocate_internal(new_capacity);
 
 			for (size_t i = 0; i < new_capacity; ++i)
@@ -80,6 +84,7 @@ crstl_module_export namespace crstl
 				m_data[i].set_empty();
 			}
 
+			m_length = 0;
 			rehash_function(current_data, current_data + current_capacity);
 
 			deallocate(current_data, current_capacity);
@@ -90,23 +95,22 @@ crstl_module_export namespace crstl
 			return (x + (alignment - 1)) & ~(alignment - 1);
 		}
 
+		// TODO Allocate aligned
 		node_type* allocate(size_t capacity)
 		{
-			size_t size_bytes = capacity * kNodeSize;
-			size_t alignment = alignof(node_type) > 64 ? alignof(node_type) : 64;
-			size_bytes = align(size_bytes, alignment);
-
 			return (node_type*)m_capacity_allocator.second().allocate(capacity * kNodeSize);
 		}
 
 		void deallocate(node_type* data, size_t capacity)
 		{
-			m_capacity_allocator.second().deallocate(data, capacity * kNodeSize);
+			if (data != &m_dummy)
+			{
+				m_capacity_allocator.second().deallocate(data, capacity * kNodeSize);
+			}
 		}
 
 		crstl_constexpr14 void allocate_internal(size_t capacity)
 		{
-			crstl_assert(m_data == nullptr);
 			m_data = allocate(capacity);
 			m_capacity_allocator.m_first = capacity;
 		}
@@ -115,7 +119,7 @@ crstl_module_export namespace crstl
 		{
 			deallocate(m_data, m_capacity_allocator.m_first);
 			m_capacity_allocator.m_first = 0;
-			m_data = nullptr;
+			m_data = &m_dummy;
 		}
 
 		crstl_constexpr14 size_t compute_new_capacity(size_t old_capacity) const
@@ -124,6 +128,10 @@ crstl_module_export namespace crstl
 		}
 
 		node_type* m_data;
+
+		// Use this dummy value to avoid having to check for m_data == nullptr during find and erase
+		// We just initialize this to be an always-empty node
+		node_type m_dummy;
 
 		size_t m_length;
 

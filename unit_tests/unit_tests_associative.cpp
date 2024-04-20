@@ -36,6 +36,14 @@ void RunUnitTestAssociativeT()
 
 	crstl_check(crFixedBucketmapInt.size() == 0);
 
+	// Iterate through an empty hashmap
+	size_t iter_count_empty = 0;
+	for (auto iter = crFixedBucketmapInt.begin(), end = crFixedBucketmapInt.end(); iter != end; ++iter)
+	{
+		iter_count_empty++;
+	}
+	crstl_check(iter_count_empty == 0);
+
 	// Insert a temporary object
 	for (size_t i = 0; i < crstl::array_size(ManualKeys); ++i)
 	{
