@@ -133,14 +133,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 size_t compute_new_capacity(size_t old_capacity) const
 		{
-			size_t new_capacity = 2 * old_capacity;
-
-			if (new_capacity < 16)
-			{
-				new_capacity = 16;
-			}
-
-			return new_capacity;
+			return 2 * old_capacity < 16 ? 16 : 2 * old_capacity;
 		}
 
 		node_type* m_data;
