@@ -131,7 +131,7 @@ crstl_module_export namespace crstl
 			m_data = nullptr;
 		}
 
-		crstl_constexpr size_t compute_new_capacity(size_t old_capacity) const
+		crstl_constexpr14 size_t compute_new_capacity(size_t old_capacity) const
 		{
 			size_t new_capacity = 2 * old_capacity;
 
