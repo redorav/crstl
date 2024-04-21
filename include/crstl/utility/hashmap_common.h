@@ -69,7 +69,7 @@ crstl_module_export namespace crstl
 		template<typename NodeType, typename KeyType, typename ValueType>
 		crstl_forceinline static void create(NodeType* new_node, KeyType&& key, ValueType&& value)
 		{
-			crstl_placement_new((void*)&(new_node->key_value)) KeyValueType(crstl_forward(const KeyType, key), crstl_forward(ValueType, value));
+			crstl_placement_new((void*)&(new_node->key_value)) KeyValueType(crstl_forward(KeyType, key), crstl_forward(ValueType, value));
 		}
 	};
 
@@ -79,7 +79,7 @@ crstl_module_export namespace crstl
 		template<typename NodeType, typename KeyType, typename... Args>
 		crstl_forceinline static void create(NodeType* new_node, KeyType&& key, Args&&... args)
 		{
-			crstl_placement_new((void*)&(new_node->key_value)) KeyValueType(crstl_forward(const KeyType, key), T(crstl_forward(Args, args)...));
+			crstl_placement_new((void*)&(new_node->key_value)) KeyValueType(crstl_forward(KeyType, key), T(crstl_forward(Args, args)...));
 		}
 	};
 };

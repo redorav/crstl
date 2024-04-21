@@ -16,7 +16,7 @@ crstl_module_export namespace crstl
 	public:
 
 		typedef Key                                  key_type;
-		typedef T                                    mapped_type;
+		typedef T                                    value_type;
 		typedef pair<Key, T>                         key_value_type;
 		typedef size_t                               size_type;
 		typedef Hasher                               hasher;
@@ -76,13 +76,13 @@ crstl_module_export namespace crstl
 
 		typedef open_hashmap_base<fixed_open_hashmap_storage<Key, T, NodeCount, Hasher>> base_type;
 
-		typedef typename base_type::key_type key_type;
-		typedef typename base_type::mapped_type mapped_type;
+		typedef typename base_type::key_type       key_type;
+		typedef typename base_type::value_type     value_type;
 		typedef typename base_type::key_value_type key_value_type;
-		typedef typename base_type::size_type size_type;
-		typedef typename base_type::iterator iterator;
+		typedef typename base_type::size_type      size_type;
+		typedef typename base_type::iterator       iterator;
 		typedef typename base_type::const_iterator const_iterator;
-		typedef typename base_type::node_type node_type;
+		typedef typename base_type::node_type      node_type;
 
 		using base_type::m_data;
 		using base_type::m_length;

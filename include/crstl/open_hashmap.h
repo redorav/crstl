@@ -19,7 +19,7 @@ crstl_module_export namespace crstl
 	protected:
 
 		typedef Key                                  key_type;
-		typedef T                                    mapped_type;
+		typedef T                                    value_type;
 		typedef pair<Key, T>                         key_value_type;
 		typedef size_t                               size_type;
 		typedef Hasher                               hasher;
@@ -159,7 +159,7 @@ crstl_module_export namespace crstl
 		typedef open_hashmap                                                       this_type;
 
 		typedef typename base_type::key_type       key_type;
-		typedef typename base_type::mapped_type    mapped_type;
+		typedef typename base_type::value_type     value_type;
 		typedef typename base_type::key_value_type key_value_type;
 		typedef typename base_type::size_type      size_type;
 		typedef typename base_type::iterator       iterator;
@@ -257,11 +257,12 @@ crstl_module_export namespace crstl
 		void destructor()
 		{
 			// Only destroy the value, no need to destroy buckets or nodes
-			crstl_constexpr_if(!crstl_is_trivially_destructible(T))
+			crstl_constexpr_if(!crstl_is_trivially_destructible(key_value_type))
 			{
+
 				for (const key_value_type& iter : *this)
 				{
-					iter.second.~T();
+					iter.~key_value_type();
 				}
 			}
 
