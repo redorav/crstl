@@ -410,6 +410,15 @@ namespace crstl
 			
 			} while(current_node != start_node);
 
+			// If there are no empty nodes but we found a tombstone, insert it here
+			if (first_tombstone)
+			{
+				first_tombstone->set_valid();
+				node_create_selector<KeyValueType, value_type, InsertEmplace>::create(first_tombstone, crstl_forward(KeyType, key), crstl_forward(InsertEmplaceArgs, insert_emplace_args)...);
+				m_length++;
+				return { iterator(m_data, m_data + get_bucket_count(), first_tombstone), true };
+			}
+
 			return { iterator(m_data, m_data + get_bucket_count(), nullptr), false };
 		}
 
