@@ -216,6 +216,25 @@
 		</Expand>
 	</Type>
 
+	<Type Name="crstl::open_hashmap_base&lt;*&gt;">
+		<DisplayString>[size = {m_length}]</DisplayString>
+
+		<Expand>
+			<Item Name="[capacity]">m_capacity_allocator.m_first</Item>
+			<Item Name="[size]">m_length</Item>
+			<CustomListItems>
+				<Variable Name="iIndex" InitialValue="0" />
+				<Size>m_length</Size>
+				<Loop>
+					<If Condition="m_data[iIndex].meta > 1">
+						<Item>m_data[iIndex].key_value</Item>
+					</If>
+					<Exec>iIndex++</Exec>
+				</Loop>
+			</CustomListItems>
+		</Expand>
+	</Type>
+
 	<Type Name="crstl::pair&lt;*,*&gt;">
 		<DisplayString>[{ first }] [{ second }]</DisplayString>
 	</Type>
