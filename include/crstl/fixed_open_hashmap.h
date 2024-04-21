@@ -123,11 +123,11 @@ crstl_module_export namespace crstl
 		~fixed_open_hashmap() crstl_noexcept
 		{
 			// Only destroy the value, no need to destroy buckets or nodes
-			crstl_constexpr_if(!crstl_is_trivially_destructible(T))
+			crstl_constexpr_if(!crstl_is_trivially_destructible(key_value_type))
 			{
 				for (const key_value_type& iter : *this)
 				{
-					iter.second.~T();
+					iter.~key_value_type();
 				}
 			}
 		}
