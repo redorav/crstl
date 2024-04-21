@@ -259,7 +259,6 @@ crstl_module_export namespace crstl
 			// Only destroy the value, no need to destroy buckets or nodes
 			crstl_constexpr_if(!crstl_is_trivially_destructible(key_value_type))
 			{
-
 				for (const key_value_type& iter : *this)
 				{
 					iter.~key_value_type();
