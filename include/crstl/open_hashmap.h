@@ -4,6 +4,7 @@
 
 #include "crstl/allocator.h"
 #include "crstl/compressed_pair.h"
+#include "crstl/bit.h"
 
 #if defined(CRSTL_MODULE_DECLARATION)
 import <initializer_list>;
@@ -43,6 +44,7 @@ crstl_module_export namespace crstl
 		// Assume our buckets are power of 2
 		size_t compute_bucket(size_t hash_value) const
 		{
+			crstl_assert(crstl::is_pow2(m_bucket_count));
 			return compute_bucket_function<true>::compute_bucket(hash_value, m_bucket_count);
 		}
 
@@ -80,9 +82,9 @@ crstl_module_export namespace crstl
 			node_type* current_data = m_data;
 			size_t current_capacity = get_bucket_count();
 
-			allocate_internal(new_capacity);
+			size_t allocated_capacity = allocate_internal(new_capacity);
 
-			for (size_t i = 0; i < new_capacity; ++i)
+			for (size_t i = 0; i < allocated_capacity; ++i)
 			{
 				m_data[i].set_empty();
 			}
@@ -112,11 +114,15 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		crstl_constexpr14 void allocate_internal(size_t capacity)
+		crstl_nodiscard
+		crstl_constexpr14 size_t allocate_internal(size_t capacity)
 		{
-			m_data = allocate(capacity);
-			m_capacity_allocator.m_first = capacity;
-			m_bucket_count = capacity;
+			// Round to the nearest power of 2 as we rely on this for the bucket calculation
+			size_t rounded_capacity = crstl::bit_ceil(capacity);
+			m_data = allocate(rounded_capacity);
+			m_capacity_allocator.m_first = rounded_capacity;
+			m_bucket_count = rounded_capacity;
+			return rounded_capacity;
 		}
 		
 		crstl_constexpr14 void deallocate_internal()
@@ -173,9 +179,9 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 open_hashmap(size_t initial_length) crstl_noexcept
 		{
-			allocate_internal(initial_length);
+			size_t allocated_length = allocate_internal(initial_length);
 
-			for (size_t i = 0; i < initial_length; ++i)
+			for (size_t i = 0; i < allocated_length; ++i)
 			{
 				m_data[i].set_empty();
 			}
