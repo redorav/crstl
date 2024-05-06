@@ -120,9 +120,9 @@
 
 	<!-- Make all optional. The first to be successful will present the data-->
 	<Type Name="crstl::compressed_pair&lt;*,*&gt;">
-		<DisplayString Optional="true">[{ m_first }] [{ m_second }]</DisplayString>
-		<DisplayString Optional="true">[{ m_first }]</DisplayString>
-		<DisplayString Optional="true">[{ m_second }]</DisplayString>
+		<DisplayString Optional="true">({ m_first }, { m_second })</DisplayString>
+		<DisplayString Optional="true">({ m_first })</DisplayString>
+		<DisplayString Optional="true">({ m_second })</DisplayString>
 	</Type>
 
 	<Type Name="crstl::critical_section">
@@ -255,7 +255,7 @@
 	</Type>
 
 	<Type Name="crstl::pair&lt;*,*&gt;">
-		<DisplayString>[{ first }] [{ second }]</DisplayString>
+		<DisplayString>({ first }, { second })</DisplayString>
 	</Type>
 
 	<Type Name="crstl::span&lt;*&gt;">
