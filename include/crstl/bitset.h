@@ -109,9 +109,9 @@ crstl_module_export namespace crstl
 
 		bool any() const
 		{
-			for (size_t i = 0; i < kNumWords; ++i)
+			for (size_t w = 0; w < kNumWords; ++w)
 			{
-				if (m_data[i] != 0)
+				if (m_data[w] != 0)
 				{
 					return true;
 				}
@@ -124,9 +124,9 @@ crstl_module_export namespace crstl
 		{
 			size_t n = 0;
 
-			for (size_t i = 0; i < kNumWords; ++i)
+			for (size_t w = 0; w < kNumWords; ++w)
 			{
-				n += crstl::popcount(m_data[i]);
+				n += crstl::popcount(m_data[w]);
 			}
 
 			return n;
@@ -134,6 +134,8 @@ crstl_module_export namespace crstl
 
 		bitset& flip(size_t i)
 		{
+			crstl_assert(i < NumBits);
+
 			if (m_data[i >> kBitsPerWordShift] & ((word_type)1 << (i & kBitsPerWordMask)))
 			{
 				m_data[i >> kBitsPerWordShift] &= ~((word_type)1 << (i & kBitsPerWordMask));
@@ -171,6 +173,8 @@ crstl_module_export namespace crstl
 
 		bitset& set(size_t i, bool value = true)
 		{
+			crstl_assert(i < NumBits);
+
 			if (value)
 			{
 				m_data[i >> kBitsPerWordShift] |= ((word_type)1 << (i & kBitsPerWordMask));
@@ -190,24 +194,27 @@ crstl_module_export namespace crstl
 
 		bool test(size_t i) const
 		{
+			crstl_assert(i < NumBits);
 			return (m_data[i >> kBitsPerWordShift] & ((word_type)1 << (i & kBitsPerWordMask))) != 0;
 		}
 
 		bit_reference operator[](size_t i)
 		{
+			crstl_assert(i < NumBits);
 			return bit_reference(m_data[i >> kBitsPerWordShift], (i & kBitsPerWordMask));
 		}
 
 		bool operator[](size_t i) const
 		{
+			crstl_assert(i < NumBits);
 			return (m_data[i >> kBitsPerWordShift] & ((word_type)1 << i)) != 0;
 		}
 
 		bool operator == (const bitset& b) const
 		{
-			for (size_t i = 0; i < kNumWords; ++i)
+			for (size_t w = 0; w < kNumWords; ++w)
 			{
-				if (m_data[i] != b.m_data[i])
+				if (m_data[w] != b.m_data[w])
 				{
 					return false;
 				}
@@ -218,9 +225,9 @@ crstl_module_export namespace crstl
 
 		bool operator != (const bitset& b) const
 		{
-			for (size_t i = 0; i < kNumWords; ++i)
+			for (size_t w = 0; w < kNumWords; ++w)
 			{
-				if (m_data[i] != b.m_data[i])
+				if (m_data[w] != b.m_data[w])
 				{
 					return true;
 				}
