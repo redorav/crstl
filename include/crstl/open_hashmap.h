@@ -232,30 +232,35 @@ crstl_module_export namespace crstl
 
 			destructor();
 
-			m_data = other.m_data;
+			m_data = other.m_data == &other.m_dummy ? &m_dummy : other.m_data;
 			m_length = other.m_length;
 			m_capacity_allocator = other.m_capacity_allocator;
+			m_bucket_count = other.m_bucket_count;
 
-			other.m_data = nullptr;
+			other.m_data = &other.m_dummy;
 			other.m_length = 0;
 			other.m_capacity_allocator.m_first = 0;
+			other.m_bucket_count = 1;
 
 			return *this;
 		}
 
 		static void swap(this_type& hashmap1, this_type& hashmap2)
 		{
-			node_type* data = hashmap2.m_data;
+			node_type* data = hashmap2.m_data == &hashmap2.m_dummy ? &hashmap1.m_dummy : hashmap2.m_data;
 			size_t length = hashmap2.m_length;
 			compressed_pair<size_t, Allocator> capacity_allocator = hashmap2.m_capacity_allocator;
+			size_t bucket_count = hashmap2.m_bucket_count;
 
-			hashmap2.m_data = hashmap1.m_data;
+			hashmap2.m_data = hashmap1.m_data == &hashmap1.m_dummy ? &hashmap2.m_dummy : hashmap1.m_data;
 			hashmap2.m_length = hashmap1.m_length;
 			hashmap2.m_capacity_allocator = hashmap1.m_capacity_allocator;
+			hashmap2.m_bucket_count = hashmap1.m_bucket_count;
 
 			hashmap1.m_data = data;
 			hashmap1.m_length = length;
 			hashmap1.m_capacity_allocator = capacity_allocator;
+			hashmap1.m_bucket_count = bucket_count;
 		}
 
 	private:
@@ -278,7 +283,9 @@ crstl_module_export namespace crstl
 		using base_type::deallocate_internal;
 
 		using base_type::m_data;
+		using base_type::m_dummy;
 		using base_type::m_length;
 		using base_type::m_capacity_allocator;
+		using base_type::m_bucket_count;
 	};
 };
