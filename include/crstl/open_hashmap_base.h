@@ -15,24 +15,16 @@ namespace crstl
 		enum node_meta
 		{
 			empty      = 0, // Indicates an empty node
-			tombstone  = 1, // Indicates node was deleted
-			valid      = 2, // First valid hash
+			valid      = 1, // First valid hash
 		};
 		
 		bool is_empty() const { return meta == node_meta::empty; }
 
-		bool is_tombstone() const { return meta == node_meta::tombstone; }
+		bool is_valid() const { return meta > node_meta::empty; }
 
-		bool is_valid() const { return meta > node_meta::tombstone; }
+		void set_valid() { meta = node_meta::valid; }
 
-		void set_valid()
-		{
-			meta = node_meta::valid; 
-		}
-
-		void set_empty() { meta = (int)node_meta::empty; }
-
-		void set_tombstone() { meta = (int)node_meta::tombstone; }
+		void set_empty() { meta = (unsigned char)node_meta::empty; }
 
 		unsigned char meta;
 
@@ -137,7 +129,7 @@ namespace crstl
 				}
 			}
 
-			// Clear m_data. This helps if we're going to reuse the hashmap to clear any tombstones
+			// Clear m_data
 			for (size_t i = 0; i < get_bucket_count(); ++i)
 			{
 				m_data[i].set_empty();
@@ -196,28 +188,29 @@ namespace crstl
 		crstl_constexpr14 iterator erase(iterator pos)
 		{
 			crstl_assert(pos != end());
-			iterator next_iter = pos; ++next_iter;
-			erase_iter_impl(pos.get_node());
-			return next_iter;
+			iterator next_iter = pos;
+			bool moved_node = erase_iter_impl(pos.get_node());
+			return moved_node ? pos : ++next_iter;
 		}
 
 		crstl_constexpr14 const_iterator erase(const_iterator pos)
 		{
 			crstl_assert(pos != cend());
-			const_iterator next_iter = pos; ++next_iter;
-			erase_iter_impl(pos.get_node());
-			return next_iter;
+			const_iterator next_iter = pos;
+			bool moved_node = erase_iter_impl(pos.get_node());
+			return moved_node ? pos : ++next_iter;
 		}
 
 		template<typename KeyType>
 		crstl_constexpr14 size_t erase(KeyType&& key)
 		{
-			const size_t hash_value = compute_hash_value(key);
+			const size_t bucket_count = get_bucket_count();
+			const size_t hash_value   = compute_hash_value(key);
 			const size_t bucket_index = compute_bucket(hash_value);
 
 			node_type* const data = m_data;
 			node_type* const start_node = data + bucket_index;
-			node_type* const end_node = data + get_bucket_count();
+			node_type* const end_node = data + bucket_count;
 			node_type* crstl_restrict current_node = start_node;
 
 			do
@@ -225,11 +218,7 @@ namespace crstl
 				// If this is the last node, we've finished our search
 				if (current_node->is_empty())
 				{
-					break;
-				}
-				else if (current_node->is_tombstone())
-				{
-					// Skip over tombstones
+					return 0;
 				}
 				else if (current_node->key_value.first == key)
 				{
@@ -323,8 +312,8 @@ namespace crstl
 			return find_create_impl<Behavior, InsertEmplace>(crstl_forward(KeyType, key), crstl_forward(InsertEmplaceArgs, insert_emplace_args)...);
 		}
 
-		// Optimized version of insert when we know we are batch inserting nodes into a clean hashmap with no tombstones
-		// We can skip iterator construction, the search for a tombstone and even the comparison with the key
+		// Optimized version of insert when we know we are batch inserting nodes into a clean hashmap
+		// We can skip iterator construction and even the comparison with the key
 		template<typename KeyValueType>
 		inline crstl_constexpr14 void reinsert_impl(KeyValueType&& key_value)
 		{
@@ -368,23 +357,17 @@ namespace crstl
 			node_type* const start_node = m_data + bucket_index;
 			node_type* const end_node = m_data + get_bucket_count();
 			node_type* current_node = start_node;
-			node_type* first_tombstone = nullptr;
 
 			do
 			{
 				if (current_node->is_empty())
 				{
-					// Keep track of the first tombstone we encounter so that if we don't find the key we're looking for, we can insert it here
-					node_type* empty_node = first_tombstone ? first_tombstone : (node_type*)current_node;
+					node_type* empty_node = (node_type*)current_node;
 
 					empty_node->set_valid();
 					node_create_selector<KeyValueType, value_type, InsertEmplace>::create(empty_node, crstl_forward(KeyType, key), crstl_forward(InsertEmplaceArgs, insert_emplace_args)...);
 					m_length++;
 					return { iterator(m_data, m_data + get_bucket_count(), empty_node), true };
-				}
-				else if (current_node->is_tombstone())
-				{
-					first_tombstone = first_tombstone ? first_tombstone : (node_type*)current_node;
 				}
 				else if (key == current_node->key_value.first)
 				{
@@ -409,15 +392,6 @@ namespace crstl
 				current_node = (current_node == end_node) ? m_data : current_node;
 			
 			} while(current_node != start_node);
-
-			// If there are no empty nodes but we found a tombstone, insert it here
-			if (first_tombstone)
-			{
-				first_tombstone->set_valid();
-				node_create_selector<KeyValueType, value_type, InsertEmplace>::create(first_tombstone, crstl_forward(KeyType, key), crstl_forward(InsertEmplaceArgs, insert_emplace_args)...);
-				m_length++;
-				return { iterator(m_data, m_data + get_bucket_count(), first_tombstone), true };
-			}
 
 			return { iterator(m_data, m_data + get_bucket_count(), nullptr), false };
 		}
@@ -452,16 +426,61 @@ namespace crstl
 			return end_node;
 		}
 
-		crstl_forceinline crstl_constexpr14 void erase_iter_impl(node_type* current_node)
+		crstl_forceinline crstl_constexpr14 bool erase_iter_impl(node_type* node_to_erase)
 		{
-			// Destroy existing value only if there's a destructor
+			size_t const bucket_count = get_bucket_count();
+			node_type* const data     = m_data;
+			node_type* const end_node = data + bucket_count;
+
+			// Destroy the current node
 			crstl_constexpr_if(!crstl_is_trivially_destructible(key_value_type))
 			{
-				current_node->key_value.~key_value_type();
+				node_to_erase->key_value.~key_value_type();
 			}
 
-			current_node->set_tombstone();
 			m_length--;
+
+			node_type* empty_slot = node_to_erase;
+			node_type* node_to_move = node_to_erase + 1;
+			node_to_move = (node_to_move >= end_node) ? data : node_to_move;
+
+			do
+			{
+				// We traverse the entire chain until we find an empty node, at which point it
+				// is not possible to reshuffle the node chain further
+				if (node_to_move->is_empty())
+				{
+					empty_slot->set_empty();
+					break;
+				}
+				else
+				{
+					// Find out if we're able to move the node
+					const size_t node_to_move_hash_value = compute_hash_value(node_to_move->key_value.first);
+					const size_t node_to_move_bucket_index = compute_bucket(node_to_move_hash_value);
+
+					node_type* bucket_node = data + node_to_move_bucket_index;
+
+					// Find out whether the relative ordering of these allows us to move the node. Moving it incorrectly
+					// could break the chain
+					bool ben = bucket_node <= empty_slot && empty_slot < node_to_move;
+					bool nbe = node_to_move < bucket_node && bucket_node <= empty_slot;
+					bool enb = empty_slot < node_to_move && node_to_move < bucket_node;
+
+					bool can_move_node = ben || nbe || enb;
+
+					if (can_move_node)
+					{
+						crstl_placement_new((void*)&(empty_slot->key_value)) key_value_type(crstl_move(node_to_move->key_value));
+						empty_slot = node_to_move;
+					}
+				}
+
+				node_to_move++;
+				node_to_move = (node_to_move == end_node) ? data : node_to_move;
+			} while (node_to_move != node_to_erase);
+
+			return empty_slot != node_to_erase;
 		}
 
 		node_type* begin_impl() const
