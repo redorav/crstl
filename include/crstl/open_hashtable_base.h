@@ -7,9 +7,11 @@
 #include "crstl/utility/placement_new.h"
 #include "crstl/utility/hashmap_common.h"
 
+#include "crstl/debugging.h"
+
 namespace crstl
 {
-	template<typename KeyValueType>
+	template<typename Key, typename Value>
 	struct open_node
 	{
 		enum node_meta
@@ -26,20 +28,24 @@ namespace crstl
 
 		void set_empty() { meta = (unsigned char)node_meta::empty; }
 
+		const Key& get_key() const { return key_value.first; }
+
 		unsigned char meta;
 
-		KeyValueType key_value;
+		crstl::pair<Key, Value> key_value;
 	};
 
-	template<typename KeyValueType, bool IsConst>
+	template<typename Key, typename Value, bool IsConst>
 	struct open_iterator
 	{
 	public:
 
-		typedef open_iterator<KeyValueType, IsConst> this_type;
-		typedef open_node<KeyValueType> node_type;
-		typedef typename hashmap_type_select<IsConst, const KeyValueType*, KeyValueType*>::type pointer;
-		typedef typename hashmap_type_select<IsConst, const KeyValueType&, KeyValueType&>::type reference;
+		typedef open_iterator<Key, Value, IsConst> this_type;
+		typedef open_node<Key, Value>              node_type;
+		typedef decltype(node_type::key_value)     key_value_type;
+
+		typedef typename hashmap_type_select<IsConst, const key_value_type*, key_value_type*>::type pointer;
+		typedef typename hashmap_type_select<IsConst, const key_value_type&, key_value_type&>::type reference;
 
 		open_iterator(const node_type* data, const node_type* end, node_type* node) : m_data(data), m_end(end), m_node(node) {}
 
@@ -78,12 +84,12 @@ namespace crstl
 	};
 
 	template<typename HashmapStorage>
-	class open_hashmap_base : public HashmapStorage
+	class open_hashtable_base : public HashmapStorage
 	{
 	public:
 
 		typedef HashmapStorage    storage_type;
-		typedef open_hashmap_base this_type;
+		typedef open_hashtable_base this_type;
 
 		typedef typename HashmapStorage::key_type       key_type;
 		typedef typename HashmapStorage::value_type     value_type;
@@ -347,9 +353,6 @@ namespace crstl
 		template<exists_behavior::t Behavior, insert_emplace::t InsertEmplace, typename KeyType, typename... InsertEmplaceArgs>
 		crstl_forceinline crstl_constexpr14 pair<iterator, bool> find_create_impl(KeyType&& key, InsertEmplaceArgs&&... insert_emplace_args)
 		{
-			// Get the type of the key_value member of the node. We need it to feed it to the macro
-			typedef decltype(node_type::key_value) KeyValueType;
-
 			const size_t hash_value = compute_hash_value(key);
 			const size_t bucket_index = compute_bucket(hash_value);
 			crstl_assert(bucket_index <= get_bucket_count());
@@ -362,10 +365,10 @@ namespace crstl
 			{
 				if (current_node->is_empty())
 				{
-					node_type* empty_node = (node_type*)current_node;
+					node_type* empty_node = current_node;
 
 					empty_node->set_valid();
-					node_create_selector<KeyValueType, value_type, InsertEmplace>::create(empty_node, crstl_forward(KeyType, key), crstl_forward(InsertEmplaceArgs, insert_emplace_args)...);
+					node_create_selector<key_value_type, value_type, InsertEmplace>::create(empty_node, crstl_forward(KeyType, key), crstl_forward(InsertEmplaceArgs, insert_emplace_args)...);
 					m_length++;
 					return { iterator(m_data, m_data + get_bucket_count(), empty_node), true };
 				}
@@ -375,14 +378,14 @@ namespace crstl
 					crstl_constexpr_if(Behavior == exists_behavior::assign)
 					{
 						// Destroy existing value
-						crstl_constexpr_if(!crstl_is_trivially_destructible(KeyValueType))
+						crstl_constexpr_if(!crstl_is_trivially_destructible(key_value_type))
 						{
-							current_node->key_value.~KeyValueType();
+							current_node->key_value.~key_value_type();
 						}
 
 						// Create the new one
 						current_node->set_valid();
-						node_create_selector<KeyValueType, value_type, InsertEmplace>::create(current_node, crstl_forward(KeyType, key), crstl_forward(InsertEmplaceArgs, insert_emplace_args)...);
+						node_create_selector<key_value_type, value_type, InsertEmplace>::create(current_node, crstl_forward(KeyType, key), crstl_forward(InsertEmplaceArgs, insert_emplace_args)...);
 					}
 
 					return { iterator(m_data, m_data + get_bucket_count(), current_node), Behavior == exists_behavior::assign };

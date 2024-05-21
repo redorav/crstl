@@ -1,6 +1,6 @@
 #pragma once
 
-#include "crstl/open_hashmap_base.h"
+#include "crstl/open_hashtable_base.h"
 
 #include "crstl/allocator.h"
 #include "crstl/compressed_pair.h"
@@ -19,14 +19,14 @@ crstl_module_export namespace crstl
 	{
 	protected:
 
-		typedef Key                                  key_type;
-		typedef T                                    value_type;
-		typedef pair<Key, T>                         key_value_type;
-		typedef size_t                               size_type;
-		typedef Hasher                               hasher;
-		typedef open_iterator<key_value_type, false> iterator;
-		typedef open_iterator<key_value_type, true>  const_iterator;
-		typedef open_node<key_value_type>            node_type;
+		typedef Key                                                  key_type;
+		typedef T                                                    value_type;
+		typedef size_t                                               size_type;
+		typedef Hasher                                               hasher;
+		typedef open_iterator<key_type, value_type, false>           iterator;
+		typedef open_iterator<key_type, value_type, true>            const_iterator;
+		typedef open_node<key_type, value_type>                      node_type;
+		typedef decltype(open_node<key_type, value_type>::key_value) key_value_type;
 
 		static const size_t kNodeSize = sizeof(node_type);
 
@@ -157,12 +157,12 @@ crstl_module_export namespace crstl
 	};
 
 	template<typename Key, typename T, typename Hasher = crstl::hash<Key>, typename Allocator = crstl::allocator>
-	class open_hashmap : public open_hashmap_base<open_hashmap_storage<Key, T, Hasher, Allocator>>
+	class open_hashtable : public open_hashtable_base<open_hashmap_storage<Key, T, Hasher, Allocator>>
 	{
 	public:
 
-		typedef open_hashmap_base<open_hashmap_storage<Key, T, Hasher, Allocator>> base_type;
-		typedef open_hashmap                                                       this_type;
+		typedef open_hashtable_base<open_hashmap_storage<Key, T, Hasher, Allocator>> base_type;
+		typedef open_hashtable                                                       this_type;
 
 		typedef typename base_type::key_type       key_type;
 		typedef typename base_type::value_type     value_type;
@@ -175,9 +175,9 @@ crstl_module_export namespace crstl
 		using base_type::clear;
 		using base_type::insert;
 
-		crstl_constexpr14 open_hashmap() crstl_noexcept : base_type() {}
+		crstl_constexpr14 open_hashtable() crstl_noexcept : base_type() {}
 
-		crstl_constexpr14 open_hashmap(size_t initial_length) crstl_noexcept
+		crstl_constexpr14 open_hashtable(size_t initial_length) crstl_noexcept
 		{
 			size_t allocated_length = allocate_internal(initial_length);
 
@@ -187,7 +187,7 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		crstl_constexpr14 open_hashmap(const open_hashmap& other) crstl_noexcept : open_hashmap(other.m_length)
+		crstl_constexpr14 open_hashtable(const open_hashtable& other) crstl_noexcept : open_hashtable(other.m_length)
 		{
 			for (const key_value_type& iter : other)
 			{
@@ -197,7 +197,7 @@ crstl_module_export namespace crstl
 
 #if defined(CRSTL_FEATURE_INITIALIZER_LISTS)
 
-		crstl_constexpr14 open_hashmap(std::initializer_list<key_value_type> ilist) crstl_noexcept : open_hashmap((size_t)ilist.size())
+		crstl_constexpr14 open_hashtable(std::initializer_list<key_value_type> ilist) crstl_noexcept : open_hashtable((size_t)ilist.size())
 		{
 			for (const key_value_type& iter : ilist)
 			{
@@ -207,12 +207,12 @@ crstl_module_export namespace crstl
 
 #endif
 
-		~open_hashmap() crstl_noexcept
+		~open_hashtable() crstl_noexcept
 		{
 			destructor();
 		}
 
-		crstl_constexpr14 open_hashmap& operator = (const open_hashmap& other)
+		crstl_constexpr14 open_hashtable& operator = (const open_hashtable& other)
 		{
 			crstl_assert(this != &other);
 
@@ -226,7 +226,7 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
-		crstl_constexpr14 open_hashmap& operator = (open_hashmap&& other)
+		crstl_constexpr14 open_hashtable& operator = (open_hashtable&& other)
 		{
 			crstl_assert(this != &other);
 
@@ -245,7 +245,7 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
-		static void swap(this_type& hashmap1, this_type& hashmap2)
+		static void swap(open_hashtable& hashmap1, open_hashtable& hashmap2)
 		{
 			node_type* data = hashmap2.m_data == &hashmap2.m_dummy ? &hashmap1.m_dummy : hashmap2.m_data;
 			size_t length = hashmap2.m_length;
@@ -287,5 +287,11 @@ crstl_module_export namespace crstl
 		using base_type::m_length;
 		using base_type::m_capacity_allocator;
 		using base_type::m_bucket_count;
+	};
+
+	template<typename Key, typename T, typename Hasher = crstl::hash<Key>>
+	class open_hashmap : public open_hashtable<Key, T, Hasher>
+	{
+		using open_hashtable<Key, T, Hasher>::open_hashtable;
 	};
 };

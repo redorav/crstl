@@ -1,6 +1,6 @@
 #pragma once
 
-#include "crstl/open_hashmap_base.h"
+#include "crstl/open_hashtable_base.h"
 
 #if defined(CRSTL_MODULE_DECLARATION)
 import <initializer_list>;
@@ -11,22 +11,22 @@ import <initializer_list>;
 crstl_module_export namespace crstl
 {
 	template<typename Key, typename T, size_t NodeCount, typename Hasher>
-	class fixed_open_hashmap_storage
+	class fixed_open_hashtable_storage
 	{
 	public:
 
-		typedef Key                                  key_type;
-		typedef T                                    value_type;
-		typedef pair<Key, T>                         key_value_type;
-		typedef size_t                               size_type;
-		typedef Hasher                               hasher;
-		typedef open_iterator<key_value_type, false> iterator;
-		typedef open_iterator<key_value_type, true>  const_iterator;
-		typedef open_node<key_value_type>            node_type;
+		typedef Key                                                  key_type;
+		typedef T                                                    value_type;
+		typedef size_t                                               size_type;
+		typedef Hasher                                               hasher;
+		typedef open_iterator<key_type, value_type, false>           iterator;
+		typedef open_iterator<key_type, value_type, true>            const_iterator;
+		typedef open_node<key_type, value_type>                      node_type;
+		typedef decltype(open_node<key_type, value_type>::key_value) key_value_type;
 
-		fixed_open_hashmap_storage() : m_length(0) {}
+		fixed_open_hashtable_storage() : m_length(0) {}
 
-		~fixed_open_hashmap_storage() {}
+		~fixed_open_hashtable_storage() {}
 
 		template<typename HashmapType>
 		crstl_constexpr14 void reallocate_rehash_if_length_above_load_factor(HashmapType)
@@ -68,13 +68,13 @@ crstl_module_export namespace crstl
 		size_t NodeCount,
 		typename Hasher = crstl::hash<Key>
 	>
-	class fixed_open_hashmap : public open_hashmap_base<fixed_open_hashmap_storage<Key, T, NodeCount, Hasher>>
+	class fixed_open_hashtable : public open_hashtable_base<fixed_open_hashtable_storage<Key, T, NodeCount, Hasher>>
 	{
 	public:
 
 		static_assert(NodeCount >= 1, "Must have at least one node");
 
-		typedef open_hashmap_base<fixed_open_hashmap_storage<Key, T, NodeCount, Hasher>> base_type;
+		typedef open_hashtable_base<fixed_open_hashtable_storage<Key, T, NodeCount, Hasher>> base_type;
 
 		typedef typename base_type::key_type       key_type;
 		typedef typename base_type::value_type     value_type;
@@ -90,7 +90,7 @@ crstl_module_export namespace crstl
 		using base_type::clear;
 		using base_type::insert;
 
-		crstl_constexpr14 fixed_open_hashmap() crstl_noexcept : base_type()
+		crstl_constexpr14 fixed_open_hashtable() crstl_noexcept : base_type()
 		{
 			for (size_t i = 0; i < NodeCount; ++i)
 			{
@@ -98,7 +98,7 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		crstl_constexpr14 fixed_open_hashmap(const fixed_open_hashmap& other) crstl_noexcept : fixed_open_hashmap()
+		crstl_constexpr14 fixed_open_hashtable(const fixed_open_hashtable& other) crstl_noexcept : fixed_open_hashtable()
 		{
 			for (const key_value_type& iter : other)
 			{
@@ -108,7 +108,7 @@ crstl_module_export namespace crstl
 
 #if defined(CRSTL_FEATURE_INITIALIZER_LISTS)
 
-		crstl_constexpr14 fixed_open_hashmap(std::initializer_list<key_value_type> ilist) crstl_noexcept : fixed_open_hashmap()
+		crstl_constexpr14 fixed_open_hashtable(std::initializer_list<key_value_type> ilist) crstl_noexcept : fixed_open_hashtable()
 		{
 			crstl_assert(ilist.size() <= NodeCount);
 
@@ -120,7 +120,7 @@ crstl_module_export namespace crstl
 
 #endif
 
-		~fixed_open_hashmap() crstl_noexcept
+		~fixed_open_hashtable() crstl_noexcept
 		{
 			// Only destroy the value, no need to destroy buckets or nodes
 			crstl_constexpr_if(!crstl_is_trivially_destructible(key_value_type))
@@ -132,7 +132,7 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		crstl_constexpr14 fixed_open_hashmap& operator = (const fixed_open_hashmap& other)
+		crstl_constexpr14 fixed_open_hashtable& operator = (const fixed_open_hashtable& other)
 		{
 			clear();
 		
@@ -143,5 +143,11 @@ crstl_module_export namespace crstl
 		
 			return *this;
 		}
+	};
+
+	template<typename Key, typename T, size_t NodeCount, typename Hasher = crstl::hash<Key>>
+	class fixed_open_hashmap : public fixed_open_hashtable<Key, T, NodeCount, Hasher>
+	{
+		using fixed_open_hashtable<Key, T, NodeCount, Hasher>::fixed_open_hashtable;
 	};
 };
