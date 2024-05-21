@@ -4,6 +4,12 @@
 
 #include "crstl/type_utils.h"
 
+#if defined(CRSTL_MODULE_DECLARATION)
+import <initializer_list>;
+#elif defined(CRSTL_FEATURE_INITIALIZER_LISTS)
+#include <initializer_list>
+#endif
+
 // crstl::span
 //
 // Replacement for std::span
@@ -26,9 +32,15 @@ crstl_module_export namespace crstl
 		typedef T*                           iterator;
 		typedef const T*                     const_iterator;
 
-		span() : m_data(nullptr), m_length(0) {}
+		span() crstl_noexcept : m_data(nullptr), m_length(0) {}
 
-		span(T* data, size_t length) : m_data(data), m_length(length) {}
+		span(T* data, size_t length) crstl_noexcept : m_data(data), m_length(length) {}
+
+#if defined(CRSTL_FEATURE_INITIALIZER_LISTS)
+
+		crstl_constexpr14 span(std::initializer_list<T> ilist) crstl_noexcept : m_data(ilist.begin()), m_length(ilist.size()) {}
+
+#endif
 
 		T& at(size_t i) { crstl_assert(i < m_length); return m_data[i]; }
 		const T& at(size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
