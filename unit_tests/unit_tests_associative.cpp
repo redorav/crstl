@@ -114,7 +114,7 @@ void RunUnitTestAssociativeT()
 		if (iter != crFixedBucketmapInt.end())
 		{
 			findElementCount++;
-			printf("[Finding] Find %i\n", iter->first);
+			//printf("[Finding] Find %i\n", iter->first);
 		}
 	}
 
@@ -124,7 +124,7 @@ void RunUnitTestAssociativeT()
 	for (auto iter = crFixedBucketmapInt.begin(), end = crFixedBucketmapInt.end(); iter != end; ++iter)
 	{
 		findElementIter++;
-		printf("[Iterators] Key %i\n", iter->first);
+		//printf("[Iterators] Key %i\n", iter->first);
 	}
 
 	crstl_check(crFixedBucketmapInt.size() == findElementIter);
@@ -132,8 +132,9 @@ void RunUnitTestAssociativeT()
 	size_t findElementRangedForConst = 0;
 	for (const auto& iter : crFixedBucketmapInt)
 	{
+		crstl_unused(iter);
 		findElementRangedForConst++;
-		printf("[Ranged For Const] Key %i\n", iter.first);
+		//printf("[Ranged For Const] Key %i\n", iter.first);
 	}
 
 	crstl_check(crFixedBucketmapInt.size() == findElementRangedForConst);
@@ -143,7 +144,7 @@ void RunUnitTestAssociativeT()
 	{
 		findElementRangedForNonConst++;
 		iter.second = Example(1, 4.0f);
-		printf("[Ranged For Non-Const] Key %i\n", iter.first);
+		//printf("[Ranged For Non-Const] Key %i\n", iter.first);
 	}
 
 	crstl_check(crFixedBucketmapInt.size() == findElementRangedForNonConst);
