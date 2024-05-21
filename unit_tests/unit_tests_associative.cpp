@@ -3,7 +3,6 @@
 #if defined(CRSTL_UNIT_MODULES)
 import crstl;
 #else
-#include "crstl/fixed_bucket_hashmap.h"
 #include "crstl/fixed_open_hashmap.h"
 #include "crstl/open_hashmap.h"
 #include "crstl/timer.h"
@@ -24,7 +23,6 @@ namespace crstl
 int ManualKeys[] = { 16, 48, 80, 76, 86, 96, 106, 116, 126, 136, 146, 156, 166, 176, 186, 196, 213, 236, 254, 268, 272 };
 
 // Explicit instantiation to help catch errors
-template class crstl::fixed_bucket_hashmap<int, int, 64>;
 template class crstl::fixed_open_hashmap<int, int, 64>;
 
 template<typename Hashmap>
@@ -202,9 +200,6 @@ void RunUnitTestsAssociative()
 {
 	printf("RunUnitTestsAssociative\n");
 
-	crstl::fixed_open_hashmap<int, Example, 64> p;
-
 	RunUnitTestAssociativeT<crstl::open_hashmap<int, Example>>();
 	RunUnitTestAssociativeT<crstl::fixed_open_hashmap<int, Example, 64>>();
-	RunUnitTestAssociativeT<crstl::fixed_bucket_hashmap<int, Example, 64>>();
 }
