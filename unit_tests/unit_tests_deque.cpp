@@ -47,9 +47,17 @@ void RunUnitTestsDeque()
 		{
 			crDeque.push_back();
 			crDeque.pop_front();
+#if defined(CRSTL_VARIADIC_TEMPLATES)
 			crDeque.emplace_back(1, 2.0f);
+#else
+			crDeque.push_back(Dummy(1, 2.0f));
+#endif
 			crDeque.pop_front();
+#if defined(CRSTL_VARIADIC_TEMPLATES)
 			crDeque.emplace_front(2, 3.0f);
+#else
+			crDeque.push_front(Dummy(1, 2.0f));
+#endif
 			crDeque.pop_back();
 			crDeque.push_back();
 			crDeque.pop_front();
@@ -108,8 +116,13 @@ void RunUnitTestsDeque()
 		crDeque[10] = Dummy(43, 43.0f);
 		crDeque[11] = Dummy(44, 44.0f);
 
+#if defined(CRSTL_VARIADIC_TEMPLATES)
 		crDeque.emplace_back(1, 2.0f);
 		crDeque.emplace_front(2, 3.0f);
+#else
+		crDeque.push_back(Dummy(1, 2.0f));
+		crDeque.push_front(Dummy(2, 3.0f));
+#endif
 
 		Dummy& backRef = crDeque.back();
 		backRef = Dummy(440, 440.0f);
