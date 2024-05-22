@@ -178,11 +178,11 @@
 		<DisplayString Condition="m_invoker != nullptr">[size = { $T1 }] { *m_invoker }</DisplayString>
 	</Type>
 
-	<Type Name="crstl::fixed_open_hashmap&lt;*,*,*,*&gt;">
+	<Type Name="crstl::fixed_open_hashtable&lt;*,*,*,*&gt;">
 		<DisplayString>[size = {m_length}]</DisplayString>
 
 		<Expand>
-			<Item Name="[capacity]">$T2</Item>
+			<Item Name="[capacity]">$T3</Item>
 			<Item Name="[size]">m_length</Item>
 			<CustomListItems>
 				<Variable Name="iIndex" InitialValue="0" />
@@ -235,7 +235,7 @@
 		</Expand>
 	</Type>
 
-	<Type Name="crstl::open_hashmap&lt;*,*,*,*&gt;">
+	<Type Name="crstl::open_hashtable&lt;*,*,*,*&gt;">
 		<DisplayString>[size = {m_length}]</DisplayString>
 
 		<Expand>
