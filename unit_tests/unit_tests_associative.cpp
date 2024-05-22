@@ -193,7 +193,6 @@ void RunUnitTestHashmapT()
 	crHashmapInsertAssign.emplace_or_assign(18, Example(4, 25.0f));
 	crstl_check(crHashmapInsertAssign.find(18)->second == Example(4, 25.0f));
 }
-}
 
 void RunUnitTestsAssociative()
 {
