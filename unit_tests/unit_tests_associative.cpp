@@ -198,6 +198,6 @@ void RunUnitTestsAssociative()
 {
 	printf("RunUnitTestsAssociative\n");
 
-	RunUnitTestAssociativeT<crstl::open_hashmap<int, Example>>();
-	RunUnitTestAssociativeT<crstl::fixed_open_hashmap<int, Example, 64>>();
+	RunUnitTestHashmapT<crstl::open_hashmap<int, Example>>();
+	RunUnitTestHashmapT<crstl::fixed_open_hashmap<int, Example, 64>>();
 }
