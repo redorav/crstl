@@ -45,7 +45,7 @@ void RunUnitTestHashmapT()
 	// Insert a temporary object
 	for (size_t i = 0; i < crstl::array_size(ManualKeys); ++i)
 	{
-		crHashmap.insert({ ManualKeys[i], Example() });
+		crHashmap.insert(ManualKeys[i], Example());
 	}
 
 	crstl_check(crHashmap.size() == crstl::array_size(ManualKeys));
