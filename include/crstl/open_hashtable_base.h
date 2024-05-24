@@ -4,6 +4,7 @@
 #include "crstl/hash.h"
 #include "crstl/move_forward.h"
 #include "crstl/pair.h"
+#include "crstl/type_utils.h"
 #include "crstl/utility/placement_new.h"
 #include "crstl/utility/hashmap_common.h"
 
@@ -15,16 +16,13 @@ namespace crstl
 	{
 		enum node_meta
 		{
-			empty      = 0, // Indicates an empty node
-			valid      = 1, // First valid hash
+			empty = 0, // Indicates an empty node
+			valid = 1, // First valid hash
 		};
-		
+
 		bool is_empty() const { return meta == node_meta::empty; }
-
 		bool is_valid() const { return meta > node_meta::empty; }
-
 		void set_valid() { meta = node_meta::valid; }
-
 		void set_empty() { meta = (unsigned char)node_meta::empty; }
 
 		unsigned char meta;
@@ -45,6 +43,12 @@ namespace crstl
 
 		Key key_value;
 	};
+
+	template<typename Key, typename Value>
+	static const Key& get_key(const crstl::pair<Key, Value>& key_value) { return key_value.first; }
+
+	template<typename Key>
+	static const Key& get_key(const Key& key) { return key; }
 
 	template<typename Key, typename Value, bool IsConst>
 	struct open_iterator
@@ -268,25 +272,17 @@ namespace crstl
 			return const_iterator(m_data, m_data + get_bucket_count(), found_node);
 		}
 
-		//-------
-		// insert
-		//-------
+		template<typename... ValueType>
+		pair<iterator, bool> insert(const key_type& key, ValueType&&... value) { return insert_impl<exists_behavior::find>(key, crstl_forward(ValueType, value)...); }
 
-		template<typename ValueType>
-		pair<iterator, bool> insert(const key_type& key, ValueType&& value) { return insert_impl<exists_behavior::find>(key, crstl_forward(ValueType, value)); }
+		template<typename... ValueType>
+		pair<iterator, bool> insert(key_type&& key, ValueType&&... value) { return insert_impl<exists_behavior::find>(crstl_forward(key_type, key), crstl_forward(ValueType, value)...); }
 
-		template<typename ValueType>
-		pair<iterator, bool> insert(key_type&& key, ValueType&& value) { return insert_impl<exists_behavior::find>(crstl_forward(key_type, key), crstl_forward(ValueType, value)); }
-		
-		//-----------------
-		// insert_or_assign
-		//-----------------
+		template<typename... ValueType>
+		pair<iterator, bool> insert_or_assign(const key_type& key, ValueType&&... value) { return insert_impl<exists_behavior::assign>(key, crstl_forward(ValueType, value)...); }
 
-		template<typename ValueType>
-		pair<iterator, bool> insert_or_assign(const key_type& key, ValueType&& value) { return insert_impl<exists_behavior::assign>(key, crstl_forward(ValueType, value)); }
-
-		template<typename ValueType>
-		pair<iterator, bool> insert_or_assign(key_type&& key, ValueType&& value) { return insert_impl<exists_behavior::assign>(crstl_forward(key_type, key), crstl_forward(ValueType, value)); }
+		template<typename... ValueType>
+		pair<iterator, bool> insert_or_assign(key_type&& key, ValueType&&... value) { return insert_impl<exists_behavior::assign>(crstl_forward(key_type, key), crstl_forward(ValueType, value)...); }
 
 		void reserve(size_t capacity)
 		{
@@ -307,10 +303,10 @@ namespace crstl
 			return find_create_reallocate<Behavior, insert_emplace::emplace>(crstl_forward(KeyType, key), crstl_forward(Args, args)...);
 		}
 
-		template<exists_behavior::t Behavior, typename KeyType, typename ValueType>
-		crstl_forceinline crstl_constexpr14 pair<iterator, bool> insert_impl(KeyType&& key, ValueType&& value)
+		template<exists_behavior::t Behavior, typename KeyType, typename... ValueTypes>
+		crstl_forceinline crstl_constexpr14 pair<iterator, bool> insert_impl(KeyType&& key, ValueTypes&&... value)
 		{
-			return find_create_reallocate<Behavior, insert_emplace::insert>(crstl_forward(KeyType, key), crstl_forward(ValueType, value));
+			return find_create_reallocate<Behavior, insert_emplace::insert>(crstl_forward(KeyType, key), crstl_forward(ValueTypes, value)...);
 		}
 		
 		template<exists_behavior::t Behavior, insert_emplace::t InsertEmplace, typename KeyType, typename... InsertEmplaceArgs>
@@ -335,7 +331,7 @@ namespace crstl
 		template<typename KeyValueType>
 		inline crstl_constexpr14 void insert_empty_impl(KeyValueType&& key_value)
 		{
-			const size_t hash_value = compute_hash_value(key_value.first);
+			const size_t hash_value = compute_hash_value(get_key(key_value));
 			const size_t bucket_index = compute_bucket(hash_value);
 			crstl_assert(bucket_index <= get_bucket_count());
 
@@ -365,6 +361,12 @@ namespace crstl
 		template<exists_behavior::t Behavior, insert_emplace::t InsertEmplace, typename KeyType, typename... InsertEmplaceArgs>
 		crstl_forceinline crstl_constexpr14 pair<iterator, bool> find_create_impl(KeyType&& key, InsertEmplaceArgs&&... insert_emplace_args)
 		{
+			// A hashset uses a value_type of void to indicate we want to only store the key. Therefore, trying to insert a value is an error
+			static_assert(crstl::is_void<value_type>::value ? sizeof...(InsertEmplaceArgs) == 0 : true, "Error: hashset does not store a value");
+
+			// Even when we do have a value, trying to insert many is an error, this is meant for a single value
+			static_assert(InsertEmplace == insert_emplace::insert ? sizeof...(InsertEmplaceArgs) < 2 : true, "Error: too many values provided");
+
 			const size_t hash_value = compute_hash_value(key);
 			const size_t bucket_index = compute_bucket(hash_value);
 			crstl_assert(bucket_index <= get_bucket_count());

@@ -194,10 +194,150 @@ void RunUnitTestHashmapT()
 	crstl_check(crHashmapInsertAssign.find(18)->second == Example(4, 25.0f));
 }
 
+template<typename Hashset>
+void RunUnitTestHashsetT()
+{
+	using namespace crstl_unit;
+
+	Hashset crHashset;
+
+	crstl_check(crHashset.size() == 0);
+
+	// Iterate through an empty hashmap
+	size_t iter_count_empty = 0;
+	for (auto iter = crHashset.begin(), end = crHashset.end(); iter != end; ++iter)
+	{
+		iter_count_empty++;
+	}
+	crstl_check(iter_count_empty == 0);
+	
+	// Insert a temporary object
+	for (size_t i = 0; i < crstl::array_size(ManualKeys); ++i)
+	{
+		crHashset.insert(ManualKeys[i]);
+	}
+	
+	crstl_check(crHashset.size() == crstl::array_size(ManualKeys));
+	
+	// Erase all objects manually
+	for (size_t i = 0; i < crstl::array_size(ManualKeys); ++i)
+	{
+		crHashset.erase(ManualKeys[i]);
+	}
+	
+	crstl_check(crHashset.size() == 0);
+	
+	// Remove all objects
+	crHashset.clear();
+	
+	crstl_check(crHashset.empty());
+	
+	// Emplace objects
+	for (size_t i = 0; i < crstl::array_size(ManualKeys); ++i)
+	{
+		crHashset.emplace(ManualKeys[i]);
+	}
+	
+	crstl_check(crHashset.size() == crstl::array_size(ManualKeys));
+	
+	// Count iteration count
+	size_t iter_count = 0;
+	for (auto iter = crHashset.begin(), end = crHashset.end(); iter != end; ++iter)
+	{
+		iter_count++;
+	}
+	crstl_check(iter_count == crstl::array_size(ManualKeys));
+	
+	// Clear via iterators
+	for (auto iter = crHashset.begin(), end = crHashset.end(); iter != end;)
+	{
+		iter = crHashset.erase(iter);
+	}
+	
+	crstl_check(crHashset.size() == 0);
+	
+	// Emplace or assign objects
+	for (size_t i = 0; i < crstl::array_size(ManualKeys); ++i)
+	{
+		crHashset.emplace_or_assign(ManualKeys[i]);
+	}
+	
+	crstl_check(crHashset.size() == crstl::array_size(ManualKeys));
+	
+	// Find the inserted elements
+	size_t findElementCount = 0;
+	for (size_t i = 0; i < crstl::array_size(ManualKeys); ++i)
+	{
+		auto iter = crHashset.find(ManualKeys[i]);
+		if (iter != crHashset.end())
+		{
+			findElementCount++;
+			//printf("[Finding] Find %i\n", iter->first);
+		}
+	}
+	
+	crstl_check(crHashset.size() == findElementCount);
+	
+	size_t findElementIter = 0;
+	for (auto iter = crHashset.begin(), end = crHashset.end(); iter != end; ++iter)
+	{
+		findElementIter++;
+		//printf("[Iterators] Key %i\n", iter->first);
+	}
+	
+	crstl_check(crHashset.size() == findElementIter);
+	
+	size_t findElementRangedForConst = 0;
+	for (const auto& iter : crHashset)
+	{
+		crstl_unused(iter);
+		findElementRangedForConst++;
+		//printf("[Ranged For Const] Key %i\n", iter.first);
+	}
+	
+	crstl_check(crHashset.size() == findElementRangedForConst);
+	
+	size_t findElementRangedForNonConst = 0;
+	for (auto& iter : crHashset)
+	{
+		crstl_unused(iter);
+		findElementRangedForNonConst++;
+		//iter.second = Example(1, 4.0f);
+		//printf("[Ranged For Non-Const] Key %i\n", iter.first);
+	}
+	
+	crstl_check(crHashset.size() == findElementRangedForNonConst);
+	
+	// Copy constructor
+	Hashset crHashset2(crHashset);
+	crstl_check(crHashset.size() == crHashset2.size());
+	
+	// Copy assignment
+	Hashset crHashset3;
+	crHashset3 = crHashset;
+	crstl_check(crHashset.size() == crHashset3.size());
+	
+	crHashset.clear();
+	
+	Hashset crHashsetInitializerList =
+	{
+		{ 7 },
+		{ 17 },
+		{ 57 },
+		{ 877 },
+		{ 1357 },
+		{ 1067 },
+	};
+	
+	crstl_check(crHashsetInitializerList.size() == 6);
+}
+
 void RunUnitTestsAssociative()
 {
 	printf("RunUnitTestsAssociative\n");
 
 	RunUnitTestHashmapT<crstl::open_hashmap<int, Example>>();
 	RunUnitTestHashmapT<crstl::fixed_open_hashmap<int, Example, 64>>();
+
+	RunUnitTestHashsetT<crstl::open_hashset<int>>();
 }
