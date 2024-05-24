@@ -17,25 +17,27 @@ extern "C"
 #include <sys/sysctl.h>
 #endif
 
+#if defined(CRSTL_COMPILER_MSVC)
+	#define crstl_breakpoint() __debugbreak()
+#elif crstl_has_builtin(__builtin_debugtrap) // Mostly the Clang compiler
+	#define crstl_breakpoint() __builtin_debugtrap()
+#elif defined(CRSTL_ARCH_X86)
+	#define crstl_breakpoint() __asm__ volatile("int $0x03")
+#elif defined(CRSTL_ARCH_ARM32)
+	#define crstl_breakpoint() __asm__ volatile("udf #0xfe")
+#elif defined(CRSTL_ARCH_ARM64)
+	#define crstl_breakpoint() __asm__ volatile("brk #0xf000")
+#elif defined(CRSTL_ARCH_POWERPC)
+	#define crstl_breakpoint() __asm__ volatile(".4byte 0x7d821008")
+#else
+	#error not implemented
+#endif
+
 crstl_module_export namespace crstl
 {
 	inline void breakpoint() crstl_noexcept
 	{
-#if defined(CRSTL_COMPILER_MSVC)
-		__debugbreak();
-#elif crstl_has_builtin(__builtin_debugtrap) // Mostly the Clang compiler
-		__builtin_debugtrap();
-#elif defined(CRSTL_ARCH_X86)
-		__asm__ volatile("int $0x03");
-#elif defined(CRSTL_ARCH_ARM32)
-		__asm__ volatile("udf #0xfe");
-#elif defined(CRSTL_ARCH_ARM64)
-		__asm__ volatile("brk #0xf000");
-#elif defined(CRSTL_ARCH_POWERPC)
-		__asm__ volatile(".4byte 0x7d821008");
-#else
-		#error not implemented
-#endif
+		crstl_breakpoint();
 	}
 
 	inline bool is_debugger_present() crstl_noexcept
