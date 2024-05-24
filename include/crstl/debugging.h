@@ -63,7 +63,7 @@ crstl_module_export namespace crstl
 		// We're in the debugger if the P_TRACED flag is set
 		return ((info.kp_proc.p_flag & P_TRACED) != 0);
 #else
-		return 0;
+		return false;
 #endif
 	}
 
