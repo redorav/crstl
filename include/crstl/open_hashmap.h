@@ -215,7 +215,23 @@ crstl_module_export namespace crstl
 		{
 			crstl_assert(this != &other);
 
-			clear();
+			// Reuse existing allocation if the size fits, just need to destroy existing elements and reset
+			if (m_bucket_count >= other.m_length)
+			{
+				clear();
+			}
+			// Otherwise destroy elements, deallocate memory and allocate a new piece of memory for the incoming data
+			else
+			{
+				destructor();
+
+				size_t allocated_length = allocate_internal(other.m_length);
+
+				for (size_t i = 0; i < allocated_length; ++i)
+				{
+					m_data[i].set_empty();
+				}
+			}
 
 			for (const key_value_type& iter : other)
 			{
@@ -293,5 +309,11 @@ crstl_module_export namespace crstl
 	class open_hashmap : public open_hashtable<Key, T, Hasher>
 	{
 		using open_hashtable<Key, T, Hasher>::open_hashtable;
+	};
+
+	template<typename Key, typename Hasher = crstl::hash<Key>>
+	class open_hashset : public open_hashtable<Key, void, Hasher>
+	{
+		using open_hashtable<Key, void, Hasher>::open_hashtable;
 	};
 };

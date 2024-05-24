@@ -138,21 +138,24 @@ namespace crstl
 
 		crstl_constexpr14 void clear()
 		{
-			crstl_constexpr_if(!crstl_is_trivially_destructible(key_value_type))
+			if (m_length != 0)
 			{
-				for (const key_value_type& iter : *this)
+				crstl_constexpr_if(!crstl_is_trivially_destructible(key_value_type))
 				{
-					iter.~key_value_type();
+					for (const key_value_type& iter : *this)
+					{
+						iter.~key_value_type();
+					}
 				}
-			}
 
-			// Clear m_data
-			for (size_t i = 0; i < get_bucket_count(); ++i)
-			{
-				m_data[i].set_empty();
-			}
+				// Clear m_data
+				for (size_t i = 0; i < get_bucket_count(); ++i)
+				{
+					m_data[i].set_empty();
+				}
 
-			m_length = 0;
+				m_length = 0;
+			}
 		}
 
 		crstl_constexpr bool empty() const { return m_length == 0; }

@@ -153,4 +153,10 @@ crstl_module_export namespace crstl
 	{
 		using fixed_open_hashtable<Key, T, NodeCount, Hasher>::fixed_open_hashtable;
 	};
+
+	template<typename Key, size_t NodeCount, typename Hasher = crstl::hash<Key>>
+	class fixed_open_hashset : public fixed_open_hashtable<Key, void, NodeCount, Hasher>
+	{
+		using fixed_open_hashtable<Key, void, NodeCount, Hasher>::fixed_open_hashtable;
+	};
 };
