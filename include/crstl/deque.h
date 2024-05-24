@@ -21,7 +21,7 @@
 //
 // Replacement for std::deque
 //
-// In the same spirit as the standard, it works via a series of fixed sized chunks, thereby having 
+// In the same spirit as the standard, it works via a series of fixed sized chunks
 //
 // Non-standard functions
 //
