@@ -173,7 +173,6 @@ crstl_module_export namespace crstl
 		typedef typename base_type::node_type      node_type;
 
 		using base_type::clear;
-		using base_type::insert;
 
 		crstl_constexpr14 open_hashtable() crstl_noexcept : base_type() {}
 
@@ -191,7 +190,7 @@ crstl_module_export namespace crstl
 		{
 			for (const key_value_type& iter : other)
 			{
-				insert(iter);
+				insert_empty_impl(iter);
 			}
 		}
 
@@ -201,7 +200,7 @@ crstl_module_export namespace crstl
 		{
 			for (const key_value_type& iter : ilist)
 			{
-				insert(iter);
+				insert_empty_impl(iter);
 			}
 		}
 
@@ -220,7 +219,7 @@ crstl_module_export namespace crstl
 
 			for (const key_value_type& iter : other)
 			{
-				insert(iter);
+				insert_empty_impl(iter);
 			}
 
 			return *this;
@@ -281,6 +280,7 @@ crstl_module_export namespace crstl
 
 		using base_type::allocate_internal;
 		using base_type::deallocate_internal;
+		using base_type::insert_empty_impl;
 
 		using base_type::m_data;
 		using base_type::m_dummy;

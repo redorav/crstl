@@ -11,8 +11,7 @@
 
 namespace crstl
 {
-	template<typename Key, typename Value>
-	struct open_node
+	struct open_node_base
 	{
 		enum node_meta
 		{
@@ -28,11 +27,23 @@ namespace crstl
 
 		void set_empty() { meta = (unsigned char)node_meta::empty; }
 
+		unsigned char meta;
+	};
+
+	template<typename Key, typename Value>
+	struct open_node : public open_node_base
+	{
 		const Key& get_key() const { return key_value.first; }
 
-		unsigned char meta;
-
 		crstl::pair<Key, Value> key_value;
+	};
+
+	template<typename Key>
+	struct open_node<Key, void> : public open_node_base
+	{
+		const Key& get_key() const { return key_value; }
+
+		Key key_value;
 	};
 
 	template<typename Key, typename Value, bool IsConst>
@@ -226,7 +237,7 @@ namespace crstl
 				{
 					return 0;
 				}
-				else if (current_node->key_value.first == key)
+				else if (current_node->get_key() == key)
 				{
 					erase_iter_impl(current_node);
 					return 1;
@@ -258,23 +269,15 @@ namespace crstl
 		// insert
 		//-------
 
-		pair<iterator, bool> insert(const key_value_type& key_value) { return insert_impl<exists_behavior::find>(key_value.first, key_value.second); }
-
-		pair<iterator, bool> insert(key_value_type&& key_value) { return insert_impl<exists_behavior::find>(crstl_forward(key_type, key_value.first), crstl_forward(value_type, key_value.second)); }
-
 		template<typename ValueType>
 		pair<iterator, bool> insert(const key_type& key, ValueType&& value) { return insert_impl<exists_behavior::find>(key, crstl_forward(ValueType, value)); }
 
 		template<typename ValueType>
 		pair<iterator, bool> insert(key_type&& key, ValueType&& value) { return insert_impl<exists_behavior::find>(crstl_forward(key_type, key), crstl_forward(ValueType, value)); }
-
+		
 		//-----------------
 		// insert_or_assign
 		//-----------------
-
-		pair<iterator, bool> insert_or_assign(const key_value_type& key_value) { return insert_impl<exists_behavior::assign>(key_value.first, key_value.second); }
-
-		pair<iterator, bool> insert_or_assign(key_value_type&& key_value) { return insert_impl<exists_behavior::assign>(crstl_forward(key_type, key_value.first), crstl_forward(value_type, key_value.second)); }
 
 		template<typename ValueType>
 		pair<iterator, bool> insert_or_assign(const key_type& key, ValueType&& value) { return insert_impl<exists_behavior::assign>(key, crstl_forward(ValueType, value)); }
@@ -318,10 +321,16 @@ namespace crstl
 			return find_create_impl<Behavior, InsertEmplace>(crstl_forward(KeyType, key), crstl_forward(InsertEmplaceArgs, insert_emplace_args)...);
 		}
 
-		// Optimized version of insert when we know we are batch inserting nodes into a clean hashmap
-		// We can skip iterator construction and even the comparison with the key
+		// Optimized version of insert when we know we are batch inserting key-value types into a clean hashmap
+		// We can skip iterator construction and even the comparison with the key. This is useful for constructors
+		// and for rehashing
+		inline crstl_constexpr14 void insert_empty_impl(const key_value_type& key_value)
+		{
+			insert_empty_impl(crstl_forward(const key_value_type, key_value));
+		}
+
 		template<typename KeyValueType>
-		inline crstl_constexpr14 void reinsert_impl(KeyValueType&& key_value)
+		inline crstl_constexpr14 void insert_empty_impl(KeyValueType&& key_value)
 		{
 			const size_t hash_value = compute_hash_value(key_value.first);
 			const size_t bucket_index = compute_bucket(hash_value);
@@ -372,7 +381,7 @@ namespace crstl
 					m_length++;
 					return { iterator(m_data, m_data + get_bucket_count(), empty_node), true };
 				}
-				else if (key == current_node->key_value.first)
+				else if (current_node->get_key() == key)
 				{
 					// If our insert behavior is to assign, replace the existing value with the current one
 					crstl_constexpr_if(Behavior == exists_behavior::assign)
@@ -417,7 +426,7 @@ namespace crstl
 					return end_node;
 				}
 
-				if (key == current_node->key_value.first)
+				if (current_node->get_key() == key)
 				{
 					return current_node;
 				}
@@ -459,7 +468,7 @@ namespace crstl
 				else
 				{
 					// Find out if we're able to move the node
-					const size_t node_to_move_hash_value = compute_hash_value(node_to_move->key_value.first);
+					const size_t node_to_move_hash_value = compute_hash_value(node_to_move->get_key());
 					const size_t node_to_move_bucket_index = compute_bucket(node_to_move_hash_value);
 
 					node_type* bucket_node = data + node_to_move_bucket_index;
@@ -513,7 +522,7 @@ namespace crstl
 			{
 				if (current_node->is_valid())
 				{
-					hashmap->reinsert_impl(crstl_move(current_node->key_value));
+					hashmap->insert_empty_impl(crstl_move(current_node->key_value));
 
 					crstl_constexpr_if(!crstl_is_trivially_destructible(node_type))
 					{

@@ -84,11 +84,7 @@ crstl_module_export namespace crstl
 		typedef typename base_type::const_iterator const_iterator;
 		typedef typename base_type::node_type      node_type;
 
-		using base_type::m_data;
-		using base_type::m_length;
-
 		using base_type::clear;
-		using base_type::insert;
 
 		crstl_constexpr14 fixed_open_hashtable() crstl_noexcept : base_type()
 		{
@@ -102,7 +98,7 @@ crstl_module_export namespace crstl
 		{
 			for (const key_value_type& iter : other)
 			{
-				insert(iter);
+				insert_empty_impl(iter);
 			}
 		}
 
@@ -114,7 +110,7 @@ crstl_module_export namespace crstl
 
 			for (const key_value_type& iter : ilist)
 			{
-				insert(iter);
+				insert_empty_impl(iter);
 			}
 		}
 
@@ -138,11 +134,18 @@ crstl_module_export namespace crstl
 		
 			for (const key_value_type& iter : other)
 			{
-				insert(iter);
+				insert_empty_impl(iter);
 			}
 		
 			return *this;
 		}
+
+	private:
+
+		using base_type::insert_empty_impl;
+
+		using base_type::m_data;
+		using base_type::m_length;
 	};
 
 	template<typename Key, typename T, size_t NodeCount, typename Hasher = crstl::hash<Key>>
