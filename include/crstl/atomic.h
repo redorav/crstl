@@ -228,7 +228,7 @@ crstl_module_export namespace crstl
 			return m_value;
 		}
 
-	protected:
+	private:
 
 		value_type m_value;
 	};
