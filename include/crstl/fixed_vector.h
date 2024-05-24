@@ -178,7 +178,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr size_t max_size() const { return NumElements; }
 
-		crstl_constexpr14 void swap(this_type& v)
+		crstl_constexpr14 void swap(this_type& v) crstl_noexcept
 		{
 			// For small vectors, make a temporary copy directly on the stack, then copy it back
 			crstl_constexpr_if(sizeof(this_type) <= kMaxStack)
