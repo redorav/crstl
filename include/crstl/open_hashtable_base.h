@@ -98,7 +98,7 @@ namespace crstl
 		node_type* m_node;
 	};
 
-	template<typename HashmapStorage>
+	template<typename HashmapStorage, bool IsMultipleValue = false>
 	class open_hashtable_base : public HashmapStorage
 	{
 	public:
@@ -273,16 +273,28 @@ namespace crstl
 		}
 
 		template<typename... ValueType>
-		pair<iterator, bool> insert(const key_type& key, ValueType&&... value) { return insert_impl<exists_behavior::find>(key, crstl_forward(ValueType, value)...); }
+		pair<iterator, bool> insert(const key_type& key, ValueType&&... value)
+		{
+			return insert_impl<IsMultipleValue ? exists_behavior::multi : exists_behavior::find>(key, crstl_forward(ValueType, value)...);
+		}
 
 		template<typename... ValueType>
-		pair<iterator, bool> insert(key_type&& key, ValueType&&... value) { return insert_impl<exists_behavior::find>(crstl_forward(key_type, key), crstl_forward(ValueType, value)...); }
+		pair<iterator, bool> insert(key_type&& key, ValueType&&... value)
+		{
+			return insert_impl<IsMultipleValue ? exists_behavior::multi : exists_behavior::find>(crstl_forward(key_type, key), crstl_forward(ValueType, value)...);
+		}
 
 		template<typename... ValueType>
-		pair<iterator, bool> insert_or_assign(const key_type& key, ValueType&&... value) { return insert_impl<exists_behavior::assign>(key, crstl_forward(ValueType, value)...); }
+		pair<iterator, bool> insert_or_assign(const key_type& key, ValueType&&... value)
+		{
+			return insert_impl<IsMultipleValue ? exists_behavior::multi : exists_behavior::assign>(key, crstl_forward(ValueType, value)...);
+		}
 
 		template<typename... ValueType>
-		pair<iterator, bool> insert_or_assign(key_type&& key, ValueType&&... value) { return insert_impl<exists_behavior::assign>(crstl_forward(key_type, key), crstl_forward(ValueType, value)...); }
+		pair<iterator, bool> insert_or_assign(key_type&& key, ValueType&&... value)
+		{
+			return insert_impl<IsMultipleValue ? exists_behavior::multi : exists_behavior::assign>(crstl_forward(key_type, key), crstl_forward(ValueType, value)...);
+		}
 
 		void reserve(size_t capacity)
 		{
@@ -386,23 +398,26 @@ namespace crstl
 					m_length++;
 					return { iterator(m_data, m_data + get_bucket_count(), empty_node), true };
 				}
-				else if (current_node->get_key() == key)
+				else crstl_constexpr_if(Behavior != exists_behavior::multi)
 				{
-					// If our insert behavior is to assign, replace the existing value with the current one
-					crstl_constexpr_if(Behavior == exists_behavior::assign)
+					if (current_node->get_key() == key)
 					{
-						// Destroy existing value
-						crstl_constexpr_if(!crstl_is_trivially_destructible(key_value_type))
+						// If our insert behavior is to assign, replace the existing value with the current one
+						crstl_constexpr_if(Behavior == exists_behavior::assign)
 						{
-							current_node->key_value.~key_value_type();
+							// Destroy existing value
+							crstl_constexpr_if(!crstl_is_trivially_destructible(key_value_type))
+							{
+								current_node->key_value.~key_value_type();
+							}
+
+							// Create the new one
+							current_node->set_valid();
+							node_create_selector<key_value_type, value_type, InsertEmplace>::create(current_node, crstl_forward(KeyType, key), crstl_forward(InsertEmplaceArgs, insert_emplace_args)...);
 						}
 
-						// Create the new one
-						current_node->set_valid();
-						node_create_selector<key_value_type, value_type, InsertEmplace>::create(current_node, crstl_forward(KeyType, key), crstl_forward(InsertEmplaceArgs, insert_emplace_args)...);
+						return { iterator(m_data, m_data + get_bucket_count(), current_node), Behavior == exists_behavior::assign };
 					}
-
-					return { iterator(m_data, m_data + get_bucket_count(), current_node), Behavior == exists_behavior::assign };
 				}
 			
 				current_node++;

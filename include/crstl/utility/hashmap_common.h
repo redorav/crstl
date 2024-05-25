@@ -42,8 +42,9 @@ crstl_module_export namespace crstl
 	{
 		enum t
 		{
-			find,
-			assign
+			find,   // Return the node if found, else insert
+			assign, // Assign (or replace) the node when found, else insert
+			multi,  // Insert multiple values with the same key, even if the values are the same
 		};
 	};
 

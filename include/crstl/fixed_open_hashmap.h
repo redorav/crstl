@@ -61,14 +61,8 @@ crstl_module_export namespace crstl
 	};
 
 	// It is recommended to use a power of 2 for buckets as it is faster to find
-	template
-	<
-		typename Key,
-		typename T,
-		size_t NodeCount,
-		typename Hasher = crstl::hash<Key>
-	>
-	class fixed_open_hashtable : public open_hashtable_base<fixed_open_hashtable_storage<Key, T, NodeCount, Hasher>>
+	template<typename Key, typename T, size_t NodeCount, typename Hasher = crstl::hash<Key>, bool IsMultipleValue = false>
+	class fixed_open_hashtable : public open_hashtable_base<fixed_open_hashtable_storage<Key, T, NodeCount, Hasher>, IsMultipleValue>
 	{
 	public:
 
@@ -158,5 +152,17 @@ crstl_module_export namespace crstl
 	class fixed_open_hashset : public fixed_open_hashtable<Key, void, NodeCount, Hasher>
 	{
 		using fixed_open_hashtable<Key, void, NodeCount, Hasher>::fixed_open_hashtable;
+	};
+
+	template<typename Key, typename T, size_t NodeCount, typename Hasher = crstl::hash<Key>>
+	class fixed_open_multi_hashmap : public fixed_open_hashtable<Key, T, NodeCount, Hasher, true>
+	{
+		using fixed_open_hashtable<Key, T, NodeCount, Hasher, true>::open_hashtable;
+	};
+
+	template<typename Key, size_t NodeCount, typename Hasher = crstl::hash<Key>>
+	class fixed_open_multi_hashset : public fixed_open_hashtable<Key, void, NodeCount, Hasher, true>
+	{
+		using fixed_open_hashtable<Key, void, NodeCount, Hasher, true>::open_hashtable;
 	};
 };
