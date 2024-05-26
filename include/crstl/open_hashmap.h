@@ -311,10 +311,10 @@ crstl_module_export namespace crstl
 		using open_hashtable<Key, T, Hasher, Allocator>::open_hashtable;
 	};
 
-	template<typename Key, typename Hasher = crstl::hash<Key>>
-	class open_hashset : public open_hashtable<Key, void, Hasher>
+	template<typename Key, typename Hasher = crstl::hash<Key>, typename Allocator = crstl::allocator>
+	class open_hashset : public open_hashtable<Key, void, Hasher, Allocator>
 	{
-		using open_hashtable<Key, void, Hasher>::open_hashtable;
+		using open_hashtable<Key, void, Hasher, Allocator>::open_hashtable;
 	};
 
 	template<typename Key, typename T, typename Hasher = crstl::hash<Key>, typename Allocator = crstl::allocator>
