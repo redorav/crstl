@@ -173,6 +173,38 @@ namespace crstl
 		crstl_nodiscard
 		crstl_constexpr const_iterator cend() const { return const_iterator(m_data, (node_type*)(m_data + get_bucket_count()), (node_type*)(m_data + get_bucket_count())); }
 
+		template<typename KeyType>
+		size_t count(const KeyType& key) const
+		{
+			const size_t bucket_count = get_bucket_count();
+			const size_t hash_value   = compute_hash_value(key);
+			const size_t bucket_index = compute_bucket(hash_value);
+
+			node_type* const data = m_data;
+			node_type* const start_node = data + bucket_index;
+			node_type* const end_node = data + bucket_count;
+			node_type* crstl_restrict current_node = start_node;
+
+			size_t count = 0;
+
+			do
+			{
+				if (current_node->is_empty())
+				{
+					break;
+				}
+				else if (current_node->get_key() == key)
+				{
+					++count;
+				}
+
+				current_node++;
+				current_node = (current_node == end_node) ? data : current_node;
+			} while (current_node != start_node);
+
+			return count;
+		}
+
 #if defined(CRSTL_VARIADIC_TEMPLATES)
 
 		//--------
