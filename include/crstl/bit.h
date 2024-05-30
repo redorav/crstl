@@ -264,7 +264,7 @@ crstl_module_export namespace crstl
 		{
 			crstl_constexpr_if(sizeof(T) <= sizeof(unsigned int))
 			{
-				return __builtin_clz(static_cast<unsigned int>(x)) - (bitsize<unsigned int>() - bit_width<T>());
+				return __builtin_clz(static_cast<unsigned int>(x)) - (bit_width<unsigned int>() - bit_width<T>());
 			}
 			else crstl_constexpr_if(sizeof(T) <= sizeof(unsigned long))
 			{
