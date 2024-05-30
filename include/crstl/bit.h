@@ -477,8 +477,8 @@ crstl_module_export namespace crstl
 
 	template <typename T>
 	crstl_nodiscard
-	crstl_constexpr T bit_width(const T x) crstl_noexcept
+	crstl_constexpr int bit_width(const T x) crstl_noexcept
 	{
-		return static_cast<T>(bitsize<T>() - crstl::countl_zero(x));
+		return static_cast<int>(bitsize<T>() - crstl::countl_zero(x));
 	}
 };
