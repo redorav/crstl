@@ -47,7 +47,7 @@ extern "C"
 crstl_module_export namespace crstl
 {
 	template<typename T>
-	crstl_constexpr int bitsize() { return sizeof(T) * 8; }
+	crstl_constexpr int bit_width() { return sizeof(T) * 8; }
 };
 
 #if defined(CRSTL_COMPILER_MSVC)
@@ -91,7 +91,7 @@ namespace crstl
 		template<typename T>
 		T rotl(const T x, int s)
 		{
-			crstl_constexpr const unsigned int digits = bitsize<T>();
+			crstl_constexpr const unsigned int digits = bit_width<T>();
 			const unsigned int us = s;
 			return (x << (us % digits)) | (x >> ((-us) % digits));
 		}
@@ -99,7 +99,7 @@ namespace crstl
 		template<typename T>
 		T rotr(const T x, int s)
 		{
-			crstl_constexpr const unsigned int digits = bitsize<T>();
+			crstl_constexpr const unsigned int digits = bit_width<T>();
 			const unsigned us = s;
 			return (x >> (us % digits)) | (x << ((-us) % digits));
 		}
@@ -132,7 +132,7 @@ crstl_module_export namespace crstl
 		unsigned long bitscan_forward(const T x)
 		{
 			unsigned long index;
-			crstl_constexpr_if(bitsize<T>() <= 32)
+			crstl_constexpr_if(bit_width<T>() <= 32)
 			{
 				_BitScanForward(&index, static_cast<DWORD>(x));
 			}
@@ -148,7 +148,7 @@ crstl_module_export namespace crstl
 		unsigned long bitscan_reverse(const T x)
 		{
 			unsigned long index;
-			crstl_constexpr_if(bitsize<T>() <= 32)
+			crstl_constexpr_if(bit_width<T>() <= 32)
 			{
 				_BitScanReverse(&index, static_cast<DWORD>(x));
 			}
@@ -182,7 +182,7 @@ crstl_module_export namespace crstl
 	crstl_nodiscard
 	inline int countr_zero(const T x)
 	{
-		crstl_constexpr const int digits = bitsize<T>();
+		crstl_constexpr const int digits = bit_width<T>();
 		unsigned long index = detail::bitscan_forward(x);
 		return static_cast<int>(x != 0 ? index : digits);
 	}
@@ -191,7 +191,7 @@ crstl_module_export namespace crstl
 	crstl_nodiscard
 	inline int countl_zero(const T x)
 	{
-		crstl_constexpr const int digits = bitsize<T>();
+		crstl_constexpr const int digits = bit_width<T>();
 		unsigned long index = detail::bitscan_reverse(x);
 		return static_cast<int>(x != 0 ? (digits - 1 - index) : digits);
 	}
@@ -205,7 +205,7 @@ crstl_module_export namespace crstl
 		temp.n64_u64[0] = x;
 		return neon_addv8(neon_cnt(temp)).n8_i8[0];
 #else
-		crstl_constexpr const int digits = bitsize<T>();
+		crstl_constexpr const int digits = bit_width<T>();
 		crstl_constexpr_if(digits <= 16)
 		{
 			return static_cast<int>(__popcnt16(static_cast<unsigned short>(x)));
@@ -264,7 +264,7 @@ crstl_module_export namespace crstl
 		{
 			crstl_constexpr_if(sizeof(T) <= sizeof(unsigned int))
 			{
-				return __builtin_clz(static_cast<unsigned int>(x)) - (bitsize<unsigned int>() - bitsize<T>());
+				return __builtin_clz(static_cast<unsigned int>(x)) - (bitsize<unsigned int>() - bit_width<T>());
 			}
 			else crstl_constexpr_if(sizeof(T) <= sizeof(unsigned long))
 			{
@@ -303,19 +303,19 @@ crstl_module_export namespace crstl
 	template<typename T>
 	inline int firstbithigh(const T x)
 	{
-		return x != 0 ? (bitsize<T>() - 1) - detail::clz(x) : -1;
+		return x != 0 ? (bit_width<T>() - 1) - detail::clz(x) : -1;
 	}
 
 	template<typename T>
 	inline int countr_zero(const T x)
 	{
-		return x != 0 ? detail::ctz(x) : bitsize<T>();
+		return x != 0 ? detail::ctz(x) : bit_width<T>();
 	}
 
 	template<typename T>
 	inline int countl_zero(const T x)
 	{
-		return x != 0 ? detail::clz(x) : bitsize<T>();
+		return x != 0 ? detail::clz(x) : bit_width<T>();
 	}
 
 	template<typename T>
@@ -366,7 +366,7 @@ crstl_module_export namespace crstl
 	crstl_nodiscard
 	inline T rotl(const T x, int s)
 	{
-		crstl_constexpr const int digits = bitsize<T>();
+		crstl_constexpr const int digits = bit_width<T>();
 
 		crstl_constexpr_if(digits == 8)
 		{
@@ -390,7 +390,7 @@ crstl_module_export namespace crstl
 	crstl_nodiscard
 	inline T rotr(const T x, int s)
 	{
-		crstl_constexpr const int digits = bitsize<T>();
+		crstl_constexpr const int digits = bit_width<T>();
 
 		crstl_constexpr_if(digits == 8)
 		{
@@ -414,7 +414,7 @@ crstl_module_export namespace crstl
 	crstl_nodiscard
 	inline T byteswap(const T x)
 	{
-		crstl_constexpr const int digits = bitsize<T>();
+		crstl_constexpr const int digits = bit_width<T>();
 
 		crstl_constexpr_if(digits == 8)
 		{
@@ -458,7 +458,7 @@ crstl_module_export namespace crstl
 			return T(1);
 		}
 
-		const auto shift = crstl::bitsize<T>() - crstl::countl_zero(static_cast<T>(x - 1));
+		const auto shift = crstl::bit_width<T>() - crstl::countl_zero(static_cast<T>(x - 1));
 		return static_cast<T>(T(1) << shift);
 	}
 
@@ -471,7 +471,7 @@ crstl_module_export namespace crstl
 			return T(0);
 		}
 
-		const auto shift = crstl::bitsize<T>() - crstl::countl_zero(x) - 1;
+		const auto shift = crstl::bit_width<T>() - crstl::countl_zero(x) - 1;
 		return static_cast<T>(T(1) << shift);
 	}
 
@@ -479,6 +479,6 @@ crstl_module_export namespace crstl
 	crstl_nodiscard
 	crstl_constexpr int bit_width(const T x) crstl_noexcept
 	{
-		return static_cast<int>(bitsize<T>() - crstl::countl_zero(x));
+		return static_cast<int>(bit_width<T>() - crstl::countl_zero(x));
 	}
 };
