@@ -47,13 +47,13 @@ void RunUnitTestsDeque()
 		{
 			crDeque.push_back();
 			crDeque.pop_front();
-#if defined(CRSTL_VARIADIC_TEMPLATES)
+#if defined(CRSTL_FEATURE_VARIADIC_TEMPLATES)
 			crDeque.emplace_back(1, 2.0f);
 #else
 			crDeque.push_back(Dummy(1, 2.0f));
 #endif
 			crDeque.pop_front();
-#if defined(CRSTL_VARIADIC_TEMPLATES)
+#if defined(CRSTL_FEATURE_VARIADIC_TEMPLATES)
 			crDeque.emplace_front(2, 3.0f);
 #else
 			crDeque.push_front(Dummy(1, 2.0f));
@@ -116,7 +116,7 @@ void RunUnitTestsDeque()
 		crDeque[10] = Dummy(43, 43.0f);
 		crDeque[11] = Dummy(44, 44.0f);
 
-#if defined(CRSTL_VARIADIC_TEMPLATES)
+#if defined(CRSTL_FEATURE_VARIADIC_TEMPLATES)
 		crDeque.emplace_back(1, 2.0f);
 		crDeque.emplace_front(2, 3.0f);
 #else
@@ -162,7 +162,7 @@ void RunUnitTestsDeque()
 
 		for (size_t i = 0; i < 200000; ++i)
 		{
-#if defined(CRSTL_VARIADIC_TEMPLATES)
+#if defined(CRSTL_FEATURE_VARIADIC_TEMPLATES)
 			int random = rand() % 11;
 #else
 			int random = rand() % 9;
@@ -177,7 +177,7 @@ void RunUnitTestsDeque()
 				case 5: crDeque.push_front(dummy); break;
 				case 7: if (!crDeque.empty()) crDeque.pop_back(); break;
 				case 8: if (!crDeque.empty()) crDeque.pop_front(); break;
-#if defined(CRSTL_VARIADIC_TEMPLATES)
+#if defined(CRSTL_FEATURE_VARIADIC_TEMPLATES)
 				case 9: crDeque.emplace_back(67, 68.0f); break;
 				case 10: crDeque.emplace_front(67, 68.0f); break;
 #endif

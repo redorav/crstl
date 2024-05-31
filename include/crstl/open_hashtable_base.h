@@ -205,7 +205,7 @@ namespace crstl
 			return count;
 		}
 
-#if defined(CRSTL_VARIADIC_TEMPLATES)
+#if defined(CRSTL_FEATURE_VARIADIC_TEMPLATES)
 
 		//--------
 		// emplace

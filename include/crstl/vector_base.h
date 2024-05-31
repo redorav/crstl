@@ -47,7 +47,7 @@ namespace crstl
 		crstl_constexpr14 pointer data() { return &m_data[0]; }
 		crstl_constexpr const_pointer data() const { return &m_data[0]; }
 
-#if defined(CRSTL_VARIADIC_TEMPLATES)
+#if defined(CRSTL_FEATURE_VARIADIC_TEMPLATES)
 		template<typename... Args>
 		crstl_constexpr14 T& emplace_back(Args&&... args)
 		{

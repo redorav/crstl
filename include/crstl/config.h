@@ -206,7 +206,8 @@
 
 #if CRSTL_CPPVERSION >= CRSTL_CPP11
 
-	#define CRSTL_VARIADIC_TEMPLATES
+	#define CRSTL_FEATURE_VARIADIC_TEMPLATES
+
 	#define crstl_constructor_delete = delete
 	#define crstl_constructor_default = default
 

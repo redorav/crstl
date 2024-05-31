@@ -45,7 +45,7 @@ void LoopOverSpan(const crstl::span<Dummy>& dummySpan)
 //{
 //	crstl::fixed_vector<int, 32> crConstexprFixedVector;
 //	crConstexprFixedVector.push_back();
-//#if defined(CRSTL_VARIADIC_TEMPLATES)
+//#if defined(CRSTL_FEATURE_VARIADIC_TEMPLATES)
 //	crConstexprFixedVector.emplace_back();
 //#endif
 //}
@@ -80,7 +80,7 @@ void RunUnitTestsVectorStdCompare()
 		crFixedVector.pop_back();
 		stdVector.pop_back();
 
-#if defined(CRSTL_VARIADIC_TEMPLATES)
+#if defined(CRSTL_FEATURE_VARIADIC_TEMPLATES)
 		crFixedVector.emplace_back(0, 1.0f, 2, 3, 4, 5, 6, 7, 8, 9);
 		stdVector.emplace_back(0, 1.0f, 2, 3, 4, 5, 6, 7, 8, 9);
 #else
@@ -117,7 +117,7 @@ void RunUnitTestsVectorStdCompare()
 		stdVector.push_back(Dummy());
 		crstl_check(crFixedVector.size() == stdVector.size());
 
-#if defined(CRSTL_VARIADIC_TEMPLATES)
+#if defined(CRSTL_FEATURE_VARIADIC_TEMPLATES)
 		crFixedVector.emplace_back(Dummy());
 		stdVector.emplace_back(Dummy());
 		crstl_check(crFixedVector.size() == stdVector.size());
@@ -211,7 +211,7 @@ void RunUnitTestsVectorStdCompare()
 
 		crstl_check(crVector.size() == stdVector.size());
 
-#if defined(CRSTL_VARIADIC_TEMPLATES)
+#if defined(CRSTL_FEATURE_VARIADIC_TEMPLATES)
 		crVector.emplace_back(9, 20.0f);
 		stdVector.emplace_back(9, 20.0f);
 #else
@@ -308,7 +308,7 @@ void RunUnitTestsVectorStdCompare()
 		crStackVector.push_back(Dummy());
 		crStackVector.push_back(Dummy());
 
-#if defined(CRSTL_VARIADIC_TEMPLATES)
+#if defined(CRSTL_FEATURE_VARIADIC_TEMPLATES)
 		crStackVector.emplace_back();
 #endif
 

@@ -173,7 +173,7 @@ crstl_module_export namespace crstl
 			m_length = 0;
 		}
 		
-	#if defined(CRSTL_VARIADIC_TEMPLATES)
+	#if defined(CRSTL_FEATURE_VARIADIC_TEMPLATES)
 
 		template<typename... Args>
 		crstl_constexpr14 T& emplace_back(Args&&... args)
