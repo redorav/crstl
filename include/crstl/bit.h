@@ -124,6 +124,59 @@ namespace crstl
 
 crstl_module_export namespace crstl
 {
+	// Variation of Hacker's Delight, Figure 5-13
+	template<typename T>
+	crstl_nodiscard
+	crstl_constexpr int countl_zero_constexpr(const T x) crstl_noexcept
+	{
+		T current_half = x;
+
+		// Start by shifting half the bits
+		unsigned int current_shift_bits = bit_width<T>() >> 1;
+		unsigned int zero_count = 0;
+
+		while (current_shift_bits != 0)
+		{
+			T shifted_result = static_cast<T>(current_half >> current_shift_bits);
+			if (shifted_result == 0)
+			{
+				// Count the zeros we detected by shifting. Next time we'll shift less
+				zero_count += current_shift_bits;
+			}
+			else
+			{
+				// If the result was not 0, copy the shifted result and we'll start analyzing that
+				current_half = shifted_result;
+			}
+
+			// Take next shift
+			current_shift_bits >>= 1;
+		} 
+
+		return static_cast<int>(zero_count);
+	}
+
+	template<typename T>
+	crstl_nodiscard
+	crstl_constexpr int bit_width_constexpr(const T x) crstl_noexcept
+	{
+		return static_cast<int>(bit_width<T>() - crstl::countl_zero_constexpr(x));
+	}
+
+	template<size_t N>
+	crstl_nodiscard
+	crstl_constexpr int countl_zero() crstl_noexcept
+	{
+		return countl_zero_constexpr(N);
+	}
+
+	template<size_t N>
+	crstl_nodiscard
+	crstl_constexpr int bit_width() crstl_noexcept
+	{
+		return bit_width_constexpr(N);
+	}
+
 #if defined(CRSTL_COMPILER_MSVC)
 
 	namespace detail
