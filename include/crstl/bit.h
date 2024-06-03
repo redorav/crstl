@@ -127,7 +127,7 @@ crstl_module_export namespace crstl
 	// Variation of Hacker's Delight, Figure 5-13
 	template<typename T>
 	crstl_nodiscard
-	crstl_constexpr int countl_zero_constexpr(const T x) crstl_noexcept
+	crstl_constexpr14 int countl_zero_constexpr(const T x) crstl_noexcept
 	{
 		T current_half = x;
 
@@ -158,7 +158,7 @@ crstl_module_export namespace crstl
 
 	template<typename T>
 	crstl_nodiscard
-	crstl_constexpr int bit_width_constexpr(const T x) crstl_noexcept
+	crstl_constexpr14 int bit_width_constexpr(const T x) crstl_noexcept
 	{
 		return static_cast<int>(bit_width<T>() - crstl::countl_zero_constexpr(x));
 	}
