@@ -24,18 +24,8 @@
 // - Consider using a fixed_vector first, and if requirements require dynamic
 //   size for temporary usage, use stack_vector instead
 
-#define crstl_alloca_t(T, capacity) crstl::transient_memory_t<T>((T*)crstl_alloca((capacity) * sizeof(T)), (capacity))
-
 crstl_module_export namespace crstl
 {
-	template<typename T>
-	struct transient_memory_t
-	{
-		transient_memory_t(T* memory, size_t capacity) : memory(memory), capacity(capacity) {}
-		T* memory;
-		size_t capacity;
-	};
-
 	template<typename T>
 	class stack_vector_storage
 	{

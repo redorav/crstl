@@ -30,8 +30,18 @@ extern "C"
 #define crstl_alloca(size) (__builtin_alloca(size))
 #endif
 
-namespace crstl
+#define crstl_alloca_t(T, capacity) crstl::transient_memory_t<T>((T*)crstl_alloca((capacity) * sizeof(T)), (capacity))
+
+crstl_module_export namespace crstl
 {
+	template<typename T>
+	struct transient_memory_t
+	{
+		transient_memory_t(T* memory, size_t capacity) : memory(memory), capacity(capacity) {}
+		T* memory;
+		size_t capacity;
+	};
+
 	//------------------
 	// Memory Primitives
 	//------------------
