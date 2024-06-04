@@ -322,21 +322,21 @@ namespace crstl
 
 			do
 			{
-				if (!current_node->is_empty() && current_node->get_key() == key)
+				if (current_node->is_empty())
+				{
+					return;
+				}
+				else if (current_node->get_key() == key)
 				{
 					// Call function on every value we find
 					function(current_node->get_value());
-					
+
 					// Return early if we're not a multiple value hashmap. It'd be wasted effort
 					// to iterate until we find an empty node
-					crstl_constexpr_if (!IsMultipleValue)
+					crstl_constexpr_if(!IsMultipleValue)
 					{
 						return;
 					}
-				}
-				else
-				{
-					return;
 				}
 
 				current_node++;
