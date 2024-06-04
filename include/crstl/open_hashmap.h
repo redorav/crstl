@@ -308,24 +308,37 @@ crstl_module_export namespace crstl
 	template<typename Key, typename T, typename Hasher = crstl::hash<Key>, typename Allocator = crstl::allocator>
 	class open_hashmap : public open_hashtable<Key, T, Hasher, Allocator>
 	{
-		using open_hashtable<Key, T, Hasher, Allocator>::open_hashtable;
+		typedef open_hashtable<Key, T, Hasher, Allocator> base_type;
+		using base_type::open_hashtable;
 	};
 
 	template<typename Key, typename Hasher = crstl::hash<Key>, typename Allocator = crstl::allocator>
 	class open_hashset : public open_hashtable<Key, void, Hasher, Allocator>
 	{
-		using open_hashtable<Key, void, Hasher, Allocator>::open_hashtable;
+		typedef open_hashtable<Key, void, Hasher, Allocator> base_type;
+		using base_type::open_hashtable;
+
+	private:
+
+		using base_type::for_each;
 	};
 
 	template<typename Key, typename T, typename Hasher = crstl::hash<Key>, typename Allocator = crstl::allocator>
 	class open_multi_hashmap : public open_hashtable<Key, T, Hasher, Allocator, true>
 	{
-		using open_hashtable<Key, T, Hasher, Allocator, true>::open_hashtable;
+		typedef open_hashtable<Key, T, Hasher, Allocator, true> base_type;
+		using base_type::open_hashtable;
+
 	};
 
 	template<typename Key, typename Hasher = crstl::hash<Key>, typename Allocator = crstl::allocator>
 	class open_multi_hashset : public open_hashtable<Key, void, Hasher, Allocator, true>
 	{
-		using open_hashtable<Key, void, Hasher, Allocator, true>::open_hashtable;
+		typedef open_hashtable<Key, void, Hasher, Allocator, true> base_type;
+		using base_type::open_hashtable;
+
+	private:
+
+		using base_type::for_each;
 	};
 };

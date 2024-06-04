@@ -304,6 +304,42 @@ namespace crstl
 			return const_iterator(m_data, m_data + get_bucket_count(), found_node);
 		}
 
+		template<typename KeyType, typename Function>
+		void for_each(KeyType&& key, Function&& function)
+		{
+			const size_t hash_value = compute_hash_value(key);
+			const size_t bucket_index = compute_bucket(hash_value);
+			crstl_assert(bucket_index <= get_bucket_count());
+
+			node_type* const data = m_data;
+			node_type* const start_node = m_data + bucket_index;
+			node_type* const end_node = m_data + get_bucket_count();
+			node_type* crstl_restrict current_node = start_node;
+
+			do
+			{
+				if (!current_node->is_empty() && current_node->get_key() == key)
+				{
+					// Call function on every value we find
+					function(current_node->get_value());
+					
+					// Return early if we're not a multiple value hashmap. It'd be wasted effort
+					// to iterate until we find an empty node
+					crstl_constexpr_if (!IsMultipleValue)
+					{
+						return;
+					}
+				}
+				else
+				{
+					return;
+				}
+
+				current_node++;
+				current_node = (current_node == end_node) ? data : current_node;
+			} while (current_node != start_node);
+		}
+
 		template<typename... ValueType>
 		pair<iterator, bool> insert(const key_type& key, ValueType&&... value)
 		{

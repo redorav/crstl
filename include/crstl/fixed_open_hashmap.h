@@ -145,24 +145,36 @@ crstl_module_export namespace crstl
 	template<typename Key, typename T, size_t NodeCount, typename Hasher = crstl::hash<Key>>
 	class fixed_open_hashmap : public fixed_open_hashtable<Key, T, NodeCount, Hasher>
 	{
-		using fixed_open_hashtable<Key, T, NodeCount, Hasher>::fixed_open_hashtable;
+		typedef fixed_open_hashtable<Key, T, NodeCount, Hasher> base_type;
+		using base_type::fixed_open_hashtable;
 	};
 
 	template<typename Key, size_t NodeCount, typename Hasher = crstl::hash<Key>>
 	class fixed_open_hashset : public fixed_open_hashtable<Key, void, NodeCount, Hasher>
 	{
-		using fixed_open_hashtable<Key, void, NodeCount, Hasher>::fixed_open_hashtable;
+		typedef fixed_open_hashtable<Key, void, NodeCount, Hasher> base_type;
+		using base_type::fixed_open_hashtable;
+
+	private:
+
+		using base_type::for_each;
 	};
 
 	template<typename Key, typename T, size_t NodeCount, typename Hasher = crstl::hash<Key>>
 	class fixed_open_multi_hashmap : public fixed_open_hashtable<Key, T, NodeCount, Hasher, true>
 	{
-		using fixed_open_hashtable<Key, T, NodeCount, Hasher, true>::open_hashtable;
+		typedef fixed_open_hashtable<Key, T, NodeCount, Hasher, true> base_type;
+		using base_type::fixed_open_hashtable;
 	};
 
 	template<typename Key, size_t NodeCount, typename Hasher = crstl::hash<Key>>
 	class fixed_open_multi_hashset : public fixed_open_hashtable<Key, void, NodeCount, Hasher, true>
 	{
-		using fixed_open_hashtable<Key, void, NodeCount, Hasher, true>::open_hashtable;
+		typedef fixed_open_hashtable<Key, void, NodeCount, Hasher, true> base_type;
+		using base_type::fixed_open_hashtable;
+
+	private:
+
+		using base_type::for_each;
 	};
 };
