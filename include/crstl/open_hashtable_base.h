@@ -33,6 +33,8 @@ namespace crstl
 	{
 		const Key& get_key() const { return key_value.first; }
 
+		const Value& get_value() const { return key_value.second; }
+
 		crstl::pair<Key, Value> key_value;
 	};
 
@@ -40,6 +42,8 @@ namespace crstl
 	struct open_node<Key, void> : public open_node_base
 	{
 		const Key& get_key() const { return key_value; }
+
+		void get_value() const {}
 
 		Key key_value;
 	};
