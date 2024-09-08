@@ -226,13 +226,9 @@
 	</Type>
 
 	<Type Name="crstl::intrusive_ptr&lt;*&gt;">
-		<DisplayString Condition="m_ptr != nullptr">({(void*)m_ptr} = {*m_ptr})</DisplayString>
+		<SmartPointer Usage="Minimal">m_ptr</SmartPointer>
+		<DisplayString Condition="m_ptr != nullptr">[refcount = {m_ptr->m_refcount}] {m_ptr}</DisplayString>
 		<DisplayString Condition="m_ptr == nullptr">nullptr</DisplayString>
-		<Expand>
-			<Item Condition="m_ptr != nullptr" Name="[pointer]">(void*)m_ptr</Item>
-			<Item Condition="m_ptr != nullptr" Name="[value]">*m_ptr</Item>
-			<Item Condition="m_ptr != nullptr" Name="[refcount]">m_ptr->m_refcount</Item>
-		</Expand>
 	</Type>
 
 	<Type Name="crstl::open_hashtable&lt;*,*,*,*&gt;">
