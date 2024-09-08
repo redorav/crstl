@@ -536,7 +536,7 @@ namespace crstl
 			node_type* const data     = m_data;
 			node_type* const end_node = data + bucket_count;
 
-			// Destroy the current node
+			// Destroy the node we pass in
 			crstl_constexpr_if(!crstl_is_trivially_destructible(key_value_type))
 			{
 				node_to_erase->key_value.~key_value_type();
@@ -576,6 +576,13 @@ namespace crstl
 					if (can_move_node)
 					{
 						crstl_placement_new((void*)&(empty_slot->key_value)) key_value_type(crstl_move(node_to_move->key_value));
+
+						// Note that we still need to call the destructor here for moved types
+						crstl_constexpr_if(!crstl_is_trivially_destructible(key_value_type))
+						{
+							node_to_move->key_value.~key_value_type();
+						}
+
 						empty_slot = node_to_move;
 					}
 				}
