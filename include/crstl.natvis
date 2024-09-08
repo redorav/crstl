@@ -297,12 +297,8 @@
 	</Type>
 
 	<Type Name="crstl::unique_ptr&lt;*&gt;">
-		<DisplayString Condition="m_ptr != nullptr">({(void*)m_ptr} = {*m_ptr})</DisplayString>
+		<SmartPointer Usage="Minimal">m_ptr</SmartPointer>
 		<DisplayString Condition="m_ptr == nullptr">nullptr</DisplayString>
-		<Expand>
-			<Item Name="[pointer]">(void*)m_ptr</Item>
-			<Item Name="[value]">*m_ptr</Item>
-		</Expand>
 	</Type>
 
 	<Type Name="crstl::vector&lt;*,*&gt;">
