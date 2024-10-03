@@ -44,10 +44,6 @@ crstl_module_export namespace crstl
 
 	#define crstl_return_is_char_ptr(Q, T) typename crstl::string_enable_if<crstl::is_char_ptr<Q>::value, T>::type
 
-	struct ctor_concatenate {};
-
-	struct ctor_no_initialize {};
-
 	// = 0   They compare equal
 	// < 0   Either the value of the first character that does not match is lower in the compared string, or all compared characters match but the compared string is shorter.
 	// > 0   Either the value of the first character that does not match is greater in the compared string, or all compared characters match but the compared string is longer.

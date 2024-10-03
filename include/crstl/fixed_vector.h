@@ -4,6 +4,7 @@
 #include "crstl/crstldef.h"
 #include "crstl/utility/fixed_common.h"
 #include "crstl/utility/memory_ops.h"
+#include "crstl/utility/constructor_utils.h"
 
 #if defined(CRSTL_MODULE_DECLARATION)
 import <initializer_list>;
@@ -99,6 +100,12 @@ crstl_module_export namespace crstl
 		// debug later on and would rely on a natvis to properly visualize it
 
 		crstl_constexpr fixed_vector() crstl_noexcept : base_type() {}
+
+		crstl_constexpr14 fixed_vector(ctor_no_initialize_e, size_t initial_length)
+		{
+			crstl_assert(initial_length < NumElements);
+			m_length = (length_type)initial_length;
+		}
 
 		crstl_constexpr14 fixed_vector(size_t initial_length) crstl_noexcept : base_type()
 		{

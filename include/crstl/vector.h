@@ -5,6 +5,7 @@
 #include "crstl/allocator.h"
 #include "crstl/compressed_pair.h"
 #include "crstl/utility/memory_ops.h"
+#include "crstl/utility/constructor_utils.h"
 
 #if defined(CRSTL_MODULE_DECLARATION)
 import <initializer_list>;
@@ -140,6 +141,12 @@ crstl_module_export namespace crstl
 		static const size_t kDataSize = sizeof(T);
 
 		crstl_constexpr vector() crstl_noexcept : base_type() {}
+
+		crstl_constexpr14 vector(ctor_no_initialize_e, size_t initial_length)
+		{
+			m_data = allocate(initial_length);
+			m_length = (length_type)initial_length;
+		}
 
 		crstl_constexpr14 vector(size_t initial_length)
 		{
