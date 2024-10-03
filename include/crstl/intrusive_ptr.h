@@ -47,7 +47,7 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		intrusive_ptr(const intrusive_ptr<T>& ptr) crstl_noexcept : m_ptr(ptr.m_ptr)
+		intrusive_ptr(const intrusive_ptr<T>& other) crstl_noexcept : m_ptr(other.m_ptr)
 		{
 			if (m_ptr != nullptr)
 			{
@@ -55,9 +55,9 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		intrusive_ptr(intrusive_ptr<T>&& ptr) crstl_noexcept : m_ptr(ptr.m_ptr)
+		intrusive_ptr(intrusive_ptr<T>&& other) crstl_noexcept : m_ptr(other.m_ptr)
 		{
-			ptr.m_ptr = nullptr;
+			other.m_ptr = nullptr;
 		}
 
 		~intrusive_ptr() crstl_noexcept
