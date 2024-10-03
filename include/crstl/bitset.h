@@ -1,12 +1,10 @@
 #pragma once
 
 #include "crstl/config.h"
-
 #include "crstl/crstldef.h"
-
 #include "crstl/bit.h"
-
 #include "crstl/utility/memory_ops.h"
+#include "crstl/utility/constructor_utils.h"
 
 // crstl::bitset
 //
@@ -88,6 +86,8 @@ crstl_module_export namespace crstl
 		{
 			memory_set(m_data, 0, sizeof(m_data));
 		}
+
+		bitset(ctor_no_initialize_e) {}
 
 		bitset(word_type v)
 		{
@@ -198,6 +198,92 @@ crstl_module_export namespace crstl
 			return (m_data[i >> kBitsPerWordShift] & ((word_type)1 << (i & kBitsPerWordMask))) != 0;
 		}
 
+		//------------------
+		// Bitwise Operators
+		//------------------
+
+		bitset operator & (const bitset& other)
+		{
+			bitset result(ctor_no_initialize);
+
+			for (size_t i = 0; i < kNumWords; ++i)
+			{
+				result.m_data[i] = m_data[i] & other.m_data[i];
+			}
+
+			return result;
+		}
+
+		bitset operator | (const bitset& other)
+		{
+			bitset result(ctor_no_initialize);
+
+			for (size_t i = 0; i < kNumWords; ++i)
+			{
+				result.m_data[i] = m_data[i] | other.m_data[i];
+			}
+
+			return result;
+		}
+
+		bitset operator ^ (const bitset& other)
+		{
+			bitset result(ctor_no_initialize);
+
+			for (size_t i = 0; i < kNumWords; ++i)
+			{
+				result.m_data[i] = m_data[i] ^ other.m_data[i];
+			}
+
+			return result;
+		}
+
+		bitset operator ~() const
+		{
+			bitset result(ctor_no_initialize);
+
+			for (size_t i = 0; i < kNumWords; ++i)
+			{
+				result.m_data[i] = ~m_data[i];
+			}
+
+			return result;
+		}
+
+		bitset& operator &= (const bitset& other)
+		{
+			for (size_t i = 0; i < kNumWords; ++i)
+			{
+				m_data[i] &= other.m_data[i];
+			}
+
+			return *this;
+		}
+
+		bitset& operator |= (const bitset& other)
+		{
+			for (size_t i = 0; i < kNumWords; ++i)
+			{
+				m_data[i] |= other.m_data[i];
+			}
+
+			return *this;
+		}
+
+		bitset& operator ^= (const bitset& other)
+		{
+			for (size_t i = 0; i < kNumWords; ++i)
+			{
+				m_data[i] ^= other.m_data[i];
+			}
+
+			return *this;
+		}
+
+		//-------------------
+		// Accessor Operators
+		//-------------------
+
 		bit_reference operator[](size_t i)
 		{
 			crstl_assert(i < NumBits);
@@ -210,11 +296,15 @@ crstl_module_export namespace crstl
 			return (m_data[i >> kBitsPerWordShift] & ((word_type)1 << i)) != 0;
 		}
 
-		bool operator == (const bitset& b) const
+		//---------------------
+		// Comparison Operators
+		//---------------------
+
+		bool operator == (const bitset& other) const
 		{
 			for (size_t w = 0; w < kNumWords; ++w)
 			{
-				if (m_data[w] != b.m_data[w])
+				if (m_data[w] != other.m_data[w])
 				{
 					return false;
 				}
@@ -223,11 +313,11 @@ crstl_module_export namespace crstl
 			return true;
 		}
 
-		bool operator != (const bitset& b) const
+		bool operator != (const bitset& other) const
 		{
 			for (size_t w = 0; w < kNumWords; ++w)
 			{
-				if (m_data[w] != b.m_data[w])
+				if (m_data[w] != other.m_data[w])
 				{
 					return true;
 				}
