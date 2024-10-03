@@ -113,7 +113,7 @@
 		<Expand>
 			<IndexListItems>
 				<Size>$T1</Size>
-				<ValueNode>m_data[$i / kBitsPerWord] &gt;&gt; ($i % kBitsPerWord)</ValueNode>
+				<ValueNode>m_data[$i / kBitsPerWord] &gt;&gt; ($i % kBitsPerWord) &amp; 1, d</ValueNode>
 			</IndexListItems>
 		</Expand>
 	</Type>
