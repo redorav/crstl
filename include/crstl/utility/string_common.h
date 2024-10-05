@@ -127,9 +127,9 @@ crstl_module_export namespace crstl
 	}
 
 	template<typename T>
-	inline const T* string_find_char(const T* string, T c, size_t n)
+	inline const T* string_find_char(const T* string, T c, size_t length)
 	{
-		for(const T* ptr = string; ptr != string + n; ++ptr)
+		for(const T* ptr = string; ptr != string + length; ++ptr)
 		{
 			if (*ptr == c)
 			{
@@ -155,9 +155,9 @@ crstl_module_export namespace crstl
 	}
 
 	template<typename T>
-	inline const T* string_find_of(const T* string, size_t n, const T* needles, size_t needle_length)
+	inline const T* string_find_of(const T* string, size_t length, const T* needles, size_t needle_length)
 	{
-		for (const T* ptr = string; ptr != string + n; ++ptr)
+		for (const T* ptr = string; ptr != string + length; ++ptr)
 		{
 			for (const T* ptr2 = needles; ptr2 != needles + needle_length; ++ptr2)
 			{
@@ -172,9 +172,9 @@ crstl_module_export namespace crstl
 	}
 
 	template<typename T>
-	inline const T* string_rfind_of(const T* string, size_t n, const T* needles, size_t needle_length)
+	inline const T* string_rfind_of(const T* string, size_t length, const T* needles, size_t needle_length)
 	{
-		for (const T* ptr = string; ptr != string - n; --ptr)
+		for (const T* ptr = string; ptr != string - length; --ptr)
 		{
 			for (const T* ptr2 = needles; ptr2 != needles + needle_length; ++ptr2)
 			{
@@ -320,6 +320,54 @@ crstl_module_export namespace crstl
 		}
 
 		return block_dst;
+	}
+
+	template<typename T>
+	inline crstl_constexpr14 int string_compare(const T* string1, const T* string2)
+	{
+		return string_compare(string1, string_length(string1), string2, string_length(string2));
+	}
+
+	template<typename T>
+	inline crstl_constexpr14 int string_comparei(const T* string1, const T* string2)
+	{
+		return string_comparei(string1, string_length(string1), string2, string_length(string2));
+	}
+
+	template<typename T>
+	inline const T* string_find_of(const T* string, const T* needles)
+	{
+		return string_find_of(string, string_length(string), needles, string_length(needles));
+	}
+
+	template<typename T>
+	inline const T* string_rfind_of(const T* string, const T* needles)
+	{
+		return string_rfind_of(string, string_length(string), needles, string_length(needles));
+	}
+
+	template<typename T>
+	inline const T* string_find_char(const T* string, T c)
+	{
+		return string_find_char(string, c, string_length(string));
+	}
+
+	template<typename T>
+	inline const T* string_rfind_char(const T* string, T c)
+	{
+		return string_rfind_char(string, c, string_length(string));
+	}
+
+	template<typename T>
+	inline const T* string_find(const T* string, const T* needle_string)
+	{
+		return string_find(string, string_length(string), needle_string, string_length(needle_string));
+	}
+
+	template<typename T>
+	inline const T* string_rfind(const T* string, const T* needle_string)
+	{
+		return string_rfind(string, string_length(string), needle_string, string_length(needle_string));
 	}
 
 	inline crstl_constexpr14 void fill_char(char* destination, size_t n, char c)
