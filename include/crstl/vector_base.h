@@ -8,6 +8,14 @@
 
 #include "crstl/utility/memory_ops.h"
 
+// Non-standard functions
+// 
+// - push_back(): push back an empty default object
+// - push_back_uninitialized(): push back an uninitialized object
+// - resize_uninitialized(length): resizes vector to have specified length but does not initialize the contents of the objects. Use with care as
+//   objects with assignment operators accessing member variables assumed to be initialized can crash
+// - size_bytes(): return size of vector in bytes
+
 namespace crstl
 {
 	template<typename T, typename VectorStorage>
@@ -166,6 +174,8 @@ namespace crstl
 		}
 
 		crstl_constexpr size_t size() const { return m_length; }
+
+		crstl_constexpr size_t size_bytes() const { return m_length * sizeof(T); }
 
 		crstl_constexpr14 T& operator [] (size_t i) { return crstl_assert(i < m_length), m_data[i]; }
 
