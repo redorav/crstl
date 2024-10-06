@@ -116,6 +116,8 @@ crstl_module_export namespace crstl
 	{
 	public:
 
+		friend class vector;
+
 		typedef vector_base<T, vector_storage<T, Allocator>> base_type;
 		typedef vector                                       this_type;
 
@@ -167,6 +169,19 @@ crstl_module_export namespace crstl
 			// Swap relevant data
 			m_data = other.m_data;
 			m_length = other.m_length;
+			m_capacity_allocator = other.m_capacity_allocator;
+
+			other.m_data = nullptr;
+			other.m_length = 0;
+		}
+
+		template<typename T2>
+		explicit crstl_constexpr14 vector(vector<T2>&& other) crstl_noexcept
+		{
+			crstl_assert_msg((other.m_length * sizeof(T2)) % sizeof(T) == 0, "Data size is not a multiple of element size");
+
+			m_data = (T*)other.m_data;
+			m_length = (other.m_length * sizeof(T2)) / sizeof(T);
 			m_capacity_allocator = other.m_capacity_allocator;
 
 			other.m_data = nullptr;
