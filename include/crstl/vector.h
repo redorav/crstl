@@ -116,6 +116,7 @@ crstl_module_export namespace crstl
 	{
 	public:
 
+		template<typename T2, typename Allocator2>
 		friend class vector;
 
 		typedef vector_base<T, vector_storage<T, Allocator>> base_type;
