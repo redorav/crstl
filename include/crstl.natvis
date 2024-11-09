@@ -188,7 +188,7 @@
 				<Variable Name="iIndex" InitialValue="0" />
 				<Size>m_length</Size>
 				<Loop>
-					<If Condition="m_data[iIndex].meta > 1">
+					<If Condition="m_data[iIndex].meta != 0">
 						<Item>m_data[iIndex].key_value</Item>
 					</If>
 					<Exec>iIndex++</Exec>
