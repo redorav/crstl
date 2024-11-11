@@ -1,6 +1,7 @@
 #pragma once
 
 #include "crstl/config.h"
+#include "crstl/crstldef.h"
 
 // Create our own placement new to avoid including header <new> which is quite heavy
 // We pass in a dummy parameter to disambiguate from the global placement new. The
