@@ -8,13 +8,6 @@
 
 #include "crstl/utility/memory_ops.h"
 
-struct _SECURITY_ATTRIBUTES;
-typedef _SECURITY_ATTRIBUTES SECURITY_ATTRIBUTES;
-typedef _SECURITY_ATTRIBUTES* LPSECURITY_ATTRIBUTES;
-typedef struct _STARTUPINFOW STARTUPINFOW;
-typedef struct _PROCESS_INFORMATION PROCESS_INFORMATION;
-typedef struct _OVERLAPPED* LPOVERLAPPED;
-
 #define CRSTL_WAIT_ABANDONED 0x00000080L
 #define CRSTL_WAIT_OBJECT_0  0x00000000L
 #define CRSTL_WAIT_TIMEOUT   0x00000102L
@@ -22,35 +15,35 @@ typedef struct _OVERLAPPED* LPOVERLAPPED;
 
 extern "C"
 {
-	__declspec(dllimport) crstl::BOOL CreatePipe
+	__declspec(dllimport) BOOL CreatePipe
 	(
-		crstl::PHANDLE hReadPipe,
-		crstl::PHANDLE hWritePipe,
+		PHANDLE hReadPipe,
+		PHANDLE hWritePipe,
 		LPSECURITY_ATTRIBUTES lpPipeAttributes,
-		crstl::DWORD nSize
+		DWORD nSize
 	);
 
-	__declspec(dllimport) crstl::BOOL CreateProcessW
+	__declspec(dllimport) BOOL CreateProcessW
 	(
-		crstl::LPCWSTR lpApplicationName,
-		crstl::LPWSTR lpCommandLine,
+		LPCWSTR lpApplicationName,
+		LPWSTR lpCommandLine,
 		SECURITY_ATTRIBUTES* lpProcessAttributes,
 		SECURITY_ATTRIBUTES* lpThreadAttributes,
-		crstl::BOOL bInheritHandles,
-		crstl::DWORD dwCreationFlags,
-		crstl::LPVOID lpEnvironment,
-		crstl::LPCWSTR lpCurrentDirectory,
+		BOOL bInheritHandles,
+		DWORD dwCreationFlags,
+		LPVOID lpEnvironment,
+		LPCWSTR lpCurrentDirectory,
 		STARTUPINFOW* lpStartupInfo,
 		PROCESS_INFORMATION* lpProcessInformation
 	);
 
-	__declspec(dllimport) crstl::BOOL SetHandleInformation(crstl::HANDLE hObject, crstl::DWORD dwMask, crstl::DWORD dwFlags);
+	__declspec(dllimport) BOOL SetHandleInformation(HANDLE hObject, DWORD dwMask, DWORD dwFlags);
 
-	__declspec(dllimport) crstl::BOOL GetExitCodeProcess(crstl::HANDLE hProcess, crstl::LPDWORD lpExitCode);
+	__declspec(dllimport) BOOL GetExitCodeProcess(HANDLE hProcess, LPDWORD lpExitCode);
 
-	__declspec(dllimport) crstl::BOOL ReadFile(crstl::HANDLE hFile, crstl::LPVOID lpBuffer, crstl::DWORD nNumberOfBytesToRead, crstl::LPDWORD lpNumberOfBytesRead, LPOVERLAPPED lpOverlapped);
+	__declspec(dllimport) BOOL ReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead, LPDWORD lpNumberOfBytesRead, LPOVERLAPPED lpOverlapped);
 
-	__declspec(dllimport) crstl::BOOL TerminateProcess(crstl::HANDLE hProcess, crstl::UINT uExitCode);
+	__declspec(dllimport) BOOL TerminateProcess(HANDLE hProcess, UINT uExitCode);
 };
 
 #define CRSTL_CREATE_NO_WINDOW 0x08000000

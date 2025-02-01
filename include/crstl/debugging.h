@@ -9,7 +9,7 @@ extern "C"
 {
 	void __debugbreak();
 
-	__declspec(dllimport) crstl::BOOL IsDebuggerPresent();
+	__declspec(dllimport) BOOL IsDebuggerPresent();
 };
 #elif defined(CRSTL_OS_OSX)
 #include <unistd.h>

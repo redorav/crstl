@@ -12,7 +12,7 @@
 
 #if defined(CRSTL_COMPILER_MSVC)
 
-union _LARGE_INTEGER;
+#include "crstl/platform/common_win32.h"
 
 extern "C"
 {

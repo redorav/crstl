@@ -15,7 +15,7 @@ extern "C"
 	__declspec(dllimport) void DeleteCriticalSection(LPCRITICAL_SECTION lpCriticalSection);
 	
 	__declspec(dllimport) void EnterCriticalSection(LPCRITICAL_SECTION lpCriticalSection);
-	__declspec(dllimport) crstl::BOOL TryEnterCriticalSection(LPCRITICAL_SECTION lpCriticalSection);
+	__declspec(dllimport) BOOL TryEnterCriticalSection(LPCRITICAL_SECTION lpCriticalSection);
 	__declspec(dllimport) void LeaveCriticalSection(LPCRITICAL_SECTION lpCriticalSection);
 };
 
@@ -29,15 +29,15 @@ crstl_module_export namespace crstl
 		} LIST_ENTRY, *PLIST_ENTRY;
 	
 		typedef struct _RTL_CRITICAL_SECTION_DEBUG {
-			crstl::WORD   Type;
-			crstl::WORD   CreatorBackTraceIndex;
+			WORD Type;
+			WORD CreatorBackTraceIndex;
 			struct _RTL_CRITICAL_SECTION* CriticalSection;
-			LIST_ENTRY   ProcessLocksList;
-			crstl::DWORD EntryCount;
-			crstl::DWORD ContentionCount;
-			crstl::DWORD Flags;
-			crstl::WORD  CreatorBackTraceIndexHigh;
-			crstl::WORD  Identifier;
+			LIST_ENTRY ProcessLocksList;
+			DWORD EntryCount;
+			DWORD ContentionCount;
+			DWORD Flags;
+			WORD CreatorBackTraceIndexHigh;
+			WORD Identifier;
 		} RTL_CRITICAL_SECTION_DEBUG, * PRTL_CRITICAL_SECTION_DEBUG, RTL_RESOURCE_DEBUG, * PRTL_RESOURCE_DEBUG;
 	
 		#pragma pack(push, 8)
@@ -50,11 +50,11 @@ crstl_module_export namespace crstl
 			//  section for the resource
 			//
 	
-			crstl::LONG LockCount;
-			crstl::LONG RecursionCount;
-			crstl::HANDLE OwningThread;        // from the thread's ClientId->UniqueThread
-			crstl::HANDLE LockSemaphore;
-			crstl::ULONG_PTR SpinCount;        // force size on 64-bit systems when packed
+			LONG LockCount;
+			LONG RecursionCount;
+			HANDLE OwningThread;        // from the thread's ClientId->UniqueThread
+			HANDLE LockSemaphore;
+			ULONG_PTR SpinCount;        // force size on 64-bit systems when packed
 		} RTL_CRITICAL_SECTION, * PRTL_CRITICAL_SECTION;
 	
 		#pragma pack(pop)

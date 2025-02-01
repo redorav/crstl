@@ -22,29 +22,29 @@ extern "C"
 		unsigned long* lpThreadId
 	);
 
-	__declspec(dllimport) crstl::DWORD ResumeThread(crstl::HANDLE hThread);
+	__declspec(dllimport) DWORD ResumeThread(HANDLE hThread);
 
-	__declspec(dllimport) __declspec(noreturn) void ExitThread(crstl::DWORD dwExitCode);
+	__declspec(dllimport) __declspec(noreturn) void ExitThread(DWORD dwExitCode);
 
-	__declspec(dllimport) crstl::BOOL SetThreadPriority(crstl::HANDLE hThread, int nPriority);
+	__declspec(dllimport) BOOL SetThreadPriority(HANDLE hThread, int nPriority);
 
-	__declspec(dllimport) void Sleep(crstl::DWORD dwMilliseconds);
+	__declspec(dllimport) void Sleep(DWORD dwMilliseconds);
 
-	__declspec(dllimport) crstl::DWORD GetCurrentThreadId();
+	__declspec(dllimport) DWORD GetCurrentThreadId();
 
-	__declspec(dllimport) crstl::HANDLE GetCurrentThread();
+	__declspec(dllimport) HANDLE GetCurrentThread();
 
-	__declspec(dllimport) crstl::HRESULT SetThreadDescription(crstl::HANDLE hThread, const wchar_t* lpThreadDescription);
+	__declspec(dllimport) HRESULT SetThreadDescription(HANDLE hThread, const wchar_t* lpThreadDescription);
 
-	__declspec(dllimport) crstl::HANDLE CreateEventA(SECURITY_ATTRIBUTES* lpEventAttributes, crstl::BOOL bManualReset, crstl::BOOL bInitialState, crstl::LPCSTR lpName);
+	__declspec(dllimport) HANDLE CreateEventA(SECURITY_ATTRIBUTES* lpEventAttributes, BOOL bManualReset, BOOL bInitialState, LPCSTR lpName);
 
-	__declspec(dllimport) void RaiseException(crstl::DWORD dwExceptionCode, crstl::DWORD dwExceptionFlags, crstl::DWORD nNumberOfArguments, const crstl::ULONG_PTR* lpArguments);
+	__declspec(dllimport) void RaiseException(DWORD dwExceptionCode, DWORD dwExceptionFlags, DWORD nNumberOfArguments, const ULONG_PTR* lpArguments);
 
 	unsigned long _exception_code(void);
 
-	__declspec(dllimport) crstl::FARPROC GetProcAddress(crstl::HMODULE hModule, crstl::LPCSTR lpProcName);
+	__declspec(dllimport) FARPROC GetProcAddress(HMODULE hModule, LPCSTR lpProcName);
 
-	__declspec(dllimport) crstl::HMODULE GetModuleHandleA(crstl::LPCSTR lpModuleName);
+	__declspec(dllimport) HMODULE GetModuleHandleA(LPCSTR lpModuleName);
 };
 
 #define CRSTL_CREATE_SUSPENDED 0x00000004

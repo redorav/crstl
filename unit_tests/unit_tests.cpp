@@ -141,6 +141,7 @@ void RunUnitTestsAtomic();
 void RunUnitTestsBit();
 void RunUnitTestsBitset();
 void RunUnitTestsDeque();
+void RunUnitTestsFilesystem();
 void RunUnitTestsFunction();
 void RunUnitTestsPair();
 void RunUnitTestsPath();
@@ -172,6 +173,7 @@ extern "C"
 	RunUnitTestsBit();
 	RunUnitTestsBitset();
 	RunUnitTestsDeque();
+	RunUnitTestsFilesystem();
 	RunUnitTestsFunction();
 	RunUnitTestsPair();
 	RunUnitTestsPath();
