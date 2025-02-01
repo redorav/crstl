@@ -111,7 +111,10 @@ namespace crstl
 
 #include <unistd.h>
 #include <sys/stat.h>
+
+#if defined(CRSTL_OS_LINUX)
 #include <sys/sendfile.h>
+#endif
 
 namespace crstl
 {
@@ -169,7 +172,7 @@ namespace crstl
 		{
 #if defined(CRSTL_OS_LINUX)
 
-			struct stat s_stat = { 0 };
+			stat s_stat = {};
 			off_t total_bytes_copied = 0;
 			fstat(src_file_handle, &s_stat);
 			return sendfile(dst_file_handle, src_file_handle, &total_bytes_copied, s_stat.st_size);
