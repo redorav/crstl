@@ -13,6 +13,8 @@
 #define CRSTL_WAIT_TIMEOUT   0x00000102L
 #define CRSTL_WAIT_FAILED    0xFFFFFFFF
 
+#define CRSTL_STATUS_PENDING ((DWORD   )0x00000103L)
+
 extern "C"
 {
 	__declspec(dllimport) BOOL CreatePipe
@@ -249,19 +251,19 @@ crstl_module_export namespace crstl
 					DWORD process_exit_code = 0;
 					GetExitCodeProcess(m_process_handle, &process_exit_code);
 
-					return_value = process_exit_code;
-					m_state = process_state::joined;
+					if (process_exit_code == 0 || process_exit_code == CRSTL_STATUS_PENDING)
+					{
+						m_state = process_state::joined;
+					}
+					else
+					{
+						m_state = process_state::error_join;
+					}
 				}
 				else
 				{
-					return_value = -1;
 					m_state = process_state::error_join;
 				}
-
-				//if (process_exit_code && process_exit_code != STILL_ACTIVE)
-				//{
-				//
-				//}
 
 				if (m_state == process_state::joined)
 				{

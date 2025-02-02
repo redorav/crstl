@@ -117,8 +117,6 @@ crstl_module_export namespace crstl
 
 		process_result::t join()
 		{
-			int return_value = kInvalidReturnValue;
-
 			if (m_state == process_state::launched)
 			{
 				int status;
@@ -128,19 +126,25 @@ crstl_module_export namespace crstl
 				{
 					if (WIFEXITED(status))
 					{
-						return_value = WEXITSTATUS(status);
-						m_state = process_state::joined;
+						int return_value = WEXITSTATUS(status);
+
+						if (return_value == 0)
+						{
+							m_state = process_state::joined;
+						}
+						else
+						{
+							m_state = process_state::error_join;
+						}
 					}
 					else
 					{
 						m_state = process_state::error_join;
-						return_value = -1;
 					}
 				}
 				else
 				{
 					m_state = process_state::error_join;
-					return_value = -1;
 				}
 
 				m_child_pid = 0;
