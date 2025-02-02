@@ -122,7 +122,7 @@ namespace crstl
 	{
 		inline int open(const char* file_path, int open_flags)
 		{
-			return ::open(file_path, open_flags);
+			return ::open(file_path, open_flags, S_IRUSR | S_IWUSR);
 		}
 
 		inline ssize_t read(int file_handle, void* dst_buf, size_t max_char_count)
