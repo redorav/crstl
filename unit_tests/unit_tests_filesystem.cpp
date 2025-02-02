@@ -1,9 +1,9 @@
-#include "crstl/filesystem.h"
 #include "unit_tests.h"
 
 #if defined(CRSTL_UNIT_MODULES)
 import crstl;
 #else
+#include "crstl/filesystem.h"
 #include "crstl/utility/string_length.h"
 #endif
 
@@ -35,8 +35,8 @@ void RunUnitTestsFilesystem()
 			crstl::file my_file(temp_file_path.c_str(), crstl::file_flags::create | crstl::file_flags::write);
 
 			// Make sure we cannot delete a file that is already open
-			crstl::filesystem_return::t delete_result = crstl::file_delete(temp_file_path.c_str());
-			crstl_assert(delete_result == crstl::filesystem_return::error_access_denied);
+			crstl::filesystem_result::t delete_result = crstl::file_delete(temp_file_path.c_str());
+			crstl_assert(delete_result == crstl::filesystem_result::error_access_denied);
 
 			// Write a bit of text
 			my_file.write(temp_text, crstl::string_length(temp_text));
