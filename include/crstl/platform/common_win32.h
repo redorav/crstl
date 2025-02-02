@@ -1,5 +1,7 @@
 #pragma once
 
+crstl_warning_unscoped_enum_begin
+
 #define CRSTL_INVALID_HANDLE_VALUE ((HANDLE)(LONG_PTR)-1)
 
 typedef char                CHAR;
@@ -82,7 +84,7 @@ typedef struct _STARTUPINFOW STARTUPINFOW;
 typedef struct _PROCESS_INFORMATION PROCESS_INFORMATION;
 typedef struct _OVERLAPPED* LPOVERLAPPED;
 
-enum _GET_FILEEX_INFO_LEVELS : int;
+enum _GET_FILEEX_INFO_LEVELS;
 typedef _GET_FILEEX_INFO_LEVELS GET_FILEEX_INFO_LEVELS;
 
 namespace crstl
@@ -181,3 +183,5 @@ namespace crstl
 		}
 	}
 };
+
+crstl_warning_unscoped_enum_end

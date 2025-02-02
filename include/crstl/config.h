@@ -190,6 +190,31 @@
 
 #endif
 
+#if defined(CRSTL_COMPILER_CLANG)
+
+	#define crstl_warning_unscoped_enum_begin \
+		_Pragma("clang diagnostic push") \
+		_Pragma("clang diagnostic ignored \"-Wmicrosoft-enum-forward-reference\"")
+
+	#define crstl_warning_unscoped_enum_end \
+		_Pragma("clang diagnostic pop")
+
+#elif defined(CRSTL_COMPILER_MSVC)
+
+	#define crstl_warning_unscoped_enum_begin \
+		__pragma(warning(push)) \
+		__pragma(warning(disable : 4471))
+
+	#define crstl_warning_unscoped_enum_end \
+		__pragma(warning(pop))
+
+#else
+
+	#define crstl_warning_unscoped_enum_begin
+	#define crstl_warning_unscoped_enum_end
+
+#endif
+
 #if defined(CRSTL_COMPILER_MSVC)
 
 	#define crstl_warning_anonymous_struct_union_begin \
