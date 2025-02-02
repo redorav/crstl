@@ -171,8 +171,7 @@ namespace crstl
 		inline ssize_t copy(int src_file_handle, int dst_file_handle)
 		{
 #if defined(CRSTL_OS_LINUX)
-
-			stat s_stat = {};
+			struct stat s_stat = {};
 			off_t total_bytes_copied = 0;
 			fstat(src_file_handle, &s_stat);
 			return sendfile(dst_file_handle, src_file_handle, &total_bytes_copied, s_stat.st_size);
