@@ -178,7 +178,7 @@ crstl_module_export namespace crstl
 				}
 			}
 
-			return process();
+			return process_size();
 		}
 
 		bool terminate()
