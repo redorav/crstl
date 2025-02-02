@@ -19,7 +19,7 @@ crstl_module_export namespace crstl
 		};
 	}
 
-	namespace process_result
+	struct process_result
 	{
 		enum t
 		{
@@ -27,20 +27,28 @@ crstl_module_export namespace crstl
 			error
 		};
 
-		struct conversion
+		process_result() : result(error) {}
+
+		process_result(t result) : result(result) {}
+
+		operator bool() const { return result == process_result::success; }
+
+		bool operator == (process_result::t other) const
 		{
-			conversion(process_result::t result) : result(result) {}
-			operator bool() { return result == process_result::success; }
-			process_result::t result;
-		};
-	}
+			return result == other;
+		}
+
+	private:
+
+		t result;
+	};
 
 	struct process_size
 	{
-		process_size() : result(process_result::error), size(0) {}
-		process_size(process_result::t result, size_t size) : result(result), size(size) {}
+		process_size() : size(0) {}
+		process_size(process_result result, size_t size) : result(result), size(size) {}
 
-		process_result::t result;
+		process_result result;
 		size_t size;
 	};
 
