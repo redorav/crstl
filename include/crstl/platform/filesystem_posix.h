@@ -49,13 +49,13 @@ extern "C"
 
 typedef long off_t;
 
-template<size_t Index> struct ssize_t_definer {};
-template<> struct ssize_t_definer<4> { typedef long type; };
-template<> struct ssize_t_definer<8> { typedef int64_t type; };
-typedef ssize_t_definer<sizeof(void*)>::type ssize_t;
-
 namespace crstl
 {
+	template<size_t Index> struct ssize_t_definer {};
+	template<> struct ssize_t_definer<4> { typedef long type; };
+	template<> struct ssize_t_definer<8> { typedef int64_t type; };
+	typedef ssize_t_definer<sizeof(void*)>::type ssize_t;
+
 	namespace detail
 	{
 		inline int open(const char* file_path, int open_flags)
