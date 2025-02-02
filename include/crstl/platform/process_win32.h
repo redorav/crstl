@@ -210,8 +210,6 @@ crstl_module_export namespace crstl
 
 		process& operator = (process&& other) crstl_noexcept
 		{
-			join();
-
 			m_process_handle = other.m_process_handle;
 			m_stdout_read_handle = other.m_stdout_read_handle;
 			m_state = other.m_state;
@@ -236,7 +234,7 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		int join()
+		process_result::t join()
 		{
 			int return_value = kInvalidReturnValue;
 
@@ -264,12 +262,17 @@ crstl_module_export namespace crstl
 				//{
 				//
 				//}
+
+				if (m_state == process_state::joined)
+				{
+					return process_result::success;
+				}
 			}
 
-			return return_value;
+			return process_result::error;
 		}
 
-		int read_stdout(char* buffer, size_t buffer_size)
+		process_size read_stdout(char* buffer, size_t buffer_size)
 		{
 			crstl_assert_msg(buffer != nullptr, "Buffer is null");
 			crstl_assert_msg(buffer_size > 0, "Invalid size");
@@ -292,9 +295,11 @@ crstl_module_export namespace crstl
 
 				// Null terminate the buffer
 				buffer[total_bytes_read] = '\0';
+
+				return process_size(process_result::success, total_bytes_read);
 			}
 
-			return (int)total_bytes_read;
+			return process_size();
 		}
 
 		bool terminate()

@@ -95,8 +95,6 @@ crstl_module_export namespace crstl
 
 		process& operator = (process&& other)
 		{
-			join();
-
 			m_child_pid = other.m_child_pid;
 			m_state = other.m_state;
 
@@ -117,7 +115,7 @@ crstl_module_export namespace crstl
 			return wpid == 0;
 		}
 
-		int join()
+		process_result::t join()
 		{
 			int return_value = kInvalidReturnValue;
 
@@ -131,6 +129,7 @@ crstl_module_export namespace crstl
 					if (WIFEXITED(status))
 					{
 						return_value = WEXITSTATUS(status);
+						m_state = process_state::joined;
 					}
 					else
 					{
@@ -145,12 +144,17 @@ crstl_module_export namespace crstl
 				}
 
 				m_child_pid = 0;
+
+				if (m_state == process_state::joined)
+				{
+					return process_result::success;
+				}
 			}
 
-			return return_value;
+			return process_result::error;
 		}
 
-		int read_stdout(char* buffer, size_t buffer_size)
+		process_size read_stdout(char* buffer, size_t buffer_size)
 		{
 			crstl_assert_msg(buffer != nullptr, "Buffer is null");
 			crstl_assert_msg(buffer_size > 0, "Invalid size");
@@ -164,13 +168,13 @@ crstl_module_export namespace crstl
 				int fd = fileno(m_stdout_read_file);
 				bytes_read = read(fd, buffer, buffer_size);
 
-				if (bytes_read < 0)
+				if (bytes_read >= 0)
 				{
-					bytes_read = 0;
+					return process_size(process_result::success, bytes_read);
 				}
 			}
 
-			return (int)bytes_read;
+			return process();
 		}
 
 		bool terminate()

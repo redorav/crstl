@@ -17,6 +17,31 @@ crstl_module_export namespace crstl
 			error_launch, // There was an error launching the process
 			error_join,   // There was an error during join
 		};
+	}
+
+	namespace process_result
+	{
+		enum t
+		{
+			success,
+			error
+		};
+
+		struct conversion
+		{
+			conversion(process_result::t result_value) : result_value(result_value) {}
+			operator bool() { return result_value == process_result::success; }
+			process_result::t result_value;
+		};
+	}
+
+	struct process_size
+	{
+		process_size() : result(process_result::error), size(0) {}
+		process_size(process_result::t result, size_t size) : result(result), size(size) {}
+
+		process_result::t result;
+		size_t size;
 	};
 
 	struct process_parameters
@@ -39,7 +64,6 @@ crstl_module_export namespace crstl
 	public:
 
 		static const int kInvalidReturnValue = 2147483647;
-
 		process_base()
 			: m_state(process_state::undefined)
 		{}
@@ -56,7 +80,7 @@ crstl_module_export namespace crstl
 
 		process_base& operator = (const process_base& other) crstl_constructor_delete;
 	};
-};
+}
 
 #if defined(CRSTL_OS_WINDOWS)
 #include "crstl/platform/process_win32.h"
