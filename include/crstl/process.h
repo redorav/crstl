@@ -63,7 +63,6 @@ crstl_module_export namespace crstl
 	{
 	public:
 
-		static const int kInvalidReturnValue = 2147483647;
 		process_base()
 			: m_state(process_state::undefined)
 		{}

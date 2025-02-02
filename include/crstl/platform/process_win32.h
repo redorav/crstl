@@ -238,8 +238,6 @@ crstl_module_export namespace crstl
 
 		process_result::t join()
 		{
-			int return_value = kInvalidReturnValue;
-
 			if (m_state == process_state::launched)
 			{
 				// If wait timeout is the maximum, we wait until it finishes
