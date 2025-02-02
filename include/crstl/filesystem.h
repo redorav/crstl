@@ -36,7 +36,7 @@ crstl_module_export namespace crstl
 		};
 	};
 
-	namespace filesystem_return
+	namespace filesystem_result
 	{
 		enum t
 		{
@@ -48,9 +48,9 @@ crstl_module_export namespace crstl
 
 		struct conversion
 		{
-			conversion(filesystem_return::t return_value) : return_value(return_value) {}
-			operator bool() { return return_value == filesystem_return::success; }
-			filesystem_return::t return_value;
+			conversion(filesystem_result::t result) : result(result) {}
+			operator bool() { return result == filesystem_result::success; }
+			filesystem_result::t result;
 		};
 	};
 

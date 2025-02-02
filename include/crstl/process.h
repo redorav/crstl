@@ -29,9 +29,9 @@ crstl_module_export namespace crstl
 
 		struct conversion
 		{
-			conversion(process_result::t result_value) : result_value(result_value) {}
-			operator bool() { return result_value == process_result::success; }
-			process_result::t result_value;
+			conversion(process_result::t result) : result(result) {}
+			operator bool() { return result == process_result::success; }
+			process_result::t result;
 		};
 	}
 

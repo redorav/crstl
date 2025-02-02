@@ -378,13 +378,13 @@ crstl_module_export namespace crstl
 		}
 	}
 
-	inline filesystem_return::t file_delete(const char* file_path)
+	inline filesystem_result::t file_delete(const char* file_path)
 	{
 		int result = detail::unlink(file_path);
 
 		if (result == 0)
 		{
-			return filesystem_return::success;
+			return filesystem_result::success;
 		}
 		else
 		{
@@ -392,11 +392,11 @@ crstl_module_export namespace crstl
 
 			if (error == EACCES)
 			{
-				return filesystem_return::error_access_denied;
+				return filesystem_result::error_access_denied;
 			}
 		}
 
-		return filesystem_return::error;
+		return filesystem_result::error;
 	}
 
 	// https://stackoverflow.com/questions/230062/whats-the-best-way-to-check-if-a-file-exists-in-c
@@ -412,13 +412,13 @@ crstl_module_export namespace crstl
 		return result != -1;
 	}
 
-	inline filesystem_return::t create_directory(const char* directory_path)
+	inline filesystem_result::t create_directory(const char* directory_path)
 	{
 		int result = detail::mkdir(directory_path);
 
 		if (result != -1)
 		{
-			return filesystem_return::success;
+			return filesystem_result::success;
 		}
 		else
 		{
@@ -426,11 +426,11 @@ crstl_module_export namespace crstl
 
 			if (error == EEXIST)
 			{
-				return filesystem_return::success;
+				return filesystem_result::success;
 			}
 			else
 			{
-				return filesystem_return::error;
+				return filesystem_result::error;
 			}
 		}
 	}

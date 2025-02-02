@@ -234,13 +234,13 @@ crstl_module_export namespace crstl
 		/*BOOL result = */MoveFileA(source_file_path, destination_file_path);
 	}
 
-	inline filesystem_return::t file_delete(const char* file_path)
+	inline filesystem_result::t file_delete(const char* file_path)
 	{
 		bool success = DeleteFileA(file_path);
 
 		if (success)
 		{
-			return filesystem_return::success;
+			return filesystem_result::success;
 		}
 		else
 		{
@@ -249,14 +249,14 @@ crstl_module_export namespace crstl
 			// If the file was not found we consider it a success as the file is effectively deleted
 			if (errorCode == CRSTL_ERROR_FILE_NOT_FOUND)
 			{
-				return filesystem_return::success;
+				return filesystem_result::success;
 			}
 			else if (errorCode == CRSTL_ERROR_ACCESS_DENIED || errorCode == CRSTL_ERROR_SHARING_VIOLATION)
 			{
-				return filesystem_return::error_access_denied;
+				return filesystem_result::error_access_denied;
 			}
 
-			return filesystem_return::error;
+			return filesystem_result::error;
 		}
 	}
 
@@ -288,13 +288,13 @@ crstl_module_export namespace crstl
 		}
 	}
 
-	inline filesystem_return::t directory_create(const char* directory_path, bool /*create_intermediate*/)
+	inline filesystem_result::t directory_create(const char* directory_path, bool /*create_intermediate*/)
 	{
 		bool success = CreateDirectoryA(directory_path, nullptr);
 
 		if (success)
 		{
-			return filesystem_return::success;
+			return filesystem_result::success;
 		}
 		else
 		{
@@ -302,11 +302,11 @@ crstl_module_export namespace crstl
 
 			if (errorCode == CRSTL_ERROR_ALREADY_EXISTS)
 			{
-				return filesystem_return::success;
+				return filesystem_result::success;
 			}
 			else
 			{
-				return filesystem_return::error;
+				return filesystem_result::error;
 			}
 		}
 	}
