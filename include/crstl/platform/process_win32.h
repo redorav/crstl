@@ -189,7 +189,7 @@ crstl_module_export namespace crstl
 			}
 			else
 			{
-				m_state = process_state::error_launch;
+				m_state = process_state::error_failed_to_launch;
 			}
 		}
 
@@ -236,7 +236,7 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		process_result::t join()
+		process_exit_code wait()
 		{
 			if (m_state == process_state::launched)
 			{
@@ -246,30 +246,27 @@ crstl_module_export namespace crstl
 				if (wait_result == CRSTL_WAIT_OBJECT_0)
 				{
 					// If we managed to wait, we can get the exit code immediately after
-					DWORD process_exit_code = 0;
-					GetExitCodeProcess(m_process_handle, &process_exit_code);
+					DWORD dw_process_exit_code = 0;
+					GetExitCodeProcess(m_process_handle, &dw_process_exit_code);
 
-					if (process_exit_code == 0 || process_exit_code == CRSTL_STATUS_PENDING)
+					if (dw_process_exit_code == 0 || dw_process_exit_code == CRSTL_STATUS_PENDING)
 					{
-						m_state = process_state::joined;
+						m_state = process_state::waited;
 					}
 					else
 					{
-						m_state = process_state::error_join;
+						m_state = process_state::error_wait;
 					}
+
+					m_exit_code = process_exit_code((process_exit_code::t)dw_process_exit_code);
 				}
 				else
 				{
-					m_state = process_state::error_join;
-				}
-
-				if (m_state == process_state::joined)
-				{
-					return process_result::success;
+					m_state = process_state::error_wait;
 				}
 			}
 
-			return process_result::error;
+			return m_exit_code;
 		}
 
 		process_size read_stdout(char* buffer, size_t buffer_size)
@@ -279,7 +276,7 @@ crstl_module_export namespace crstl
 
 			DWORD total_bytes_read = 0;
 
-			if (m_state == process_state::launched || m_state == process_state::joined)
+			if (m_state == process_state::launched || m_state == process_state::waited)
 			{
 				while (true)
 				{
@@ -296,7 +293,7 @@ crstl_module_export namespace crstl
 				// Null terminate the buffer
 				buffer[total_bytes_read] = '\0';
 
-				return process_size(process_result::success, total_bytes_read);
+				return process_size(process_size::success, total_bytes_read);
 			}
 
 			return process_size();

@@ -4,22 +4,50 @@
 
 crstl_module_export namespace crstl
 {
-	// Result of launching the process. Errors in the execution of the process
-	// will be the responsibility of the return value when calling join()
+	// State of the process. Errors in the execution of the process will be 
+	// notified through the return value when calling wait()
 	namespace process_state
 	{
 		enum t
 		{
-			undefined,    // Process launch has not been attempted yet
-			launched,     // Process launched successfully
-			terminated,   // Process was forcibly terminated
-			joined,       // Process was gracefully waited to finish
-			error_launch, // There was an error launching the process
-			error_join,   // There was an error during join
+			undefined,              // Process launch has not been attempted yet
+			launched,               // Process launched successfully
+			terminated,             // Process was forcibly terminated
+			waited,                 // Process was waited to completion. Check the return code
+			error_failed_to_launch, // There was an error launching the process
+			error_wait,             // There was an error during wait
 		};
 	}
 
-	struct process_result
+	struct process_exit_code
+	{
+		enum t : int
+		{
+			success                = 0,
+			error_generic          = -1,
+			error_failed_to_launch = 2147483647
+		};
+
+		process_exit_code() : return_code(error_failed_to_launch) {}
+
+		process_exit_code(t return_code) : return_code(return_code) {}
+
+		explicit operator bool() const { return return_code != error_failed_to_launch; }
+
+		// This return code is process-specific, and should be handled by the application
+		int get_exit_code()
+		{
+			return return_code;
+		}
+
+	private:
+
+		t return_code;
+	};
+
+	// Handles the state of a read or write operation. For example, a read on a process returns
+	// how many bytes were read, but also whether there was an error during the operation
+	struct process_size
 	{
 		enum t
 		{
@@ -27,28 +55,15 @@ crstl_module_export namespace crstl
 			error
 		};
 
-		process_result() : result(error) {}
+		process_size() : result(error), size(0) {}
+		process_size(t result, size_t size) : result(result), size(size) {}
 
-		process_result(t result) : result(result) {}
-
-		operator bool() const { return result == process_result::success; }
-
-		bool operator == (process_result::t other) const
-		{
-			return result == other;
-		}
+		explicit operator bool() const { return result != error; }
 
 	private:
 
 		t result;
-	};
 
-	struct process_size
-	{
-		process_size() : size(0) {}
-		process_size(process_result result, size_t size) : result(result), size(size) {}
-
-		process_result result;
 		size_t size;
 	};
 
@@ -75,11 +90,13 @@ crstl_module_export namespace crstl
 			: m_state(process_state::undefined)
 		{}
 
-		process_state::t get_state() const { return m_state; }
+		process_exit_code get_return_code() const { return m_exit_code; }
 
 	protected:
 
 		process_state::t m_state;
+
+		process_exit_code m_exit_code;
 
 	private:
 

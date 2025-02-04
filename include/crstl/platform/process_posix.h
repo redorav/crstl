@@ -34,14 +34,14 @@ crstl_module_export namespace crstl
 			int stdoutfd[2];
 			if (pipe(stdoutfd) != 0)
 			{
-				m_state = process_state::error_launch;
+				m_state = process_state::error_failed_to_launch;
 				return;
 			}
 
 			posix_spawn_file_actions_t actions;
 			if (posix_spawn_file_actions_init(&actions) != 0)
 			{
-				m_state = process_state::error_launch;
+				m_state = process_state::error_failed_to_launch;
 				return;
 			}
 
@@ -49,7 +49,7 @@ crstl_module_export namespace crstl
 			if (posix_spawn_file_actions_addclose(&actions, stdoutfd[0]) != 0 ||
 				posix_spawn_file_actions_adddup2(&actions, stdoutfd[1], STDOUT_FILENO) != 0)
 			{
-				m_state = process_state::error_launch;
+				m_state = process_state::error_failed_to_launch;
 			}
 
 			if (m_state == process_state::undefined)
@@ -63,7 +63,7 @@ crstl_module_export namespace crstl
 				}
 				else
 				{
-					m_state = process_state::error_launch;
+					m_state = process_state::error_failed_to_launch;
 				}
 			}
 
@@ -115,7 +115,7 @@ crstl_module_export namespace crstl
 			return wpid == 0;
 		}
 
-		process_result::t join()
+		process_exit_code wait()
 		{
 			if (m_state == process_state::launched)
 			{
@@ -127,35 +127,23 @@ crstl_module_export namespace crstl
 					if (WIFEXITED(status))
 					{
 						int return_value = WEXITSTATUS(status);
-
-						if (return_value == 0)
-						{
-							m_state = process_state::joined;
-						}
-						else
-						{
-							m_state = process_state::error_join;
-						}
+						m_state = process_state::waited;
+						m_exit_code = process_exit_code((process_exit_code::t)return_value);
 					}
 					else
 					{
-						m_state = process_state::error_join;
+						m_state = process_state::error_wait;
 					}
 				}
 				else
 				{
-					m_state = process_state::error_join;
+					m_state = process_state::error_wait;
 				}
 
 				m_child_pid = 0;
-
-				if (m_state == process_state::joined)
-				{
-					return process_result::success;
-				}
 			}
 
-			return process_result::error;
+			return m_exit_code;
 		}
 
 		process_size read_stdout(char* buffer, size_t buffer_size)
@@ -167,14 +155,14 @@ crstl_module_export namespace crstl
 
 			// We need to check whether the process is alive because it might have been killed by someone else
 			// before we're trying to access the stdout handle. There's not a lot we can do 
-			if ((m_state == process_state::launched || m_state == process_state::joined) && is_alive())
+			if ((m_state == process_state::launched || m_state == process_state::waited) && is_alive())
 			{
 				int fd = fileno(m_stdout_read_file);
 				bytes_read = read(fd, buffer, buffer_size);
 
 				if (bytes_read >= 0)
 				{
-					return process_size(process_result::success, bytes_read);
+					return process_size(bytes_read);
 				}
 			}
 
