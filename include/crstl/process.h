@@ -55,16 +55,18 @@ crstl_module_export namespace crstl
 			error
 		};
 
-		process_size() : result(error), size(0) {}
-		process_size(t result, size_t size) : result(result), size(size) {}
+		process_size() : m_result(error), m_size(0) {}
+		process_size(t result, size_t size) : m_result(result), m_size(size) {}
 
-		explicit operator bool() const { return result != error; }
+		explicit operator bool() const { return m_result != error; }
+
+		size_t size() const { return m_size; }
 
 	private:
 
-		t result;
+		t m_result;
 
-		size_t size;
+		size_t m_size;
 	};
 
 	struct process_parameters
