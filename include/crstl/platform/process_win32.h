@@ -293,7 +293,7 @@ crstl_module_export namespace crstl
 				// Null terminate the buffer
 				buffer[total_bytes_read] = '\0';
 
-				return process_size(process_size::success, total_bytes_read);
+				return process_size(total_bytes_read);
 			}
 
 			return process_size();

@@ -56,7 +56,7 @@ crstl_module_export namespace crstl
 		};
 
 		process_size() : m_result(error), m_size(0) {}
-		process_size(t result, size_t size) : m_result(result), m_size(size) {}
+		process_size(size_t size) : m_result(success), m_size(size) {}
 
 		explicit operator bool() const { return m_result != error; }
 
