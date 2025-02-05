@@ -34,6 +34,7 @@ typedef BYTE* LPBYTE;
 typedef DWORD* LPDWORD;
 
 typedef int BOOL;
+typedef BOOL* LPBOOL;
 
 typedef const CHAR* LPCCH, * PCCH;
 typedef CHAR* LPSTR;
@@ -41,7 +42,10 @@ typedef const CHAR* LPCSTR;
 
 typedef wchar_t WCHAR;
 typedef WCHAR* LPWSTR;
-typedef const WCHAR* LPCWSTR, * PCWSTR;
+typedef const WCHAR* LPCWSTR, *PCWSTR;
+
+typedef WCHAR *PWCHAR, *LPWCH, *PWCH;
+typedef const WCHAR *LPCWCH, *PCWCH;
 
 typedef unsigned __int64 ULONG_PTR, * PULONG_PTR;
 
@@ -137,6 +141,18 @@ extern "C"
 		int cchWideChar
 	);
 
+	__declspec(dllimport) int WideCharToMultiByte
+	(
+		UINT CodePage,
+		DWORD dwFlags,
+		LPCWCH lpWideCharStr,
+		int cchWideChar,
+		LPSTR lpMultiByteStr,
+		int cbMultiByte,
+		LPCCH lpDefaultChar,
+		LPBOOL lpUsedDefaultChar
+	);
+
 	__declspec(dllimport) BOOL CloseHandle(HANDLE hObject);
 
 	__declspec(dllimport) DWORD WaitForSingleObject(HANDLE hHandle, DWORD dwMilliseconds);
@@ -144,15 +160,24 @@ extern "C"
 	__declspec(dllimport) DWORD GetLastError(void);
 
 	// Files
-	__declspec(dllimport) void* CreateFileA(const char*, DWORD, DWORD, LPSECURITY_ATTRIBUTES, DWORD, DWORD, void*);
+
+	__declspec(dllimport) HANDLE CreateFileA(LPCSTR, DWORD, DWORD, LPSECURITY_ATTRIBUTES, DWORD, DWORD, HANDLE);
+
+	__declspec(dllimport) HANDLE CreateFileW(LPCWSTR, DWORD, DWORD, LPSECURITY_ATTRIBUTES, DWORD, DWORD, HANDLE);
 
 	__declspec(dllimport) BOOL DeleteFileA(LPCSTR lpFileName);
 
+	__declspec(dllimport) BOOL DeleteFileW(LPCWSTR lpFileName);
+
 	__declspec(dllimport) BOOL CopyFileA(LPCSTR lpExistingFileName, LPCSTR lpNewFileName, BOOL bFailIfExists);
+
+	__declspec(dllimport) BOOL CopyFileW(LPCWSTR lpExistingFileName, LPCWSTR lpNewFileName, BOOL bFailIfExists);
 
 	__declspec(dllimport) BOOL MoveFileA(LPCSTR lpExistingFileName, LPCSTR lpNewFileName);
 
-	__declspec(dllimport) int ReadFile(void*, void*, DWORD, LPDWORD, LPOVERLAPPED);
+	__declspec(dllimport) BOOL MoveFileW(LPCWSTR lpExistingFileName, LPCWSTR lpNewFileName);
+
+	__declspec(dllimport) BOOL ReadFile(HANDLE, LPVOID, DWORD, LPDWORD, LPOVERLAPPED);
 
 	__declspec(dllimport) BOOL WriteFile(HANDLE, LPCVOID, DWORD, LPDWORD, LPOVERLAPPED);
 
@@ -162,14 +187,22 @@ extern "C"
 
 	__declspec(dllimport) BOOL GetFileAttributesExA(LPCSTR lpFileName, GET_FILEEX_INFO_LEVELS fInfoLevelId, LPVOID lpFileInformation);
 
+	__declspec(dllimport) BOOL GetFileAttributesExW(LPCWSTR lpFileName, GET_FILEEX_INFO_LEVELS fInfoLevelId, LPVOID lpFileInformation);
+
 	// Directories
 	__declspec(dllimport) BOOL CreateDirectoryA(LPCSTR lpPathName, LPSECURITY_ATTRIBUTES lpSecurityAttributes);
+
+	__declspec(dllimport) BOOL CreateDirectoryW(LPCWSTR lpPathName, LPSECURITY_ATTRIBUTES lpSecurityAttributes);
 
 	// Paths
 
 	__declspec(dllimport) DWORD GetTempPathA(DWORD nBufferLength, LPSTR lpBuffer);
 
+	__declspec(dllimport) DWORD GetTempPathW(DWORD nBufferLength, LPWSTR lpBuffer);
+
 	__declspec(dllimport) DWORD GetLongPathNameA(LPCSTR lpszShortPath, LPSTR lpszLongPath, DWORD cchBuffer);
+
+	__declspec(dllimport) DWORD GetLongPathNameW(LPCWSTR lpszShortPath, LPWSTR lpszLongPath, DWORD cchBuffer);
 };
 
 namespace crstl
