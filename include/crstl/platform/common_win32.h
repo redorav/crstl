@@ -159,6 +159,8 @@ extern "C"
 
 	__declspec(dllimport) DWORD GetLastError(void);
 
+	__declspec(dllimport) UINT GetOEMCP(void);
+
 	// Files
 
 	__declspec(dllimport) HANDLE CreateFileA(LPCSTR, DWORD, DWORD, LPSECURITY_ATTRIBUTES, DWORD, DWORD, HANDLE);

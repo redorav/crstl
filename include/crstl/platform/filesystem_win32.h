@@ -56,19 +56,37 @@
 #define CRSTL_ERROR_SHARING_VIOLATION          32L
 #define CRSTL_ERROR_ALREADY_EXISTS             183L
 
+#define CRSTL_CP_UTF8 65001
+
 crstl_module_export namespace crstl
 {
 	namespace detail
 	{
+		template<typename Dummy>
+		struct win32_filesystem_globals
+		{
+			static const UINT win32_codepath;
+		};
+
+		template<typename Dummy>
+		const UINT win32_filesystem_globals<Dummy>::win32_codepath = GetOEMCP();
+
+		// Return whether Windows has the UTF-8 codepage enabled system-wide
+		// Mainly used to avoid string conversions when Windows supports the behavior natively
+		inline bool win32_is_utf8()
+		{
+			return win32_filesystem_globals<void>::win32_codepath == CRSTL_CP_UTF8;
+		}
+
 		inline void win32_utf8_to_utf16(const CHAR* path, size_t path_length, WCHAR* destination_path, size_t destination_path_length)
 		{
-			int end_position = MultiByteToWideChar(65001 /*CP_UTF8*/, 0, path, (int)path_length, destination_path, (int)destination_path_length);
+			int end_position = MultiByteToWideChar(CRSTL_CP_UTF8, 0, path, (int)path_length, destination_path, (int)destination_path_length);
 			destination_path[end_position] = L'\0';
 		}
 
 		inline void win32_utf16_to_utf8(const WCHAR* path, size_t path_length, CHAR* destination_path, size_t destination_path_length)
 		{
-			int end_position = WideCharToMultiByte(65001 /*CP_UTF8*/, 0, path, (int)path_length, destination_path, (int)destination_path_length, nullptr, nullptr);
+			int end_position = WideCharToMultiByte(CRSTL_CP_UTF8, 0, path, (int)path_length, destination_path, (int)destination_path_length, nullptr, nullptr);
 			destination_path[end_position] = '\0';
 		}
 	}
@@ -117,19 +135,16 @@ crstl_module_export namespace crstl
 
 			dw_flags_and_attributes = CRSTL_FILE_ATTRIBUTE_NORMAL;
 
-			WCHAR w_file_path[MaxPathLength];
-			detail::win32_utf8_to_utf16(file_path, crstl::string_length(file_path), w_file_path, crstl::string_length(w_file_path));
-
-			m_file_handle = ::CreateFileW
-			(
-				w_file_path,
-				dw_desired_access,
-				dw_share_mode,
-				lp_security_attributes,
-				dw_creation_disposition,
-				dw_flags_and_attributes,
-				h_template_file
-			);
+			if (detail::win32_is_utf8())
+			{
+				m_file_handle = ::CreateFileA(file_path, dw_desired_access, dw_share_mode, lp_security_attributes, dw_creation_disposition, dw_flags_and_attributes, h_template_file);
+			}
+			else
+			{
+				WCHAR w_file_path[MaxPathLength];
+				detail::win32_utf8_to_utf16(file_path, crstl::string_length(file_path), w_file_path, sizeof(w_file_path));
+				m_file_handle = ::CreateFileW(w_file_path, dw_desired_access, dw_share_mode, lp_security_attributes, dw_creation_disposition, dw_flags_and_attributes, h_template_file);
+			}
 
 			if (m_file_handle != CRSTL_INVALID_HANDLE_VALUE)
 			{
@@ -243,34 +258,58 @@ crstl_module_export namespace crstl
 	{
 		bool fail_if_exists = copy_options & file_copy_options::overwrite ? false : true;
 
-		WCHAR w_source_file_path[MaxPathLength];
-		detail::win32_utf8_to_utf16(source_file_path, crstl::string_length(source_file_path), w_source_file_path, crstl::string_length(w_source_file_path));
+		if (detail::win32_is_utf8())
+		{
+			CopyFileA(source_file_path, destination_file_path, fail_if_exists);
+		}
+		else
+		{
+			WCHAR w_source_file_path[MaxPathLength];
+			detail::win32_utf8_to_utf16(source_file_path, crstl::string_length(source_file_path), w_source_file_path, sizeof(w_source_file_path));
 
-		WCHAR w_destination_file_path[MaxPathLength];
-		detail::win32_utf8_to_utf16(destination_file_path, crstl::string_length(destination_file_path), w_destination_file_path, crstl::string_length(w_destination_file_path));
+			WCHAR w_destination_file_path[MaxPathLength];
+			detail::win32_utf8_to_utf16(destination_file_path, crstl::string_length(destination_file_path), w_destination_file_path, sizeof(w_destination_file_path));
+
+			CopyFileW(w_source_file_path, w_destination_file_path, fail_if_exists);
+		}
 
 		// TODO ERROR HANDLING
-		CopyFileW(w_source_file_path, w_destination_file_path, fail_if_exists);
 	}
 
 	inline void file_move(const char* source_file_path, const char* destination_file_path)
 	{
-		WCHAR w_source_file_path[MaxPathLength];
-		detail::win32_utf8_to_utf16(source_file_path, crstl::string_length(source_file_path), w_source_file_path, crstl::string_length(w_source_file_path));
+		if (detail::win32_is_utf8())
+		{
+			MoveFileA(source_file_path, destination_file_path);
+		}
+		else
+		{
+			WCHAR w_source_file_path[MaxPathLength];
+			detail::win32_utf8_to_utf16(source_file_path, crstl::string_length(source_file_path), w_source_file_path, sizeof(w_source_file_path));
 
-		WCHAR w_destination_file_path[MaxPathLength];
-		detail::win32_utf8_to_utf16(destination_file_path, crstl::string_length(destination_file_path), w_destination_file_path, crstl::string_length(w_destination_file_path));
+			WCHAR w_destination_file_path[MaxPathLength];
+			detail::win32_utf8_to_utf16(destination_file_path, crstl::string_length(destination_file_path), w_destination_file_path, sizeof(w_destination_file_path));
+
+			/*BOOL result = */MoveFileW(w_source_file_path, w_destination_file_path);
+		}
 
 		// TODO ERROR HANDLING
-		/*BOOL result = */MoveFileW(w_source_file_path, w_destination_file_path);
 	}
 
 	inline filesystem_result::t file_delete(const char* file_path)
 	{
-		WCHAR w_file_path[MaxPathLength];
-		detail::win32_utf8_to_utf16(file_path, crstl::string_length(file_path), w_file_path, crstl::string_length(w_file_path));
+		bool success = false;
 
-		bool success = DeleteFileW(w_file_path);
+		if (detail::win32_is_utf8())
+		{
+			success = DeleteFileA(file_path);
+		}
+		else
+		{
+			WCHAR w_file_path[MaxPathLength];
+			detail::win32_utf8_to_utf16(file_path, crstl::string_length(file_path), w_file_path, sizeof(w_file_path));
+			success = DeleteFileW(w_file_path);
+		}
 
 		if (success)
 		{
@@ -298,10 +337,20 @@ crstl_module_export namespace crstl
 	{
 		_win32_file_attribute_data attribute_data;
 
-		WCHAR w_file_path[MaxPathLength];
-		detail::win32_utf8_to_utf16(file_path, crstl::string_length(file_path), w_file_path, crstl::string_length(w_file_path));
+		bool success = false;
 
-		if (GetFileAttributesExW(w_file_path, (GET_FILEEX_INFO_LEVELS)GetFileExInfoStandard, &attribute_data))
+		if (detail::win32_is_utf8())
+		{
+			success = GetFileAttributesExA(file_path, (GET_FILEEX_INFO_LEVELS)GetFileExInfoStandard, &attribute_data);
+		}
+		else
+		{
+			WCHAR w_file_path[MaxPathLength];
+			detail::win32_utf8_to_utf16(file_path, crstl::string_length(file_path), w_file_path, sizeof(w_file_path));
+			success = GetFileAttributesExW(w_file_path, (GET_FILEEX_INFO_LEVELS)GetFileExInfoStandard, &attribute_data);
+		}
+
+		if (success)
 		{
 			return attribute_data.dwFileAttributes != CRSTL_INVALID_FILE_ATTRIBUTES && !(attribute_data.dwFileAttributes & CRSTL_FILE_ATTRIBUTE_DIRECTORY);
 		}
@@ -315,10 +364,20 @@ crstl_module_export namespace crstl
 	{
 		_win32_file_attribute_data attribute_data;
 
-		WCHAR w_directory_path[MaxPathLength];
-		detail::win32_utf8_to_utf16(directory_path, crstl::string_length(directory_path), w_directory_path, crstl::string_length(w_directory_path));
+		bool success = false;
 
-		if (GetFileAttributesExW(w_directory_path, (GET_FILEEX_INFO_LEVELS)GetFileExInfoStandard, &attribute_data))
+		if (detail::win32_is_utf8())
+		{
+			success = GetFileAttributesExA(directory_path, (GET_FILEEX_INFO_LEVELS)GetFileExInfoStandard, &attribute_data);
+		}
+		else
+		{
+			WCHAR w_directory_path[MaxPathLength];
+			detail::win32_utf8_to_utf16(directory_path, crstl::string_length(directory_path), w_directory_path, sizeof(w_directory_path));
+			success = GetFileAttributesExW(w_directory_path, (GET_FILEEX_INFO_LEVELS)GetFileExInfoStandard, &attribute_data);
+		}
+
+		if (success)
 		{
 			return attribute_data.dwFileAttributes != CRSTL_INVALID_FILE_ATTRIBUTES && (attribute_data.dwFileAttributes & CRSTL_FILE_ATTRIBUTE_DIRECTORY);
 		}
@@ -330,10 +389,18 @@ crstl_module_export namespace crstl
 
 	inline filesystem_result::t directory_create(const char* directory_path, bool /*create_intermediate*/)
 	{
-		WCHAR w_directory_path[MaxPathLength];
-		detail::win32_utf8_to_utf16(directory_path, crstl::string_length(directory_path), w_directory_path, crstl::string_length(w_directory_path));
+		bool success = false;
 
-		bool success = CreateDirectoryW(w_directory_path, nullptr);
+		if (detail::win32_is_utf8())
+		{
+			success = CreateDirectoryA(directory_path, nullptr);
+		}
+		else
+		{
+			WCHAR w_directory_path[MaxPathLength];
+			detail::win32_utf8_to_utf16(directory_path, crstl::string_length(directory_path), w_directory_path, sizeof(w_directory_path));
+			success = CreateDirectoryW(w_directory_path, nullptr);
+		}
 
 		if (success)
 		{
@@ -358,22 +425,37 @@ crstl_module_export namespace crstl
 	{
 		inline path compute_temp_path()
 		{
-			WCHAR w_temp_path[MaxPathLength];
+			// Start off null-terminated
+			char temp_path[MaxPathLength];
+			temp_path[0] = 0;
 
-			DWORD short_temp_path_length = GetTempPathW(MaxPathLength, w_temp_path);
-			if (short_temp_path_length > 0)
+			// Note on GetLongPathName reusing the parameter:
+			// From the docs: "You can use the same buffer you used for the lpszShortPath parameter"
+
+			if (win32_is_utf8())
 			{
-				// From the docs: "You can use the same buffer you used for the lpszShortPath parameter"
-				DWORD long_temp_path_length = GetLongPathNameW(w_temp_path, w_temp_path, MaxPathLength);
-				if (long_temp_path_length > 0)
+				DWORD short_temp_path_length = GetTempPathA(MaxPathLength, temp_path);
+				if (short_temp_path_length > 0)
 				{
-					char temp_path[MaxPathLength];
-					win32_utf16_to_utf8(w_temp_path, crstl::string_length(w_temp_path), temp_path, crstl::string_length(temp_path));
-					return path(temp_path);
+					GetLongPathNameA(temp_path, temp_path, MaxPathLength);
+				}
+			}
+			else
+			{
+				WCHAR w_temp_path[MaxPathLength];
+
+				DWORD short_temp_path_length = GetTempPathW(MaxPathLength, w_temp_path);
+				if (short_temp_path_length > 0)
+				{
+					DWORD long_temp_path_length = GetLongPathNameW(w_temp_path, w_temp_path, MaxPathLength);
+					if (long_temp_path_length > 0)
+					{
+						win32_utf16_to_utf8(w_temp_path, crstl::string_length(w_temp_path), temp_path, sizeof(temp_path));
+					}
 				}
 			}
 
-			return path();
+			return path(temp_path);
 		}
 	}
 };
