@@ -180,8 +180,8 @@ crstl_module_export namespace crstl
 			if (createprocess_result)
 			{
 				// We don't need the primary thread of the process
-				close_handle_safe(process_info.hThread);
-				close_handle_safe(startup_info.hStdOutput);
+				detail::close_handle_safe(process_info.hThread);
+				detail::close_handle_safe(startup_info.hStdOutput);
 
 				m_state = process_state::launched;
 				m_process_handle = process_info.hProcess;
@@ -195,8 +195,8 @@ crstl_module_export namespace crstl
 
 		~process()
 		{
-			close_handle_safe(m_process_handle);
-			close_handle_safe(m_stdout_read_handle);
+			detail::close_handle_safe(m_process_handle);
+			detail::close_handle_safe(m_stdout_read_handle);
 		}
 
 		process(process&& other) crstl_noexcept

@@ -2,7 +2,65 @@
 
 crstl_warning_unscoped_enum_begin
 
+// Handleapi.h
 #define CRSTL_INVALID_HANDLE_VALUE ((HANDLE)(LONG_PTR)-1)
+
+// Winnt.h
+#define CRSTL_GENERIC_READ                     (0x80000000L)
+#define CRSTL_GENERIC_WRITE                    (0x40000000L)
+#define CRSTL_GENERIC_EXECUTE                  (0x20000000L)
+#define CRSTL_GENERIC_ALL                      (0x10000000L)
+
+#define CRSTL_FILE_SHARE_READ                      0x00000001
+#define CRSTL_FILE_SHARE_WRITE                     0x00000002
+#define CRSTL_FILE_SHARE_DELETE                    0x00000004
+#define CRSTL_FILE_ATTRIBUTE_READONLY              0x00000001
+#define CRSTL_FILE_ATTRIBUTE_HIDDEN                0x00000002
+#define CRSTL_FILE_ATTRIBUTE_SYSTEM                0x00000004
+#define CRSTL_FILE_ATTRIBUTE_DIRECTORY             0x00000010
+#define CRSTL_FILE_ATTRIBUTE_ARCHIVE               0x00000020
+#define CRSTL_FILE_ATTRIBUTE_DEVICE                0x00000040
+#define CRSTL_FILE_ATTRIBUTE_NORMAL                0x00000080
+#define CRSTL_FILE_ATTRIBUTE_TEMPORARY             0x00000100
+#define CRSTL_FILE_ATTRIBUTE_SPARSE_FILE           0x00000200
+#define CRSTL_FILE_ATTRIBUTE_REPARSE_POINT         0x00000400
+#define CRSTL_FILE_ATTRIBUTE_COMPRESSED            0x00000800
+#define CRSTL_FILE_ATTRIBUTE_OFFLINE               0x00001000
+#define CRSTL_FILE_ATTRIBUTE_NOT_CONTENT_INDEXED   0x00002000
+#define CRSTL_FILE_ATTRIBUTE_ENCRYPTED             0x00004000
+#define CRSTL_FILE_ATTRIBUTE_INTEGRITY_STREAM      0x00008000
+#define CRSTL_FILE_ATTRIBUTE_VIRTUAL               0x00010000
+#define CRSTL_FILE_ATTRIBUTE_NO_SCRUB_DATA         0x00020000
+#define CRSTL_FILE_ATTRIBUTE_EA                    0x00040000
+#define CRSTL_FILE_ATTRIBUTE_PINNED                0x00080000
+#define CRSTL_FILE_ATTRIBUTE_UNPINNED              0x00100000
+#define CRSTL_FILE_ATTRIBUTE_RECALL_ON_OPEN        0x00040000
+#define CRSTL_FILE_ATTRIBUTE_RECALL_ON_DATA_ACCESS 0x00400000
+
+// Fileapi.h
+#define CRSTL_CREATE_NEW          1
+#define CRSTL_CREATE_ALWAYS       2
+#define CRSTL_OPEN_EXISTING       3
+#define CRSTL_OPEN_ALWAYS         4
+#define CRSTL_TRUNCATE_EXISTING   5
+
+#define CRSTL_INVALID_FILE_SIZE ((DWORD)0xFFFFFFFF)
+#define CRSTL_INVALID_SET_FILE_POINTER ((DWORD)-1)
+#define CRSTL_INVALID_FILE_ATTRIBUTES ((DWORD)-1)
+
+// Winbase.h
+#define CRSTL_FILE_BEGIN           0
+#define CRSTL_FILE_CURRENT         1
+#define CRSTL_FILE_END             2
+
+// Winerror.h
+#define CRSTL_ERROR_FILE_NOT_FOUND             2L
+#define CRSTL_ERROR_ACCESS_DENIED              5L
+#define CRSTL_ERROR_SHARING_VIOLATION          32L
+#define CRSTL_ERROR_ALREADY_EXISTS             183L
+
+// WinNIs.h
+#define CRSTL_CP_UTF8 65001
 
 typedef char                CHAR;
 typedef signed char         INT8;
@@ -209,12 +267,31 @@ extern "C"
 
 namespace crstl
 {
-	inline void close_handle_safe(void*& handle)
+	namespace detail
 	{
-		if (handle != CRSTL_INVALID_HANDLE_VALUE)
+		template<typename Dummy>
+		struct win32_filesystem_globals
 		{
-			CloseHandle(handle);
-			handle = CRSTL_INVALID_HANDLE_VALUE;
+			static const UINT win32_codepage;
+		};
+
+		template<typename Dummy>
+		const UINT win32_filesystem_globals<Dummy>::win32_codepage = GetOEMCP();
+
+		// Return whether Windows has the UTF-8 codepage enabled system-wide
+		// Mainly used to avoid string conversions when Windows supports the behavior natively
+		inline bool win32_is_utf8()
+		{
+			return win32_filesystem_globals<void>::win32_codepage == CRSTL_CP_UTF8;
+		}
+
+		inline void close_handle_safe(void*& handle)
+		{
+			if (handle != CRSTL_INVALID_HANDLE_VALUE)
+			{
+				CloseHandle(handle);
+				handle = CRSTL_INVALID_HANDLE_VALUE;
+			}
 		}
 	}
 };
