@@ -98,6 +98,22 @@ crstl_module_export namespace crstl
 		{
 			close();
 		}
+
+		void close()
+		{
+			if (is_open())
+			{
+				CloseHandle(m_file_handle);
+				m_file_handle = CRSTL_INVALID_HANDLE_VALUE;
+			}
+		}
+
+		size_t get_size() const
+		{
+			large_integer file_size;
+			GetFileSizeEx(m_file_handle, (PLARGE_INTEGER)&file_size);
+			return (size_t)file_size.quad_part;
+		}
 		
 		bool is_open() const
 		{
@@ -114,23 +130,10 @@ crstl_module_export namespace crstl
 			return (size_t)bytes_read;
 		}
 
-		size_t write(const void* memory, size_t bytes)
+		void rewind()
 		{
 			crstl_assert(is_open());
-			crstl_assert(m_file_flags & file_flags::write);
-
-			DWORD bytes_written;
-			::WriteFile(m_file_handle, memory, (DWORD)bytes, &bytes_written, nullptr);
-			return (size_t)bytes_written;
-		}
-
-		void close()
-		{
-			if (is_open())
-			{
-				CloseHandle(m_file_handle);
-				m_file_handle = CRSTL_INVALID_HANDLE_VALUE;
-			}
+			SetFilePointer(m_file_handle, 0, nullptr, CRSTL_FILE_BEGIN);
 		}
 
 		void seek(file_seek_origin::t seek_origin, int64_t byte_offset)
@@ -169,10 +172,14 @@ crstl_module_export namespace crstl
 			}
 		}
 
-		void rewind()
+		size_t write(const void* memory, size_t bytes)
 		{
 			crstl_assert(is_open());
-			SetFilePointer(m_file_handle, 0, nullptr, CRSTL_FILE_BEGIN);
+			crstl_assert(m_file_flags & file_flags::write);
+
+			DWORD bytes_written;
+			::WriteFile(m_file_handle, memory, (DWORD)bytes, &bytes_written, nullptr);
+			return (size_t)bytes_written;
 		}
 
 	private:

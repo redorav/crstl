@@ -261,9 +261,25 @@ crstl_module_export namespace crstl
 			close();
 		}
 
+		void close()
+		{
+			if (is_open())
+			{
+				detail::close(m_file_handle);
+				m_file_handle = 0;
+			}
+		}
+
 		bool is_open() const
 		{
 			return m_file_handle != -1;
+		}
+
+		size_t get_size() const
+		{
+			struct stat st;
+			stat(m_file_handle, &st);
+			return (size_t)st.st_size;
 		}
 
 		size_t read(void* memory, size_t bytes)
@@ -277,24 +293,10 @@ crstl_module_export namespace crstl
 			return (size_t)bytes_read;
 		}
 
-		size_t write(const void* memory, size_t bytes)
+		void rewind()
 		{
 			crstl_assert(is_open());
-			crstl_assert(m_file_open_flags & file_flags::write);
-
-			ssize_t bytes_written = detail::write(m_file_handle, memory, (unsigned int)bytes);
-			crstl_assert(bytes_written >= 0);
-
-			return (size_t)bytes_written;
-		}
-
-		void close()
-		{
-			if (is_open())
-			{
-				detail::close(m_file_handle);
-				m_file_handle = 0;
-			}
+			detail::lseek(m_file_handle, 0, CRSTL_SEEK_CUR);
 		}
 
 		void seek(file_seek_origin::t seek_origin, int64_t byte_offset)
@@ -319,10 +321,15 @@ crstl_module_export namespace crstl
 			detail::lseek(m_file_handle, (long)byte_offset, fseek_origin);
 		}
 
-		void rewind()
+		size_t write(const void* memory, size_t bytes)
 		{
 			crstl_assert(is_open());
-			detail::lseek(m_file_handle, 0, CRSTL_SEEK_CUR);
+			crstl_assert(m_file_open_flags & file_flags::write);
+
+			ssize_t bytes_written = detail::write(m_file_handle, memory, (unsigned int)bytes);
+			crstl_assert(bytes_written >= 0);
+
+			return (size_t)bytes_written;
 		}
 
 	private:
