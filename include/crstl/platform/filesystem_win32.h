@@ -130,6 +130,11 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
+		explicit operator bool() const
+		{
+			return is_open();
+		}
+
 		void close()
 		{
 			if (is_open())
