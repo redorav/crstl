@@ -278,7 +278,7 @@ crstl_module_export namespace crstl
 		size_t get_size() const
 		{
 			struct stat st;
-			stat(m_file_handle, &st);
+			fstat(m_file_handle, &st);
 			return (size_t)st.st_size;
 		}
 
