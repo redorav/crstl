@@ -212,6 +212,11 @@ crstl_module_export namespace crstl
 	{
 	public:
 
+		file()
+			: m_file_handle(-1)
+			, m_file_flags(file_flags::none)
+		{}
+
 		file(const char* file_path, file_flags::t open_flags)
 			: m_file_handle(-1)
 			, m_file_flags(open_flags)

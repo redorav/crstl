@@ -23,6 +23,11 @@ crstl_module_export namespace crstl
 	{
 	public:
 
+		file() 
+			: m_file_handle(CRSTL_INVALID_HANDLE_VALUE)
+			, m_file_flags(file_flags::none)
+		{}
+
 		file(const char* file_path, file_flags::t open_flags)
 			: m_file_handle(CRSTL_INVALID_HANDLE_VALUE)
 			, m_file_flags(open_flags)
