@@ -318,7 +318,7 @@ crstl_module_export namespace crstl
 			return (size_t)st.st_size;
 		}
 
-		size_t read(void* memory, size_t bytes)
+		size_t read(void* memory, size_t bytes) const
 		{
 			crstl_assert(is_open());
 			crstl_assert(m_file_flags & file_flags::read);
