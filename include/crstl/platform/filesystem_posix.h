@@ -214,7 +214,7 @@ crstl_module_export namespace crstl
 
 		file(const char* file_path, file_flags::t open_flags)
 			: m_file_handle(-1)
-			, m_file_open_flags(open_flags)
+			, m_file_flags(open_flags)
 		{
 			int open_flags_posix = 0;
 
@@ -261,6 +261,32 @@ crstl_module_export namespace crstl
 			close();
 		}
 
+		file(file&& other)
+		{
+			crstl_assert(this != &other);
+
+			other.m_file_handle = m_file_handle;
+			other.m_file_flags = m_file_flags;
+
+			m_file_handle = -1;
+			m_file_flags = file_flags::none;
+		}
+
+		file& operator = (file&& other)
+		{
+			crstl_assert(this != &other);
+
+			close();
+
+			other.m_file_handle = m_file_handle;
+			other.m_file_flags = m_file_flags;
+
+			m_file_handle = -1;
+			m_file_flags = file_flags::none;
+
+			return *this;
+		}
+
 		void close()
 		{
 			if (is_open())
@@ -285,7 +311,7 @@ crstl_module_export namespace crstl
 		size_t read(void* memory, size_t bytes)
 		{
 			crstl_assert(is_open());
-			crstl_assert(m_file_open_flags & file_flags::read);
+			crstl_assert(m_file_flags & file_flags::read);
 
 			ssize_t bytes_read = detail::read(m_file_handle, memory, (unsigned int)bytes);
 			crstl_assert(bytes_read >= 0);
@@ -324,7 +350,7 @@ crstl_module_export namespace crstl
 		size_t write(const void* memory, size_t bytes)
 		{
 			crstl_assert(is_open());
-			crstl_assert(m_file_open_flags & file_flags::write);
+			crstl_assert(m_file_flags & file_flags::write);
 
 			ssize_t bytes_written = detail::write(m_file_handle, memory, (unsigned int)bytes);
 			crstl_assert(bytes_written >= 0);
@@ -334,9 +360,13 @@ crstl_module_export namespace crstl
 
 	private:
 
+		file(const file&) crstl_constructor_delete;
+
+		file& operator = (const file&) crstl_constructor_delete;
+
 		int m_file_handle;
 
-		file_flags::t m_file_open_flags;
+		file_flags::t m_file_flags;
 	};
 
 	inline void file_copy(const char* source_file_path, const char* destination_file_path, file_copy_options::t copy_options)

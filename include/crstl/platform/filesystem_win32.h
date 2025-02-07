@@ -99,6 +99,32 @@ crstl_module_export namespace crstl
 			close();
 		}
 
+		file(file&& other)
+		{
+			crstl_assert(this != &other);
+
+			other.m_file_handle = m_file_handle;
+			other.m_file_flags = m_file_flags;
+
+			m_file_handle = CRSTL_INVALID_HANDLE_VALUE;
+			m_file_flags = file_flags::none;
+		}
+
+		file& operator = (file&& other)
+		{
+			crstl_assert(this != &other);
+
+			close();
+
+			other.m_file_handle = m_file_handle;
+			other.m_file_flags = m_file_flags;
+
+			m_file_handle = CRSTL_INVALID_HANDLE_VALUE;
+			m_file_flags = file_flags::none;
+
+			return *this;
+		}
+
 		void close()
 		{
 			if (is_open())
@@ -183,6 +209,10 @@ crstl_module_export namespace crstl
 		}
 
 	private:
+
+		file(const file&) crstl_constructor_delete;
+
+		file& operator = (const file&) crstl_constructor_delete;
 
 		HANDLE m_file_handle;
 
