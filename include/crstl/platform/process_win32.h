@@ -212,6 +212,8 @@ crstl_module_export namespace crstl
 
 		process& operator = (process&& other) crstl_noexcept
 		{
+			terminate();
+
 			m_process_handle = other.m_process_handle;
 			m_stdout_read_handle = other.m_stdout_read_handle;
 			m_state = other.m_state;

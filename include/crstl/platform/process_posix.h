@@ -95,6 +95,8 @@ crstl_module_export namespace crstl
 
 		process& operator = (process&& other)
 		{
+			terminate();
+
 			m_child_pid = other.m_child_pid;
 			m_state = other.m_state;
 
