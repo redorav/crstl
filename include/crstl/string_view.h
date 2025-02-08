@@ -194,6 +194,67 @@ crstl_module_export namespace crstl
 			return find(needle_sv.m_data, pos, needle_sv.m_length);
 		}
 
+		//--------------
+		// find_first_of
+		//--------------
+
+		crstl_constexpr14 size_t find_first_of(const_pointer needle_string, size_t pos, size_t needle_length) const crstl_noexcept
+		{
+			size_t current_length = length();
+			const_pointer current_data = data();
+
+			if (pos < current_length)
+			{
+				const_pointer found_string = crstl::string_find_of(current_data + pos, current_length - pos, needle_string, needle_length);
+				return found_string ? (size_t)(found_string - current_data) : npos;
+			}
+			else
+			{
+				return npos;
+			}
+		}
+
+		crstl_constexpr14 size_t find_first_of(const_pointer needle_string, size_t pos = 0) const crstl_noexcept
+		{
+			return find_first_of(needle_string, pos, crstl::string_length(needle_string));
+		}
+
+		crstl_constexpr14 size_t find_first_of(const basic_string_view& needle_string, size_t pos = 0) const crstl_noexcept
+		{
+			return find_first_of(needle_string.c_str(), pos, needle_string.length());
+		}
+
+		crstl_constexpr14 size_t find_first_of(CharT c, size_t pos = 0) const crstl_noexcept
+		{
+			return find(c, pos);
+		}
+
+		//-------------
+		// find_last_of
+		//-------------
+
+		crstl_constexpr14 size_t find_last_of(const_pointer needle_string, size_t pos, size_t needle_length) const crstl_noexcept
+		{
+			pos = pos < length() ? pos : length();
+			const_pointer found_string = crstl::string_rfind_of(data() + pos, pos, needle_string, needle_length);
+			return found_string ? (size_t)(found_string - data()) : npos;
+		}
+
+		crstl_constexpr14 size_t find_last_of(const_pointer needle_string, size_t pos = npos) const crstl_noexcept
+		{
+			return find_last_of(needle_string, pos, crstl::string_length(needle_string));
+		}
+
+		crstl_constexpr14 size_t find_last_of(const basic_string_view& needle_string, size_t pos = npos) const crstl_noexcept
+		{
+			return find_last_of(needle_string.c_str(), pos, needle_string.length());
+		}
+
+		crstl_constexpr14 size_t find_last_of(CharT c, size_t pos = npos) const crstl_noexcept
+		{
+			return rfind(c, pos);
+		}
+
 		crstl_constexpr14 CharT& front() crstl_noexcept { return m_data; }
 		crstl_constexpr const CharT& front() const crstl_noexcept { return m_data; }
 
