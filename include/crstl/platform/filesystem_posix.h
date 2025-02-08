@@ -248,17 +248,20 @@ crstl_module_export namespace crstl
 
 			m_file_handle = detail::open(file_path, open_flags_posix);
 
-			crstl_assert(is_open());
+			if (is_open())
+			{
+				m_path = file_path;
 
-			//stat stat_struct;
-			//fstat(m_file_handle, )
-			//fseeko(m_file, 0, SEEK_END);
-			//m_fileSize = _ftelli64(m_file);
+				//stat stat_struct;
+				//fstat(m_file_handle, )
+				//fseeko(m_file, 0, SEEK_END);
+				//m_fileSize = _ftelli64(m_file);
 
-			//if (!(open_flags & file_flags::append))
-			//{
-			//	::rewind(m_file_handle);
-			//}
+				//if (!(open_flags & file_flags::append))
+				//{
+				//	::rewind(m_file_handle);
+				//}
+			}
 		}
 
 		~file()

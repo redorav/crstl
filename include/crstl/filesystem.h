@@ -65,6 +65,20 @@ crstl_module_export namespace crstl
 			overwrite = 1 << 0
 		};
 	};
+
+	class file_base
+	{
+	public:
+
+		const path& get_path() const
+		{
+			return m_path;
+		}
+
+	protected:
+
+		path m_path;
+	};
 };
 
 #if defined(CRSTL_OS_WINDOWS)

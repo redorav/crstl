@@ -19,7 +19,7 @@ crstl_module_export namespace crstl
 		}
 	}
 
-	class file
+	class file : public file_base
 	{
 	public:
 
@@ -79,18 +79,9 @@ crstl_module_export namespace crstl
 				m_file_handle = ::CreateFileW(w_file_path, dw_desired_access, dw_share_mode, lp_security_attributes, dw_creation_disposition, dw_flags_and_attributes, h_template_file);
 			}
 
-			if (m_file_handle != CRSTL_INVALID_HANDLE_VALUE)
+			if (is_open())
 			{
-				// Note that if the return value is INVALID_FILE_SIZE (0xffffffff), an application must call GetLastError 
-				// to determine whether the function has succeeded or failed. The reason the function may appear to fail 
-				// when it has not is that lpFileSizeHigh could be non-NULL or the file size could be 0xffffffff. In this 
-				// case, GetLastError will return NO_ERROR (0) upon success. Because of this behavior, it is recommended 
-				// that you use GetFileSizeEx instead.
-				long long liFileSize;
-				GetFileSizeEx(m_file_handle, (LARGE_INTEGER*)&liFileSize);
-
-				// todo use
-				//uint64_t fileSize = liFileSize;
+				m_path = file_path;
 
 				if (!(open_flags & file_flags::append))
 				{
@@ -146,6 +137,12 @@ crstl_module_export namespace crstl
 
 		size_t get_size() const
 		{
+			// Note that if the return value is INVALID_FILE_SIZE (0xffffffff), an application must call GetLastError 
+			// to determine whether the function has succeeded or failed. The reason the function may appear to fail 
+			// when it has not is that lpFileSizeHigh could be non-NULL or the file size could be 0xffffffff. In this 
+			// case, GetLastError will return NO_ERROR (0) upon success. Because of this behavior, it is recommended 
+			// that you use GetFileSizeEx instead.
+
 			large_integer file_size;
 			GetFileSizeEx(m_file_handle, (PLARGE_INTEGER)&file_size);
 			return (size_t)file_size.quad_part;
