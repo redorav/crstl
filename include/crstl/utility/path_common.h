@@ -95,6 +95,11 @@ crstl_module_export namespace crstl
 			return has_extension_internal(lastDot);
 		}
 
+		size_t length() const
+		{
+			return m_path_string.length();
+		}
+
 		path_base parent_path() const
 		{
 			size_t lastSeparator = m_path_string.find_last_of("/");
