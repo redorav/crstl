@@ -208,7 +208,7 @@ namespace crstl
 
 crstl_module_export namespace crstl
 {
-	class file
+	class file : public file_base
 	{
 	public:
 
