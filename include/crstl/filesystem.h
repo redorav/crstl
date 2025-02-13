@@ -118,4 +118,76 @@ crstl_module_export namespace crstl
 	{
 		return filesystem_globals<void>::temp_path;
 	}
+
+	inline bool create_directories(const char* directory_path)
+	{
+		if (!directory_path)
+		{
+			return false;
+		}
+
+		filesystem_result::t result = create_directory(directory_path);
+
+		if (result == filesystem_result::success)
+		{
+			return true;
+		}
+		else
+		{
+			// We guarantee path separators are only ever represented with forward slashes in the path class
+			const char* Separator = "/";
+
+			// Start working our way backwards. Chances are most of the path exists
+			crstl::path temp_path = directory_path;
+			size_t separator_pos = temp_path.find_last_of(Separator);
+
+			// Skip trailing slash
+			if (separator_pos == temp_path.length() - 1)
+			{
+				separator_pos = temp_path.find_last_of(Separator, separator_pos - 1);
+			}
+
+			while (separator_pos != crstl::path::npos)
+			{
+				temp_path[separator_pos] = 0;
+				bool subdirectory_exists = exists(temp_path.c_str());
+				temp_path[separator_pos] = '/';
+
+				// If the subdirectory exists, we now need to move forward creating the rest
+				if (subdirectory_exists)
+				{
+					separator_pos = temp_path.find_first_of(Separator, separator_pos + 1);
+					break;
+				}
+				else
+				{
+					separator_pos = temp_path.find_last_of(Separator, separator_pos - 1);
+				}
+			}
+
+			bool all_paths_created = false;
+
+			// All the paths from here should be correctly created. If any one path fails,
+			// we need to assume there is an error
+			while (separator_pos != crstl::path::npos)
+			{
+				temp_path[separator_pos] = 0;
+				filesystem_result::t subdirectory_created = create_directory(temp_path.c_str());
+				temp_path[separator_pos] = '/';
+
+				if (subdirectory_created == filesystem_result::success)
+				{
+					separator_pos = temp_path.find_first_of(Separator, separator_pos + 1);
+					all_paths_created |= true;
+				}
+				else
+				{
+					all_paths_created = false;
+					break;
+				}
+			}
+
+			return all_paths_created;
+		}
+	}
 }
