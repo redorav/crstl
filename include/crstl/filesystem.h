@@ -70,12 +70,23 @@ crstl_module_export namespace crstl
 	{
 	public:
 
+		file_base() : m_flags(file_flags::none) {}
+
+		file_base(file_flags::t flags) : m_flags(flags) {}
+
 		const path& get_path() const
 		{
 			return m_path;
 		}
 
+		file_flags::t get_flags() const
+		{
+			return m_flags;
+		}
+
 	protected:
+
+		file_flags::t m_flags;
 
 		path m_path;
 	};
