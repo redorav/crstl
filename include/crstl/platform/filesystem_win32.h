@@ -169,7 +169,7 @@ crstl_module_export namespace crstl
 			SetFilePointer(m_file_handle, 0, nullptr, CRSTL_FILE_BEGIN);
 		}
 
-		void seek(file_seek_origin::t seek_origin, int64_t byte_offset)
+		void seek(file_seek_origin seek_origin, int64_t byte_offset)
 		{
 			crstl_assert(is_open());
 
@@ -226,7 +226,7 @@ crstl_module_export namespace crstl
 
 	inline void copy_file(const char* source_file_path, const char* destination_file_path, file_copy_options::t copy_options)
 	{
-		bool fail_if_exists = copy_options & file_copy_options::overwrite ? false : true;
+		bool fail_if_exists = (copy_options & file_copy_options::overwrite) ? false : true;
 
 		if (detail::win32_is_utf8())
 		{
@@ -266,7 +266,7 @@ crstl_module_export namespace crstl
 		// TODO ERROR HANDLING
 	}
 
-	inline filesystem_result::t delete_file(const char* file_path)
+	inline filesystem_result delete_file(const char* file_path)
 	{
 		bool success = false;
 
@@ -330,7 +330,7 @@ crstl_module_export namespace crstl
 		}
 	}
 
-	inline filesystem_result::t create_directory(const char* directory_path)
+	inline filesystem_result create_directory(const char* directory_path)
 	{
 		bool success = false;
 

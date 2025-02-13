@@ -101,14 +101,11 @@ crstl_module_export namespace crstl
 		return 4;
 	}
 
-	namespace utf_result
+	enum class utf_result
 	{
-		enum t : size_t
-		{
-			success = 0,
-			invalid = (size_t)-1,  // Invalid decoding encountered
-			no_memory = (size_t)-2 // Not enough memory to decode
-		};
+		success = 0,
+		invalid = (size_t)-1,  // Invalid decoding encountered
+		no_memory = (size_t)-2 // Not enough memory to decode
 	};
 
 	// utf8: The utf-8 string
@@ -301,7 +298,7 @@ crstl_module_export namespace crstl
 	// wchar_t is a special case as it is assumed to be utf16 on Windows and utf-32 on
 	// anything else
 
-	inline utf_result::t decode_chunk(char* dst_start, const char* dst_end, const wchar_t* src_start, const wchar_t* src_end, size_t& utf8_offset, size_t& utf16_offset)
+	inline utf_result decode_chunk(char* dst_start, const char* dst_end, const wchar_t* src_start, const wchar_t* src_end, size_t& utf8_offset, size_t& utf16_offset)
 	{
 		crstl_assert(src_end >= src_start);
 		crstl_assert(dst_end >= dst_start);
@@ -344,7 +341,7 @@ crstl_module_export namespace crstl
 		}
 	}
 
-	inline utf_result::t decode_chunk(wchar_t* dst_start, const wchar_t* dst_end, const char* src_start, const char* src_end, size_t& utf16_offset, size_t& utf8_offset)
+	inline utf_result decode_chunk(wchar_t* dst_start, const wchar_t* dst_end, const char* src_start, const char* src_end, size_t& utf16_offset, size_t& utf8_offset)
 	{
 		size_t src_length = (size_t)(src_end - src_start);
 		size_t dst_length = (size_t)(dst_end - dst_start);
@@ -384,12 +381,12 @@ crstl_module_export namespace crstl
 		}
 	}
 
-	inline utf_result::t decode_chunk(char8_t* dst_start, const char8_t* dst_end, const wchar_t* src_start, const wchar_t* src_end, size_t& utf8_offset, size_t& utf16_offset)
+	inline utf_result decode_chunk(char8_t* dst_start, const char8_t* dst_end, const wchar_t* src_start, const wchar_t* src_end, size_t& utf8_offset, size_t& utf16_offset)
 	{
 		return decode_chunk((char*)dst_start, (const char*)dst_end, src_start, src_end, utf8_offset, utf16_offset);
 	}
 
-	inline utf_result::t decode_chunk(wchar_t* dst_start, const wchar_t* dst_end, const char8_t* src_start, const char8_t* src_end, size_t& utf16_offset, size_t& utf8_offset)
+	inline utf_result decode_chunk(wchar_t* dst_start, const wchar_t* dst_end, const char8_t* src_start, const char8_t* src_end, size_t& utf16_offset, size_t& utf8_offset)
 	{
 		return decode_chunk(dst_start, dst_end, (const char*)src_start, (const char*)src_end, utf8_offset, utf16_offset);
 	}

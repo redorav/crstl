@@ -324,7 +324,7 @@ crstl_module_export namespace crstl
 			if (target_capacity < kSSOCapacity)
 			{
 				CharT* data = m_layout_allocator.m_first.m_sso.data;
-				utf_result::t result = decode_chunk(data + current_length, data + kSSOCapacity, string, string + length, dst_decoded_length, src_decoded_length);
+				utf_result result = decode_chunk(data + current_length, data + kSSOCapacity, string, string + length, dst_decoded_length, src_decoded_length);
 
 				switch (result)
 				{
@@ -365,7 +365,7 @@ crstl_module_export namespace crstl
 				CharT* dst_end = m_layout_allocator.m_first.m_heap.data + target_capacity;
 				const OtherCharT* src_start = string + src_decoded_length;
 				const OtherCharT* src_end = string + length;
-				utf_result::t result = decode_chunk(dst_start, dst_end, src_start, src_end, iter_dst_decoded_length, iter_src_decoded_length);
+				utf_result result = decode_chunk(dst_start, dst_end, src_start, src_end, iter_dst_decoded_length, iter_src_decoded_length);
 
 				// If we detect an invalid decoding, return immediately
 				if (result == utf_result::invalid)

@@ -230,7 +230,7 @@ crstl_module_export namespace crstl
 			CharT* data_start = m_data + m_length;
 
 			size_t dst_decoded_length = 0, src_decoded_length = 0;
-			utf_result::t result = decode_chunk(data_start, data_start + (kCharacterCapacity - m_length), string, string_end, dst_decoded_length, src_decoded_length);
+			utf_result result = decode_chunk(data_start, data_start + (kCharacterCapacity - m_length), string, string_end, dst_decoded_length, src_decoded_length);
 			crstl_unused(result);
 			crstl_assert(result == utf_result::success);
 

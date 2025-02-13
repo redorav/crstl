@@ -35,7 +35,7 @@ void RunUnitTestsFilesystem()
 			crstl::file my_file(temp_file_path.c_str(), crstl::file_flags::create | crstl::file_flags::write);
 
 			// Make sure we cannot delete a file that is already open
-			crstl::filesystem_result::t delete_result = crstl::delete_file(temp_file_path.c_str());
+			crstl::filesystem_result delete_result = crstl::delete_file(temp_file_path.c_str());
 			crstl_assert(delete_result == crstl::filesystem_result::error_access_denied);
 
 			// Write a bit of text

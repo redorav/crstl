@@ -29,41 +29,28 @@ crstl_module_export namespace crstl
 		}
 	};
 
-	namespace file_seek_origin
-	{
-		enum t
-		{
-			begin,
-			current,
-			end,
-		};
-	};
-
-	namespace filesystem_result
-	{
-		enum t
-		{
-			success,
-			error,
-			error_not_found,
-			error_access_denied
-		};
-
-		struct conversion
-		{
-			conversion(filesystem_result::t result) : result(result) {}
-			operator bool() { return result == filesystem_result::success; }
-			filesystem_result::t result;
-		};
-	};
-
 	namespace file_copy_options
 	{
 		enum t
 		{
-			none      = 0 << 0,
+			none = 0 << 0,
 			overwrite = 1 << 0
 		};
+	};
+
+	enum class file_seek_origin
+	{
+		begin,
+		current,
+		end,
+	};
+
+	enum class filesystem_result
+	{
+		success,
+		error,
+		error_not_found,
+		error_access_denied
 	};
 
 	class file_base
@@ -126,7 +113,7 @@ crstl_module_export namespace crstl
 			return false;
 		}
 
-		filesystem_result::t result = create_directory(directory_path);
+		filesystem_result result = create_directory(directory_path);
 
 		if (result == filesystem_result::success)
 		{
@@ -172,7 +159,7 @@ crstl_module_export namespace crstl
 			while (separator_pos != crstl::path::npos)
 			{
 				temp_path[separator_pos] = 0;
-				filesystem_result::t subdirectory_created = create_directory(temp_path.c_str());
+				filesystem_result subdirectory_created = create_directory(temp_path.c_str());
 				temp_path[separator_pos] = '/';
 
 				if (subdirectory_created == filesystem_result::success)
