@@ -17,6 +17,9 @@ crstl_module_export namespace crstl
 	{
 	public:
 
+		typedef typename StringInterface::const_pointer const_pointer;
+		typedef typename StringInterface::value_type CharT;
+
 		static const size_t npos = (size_t)-1;
 
 		path_base() {}
@@ -79,14 +82,52 @@ crstl_module_export namespace crstl
 			return path_base(*this, lastSeparator + 1, m_path_string.length() - (lastSeparator + 1));
 		}
 
-		size_t find_last_of(char c) const
+		//--------------
+		// find_first_of
+		//--------------
+
+		crstl_constexpr14 size_t find_first_of(const_pointer needle_string, size_t pos, size_t needle_length) const crstl_noexcept
 		{
-			return m_path_string.find_last_of(c);
+			return m_path_string.find_first_of(needle_string, pos, needle_length);
 		}
 
-		size_t find_last_of(const char* s) const
+		crstl_constexpr14 size_t find_first_of(const_pointer needle_string, size_t pos = 0) const crstl_noexcept
 		{
-			return m_path_string.find_last_of(s);
+			return m_path_string.find_first_of(needle_string, pos);
+		}
+
+		crstl_constexpr14 size_t find_first_of(const StringInterface& needle_string, size_t pos = 0) const crstl_noexcept
+		{
+			return m_path_string.find_first_of(needle_string, pos);
+		}
+
+		crstl_constexpr14 size_t find_first_of(CharT c, size_t pos = 0) const crstl_noexcept
+		{
+			return m_path_string.find(c, pos);
+		}
+
+		//-------------
+		// find_last_of
+		//-------------
+
+		crstl_constexpr14 size_t find_last_of(const_pointer needle_string, size_t pos, size_t needle_length) const crstl_noexcept
+		{
+			return m_path_string.find_last_of(needle_string, pos, needle_length);
+		}
+
+		crstl_constexpr14 size_t find_last_of(const_pointer needle_string, size_t pos = npos) const crstl_noexcept
+		{
+			return m_path_string.find_last_of(needle_string, pos);
+		}
+
+		crstl_constexpr14 size_t find_last_of(const StringInterface& needle_string, size_t pos = npos) const crstl_noexcept
+		{
+			return m_path_string.find_last_of(needle_string, pos);
+		}
+
+		crstl_constexpr14 size_t find_last_of(CharT c, size_t pos = npos) const crstl_noexcept
+		{
+			return m_path_string.rfind(c, pos);
 		}
 
 		bool has_extension() const
@@ -161,27 +202,37 @@ crstl_module_export namespace crstl
 			m_path_string.resize(n, c);
 		}
 
-		bool operator == (const char* path) const
+		crstl_constexpr14 bool operator == (const char* path) const
 		{
 			return m_path_string == path;
 		}
 
-		bool operator == (const path_base& path) const
+		crstl_constexpr14 bool operator == (const path_base& path) const
 		{
 			return m_path_string == path.m_path_string;
 		}
 
-		bool operator != (const char* path) const
+		crstl_constexpr14 bool operator != (const char* path) const
 		{
 			return m_path_string != path;
 		}
 
-		bool operator != (const path_base& path) const
+		crstl_constexpr14 bool operator != (const path_base& path) const
 		{
 			return m_path_string != path.m_path_string;
 		}
 
-		path_base operator + (const char* str) const
+		crstl_constexpr14 CharT& operator [](size_t i) crstl_noexcept
+		{
+			return crstl_assert(i < length()), m_path_string[i];
+		}
+
+		crstl_constexpr const CharT& operator [](size_t i) const crstl_noexcept
+		{
+			return crstl_assert(i < length()), m_path_string[i];
+		}
+
+		crstl_constexpr14 path_base operator + (const char* str) const
 		{
 			path_base new_path;
 			new_path.m_path_string.reserve(m_path_string.length() + string_length(str));
@@ -190,7 +241,7 @@ crstl_module_export namespace crstl
 			return new_path;
 		}
 
-		path_base operator + (const path_base& path) const
+		crstl_constexpr14 path_base operator + (const path_base& path) const
 		{
 			path_base new_path;
 			new_path.m_path_string.reserve(m_path_string.length() + path.m_path_string.length());
@@ -199,19 +250,19 @@ crstl_module_export namespace crstl
 			return *this + path.m_path_string;
 		}
 
-		path_base& operator += (const char* str)
+		crstl_constexpr14 path_base& operator += (const char* str)
 		{
 			m_path_string += str;
 			return *this;
 		}
 
-		path_base& operator += (const path_base& path)
+		crstl_constexpr14 path_base& operator += (const path_base& path)
 		{
 			m_path_string += path.m_path_string;
 			return *this;
 		}
 
-		path_base operator / (const char* str) const
+		crstl_constexpr14 path_base operator / (const char* str) const
 		{
 			path_base new_path = *this;
 			new_path.add_trailing_separator();
@@ -219,7 +270,7 @@ crstl_module_export namespace crstl
 			return new_path;
 		}
 
-		path_base operator / (const path_base& path) const
+		crstl_constexpr14 path_base operator / (const path_base& path) const
 		{
 			path_base newPath = *this;
 			newPath.add_trailing_separator();
@@ -227,14 +278,14 @@ crstl_module_export namespace crstl
 			return newPath;
 		}
 
-		path_base& operator /= (const char* str)
+		crstl_constexpr14 path_base& operator /= (const char* str)
 		{
 			add_trailing_separator();
 			m_path_string += str;
 			return *this;
 		}
 
-		path_base& operator /= (const path_base& path)
+		crstl_constexpr14 path_base& operator /= (const path_base& path)
 		{
 			add_trailing_separator();
 			m_path_string += path.m_path_string;
@@ -248,20 +299,20 @@ crstl_module_export namespace crstl
 		// or dot-dot, then the extension is the substring beginning at the rightmost period (including the period) and until the end of the pathname.
 		// If the first character in the filename is a period, that period is ignored (a filename like ".profile" is not treated as an extension)
 		// If the pathname is either . or .., or if filename() does not contain the . character, then empty path is returned.
-		bool has_extension_internal(size_t& lastDot) const
+		bool has_extension_internal(size_t& last_dot) const
 		{
-			lastDot = m_path_string.find_last_of(".");
+			last_dot = m_path_string.find_last_of(".");
 
-			if (lastDot != m_path_string.npos && // If there is a dot
-				lastDot > 0 && // The dot is not at the beginning of the path
-				m_path_string[lastDot - 1] != '/' && // And the previous character is neither a / nor a . (special characters)
-				m_path_string[lastDot - 1] != '.')
+			if (last_dot != m_path_string.npos && // If there is a dot
+				last_dot > 0 && // The dot is not at the beginning of the path
+				m_path_string[last_dot - 1] != '/' && // And the previous character is neither a / nor a . (special characters)
+				m_path_string[last_dot - 1] != '.')
 			{
 				size_t lastSeparator = m_path_string.find_last_of("/");
 
 				if (lastSeparator != m_path_string.npos)
 				{
-					return lastDot > lastSeparator;
+					return last_dot > lastSeparator;
 				}
 				else
 				{
