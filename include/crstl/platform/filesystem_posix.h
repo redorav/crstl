@@ -378,8 +378,6 @@ crstl_module_export namespace crstl
 		file& operator = (const file&) crstl_constructor_delete;
 
 		int m_file_handle;
-
-		file_flags::t m_flags;
 	};
 
 	inline void file_copy(const char* source_file_path, const char* destination_file_path, file_copy_options::t copy_options)
