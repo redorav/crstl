@@ -224,7 +224,7 @@ crstl_module_export namespace crstl
 		HANDLE m_file_handle;
 	};
 
-	inline void file_copy(const char* source_file_path, const char* destination_file_path, file_copy_options::t copy_options)
+	inline void copy_file(const char* source_file_path, const char* destination_file_path, file_copy_options::t copy_options)
 	{
 		bool fail_if_exists = copy_options & file_copy_options::overwrite ? false : true;
 
@@ -246,7 +246,7 @@ crstl_module_export namespace crstl
 		// TODO ERROR HANDLING
 	}
 
-	inline void file_move(const char* source_file_path, const char* destination_file_path)
+	inline void move_file(const char* source_file_path, const char* destination_file_path)
 	{
 		if (detail::win32_is_utf8())
 		{
@@ -266,7 +266,7 @@ crstl_module_export namespace crstl
 		// TODO ERROR HANDLING
 	}
 
-	inline filesystem_result::t file_delete(const char* file_path)
+	inline filesystem_result::t delete_file(const char* file_path)
 	{
 		bool success = false;
 
@@ -303,7 +303,7 @@ crstl_module_export namespace crstl
 		}
 	}
 
-	inline bool file_exists(const char* file_path)
+	inline bool exists(const char* path)
 	{
 		_win32_file_attribute_data attribute_data;
 
@@ -311,18 +311,18 @@ crstl_module_export namespace crstl
 
 		if (detail::win32_is_utf8())
 		{
-			success = GetFileAttributesExA(file_path, (GET_FILEEX_INFO_LEVELS)GetFileExInfoStandard, &attribute_data);
+			success = GetFileAttributesExA(path, (GET_FILEEX_INFO_LEVELS)GetFileExInfoStandard, &attribute_data);
 		}
 		else
 		{
 			WCHAR w_file_path[MaxPathLength];
-			detail::win32_utf8_to_utf16(file_path, crstl::string_length(file_path), w_file_path, sizeof(w_file_path));
+			detail::win32_utf8_to_utf16(path, crstl::string_length(path), w_file_path, sizeof(w_file_path));
 			success = GetFileAttributesExW(w_file_path, (GET_FILEEX_INFO_LEVELS)GetFileExInfoStandard, &attribute_data);
 		}
 
 		if (success)
 		{
-			return attribute_data.dwFileAttributes != CRSTL_INVALID_FILE_ATTRIBUTES && !(attribute_data.dwFileAttributes & CRSTL_FILE_ATTRIBUTE_DIRECTORY);
+			return attribute_data.dwFileAttributes != CRSTL_INVALID_FILE_ATTRIBUTES;
 		}
 		else
 		{
@@ -330,34 +330,7 @@ crstl_module_export namespace crstl
 		}
 	}
 
-	inline bool directory_exists(const char* directory_path)
-	{
-		_win32_file_attribute_data attribute_data;
-
-		bool success = false;
-
-		if (detail::win32_is_utf8())
-		{
-			success = GetFileAttributesExA(directory_path, (GET_FILEEX_INFO_LEVELS)GetFileExInfoStandard, &attribute_data);
-		}
-		else
-		{
-			WCHAR w_directory_path[MaxPathLength];
-			detail::win32_utf8_to_utf16(directory_path, crstl::string_length(directory_path), w_directory_path, sizeof(w_directory_path));
-			success = GetFileAttributesExW(w_directory_path, (GET_FILEEX_INFO_LEVELS)GetFileExInfoStandard, &attribute_data);
-		}
-
-		if (success)
-		{
-			return attribute_data.dwFileAttributes != CRSTL_INVALID_FILE_ATTRIBUTES && (attribute_data.dwFileAttributes & CRSTL_FILE_ATTRIBUTE_DIRECTORY);
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	inline filesystem_result::t directory_create(const char* directory_path, bool /*create_intermediate*/)
+	inline filesystem_result::t create_directory(const char* directory_path)
 	{
 		bool success = false;
 

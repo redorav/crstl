@@ -24,18 +24,18 @@ void RunUnitTestsFilesystem()
 		crstl::path temp_file_move_path = temp_path / "temp_file_move.txt";
 		const char* temp_text = "I am a temp text";
 
-		crstl::file_delete(temp_file_path.c_str());
-		crstl::file_delete(temp_file_copy_path.c_str());
-		crstl::file_delete(temp_file_move_path.c_str());
-		crstl_assert(!crstl::file_exists(temp_file_path.c_str()));
-		crstl_assert(!crstl::file_exists(temp_file_copy_path.c_str()));
-		crstl_assert(!crstl::file_exists(temp_file_move_path.c_str()));
+		crstl::delete_file(temp_file_path.c_str());
+		crstl::delete_file(temp_file_copy_path.c_str());
+		crstl::delete_file(temp_file_move_path.c_str());
+		crstl_assert(!crstl::exists(temp_file_path.c_str()));
+		crstl_assert(!crstl::exists(temp_file_copy_path.c_str()));
+		crstl_assert(!crstl::exists(temp_file_move_path.c_str()));
 
 		{
 			crstl::file my_file(temp_file_path.c_str(), crstl::file_flags::create | crstl::file_flags::write);
 
 			// Make sure we cannot delete a file that is already open
-			crstl::filesystem_result::t delete_result = crstl::file_delete(temp_file_path.c_str());
+			crstl::filesystem_result::t delete_result = crstl::delete_file(temp_file_path.c_str());
 			crstl_assert(delete_result == crstl::filesystem_result::error_access_denied);
 
 			// Write a bit of text
@@ -44,14 +44,14 @@ void RunUnitTestsFilesystem()
 			// File closes when out of scope
 		}
 
-		crstl::file_copy(temp_file_path.c_str(), temp_file_copy_path.c_str(), crstl::file_copy_options::none);
-		crstl_assert(crstl::file_exists(temp_file_copy_path.c_str()));
+		crstl::copy_file(temp_file_path.c_str(), temp_file_copy_path.c_str(), crstl::file_copy_options::none);
+		crstl_assert(crstl::exists(temp_file_copy_path.c_str()));
 
-		crstl::file_move(temp_file_path.c_str(), temp_file_move_path.c_str());
-		crstl_assert(!crstl::file_exists(temp_file_path.c_str()));
-		crstl_assert(crstl::file_exists(temp_file_move_path.c_str()));
+		crstl::move_file(temp_file_path.c_str(), temp_file_move_path.c_str());
+		crstl_assert(!crstl::exists(temp_file_path.c_str()));
+		crstl_assert(crstl::exists(temp_file_move_path.c_str()));
 
-		if (!crstl::file_exists("C:/temp/temp_file.txt"))
+		if (!crstl::exists("C:/temp/temp_file.txt"))
 		{
 
 		}

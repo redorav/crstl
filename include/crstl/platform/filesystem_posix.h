@@ -380,7 +380,7 @@ crstl_module_export namespace crstl
 		int m_file_handle;
 	};
 
-	inline void file_copy(const char* source_file_path, const char* destination_file_path, file_copy_options::t copy_options)
+	inline void copy_file(const char* source_file_path, const char* destination_file_path, file_copy_options::t copy_options)
 	{
 		int source_file = detail::open(source_file_path, O_RDONLY);
 
@@ -405,7 +405,7 @@ crstl_module_export namespace crstl
 		}
 	}
 
-	inline void file_move(const char* source_file_path, const char* destination_file_path)
+	inline void move_file(const char* source_file_path, const char* destination_file_path)
 	{
 		int source_file = detail::open(source_file_path, O_RDONLY);
 
@@ -426,7 +426,7 @@ crstl_module_export namespace crstl
 		}
 	}
 
-	inline filesystem_result::t file_delete(const char* file_path)
+	inline filesystem_result::t delete_file(const char* file_path)
 	{
 		int result = detail::unlink(file_path);
 
@@ -448,15 +448,9 @@ crstl_module_export namespace crstl
 	}
 
 	// https://stackoverflow.com/questions/230062/whats-the-best-way-to-check-if-a-file-exists-in-c
-	inline bool file_exists(const char* file_path)
+	inline bool exists(const char* path)
 	{
-		int result = detail::access(file_path, 00);
-		return result != -1;
-	}
-
-	inline bool directory_exists(const char* directory_path)
-	{
-		int result = detail::access(directory_path, 00);
+		int result = detail::access(path, 00);
 		return result != -1;
 	}
 

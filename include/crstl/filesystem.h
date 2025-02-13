@@ -110,7 +110,10 @@ namespace crstl
 
 	template<typename Dummy>
 	const path filesystem_globals<Dummy>::temp_path = detail::compute_temp_path();
+}
 
+crstl_module_export namespace crstl
+{
 	inline const path& temp_directory_path()
 	{
 		return filesystem_globals<void>::temp_path;
