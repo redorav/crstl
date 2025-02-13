@@ -101,11 +101,11 @@ crstl_module_export namespace crstl
 		return 4;
 	}
 
-	enum class utf_result
+	enum class utf_result : uint32_t
 	{
 		success = 0,
-		invalid = (size_t)-1,  // Invalid decoding encountered
-		no_memory = (size_t)-2 // Not enough memory to decode
+		invalid = 1,  // Invalid decoding encountered
+		no_memory = 2 // Not enough memory to decode
 	};
 
 	// utf8: The utf-8 string
