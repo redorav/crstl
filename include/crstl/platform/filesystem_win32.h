@@ -23,12 +23,12 @@ crstl_module_export namespace crstl
 	{
 	public:
 
-		file() 
+		file() crstl_noexcept
 			: file_base()
 			, m_file_handle(CRSTL_INVALID_HANDLE_VALUE)
 		{}
 
-		file(const char* file_path, file_flags::t open_flags)
+		file(const char* file_path, file_flags::t open_flags) crstl_noexcept
 			: file_base(open_flags)
 			, m_file_handle(CRSTL_INVALID_HANDLE_VALUE)
 		{
@@ -95,7 +95,7 @@ crstl_module_export namespace crstl
 			close();
 		}
 
-		file(file&& other) : file_base(crstl_move(other))
+		file(file&& other) crstl_noexcept : file_base(crstl_move(other))
 		{
 			crstl_assert(this != &other);
 
@@ -103,7 +103,7 @@ crstl_module_export namespace crstl
 			other.m_file_handle = CRSTL_INVALID_HANDLE_VALUE;
 		}
 
-		file& operator = (file&& other)
+		file& operator = (file&& other) crstl_noexcept
 		{
 			crstl_assert(this != &other);
 

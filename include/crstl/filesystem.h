@@ -77,7 +77,7 @@ crstl_module_export namespace crstl
 
 		file_base(file_flags::t flags) : m_flags(flags) {}
 
-		file_base(file_base&& other)
+		file_base(file_base&& other) crstl_noexcept
 		{
 			m_path = crstl_move(other.m_path);
 
@@ -85,12 +85,14 @@ crstl_module_export namespace crstl
 			other.m_flags = file_flags::none;
 		}
 
-		file_base& operator = (file_base&& other)
+		file_base& operator = (file_base&& other) crstl_noexcept
 		{
 			m_path = crstl_move(other.m_path);
 
 			m_flags = other.m_flags;
 			other.m_flags = file_flags::none;
+
+			return *this;
 		}
 
 		file_flags::t m_flags;
