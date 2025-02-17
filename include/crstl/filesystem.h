@@ -6,6 +6,8 @@
 
 #include "crstl/path.h"
 
+#include "crstl/move_forward.h"
+
 crstl_module_export namespace crstl
 {
 	// Set a reasonable maximum across all possible OSs
@@ -57,10 +59,6 @@ crstl_module_export namespace crstl
 	{
 	public:
 
-		file_base() : m_flags(file_flags::none) {}
-
-		file_base(file_flags::t flags) : m_flags(flags) {}
-
 		const path& get_path() const
 		{
 			return m_path;
@@ -72,6 +70,28 @@ crstl_module_export namespace crstl
 		}
 
 	protected:
+
+		// Don't try to instantiate a file_base directly
+
+		file_base() : m_flags(file_flags::none) {}
+
+		file_base(file_flags::t flags) : m_flags(flags) {}
+
+		file_base(file_base&& other)
+		{
+			m_path = crstl_move(other.m_path);
+
+			m_flags = other.m_flags;
+			other.m_flags = file_flags::none;
+		}
+
+		file_base& operator = (file_base&& other)
+		{
+			m_path = crstl_move(other.m_path);
+
+			m_flags = other.m_flags;
+			other.m_flags = file_flags::none;
+		}
 
 		file_flags::t m_flags;
 

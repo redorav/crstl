@@ -269,15 +269,12 @@ crstl_module_export namespace crstl
 			close();
 		}
 
-		file(file&& other)
+		file(file&& other) : file_base(crstl_move(other))
 		{
 			crstl_assert(this != &other);
 
 			m_file_handle = other.m_file_handle;
-			m_flags = other.m_flags;
-
 			other.m_file_handle = -1;
-			other.m_flags = file_flags::none;
 		}
 
 		file& operator = (file&& other)
@@ -286,11 +283,10 @@ crstl_module_export namespace crstl
 
 			close();
 
-			m_file_handle = other.m_file_handle;
-			m_flags = other.m_flags;
+			file_base::operator = (crstl_move(other));
 
+			m_file_handle = other.m_file_handle;
 			other.m_file_handle = -1;
-			other.m_flags = file_flags::none;
 
 			return *this;
 		}
