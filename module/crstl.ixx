@@ -7,6 +7,7 @@ export module crstl;
 #include "crstl/critical_section.h"
 #include "crstl/debugging.h"
 #include "crstl/deque.h"
+#include "crstl/filesystem.h"
 #include "crstl/fixed_deque.h"
 #include "crstl/fixed_function.h"
 #include "crstl/fixed_open_hashmap.h"
