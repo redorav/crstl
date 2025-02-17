@@ -334,7 +334,7 @@ crstl_module_export namespace crstl
 			detail::lseek(m_file_handle, 0, CRSTL_SEEK_CUR);
 		}
 
-		void seek(file_seek_origin::t seek_origin, int64_t byte_offset)
+		void seek(file_seek_origin seek_origin, int64_t byte_offset)
 		{
 			crstl_assert(is_open());
 
@@ -422,7 +422,7 @@ crstl_module_export namespace crstl
 		}
 	}
 
-	inline filesystem_result::t delete_file(const char* file_path)
+	inline filesystem_result delete_file(const char* file_path)
 	{
 		int result = detail::unlink(file_path);
 
@@ -450,7 +450,7 @@ crstl_module_export namespace crstl
 		return result != -1;
 	}
 
-	inline filesystem_result::t create_directory(const char* directory_path)
+	inline filesystem_result create_directory(const char* directory_path)
 	{
 		int result = detail::mkdir(directory_path);
 
