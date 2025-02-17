@@ -134,15 +134,15 @@ crstl_module_export namespace crstl
 			initialize_string(begin, (size_t)(end - begin));
 		}
 
-		crstl_constexpr14 basic_string(const basic_string& string) crstl_noexcept
+		crstl_constexpr14 basic_string(const basic_string& other) crstl_noexcept
 		{
-			initialize_string(string.c_str(), string.size());
+			initialize_string(other.c_str(), other.size());
 		}
 
-		crstl_constexpr14 basic_string(basic_string&& string) crstl_noexcept
+		crstl_constexpr14 basic_string(basic_string&& other) crstl_noexcept
 		{
-			m_layout_allocator = string.m_layout_allocator;
-			string.m_layout_allocator.first().m_heap.data = nullptr; // Don't try to deallocate
+			m_layout_allocator = other.m_layout_allocator;
+			other.m_layout_allocator.first().m_heap.data = nullptr; // Don't try to deallocate
 		}
 
 		crstl_constexpr14 basic_string(ctor_concatenate_e, const basic_string& string1, const basic_string& string2) crstl_noexcept : basic_string()
@@ -1136,17 +1136,17 @@ crstl_module_export namespace crstl
 		// operators
 		//----------
 
-		crstl_constexpr14 basic_string& operator = (const basic_string& string) crstl_noexcept
+		crstl_constexpr14 basic_string& operator = (const basic_string& other) crstl_noexcept
 		{
 			clear();
-			append(string);
+			append(other);
 			return *this;
 		}
 
-		crstl_constexpr14 basic_string& operator = (basic_string&& string) crstl_noexcept
+		crstl_constexpr14 basic_string& operator = (basic_string&& other) crstl_noexcept
 		{
-			m_layout_allocator = string.m_layout_allocator;
-			string.m_layout_allocator.first().m_heap.data = nullptr; // Don't try to deallocate
+			m_layout_allocator = other.m_layout_allocator;
+			other.m_layout_allocator.first().m_heap.data = nullptr; // Don't try to deallocate
 			return *this;
 		}
 
