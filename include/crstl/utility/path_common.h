@@ -24,11 +24,11 @@ crstl_module_export namespace crstl
 
 		path_base() {}
 
-		path_base(const char* path) { m_path_string = path; normalize(); }
+		path_base(const char* path) : m_path_string(path) { normalize(); }
 
-		path_base(const char* path, size_t count) { m_path_string = StringInterface(path, count); normalize(); }
+		path_base(const char* path, size_t count) : m_path_string(path, count) { normalize(); }
 
-		path_base(const char* path, size_t offset, size_t count) { m_path_string = StringInterface(path + offset, path + offset + count); normalize(); }
+		path_base(const char* path, size_t offset, size_t count) : m_path_string(path + offset, path + offset + count) { normalize(); }
 
 		template<typename Allocator>
 		path_base(const basic_string<char, Allocator>& s) : path_base(s.c_str(), s.length()) {}
