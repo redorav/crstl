@@ -26,6 +26,7 @@
 //   - append_sprintf: Use sprintf-like formatting to append string
 //   - comparei: compare ignoring case
 //   - erase_all: erase all occurrences of a given string. This is more efficient than calling find and erase in a loop because there are fewer copies
+//   - force_length: advanced usage, force the size of this string externally if we have somehow written into this string externally
 //   - replace_all: replaces all occurrences of needle with replace. Note that replace_all(char, char) doesn't work with unicode strings
 //   - resize_uninitialized(length): resize string but don't initialize contents. Using c_str() right after is undefined behavior. Useful when populating
 //   string from an external source
@@ -105,7 +106,7 @@ crstl_module_export namespace crstl
 			m_layout_allocator.m_first.m_sso.data[0] = '\0';
 
 			// Some compilers will think this is uninitialized because some branches may take it. We'll go with simple and initialize to 0
-			// even though we knows it's not really needed, and avoid removing warnings, etc
+			// even though we know it's not really needed, and avoid removing warnings, etc
 			m_layout_allocator.m_first.m_heap.length = 0;
 			m_layout_allocator.m_first.m_sso.remaining_length.value = kSSOCapacity;
 		}
@@ -576,7 +577,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr size_t capacity() const
 		{
-			return is_sso() ? kSSOCapacity : get_capacity_heap();
+			return (is_sso() ? kSSOCapacity : get_capacity_heap()) - 1;
 		}
 
 		crstl_constexpr const_iterator cbegin() const crstl_noexcept { return is_sso() ? m_layout_allocator.m_first.m_sso.data : m_layout_allocator.m_first.m_heap.data; }
@@ -905,15 +906,12 @@ crstl_module_export namespace crstl
 			return rfind(c, pos);
 		}
 
-		crstl_constexpr14 CharT& front() crstl_noexcept { return is_sso() ? *m_layout_allocator.m_first.m_sso.data : *m_layout_allocator.m_first.m_heap.data; }
-		crstl_constexpr const CharT& front() const crstl_noexcept { return is_sso() ? *m_layout_allocator.m_first.m_sso.data : *m_layout_allocator.m_first.m_heap.data; }
-
 		crstl_constexpr14 void force_length(size_t length) crstl_noexcept
 		{
-			crstl_assert(length < capacity());
+			crstl_assert(length <= capacity());
 
 			// Ensure there's at least a null terminator
-			if(is_sso())
+			if (is_sso())
 			{
 				set_length_sso(length);
 				m_layout_allocator.m_first.m_sso.data[length] = 0;
@@ -924,6 +922,9 @@ crstl_module_export namespace crstl
 				m_layout_allocator.m_first.m_heap.data[length] = 0;
 			}
 		}
+
+		crstl_constexpr14 CharT& front() crstl_noexcept { return is_sso() ? *m_layout_allocator.m_first.m_sso.data : *m_layout_allocator.m_first.m_heap.data; }
+		crstl_constexpr const CharT& front() const crstl_noexcept { return is_sso() ? *m_layout_allocator.m_first.m_sso.data : *m_layout_allocator.m_first.m_heap.data; }
 
 		crstl_constexpr size_t length() const crstl_noexcept { return is_sso() ? length_sso() : length_heap(); }
 

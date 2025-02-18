@@ -26,6 +26,7 @@
 //   - append_sprintf: Use sprintf-like formatting to append string
 //   - comparei: compare ignoring case
 //   - erase_all: erase all occurrences of a given string. This is more efficient than calling find and erase in a loop because there are fewer copies
+//   - force_length: advanced usage, force the size of this string externally if we have somehow written into this string externally
 //   - replace_all: replaces all occurrences of needle with replace. Note that replace_all(char, char) doesn't work with unicode strings
 //   - resize_uninitialized(length): resize string but don't initialize contents. Using c_str() right after is undefined behavior. Useful when populating
 //   string from an external source
@@ -678,6 +679,13 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 size_t find_last_of(CharT c, size_t pos = npos) const crstl_noexcept
 		{
 			return rfind(c, pos);
+		}
+
+		crstl_constexpr14 void force_length(size_t length)
+		{
+			crstl_assert(length <= capacity());
+			m_length = (length_type)length;
+			m_data[m_length] = '\0';
 		}
 
 		crstl_constexpr14 CharT& front() crstl_noexcept { return m_data[0]; }
