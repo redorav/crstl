@@ -513,8 +513,8 @@ crstl_module_export namespace crstl
 				return;
 			}
 
-			bool is_dot = dir_entry.d_name[0] == '.' && dir_entry.d_name[1] == '\0';
-			bool is_double_dot = dir_entry.d_name[0] == '.' && dir_entry.d_name[1] == '.' && dir_entry.d_name[2] == '\0';
+			bool is_dot = dir_entry->d_name[0] == '.' && dir_entry->d_name[1] == '\0';
+			bool is_double_dot = dir_entry->d_name[0] == '.' && dir_entry->d_name[1] == '.' && dir_entry->d_name[2] == '\0';
 
 			if (!is_dot && !is_double_dot)
 			{
@@ -527,8 +527,8 @@ crstl_module_export namespace crstl
 
 				directory_entry entry;
 				entry.directory = directory_path;
-				entry.filename = dir_entry.d_name;
-				entry.is_directory = dir_entry.d_type == DT_DIR;
+				entry.filename = dir_entry->d_name;
+				entry.is_directory = dir_entry->d_type == DT_DIR;
 
 				continue_iterating = function(entry);
 
