@@ -505,19 +505,12 @@ crstl_module_export namespace crstl
 
 		while(continue_iterating)
 		{
-			struct dirent dir_entry;
-			struct dirent* endp = nullptr;
-
 			// Read next directory entry
-			if (readdir(dirp, &dir_entry, &endp) == -1)
+			struct dirent dir_entry = readdir(dirp);
+			if (!dir_entry)
 			{
 				closedir(dirp);
 				return;
-			}
-
-			if (!endp)
-			{
-				break;
 			}
 
 			bool is_dot = dir_entry.d_name[0] == '.' && dir_entry.d_name[1] == '\0';
