@@ -506,7 +506,7 @@ crstl_module_export namespace crstl
 		while(continue_iterating)
 		{
 			// Read next directory entry
-			struct dirent dir_entry = readdir(dirp);
+			struct dirent* dir_entry = readdir(dirp);
 			if (!dir_entry)
 			{
 				closedir(dirp);
