@@ -104,7 +104,7 @@ crstl_module_export namespace crstl
 
 		bool all() const
 		{
-			return count() == size();
+			return (count() == size());
 		}
 
 		bool any() const
