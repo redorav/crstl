@@ -6,16 +6,18 @@ crstl_module_export namespace crstl
 {
 	namespace detail
 	{
-		inline void win32_utf8_to_utf16(const CHAR* path, size_t path_length, WCHAR* destination_path, size_t destination_path_length)
+		inline int win32_utf8_to_utf16(const CHAR* path, size_t path_length, WCHAR* destination_path, size_t destination_path_length)
 		{
 			int end_position = MultiByteToWideChar(CRSTL_CP_UTF8, 0, path, (int)path_length, destination_path, (int)destination_path_length);
 			destination_path[end_position] = L'\0';
+			return end_position;
 		}
 
-		inline void win32_utf16_to_utf8(const WCHAR* path, size_t path_length, CHAR* destination_path, size_t destination_path_length)
+		inline int win32_utf16_to_utf8(const WCHAR* path, size_t path_length, CHAR* destination_path, size_t destination_path_length)
 		{
 			int end_position = WideCharToMultiByte(CRSTL_CP_UTF8, 0, path, (int)path_length, destination_path, (int)destination_path_length, nullptr, nullptr);
 			destination_path[end_position] = '\0';
+			return end_position;
 		}
 	}
 
@@ -396,5 +398,95 @@ crstl_module_export namespace crstl
 
 			return path(temp_path);
 		}
+	}
+
+	template<typename FileIteratorFunction>
+	void for_each_directory_entry(const char* directory_path, bool recursive, const FileIteratorFunction& function)
+	{
+		HANDLE h_find = nullptr;
+
+		crstl::fixed_path512 directory_path_normalized = directory_path;
+		directory_path_normalized /= "*";
+
+		bool continueIterating = true;
+
+		if (detail::win32_is_utf8())
+		{
+			_win32_find_dataa find_data;
+
+			h_find = FindFirstFileA(directory_path_normalized.c_str(), (WIN32_FIND_DATAA*)&find_data);
+
+			if (h_find != CRSTL_INVALID_HANDLE_VALUE)
+			{
+				while (continueIterating)
+				{
+					bool is_dot = find_data.cFileName[0] == L'.' && find_data.cFileName[1] == L'\0';
+					bool is_double_dot = find_data.cFileName[0] == L'.' && find_data.cFileName[1] == L'.' && find_data.cFileName[2] == L'\0';
+
+					// Ignore special cases of '.' and '..' to be more in line with the C++ spec
+					if (!is_dot && !is_double_dot)
+					{
+						directory_entry entry;
+						entry.directory = directory_path;
+						entry.filename = find_data.cFileName;
+						entry.is_directory = find_data.dwFileAttributes & CRSTL_FILE_ATTRIBUTE_DIRECTORY;
+
+						continueIterating = function(entry);
+
+						if (recursive && continueIterating && entry.is_directory)
+						{
+							crstl::fixed_path512 sub_path = directory_path;
+							sub_path /= entry.filename;
+							for_each_directory_entry(sub_path.c_str(), recursive, function);
+						}
+					}
+
+					continueIterating &= FindNextFileA(h_find, (WIN32_FIND_DATAA*)&find_data) != 0;
+				}
+			}
+		}
+		else
+		{
+			_win32_find_dataw find_data;
+
+			WCHAR w_directory_path_normalized[MaxPathLength];
+			detail::win32_utf8_to_utf16(directory_path, crstl::string_length(directory_path), w_directory_path_normalized, sizeof(w_directory_path_normalized));
+
+			h_find = FindFirstFileW(w_directory_path_normalized, (WIN32_FIND_DATAW*)&find_data);
+
+			if (h_find != CRSTL_INVALID_HANDLE_VALUE)
+			{
+				while (continueIterating)
+				{
+					bool is_dot = find_data.cFileName[0] == L'.' && find_data.cFileName[1] == L'\0';
+					bool is_double_dot = find_data.cFileName[0] == L'.' && find_data.cFileName[1] == L'.' && find_data.cFileName[2] == L'\0';
+
+					// Ignore special cases of '.' and '..' to be more in line with the C++ spec
+					if (!is_dot && !is_double_dot)
+					{
+						char filename[128];
+						detail::win32_utf16_to_utf8(find_data.cFileName, crstl::string_length(find_data.cFileName), filename, sizeof(filename));
+
+						directory_entry entry;
+						entry.directory = directory_path;
+						entry.filename = filename;
+						entry.is_directory = find_data.dwFileAttributes & CRSTL_FILE_ATTRIBUTE_DIRECTORY;
+
+						continueIterating = function(entry);
+
+						if (recursive && continueIterating && entry.is_directory)
+						{
+							crstl::fixed_path512 sub_path = directory_path;
+							sub_path /= entry.filename;
+							for_each_directory_entry(sub_path.c_str(), recursive, function);
+						}
+					}
+
+					continueIterating &= FindNextFileW(h_find, (WIN32_FIND_DATAW*)&find_data) != 0;
+				}
+			}
+		}
+
+		FindClose(h_find);
 	}
 };

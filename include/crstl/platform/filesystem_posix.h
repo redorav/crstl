@@ -111,6 +111,7 @@ namespace crstl
 
 #include <unistd.h>
 #include <sys/stat.h>
+#include <fts.h>
 
 #if defined(CRSTL_OS_LINUX)
 #include <sys/sendfile.h>
@@ -482,5 +483,59 @@ crstl_module_export namespace crstl
 			// and, if none of them are specified, the path "/tmp" is returned.
 			return path("/tmp");
 		}
+	}
+
+	template<typename FileIteratorFunction>
+	void for_each_directory_entry(const char* directory_path, bool recursive, const FileIteratorFunction& function)
+	{
+		int fts_options = FTS_COMFOLLOW | FTS_LOGICAL | FTS_NOCHDIR;
+
+		const char* paths[] = { directory_path, nullptr };
+
+		FTS* ftsp = fts_open(paths, fts_options, nullptr);
+		if (!ftsp)
+		{
+			return;
+		}
+
+		// Initialize ftsp with as many argv[] parts as possible
+		FTSENT* chp = fts_children(ftsp, 0);
+		if (!chp)
+		{
+			return;
+		}
+
+		// Read first file
+		FTSENT* filetree_entry = fts_read(ftsp);
+
+		if (filetree_entry)
+		{
+			bool continueIterating = true;
+
+			while (continueIterating)
+			{
+				if (filetree_entry->fts_info == FTS_D || filetree_entry->fts_info == FTS_F)
+				{
+					directory_entry entry;
+					entry.directory = directory_path;
+					entry.filename = filetree_entry->fts_accpath;
+					entry.is_directory = filetree_entry->fts_info == FTS_D;
+
+					continueIterating = function(entry);
+
+					if (recursive && continueIterating && entry.is_directory)
+					{
+						crstl::fixed_path512 sub_path = directory_path;
+						sub_path /= entry.filename;
+						for_each_directory_entry(sub_path.c_str(), recursive, function);
+					}
+				}
+
+				filetree_entry = fts_read(ftsp);
+				continueIterating &= filetree_entry != nullptr;
+			}
+		}
+
+		fts_close(ftsp);
 	}
 }

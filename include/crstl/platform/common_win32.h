@@ -146,6 +146,12 @@ typedef struct _STARTUPINFOW STARTUPINFOW;
 typedef struct _PROCESS_INFORMATION PROCESS_INFORMATION;
 typedef struct _OVERLAPPED* LPOVERLAPPED;
 
+typedef struct _WIN32_FIND_DATAA WIN32_FIND_DATAA;
+typedef struct _WIN32_FIND_DATAA* LPWIN32_FIND_DATAA;
+
+typedef struct _WIN32_FIND_DATAW WIN32_FIND_DATAW;
+typedef struct _WIN32_FIND_DATAW* LPWIN32_FIND_DATAW;
+
 enum _GET_FILEEX_INFO_LEVELS;
 typedef _GET_FILEEX_INFO_LEVELS GET_FILEEX_INFO_LEVELS;
 
@@ -185,6 +191,34 @@ namespace crstl
 		GetFileExInfoStandard,
 		GetFileExMaxInfoLevel
 	} get_fileex_info_levels;
+
+	typedef struct _win32_find_dataa
+	{
+		DWORD dwFileAttributes;
+		filetime ftCreationTime;
+		filetime ftLastAccessTime;
+		filetime ftLastWriteTime;
+		DWORD nFileSizeHigh;
+		DWORD nFileSizeLow;
+		DWORD dwReserved0;
+		DWORD dwReserved1;
+		CHAR cFileName[260];
+		CHAR cAlternateFileName[14];
+	} win32_find_dataa;
+
+	typedef struct _win32_find_dataw
+	{
+		DWORD dwFileAttributes;
+		filetime ftCreationTime;
+		filetime ftLastAccessTime;
+		filetime ftLastWriteTime;
+		DWORD nFileSizeHigh;
+		DWORD nFileSizeLow;
+		DWORD dwReserved0;
+		DWORD dwReserved1;
+		WCHAR cFileName[260];
+		WCHAR cAlternateFileName[14];
+	} win32_find_dataw;
 };
 
 extern "C"
@@ -264,6 +298,16 @@ extern "C"
 	__declspec(dllimport) DWORD GetLongPathNameA(LPCSTR lpszShortPath, LPSTR lpszLongPath, DWORD cchBuffer);
 
 	__declspec(dllimport) DWORD GetLongPathNameW(LPCWSTR lpszShortPath, LPWSTR lpszLongPath, DWORD cchBuffer);
+
+	__declspec(dllimport) HANDLE FindFirstFileA(LPCSTR lpFileName, LPWIN32_FIND_DATAA lpFindFileData);
+
+	__declspec(dllimport) BOOL FindNextFileA(HANDLE hFindFile, LPWIN32_FIND_DATAA lpFindFileData);
+
+	__declspec(dllimport) HANDLE FindFirstFileW(LPCWSTR lpFileName, LPWIN32_FIND_DATAW lpFindFileData);
+
+	__declspec(dllimport) BOOL FindNextFileW(HANDLE hFindFile, LPWIN32_FIND_DATAW lpFindFileData);
+
+	__declspec(dllimport) BOOL FindClose(HANDLE hFindFile);
 };
 
 namespace crstl
