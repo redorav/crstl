@@ -11,7 +11,7 @@
 crstl_module_export namespace crstl
 {
 	// Set a reasonable maximum across all possible OSs
-	static const uint32_t MaxPathLength = 1024;
+	static const uint32_t MaxPathLength = 512;
 
 	namespace file_flags
 	{
@@ -53,6 +53,13 @@ crstl_module_export namespace crstl
 		error,
 		error_not_found,
 		error_access_denied
+	};
+
+	struct directory_entry
+	{
+		const char* directory;
+		const char* filename;
+		bool is_directory;
 	};
 
 	class file_base
