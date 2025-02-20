@@ -408,7 +408,7 @@ crstl_module_export namespace crstl
 		crstl::fixed_path512 directory_path_normalized = directory_path;
 		directory_path_normalized /= "*";
 
-		bool continueIterating = true;
+		bool continue_iterating = true;
 
 		if (detail::win32_is_utf8())
 		{
@@ -418,10 +418,10 @@ crstl_module_export namespace crstl
 
 			if (h_find != CRSTL_INVALID_HANDLE_VALUE)
 			{
-				while (continueIterating)
+				while (continue_iterating)
 				{
-					bool is_dot = find_data.cFileName[0] == L'.' && find_data.cFileName[1] == L'\0';
-					bool is_double_dot = find_data.cFileName[0] == L'.' && find_data.cFileName[1] == L'.' && find_data.cFileName[2] == L'\0';
+					bool is_dot = find_data.cFileName[0] == '.' && find_data.cFileName[1] == '\0';
+					bool is_double_dot = find_data.cFileName[0] == '.' && find_data.cFileName[1] == '.' && find_data.cFileName[2] == '\0';
 
 					// Ignore special cases of '.' and '..' to be more in line with the C++ spec
 					if (!is_dot && !is_double_dot)
@@ -431,9 +431,9 @@ crstl_module_export namespace crstl
 						entry.filename = find_data.cFileName;
 						entry.is_directory = find_data.dwFileAttributes & CRSTL_FILE_ATTRIBUTE_DIRECTORY;
 
-						continueIterating = function(entry);
+						continue_iterating = function(entry);
 
-						if (recursive && continueIterating && entry.is_directory)
+						if (recursive && continue_iterating && entry.is_directory)
 						{
 							crstl::fixed_path512 sub_path = directory_path;
 							sub_path /= entry.filename;
@@ -441,7 +441,7 @@ crstl_module_export namespace crstl
 						}
 					}
 
-					continueIterating &= FindNextFileA(h_find, (WIN32_FIND_DATAA*)&find_data) != 0;
+					continue_iterating &= FindNextFileA(h_find, (WIN32_FIND_DATAA*)&find_data) != 0;
 				}
 			}
 		}
@@ -456,7 +456,7 @@ crstl_module_export namespace crstl
 
 			if (h_find != CRSTL_INVALID_HANDLE_VALUE)
 			{
-				while (continueIterating)
+				while (continue_iterating)
 				{
 					bool is_dot = find_data.cFileName[0] == L'.' && find_data.cFileName[1] == L'\0';
 					bool is_double_dot = find_data.cFileName[0] == L'.' && find_data.cFileName[1] == L'.' && find_data.cFileName[2] == L'\0';
@@ -472,9 +472,9 @@ crstl_module_export namespace crstl
 						entry.filename = filename;
 						entry.is_directory = find_data.dwFileAttributes & CRSTL_FILE_ATTRIBUTE_DIRECTORY;
 
-						continueIterating = function(entry);
+						continue_iterating = function(entry);
 
-						if (recursive && continueIterating && entry.is_directory)
+						if (recursive && continue_iterating && entry.is_directory)
 						{
 							crstl::fixed_path512 sub_path = directory_path;
 							sub_path /= entry.filename;
@@ -482,7 +482,7 @@ crstl_module_export namespace crstl
 						}
 					}
 
-					continueIterating &= FindNextFileW(h_find, (WIN32_FIND_DATAW*)&find_data) != 0;
+					continue_iterating &= FindNextFileW(h_find, (WIN32_FIND_DATAW*)&find_data) != 0;
 				}
 			}
 		}

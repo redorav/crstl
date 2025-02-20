@@ -111,7 +111,7 @@ namespace crstl
 
 #include <unistd.h>
 #include <sys/stat.h>
-#include <fts.h>
+#include <dirent.h>
 
 #if defined(CRSTL_OS_LINUX)
 #include <sys/sendfile.h>
@@ -488,54 +488,66 @@ crstl_module_export namespace crstl
 	template<typename FileIteratorFunction>
 	void for_each_directory_entry(const char* directory_path, bool recursive, const FileIteratorFunction& function)
 	{
-		int fts_options = FTS_COMFOLLOW | FTS_LOGICAL | FTS_NOCHDIR;
-
-		const char* paths[] = { directory_path, nullptr };
-
-		FTS* ftsp = fts_open(paths, fts_options, nullptr);
-		if (!ftsp)
+		struct stat st;
+		if (stat(directory_path, &st) == -1)
 		{
 			return;
 		}
 
-		// Initialize ftsp with as many argv[] parts as possible
-		FTSENT* chp = fts_children(ftsp, 0);
-		if (!chp)
+		DIR* dirp = opendir(directory_path);
+
+		if (!dirp)
 		{
 			return;
 		}
 
-		// Read first file
-		FTSENT* filetree_entry = fts_read(ftsp);
+		bool continue_iterating = true;
 
-		if (filetree_entry)
+		while(continue_iterating)
 		{
-			bool continueIterating = true;
+			struct dirent dir_entry;
+			struct dirent* endp = nullptr;
 
-			while (continueIterating)
+			// Read next directory entry
+			if (readdir(dirp, &dir_entry, &endp) == -1)
 			{
-				if (filetree_entry->fts_info == FTS_D || filetree_entry->fts_info == FTS_F)
+				closedir(dirp);
+				return;
+			}
+
+			if (!endp)
+			{
+				break;
+			}
+
+			bool is_dot = dir_entry.d_name[0] == '.' && dir_entry.d_name[1] == '\0';
+			bool is_double_dot = dir_entry.d_name[0] == '.' && dir_entry.d_name[1] == '.' && dir_entry.d_name[2] == '\0';
+
+			if (!is_dot && !is_double_dot)
+			{
+				// If entry is accessible, start getting at the properties
+				//if (stat(ep, &st) == -1)
+				//{
+				//	closedir(dirp);
+				//	return;
+				//}
+
+				directory_entry entry;
+				entry.directory = directory_path;
+				entry.filename = dir_entry.d_name;
+				entry.is_directory = dir_entry.d_type == DT_DIR;
+
+				continue_iterating = function(entry);
+
+				if (recursive && continue_iterating && entry.is_directory)
 				{
-					directory_entry entry;
-					entry.directory = directory_path;
-					entry.filename = filetree_entry->fts_accpath;
-					entry.is_directory = filetree_entry->fts_info == FTS_D;
-
-					continueIterating = function(entry);
-
-					if (recursive && continueIterating && entry.is_directory)
-					{
-						crstl::fixed_path512 sub_path = directory_path;
-						sub_path /= entry.filename;
-						for_each_directory_entry(sub_path.c_str(), recursive, function);
-					}
+					crstl::fixed_path512 sub_path = directory_path;
+					sub_path /= entry.filename;
+					for_each_directory_entry(sub_path.c_str(), recursive, function);
 				}
-
-				filetree_entry = fts_read(ftsp);
-				continueIterating &= filetree_entry != nullptr;
 			}
 		}
 
-		fts_close(ftsp);
+		closedir(dirp);
 	}
 }
