@@ -6,6 +6,8 @@
 
 #include "crstl/path.h"
 
+#include "crstl/fixed_path.h"
+
 #include "crstl/move_forward.h"
 
 crstl_module_export namespace crstl
