@@ -341,13 +341,7 @@ crstl_module_export namespace crstl
 
 		void normalize()
 		{
-			size_t separatorPosition = m_path_string.find_first_of('\\');
-
-			while (separatorPosition != m_path_string.npos)
-			{
-				m_path_string[separatorPosition] = '/';
-				separatorPosition = m_path_string.find_first_of('\\');
-			}
+			m_path_string.replace_all('\\', '/');
 		}
 
 		StringInterface m_path_string;
