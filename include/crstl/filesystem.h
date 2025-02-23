@@ -137,6 +137,8 @@ crstl_module_export namespace crstl
 		return filesystem_globals<void>::temp_path;
 	}
 
+	// Create directory, including the tree that leads up to it
+	// If folder was created successfully or folder already exists, return true
 	inline bool create_directories(const char* directory_path)
 	{
 		if (!directory_path)
