@@ -221,7 +221,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 size_t find_first_of(const basic_string_view& needle_string, size_t pos = 0) const crstl_noexcept
 		{
-			return find_first_of(needle_string.c_str(), pos, needle_string.length());
+			return find_first_of(needle_string.data(), pos, needle_string.length());
 		}
 
 		crstl_constexpr14 size_t find_first_of(CharT c, size_t pos = 0) const crstl_noexcept
@@ -247,7 +247,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 size_t find_last_of(const basic_string_view& needle_string, size_t pos = npos) const crstl_noexcept
 		{
-			return find_last_of(needle_string.c_str(), pos, needle_string.length());
+			return find_last_of(needle_string.data(), pos, needle_string.length());
 		}
 
 		crstl_constexpr14 size_t find_last_of(CharT c, size_t pos = npos) const crstl_noexcept
