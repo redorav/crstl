@@ -1444,4 +1444,15 @@ crstl_module_export namespace crstl
 	typedef basic_string<char8_t, crstl::allocator> u8string;
 	typedef basic_string<char16_t, crstl::allocator> u16string;
 	typedef basic_string<char32_t, crstl::allocator> u32string;
+
+	template<typename T> struct hash;
+
+	template <typename T, typename Allocator>
+	struct hash<basic_string<T, Allocator>>
+	{
+		size_t operator()(const basic_string<T, Allocator>& string) const
+		{
+			return string_hash(string.c_str(), string.length());
+		}
+	};
 };

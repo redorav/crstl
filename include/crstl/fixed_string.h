@@ -977,4 +977,15 @@ crstl_module_export namespace crstl
 	typedef basic_fixed_string<wchar_t, 128> fixed_wstring128;
 	typedef basic_fixed_string<wchar_t, 256> fixed_wstring256;
 	typedef basic_fixed_string<wchar_t, 512> fixed_wstring512;
+
+	template<typename T> struct hash;
+
+	template <typename T, int N>
+	struct hash<basic_fixed_string<T, N>>
+	{
+		size_t operator()(const basic_fixed_string<T, N>& string) const
+		{
+			return string_hash(string.c_str(), string.length());
+		}
+	};
 }
