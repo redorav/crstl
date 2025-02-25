@@ -1,6 +1,7 @@
 export module crstl;
 
 #define CRSTL_MODULE_DECLARATION
+#include "crstl/allocator.h"
 #include "crstl/array.h"
 #include "crstl/bit.h"
 #include "crstl/bitset.h"
@@ -11,12 +12,13 @@ export module crstl;
 #include "crstl/fixed_deque.h"
 #include "crstl/fixed_function.h"
 #include "crstl/fixed_open_hashmap.h"
-#include "crstl/fixed_open_hashmap.h"
 #include "crstl/fixed_path.h"
 #include "crstl/fixed_string.h"
 #include "crstl/fixed_vector.h"
 #include "crstl/function.h"
+#include "crstl/hash.h"
 #include "crstl/intrusive_ptr.h"
+#include "crstl/open_hashmap.h"
 #include "crstl/pair.h"
 #include "crstl/path.h"
 #include "crstl/process.h"
