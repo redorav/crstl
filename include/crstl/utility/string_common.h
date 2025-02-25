@@ -393,7 +393,7 @@ crstl_module_export namespace crstl
 		size_t result = 2166136261U;
 		for (size_t i = 0; i < length; ++i)
 		{
-			CharT c = string[i];
+			size_t c = string[i];
 			result = (result * 16777619) ^ c;
 		}
 
