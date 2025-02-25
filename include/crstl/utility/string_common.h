@@ -387,12 +387,13 @@ crstl_module_export namespace crstl
 	}
 
 	// FNV-like string hash
-	inline crstl_constexpr14 size_t string_hash(const char* string, size_t length)
+	template<typename CharT>
+	inline crstl_constexpr14 size_t string_hash(const CharT* string, size_t length)
 	{
 		size_t result = 2166136261U;
 		for (size_t i = 0; i < length; ++i)
 		{
-			size_t c = string[i];
+			CharT c = string[i];
 			result = (result * 16777619) ^ c;
 		}
 
