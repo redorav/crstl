@@ -10,7 +10,7 @@ namespace crstl
 
 	// Pointers tend to be correlated by being aligned so they'll typically end up in the same buckets and cause many collisions.
 	// This is a relatively fast way to mix them up a bit without being too expensive. Other approaches such as removing the bottom
-	// bits are very cheap but cause many collisions, and better hashes like Wang or 
+	// bits are very cheap but cause many collisions, and better hashes like Wang are more expensive
 	// https://stackoverflow.com/questions/664014/what-integer-hash-function-are-good-that-accepts-an-integer-hash-key
 	template <typename T> struct hash<T*>
 	{
