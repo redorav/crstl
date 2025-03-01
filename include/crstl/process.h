@@ -79,6 +79,11 @@ crstl_module_export namespace crstl
 
 		process_exit_code get_return_code() const { return m_exit_code; }
 
+		bool is_launched() const
+		{
+			return m_state == process_state::launched;
+		}
+
 	protected:
 
 		process_state::t m_state;

@@ -106,7 +106,7 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
-		bool is_alive()
+		bool is_running() const
 		{
 			// https://linux.die.net/man/2/waitpid
 			// On success, returns the process ID of the child whose state has changed; 

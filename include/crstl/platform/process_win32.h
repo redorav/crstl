@@ -225,7 +225,7 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
-		bool is_alive()
+		bool is_running() const
 		{
 			if (m_state == process_state::launched)
 			{
