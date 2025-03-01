@@ -8,6 +8,8 @@
 
 #include "crstl/utility/memory_ops.h"
 
+// https://stackoverflow.com/questions/15435994/how-do-i-open-an-exe-from-another-c-exe
+
 #define CRSTL_WAIT_ABANDONED 0x00000080L
 #define CRSTL_WAIT_OBJECT_0  0x00000000L
 #define CRSTL_WAIT_TIMEOUT   0x00000102L
