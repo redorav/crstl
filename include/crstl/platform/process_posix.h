@@ -117,7 +117,7 @@ crstl_module_export namespace crstl
 			return wpid == 0;
 		}
 
-		process_exit_code wait()
+		process_exit_status wait()
 		{
 			if (m_state == process_state::launched)
 			{
@@ -130,7 +130,7 @@ crstl_module_export namespace crstl
 					{
 						int return_value = WEXITSTATUS(status);
 						m_state = process_state::waited;
-						m_exit_code = process_exit_code((process_exit_code::t)return_value);
+						m_exit_status = process_exit_status(return_value);
 					}
 					else
 					{
@@ -145,7 +145,7 @@ crstl_module_export namespace crstl
 				m_child_pid = 0;
 			}
 
-			return m_exit_code;
+			return m_exit_status;
 		}
 
 		process_size read_stdout(char* buffer, size_t buffer_size)

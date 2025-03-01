@@ -19,30 +19,31 @@ crstl_module_export namespace crstl
 		};
 	}
 
-	struct process_exit_code
+	struct process_exit_status
 	{
-		enum t : int
+		enum class status
 		{
-			success                = 0,
-			error_generic          = -1,
-			error_failed_to_launch = 2147483647
+			success,
+			error
 		};
 
-		process_exit_code() : return_code(error_failed_to_launch) {}
+		process_exit_status() : status(status::error), exit_code(2147483647) {}
 
-		process_exit_code(t return_code) : return_code(return_code) {}
+		process_exit_status(int exit_code) : status(status::success), exit_code(exit_code) {}
 
-		explicit operator bool() const { return return_code != error_failed_to_launch; }
+		explicit operator bool() const { return status == status::success; }
 
 		// This return code is process-specific, and should be handled by the application
 		int get_exit_code()
 		{
-			return return_code;
+			return exit_code;
 		}
 
 	private:
 
-		t return_code;
+		status status;
+
+		int exit_code;
 	};
 
 	// Handles the state of a read or write operation. For example, a read on a process returns
@@ -77,7 +78,10 @@ crstl_module_export namespace crstl
 			: m_state(process_state::undefined)
 		{}
 
-		process_exit_code get_return_code() const { return m_exit_code; }
+		process_exit_status get_exit_status() const
+		{
+			return m_exit_status;
+		}
 
 		bool is_launched() const
 		{
@@ -88,7 +92,7 @@ crstl_module_export namespace crstl
 
 		process_state::t m_state;
 
-		process_exit_code m_exit_code;
+		process_exit_status m_exit_status;
 
 	private:
 
