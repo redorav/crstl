@@ -157,7 +157,7 @@ crstl_module_export namespace crstl
 
 			// We need to check whether the process is alive because it might have been killed by someone else
 			// before we're trying to access the stdout handle. There's not a lot we can do 
-			if ((m_state == process_state::launched || m_state == process_state::waited) && is_alive())
+			if ((m_state == process_state::launched || m_state == process_state::waited) && is_running())
 			{
 				int fd = fileno(m_stdout_read_file);
 				bytes_read = read(fd, buffer, buffer_size);
