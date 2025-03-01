@@ -27,9 +27,7 @@ import <initializer_list>;
 
 crstl_module_export namespace crstl
 {
-	// We forward include all the uses of span, so we don't need to always include it
-	template<typename T>
-	class span;
+	template<typename T> class span;
 
 	template<typename T, size_t NumElements>
 	class fixed_vector_storage
