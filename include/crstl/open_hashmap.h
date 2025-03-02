@@ -5,6 +5,7 @@
 #include "crstl/allocator.h"
 #include "crstl/compressed_pair.h"
 #include "crstl/bit.h"
+#include "crstl/forward_declarations.h"
 
 #if defined(CRSTL_MODULE_DECLARATION)
 import <initializer_list>;
@@ -156,7 +157,7 @@ crstl_module_export namespace crstl
 		compressed_pair<size_t, Allocator> m_capacity_allocator;
 	};
 
-	template<typename Key, typename T, typename Hasher = crstl::hash<Key>, typename Allocator = crstl::allocator, bool IsMultipleValue = false>
+	template<typename Key, typename T, typename Hasher, typename Allocator, bool IsMultipleValue>
 	class open_hashtable : public open_hashtable_base<open_hashmap_storage<Key, T, Hasher, Allocator>, IsMultipleValue>
 	{
 	public:
@@ -305,30 +306,29 @@ crstl_module_export namespace crstl
 		using base_type::m_bucket_count;
 	};
 
-	template<typename Key, typename T, typename Hasher = crstl::hash<Key>, typename Allocator = crstl::allocator>
-	class open_hashmap : public open_hashtable<Key, T, Hasher, Allocator>
+	template<typename Key, typename T, typename Hasher, typename Allocator>
+	class open_hashmap : public open_hashtable<Key, T, Hasher, Allocator, false>
 	{
-		using open_hashtable<Key, T, Hasher, Allocator>::open_hashtable;
+		using open_hashtable<Key, T, Hasher, Allocator, false>::open_hashtable;
 	};
 
-	template<typename Key, typename Hasher = crstl::hash<Key>, typename Allocator = crstl::allocator>
-	class open_hashset : public open_hashtable<Key, void, Hasher, Allocator>
+	template<typename Key, typename Hasher, typename Allocator>
+	class open_hashset : public open_hashtable<Key, void, Hasher, Allocator, false>
 	{
-		using open_hashtable<Key, void, Hasher, Allocator>::open_hashtable;
+		using open_hashtable<Key, void, Hasher, Allocator, false>::open_hashtable;
 
 	private:
 
-		using open_hashtable<Key, void, Hasher, Allocator>::for_each;
+		using open_hashtable<Key, void, Hasher, Allocator, false>::for_each;
 	};
 
-	template<typename Key, typename T, typename Hasher = crstl::hash<Key>, typename Allocator = crstl::allocator>
+	template<typename Key, typename T, typename Hasher, typename Allocator>
 	class open_multi_hashmap : public open_hashtable<Key, T, Hasher, Allocator, true>
 	{
 		using open_hashtable<Key, T, Hasher, Allocator, true>::open_hashtable;
-
 	};
 
-	template<typename Key, typename Hasher = crstl::hash<Key>, typename Allocator = crstl::allocator>
+	template<typename Key, typename Hasher, typename Allocator>
 	class open_multi_hashset : public open_hashtable<Key, void, Hasher, Allocator, true>
 	{
 		using open_hashtable<Key, void, Hasher, Allocator, true>::open_hashtable;

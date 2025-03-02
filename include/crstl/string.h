@@ -14,6 +14,8 @@
 
 #include "crstl/utility/memory_ops.h"
 
+#include "crstl/forward_declarations.h"
+
 // crstl::string
 //
 // Replacement for std::string
@@ -40,7 +42,7 @@ crstl_module_export namespace crstl
 		template<> struct sso_padding<0> {};
 	};
 
-	template<typename CharT, typename Allocator = crstl::allocator>
+	template<typename CharT, typename Allocator>
 	class basic_string
 	{
 	public:

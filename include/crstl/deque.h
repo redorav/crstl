@@ -14,6 +14,8 @@
 
 #include "crstl/utility/memory_ops.h"
 
+#include "crstl/forward_declarations.h"
+
 // Only turn this on for development
 //#define CRSTL_DEQUE_EXHAUSTIVE_VALIDATION
 
@@ -110,7 +112,7 @@ crstl_module_export namespace crstl
 		chunk_type** m_chunk_array;
 	};
 
-	template<typename T, typename Allocator = crstl::allocator, size_t ChunkSize = 16>
+	template<typename T, typename Allocator, size_t ChunkSize>
 	class deque
 	{
 	public:

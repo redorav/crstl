@@ -14,6 +14,7 @@ import <initializer_list>;
 #endif
 
 #include "crstl/vector_base.h"
+#include "crstl/forward_declarations.h"
 
 // crstl::vector
 //
@@ -26,10 +27,9 @@ import <initializer_list>;
 
 crstl_module_export namespace crstl
 {
-	template<typename T>
-	class span;
+	template<typename T> class span;
 
-	template<typename T, typename Allocator = crstl::allocator>
+	template<typename T, typename Allocator>
 	class vector_storage
 	{
 	protected:
@@ -111,7 +111,7 @@ crstl_module_export namespace crstl
 		compressed_pair<size_t, Allocator> m_capacity_allocator;
 	};
 
-	template<typename T, typename Allocator = crstl::allocator>
+	template<typename T, typename Allocator>
 	class vector : public vector_base<T, vector_storage<T, Allocator>>
 	{
 	public:

@@ -1,9 +1,21 @@
 #pragma once
 
+// Forward declarations for all types
+// 
+// Use in your header files to gain access to all the declarations without worrying about the 
+// details of declaring them. Forward declarations have a particularity, that they define the
+// default arguments of a type. The reason for this is that template defaults can only be 
+// defined once, and we want to be able to also benefit from these in the forward declarations
+// as if we had included the file. The crstl files therefore have to include this file too and
+// the details are hidden away here. It's a minor inconvenience for a good benefit
+
 namespace crstl
 {
 	// allocator.h
 	class allocator;
+
+	// hash.h
+	template<typename T> struct hash;
 
 	// array.h
 	template<typename T, size_t N> class array;
@@ -12,7 +24,7 @@ namespace crstl
 	template<size_t N, typename WordType> class bitset;
 
 	// deque.h
-	template<typename T, typename Allocator, size_t ChunkSize> class deque;
+	template<typename T, typename Allocator = crstl::allocator, size_t ChunkSize = 16> class deque;
 
 	// filesystem.h
 	class file;
@@ -24,7 +36,10 @@ namespace crstl
 	template<int SizeBytes, typename Return> class fixed_function;
 	
 	// fixed_open_hashmap.h
-	template<typename Key, typename T, size_t NodeCount, typename Hasher> class fixed_open_hashmap;
+	template<typename Key, typename T, size_t NodeCount, typename Hasher = crstl::hash<Key>> class fixed_open_hashmap;
+	template<typename Key, size_t NodeCount, typename Hasher = crstl::hash<Key>> class fixed_open_hashset;
+	template<typename Key, typename T, size_t NodeCount, typename Hasher = crstl::hash<Key>> class fixed_open_multi_hashmap;
+	template<typename Key, size_t NodeCount, typename Hasher = crstl::hash<Key>> class fixed_open_multi_hashset;
 
 	// fixed_string.h
 	template<typename T, int N> class basic_fixed_string;
@@ -39,16 +54,14 @@ namespace crstl
 	// fixed_vector.h
 	template<typename T, size_t N> class fixed_vector;
 
-	// hash.h
-	template<typename T> struct hash;
-
 	// intrusive_ptr.h
 	template<typename T> class intrusive_ptr;
 
 	// open_hashmap.h
-	template<typename Key, typename T, typename Hasher, typename Allocator> class open_hashmap;
-	template<typename Key, typename Hasher, typename Allocator> class open_hashset;
-	template<typename Key, typename T, typename Hasher, typename Allocator> class open_multi_hashmap;
+	template<typename Key, typename T, typename Hasher = crstl::hash<Key>, typename Allocator = crstl::allocator> class open_hashmap;
+	template<typename Key, typename Hasher = crstl::hash<Key>, typename Allocator = crstl::allocator> class open_hashset;
+	template<typename Key, typename T, typename Hasher = crstl::hash<Key>, typename Allocator = crstl::allocator> class open_multi_hashmap;
+	template<typename Key, typename Hasher = crstl::hash<Key>, typename Allocator = crstl::allocator> class open_multi_hashset;
 
 	// pair.h
 	template<typename T1, typename T2> class pair;
@@ -63,7 +76,7 @@ namespace crstl
 	template<typename T> class stack_vector;
 
 	// string.h
-	template <typename CharT, typename Allocator> class basic_string;
+	template <typename CharT, typename Allocator = crstl::allocator> class basic_string;
 	typedef basic_string<char, allocator> string;
 	typedef basic_string<wchar_t, allocator> wstring;
 
@@ -83,7 +96,7 @@ namespace crstl
 	template<typename T> class unique_ptr;
 
 	// vector.h
-	template<typename T, typename Allocator> class vector;
+	template<typename T, typename Allocator = crstl::allocator> class vector;
 
 	// path.h
 	template<typename StringInterface> class path_base;
