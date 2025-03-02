@@ -2,6 +2,8 @@
 
 #include "crstl/open_hashtable_base.h"
 
+#include "crstl/forward_declarations.h"
+
 #if defined(CRSTL_MODULE_DECLARATION)
 import <initializer_list>;
 #elif defined(CRSTL_FEATURE_INITIALIZER_LISTS)
