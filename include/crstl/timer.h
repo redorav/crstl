@@ -28,9 +28,10 @@ crstl_module_export namespace crstl
 
 		time() : m_ticks(0) {}
 
-		explicit time(uint64_t ticks) : m_ticks(ticks) {}
+		explicit time(int64_t ticks) : m_ticks(ticks) {}
 
-		uint64_t ticks() const
+		// Return raw ticks value
+		int64_t ticks() const
 		{
 			return m_ticks;
 		}
@@ -40,24 +41,28 @@ crstl_module_export namespace crstl
 			return time(current_ticks());
 		}
 
+		// Return ticks as seconds
 		double seconds() const
 		{
-			return (double)m_ticks * timer_globals<uint64_t>::TicksToSeconds;
+			return (double)m_ticks * timer_globals<int64_t>::TicksToSeconds;
 		}
 
+		// Return ticks as milliseconds
 		double milliseconds() const
 		{
-			return (double)m_ticks * 1000.0 * timer_globals<uint64_t>::TicksToSeconds;
+			return (double)m_ticks * 1000.0 * timer_globals<int64_t>::TicksToSeconds;
 		}
 
+		// Return ticks as microseconds
 		double microseconds() const
 		{
-			return (double)m_ticks * 1000000.0 * timer_globals<uint64_t>::TicksToSeconds;
+			return (double)m_ticks * 1000000.0 * timer_globals<int64_t>::TicksToSeconds;
 		}
 
-		double frequency() const
+		// Return number of ticks per second
+		double ticks_per_second() const
 		{
-			return 1.0 / ((double)m_ticks * timer_globals<uint64_t>::TicksToSeconds);
+			return 1.0 / ((double)m_ticks * timer_globals<int64_t>::TicksToSeconds);
 		}
 
 		inline time operator + (const time& other) const
@@ -80,22 +85,22 @@ crstl_module_export namespace crstl
 			m_ticks -= other.m_ticks; return *this;
 		}
 
-		inline time operator * (const uint64_t other) const
+		inline time operator * (const int64_t other) const
 		{
 			return time(m_ticks * other);
 		}
 
-		inline time& operator *= (const uint64_t other)
+		inline time& operator *= (const int64_t other)
 		{
 			m_ticks *= other; return *this;
 		}
 
-		inline time operator / (const uint64_t other) const
+		inline time operator / (const int64_t other) const
 		{
 			return time(m_ticks / other);
 		}
 
-		inline time& operator /= (const uint64_t other)
+		inline time& operator /= (const int64_t other)
 		{
 			m_ticks /= other; return *this;
 		}
@@ -132,7 +137,7 @@ crstl_module_export namespace crstl
 
 	private:
 
-		uint64_t m_ticks;
+		int64_t m_ticks;
 	};
 
 	class timer
