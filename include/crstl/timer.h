@@ -139,7 +139,7 @@ crstl_module_export namespace crstl
 	{
 	public:
 
-		timer(bool immediate_start = false)
+		timer(bool immediate_start = true)
 		{
 			immediate_start ? start() : reset();
 		}
