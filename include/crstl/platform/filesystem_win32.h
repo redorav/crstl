@@ -429,6 +429,20 @@ crstl_module_export namespace crstl
 		return path(path_buffer, size);
 	}
 
+	inline const bool current_path(const path& path)
+	{
+		if (detail::win32_is_utf8())
+		{
+			return SetCurrentDirectoryA(path.c_str()) != 0;
+		}
+		else
+		{
+			wchar_t wpath_buffer[MaxPathLength];
+			detail::win32_utf8_to_utf16(path.c_str(), path.length(), wpath_buffer, sizeof(wpath_buffer));
+			return SetCurrentDirectoryW(wpath_buffer) != 0;
+		}
+	}
+
 	template<typename FileIteratorFunction>
 	void for_each_directory_entry(const char* directory_path, bool recursive, const FileIteratorFunction& function)
 	{
