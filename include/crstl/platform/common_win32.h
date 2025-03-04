@@ -413,6 +413,10 @@ extern "C"
 	__declspec(dllimport) DWORD GetModuleFileNameA(HMODULE hModule, LPSTR lpFilename, DWORD nSize);
 
 	__declspec(dllimport) DWORD GetModuleFileNameW(HMODULE hModule, LPWSTR lpFilename, DWORD nSize);
+
+	__declspec(dllimport) DWORD GetCurrentDirectoryA(DWORD nBufferLength, LPSTR lpBuffer);
+
+	__declspec(dllimport) DWORD GetCurrentDirectoryW(DWORD nBufferLength, LPWSTR lpBuffer);
 };
 
 namespace crstl

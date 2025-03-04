@@ -352,59 +352,81 @@ crstl_module_export namespace crstl
 		inline path compute_temp_path()
 		{
 			// Start off null-terminated
-			char temp_path[MaxPathLength];
-			temp_path[0] = 0;
+			char path_buffer[MaxPathLength];
+			path_buffer[0] = 0;
 
 			// Note on GetLongPathName reusing the parameter:
 			// From the docs: "You can use the same buffer you used for the lpszShortPath parameter"
 
 			if (win32_is_utf8())
 			{
-				DWORD short_temp_path_length = GetTempPathA(MaxPathLength, temp_path);
+				DWORD short_temp_path_length = GetTempPathA(MaxPathLength, path_buffer);
 				if (short_temp_path_length > 0)
 				{
-					GetLongPathNameA(temp_path, temp_path, MaxPathLength);
+					GetLongPathNameA(path_buffer, path_buffer, MaxPathLength);
 				}
 			}
 			else
 			{
-				WCHAR w_temp_path[MaxPathLength];
+				WCHAR wpath_buffer[2048];
 
-				DWORD short_temp_path_length = GetTempPathW(MaxPathLength, w_temp_path);
+				DWORD short_temp_path_length = GetTempPathW(MaxPathLength, wpath_buffer);
 				if (short_temp_path_length > 0)
 				{
-					DWORD long_temp_path_length = GetLongPathNameW(w_temp_path, w_temp_path, MaxPathLength);
+					DWORD long_temp_path_length = GetLongPathNameW(wpath_buffer, wpath_buffer, MaxPathLength);
 					if (long_temp_path_length > 0)
 					{
-						win32_utf16_to_utf8(w_temp_path, crstl::string_length(w_temp_path), temp_path, sizeof(temp_path));
+						win32_utf16_to_utf8(wpath_buffer, crstl::string_length(wpath_buffer), path_buffer, sizeof(path_buffer));
 					}
 				}
 			}
 
-			return path(temp_path);
+			return path(path_buffer);
 		}
 
 		inline path compute_executable_path()
 		{
-			char buffer[2048];
-			buffer[0] = '\0';
+			char path_buffer[MaxPathLength];
+			path_buffer[0] = '\0';
 			DWORD size = 0;
 
 			if (detail::win32_is_utf8())
 			{
-				size = GetModuleFileNameA(nullptr, buffer, sizeof(buffer));
+				size = GetModuleFileNameA(nullptr, path_buffer, sizeof(path_buffer));
 			}
 			else
 			{
-				wchar_t wbuffer[2048];
-				size = GetModuleFileNameW(nullptr, wbuffer, sizeof(wbuffer));
-				detail::win32_utf16_to_utf8(wbuffer, size, buffer, sizeof(buffer));
+				wchar_t wpath_buffer[MaxPathLength];
+				size = GetModuleFileNameW(nullptr, wpath_buffer, sizeof(wpath_buffer));
+				detail::win32_utf16_to_utf8(wpath_buffer, size, path_buffer, sizeof(path_buffer));
 			}
 
-			crstl_assert(size > 0 && size < sizeof(buffer));
+			crstl_assert(size > 0 && size < sizeof(path_buffer));
 
-			return path(buffer, size);
+			return path(path_buffer, size);
 		}
+	}
+
+	inline const path current_path()
+	{
+		char path_buffer[MaxPathLength];
+		path_buffer[0] = '\0';
+		DWORD size = 0;
+
+		if (detail::win32_is_utf8())
+		{
+			size = GetCurrentDirectoryA(sizeof(path_buffer), path_buffer);
+		}
+		else
+		{
+			wchar_t wpath_buffer[MaxPathLength];
+			size = GetCurrentDirectoryW(sizeof(wpath_buffer), wpath_buffer);
+			detail::win32_utf16_to_utf8(wpath_buffer, size, path_buffer, sizeof(path_buffer));
+		}
+
+		crstl_assert(size > 0 && size < sizeof(path_buffer));
+
+		return path(path_buffer, size);
 	}
 
 	template<typename FileIteratorFunction>

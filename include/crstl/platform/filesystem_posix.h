@@ -493,7 +493,7 @@ crstl_module_export namespace crstl
 		// This function is not really POSIX but we'll add it here since most of the other code is common to all the Unix family of OSs
 		inline path compute_executable_path()
 		{
-			char path_buffer[2048];
+			char path_buffer[MaxPathLength];
 			path_buffer[0] = '\0';
 			size_t size = sizeof(path_buffer);
 
