@@ -417,6 +417,10 @@ extern "C"
 	__declspec(dllimport) DWORD GetCurrentDirectoryA(DWORD nBufferLength, LPSTR lpBuffer);
 
 	__declspec(dllimport) DWORD GetCurrentDirectoryW(DWORD nBufferLength, LPWSTR lpBuffer);
+
+	__declspec(dllimport) BOOL SetCurrentDirectoryA(LPCSTR lpPathName);
+
+	__declspec(dllimport) BOOL SetCurrentDirectoryW(LPCWSTR lpPathName);
 };
 
 namespace crstl

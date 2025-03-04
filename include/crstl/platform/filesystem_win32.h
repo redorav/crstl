@@ -407,7 +407,7 @@ crstl_module_export namespace crstl
 		}
 	}
 
-	inline const path current_path()
+	inline const path current_directory_path()
 	{
 		char path_buffer[MaxPathLength];
 		path_buffer[0] = '\0';
@@ -429,7 +429,7 @@ crstl_module_export namespace crstl
 		return path(path_buffer, size);
 	}
 
-	inline const bool current_path(const path& path)
+	inline const bool current_directory_path(const path& path)
 	{
 		if (detail::win32_is_utf8())
 		{
