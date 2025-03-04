@@ -13,7 +13,7 @@
 crstl_module_export namespace crstl
 {
 	// Set a reasonable maximum across all possible OSs
-	static const uint32_t MaxPathLength = 512;
+	static const uint32_t MaxPathLength = 1024;
 
 	namespace file_flags
 	{
