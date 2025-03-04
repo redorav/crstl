@@ -115,6 +115,12 @@ namespace crstl
 
 #if defined(CRSTL_OS_LINUX)
 #include <sys/sendfile.h>
+#elif defined(CRSTL_OS_OSX)
+#include <mach-o/dyld.h>
+#elif defined(CRSTL_OS_BSD)
+#include <sys/sysctl.h>
+#elif defined(CRSTL_OS_SOLARIS)
+const char* getexecname(void);
 #endif
 
 namespace crstl
@@ -482,6 +488,34 @@ crstl_module_export namespace crstl
 			// On POSIX systems, the path may be the one specified in the environment variables TMPDIR, TMP, TEMP, TEMPDIR, 
 			// and, if none of them are specified, the path "/tmp" is returned.
 			return path("/tmp");
+		}
+
+		// This function is not really POSIX but we'll add it here since most of the other code is common to all the Unix family of OSs
+		inline path compute_executable_path()
+		{
+			char path_buffer[2048];
+			path_buffer[0] = '\0';
+			size_t size = sizeof(path_buffer);
+
+			const char* path_ptr = path_buffer;
+
+		#if defined(CRSTL_OS_LINUX)
+			/*ssize_t result = */readlink("/proc/self/exe", path_buffer, size);
+		#elif defined(CRSTL_OS_OSX)
+			/*int result = */_NSGetExecutablePath(path_buffer, &size);
+		#elif defined(CRSTL_OS_BSD)
+			int mib[4] = {};
+			size_t size;
+			mib[0] = CTL_KERN;
+			mib[1] = KERN_PROC;
+			mib[2] = KERN_PROC_PATHNAME;
+			mib[3] = -1;
+			sysctl(mib, 4, path_buffer, &size, nullptr, 0);
+		#elif defined(CRSTL_OS_SOLARIS)
+			path_ptr = getexecname();
+		#endif
+
+			return path(path_ptr, size);
 		}
 	}
 

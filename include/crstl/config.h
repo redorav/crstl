@@ -1,5 +1,9 @@
 #pragma once
 
+// References
+// https://beta.boost.org/doc/libs/1_82_0/libs/predef/doc/index.html
+// https://stackoverflow.com/questions/152016/detecting-cpu-architecture-compile-time
+
 // C++ Version
 
 #if defined(_MSVC_LANG)
@@ -42,7 +46,6 @@
 #endif
 
 // Processor Architecture
-// https://stackoverflow.com/questions/152016/detecting-cpu-architecture-compile-time
 
 #if defined(__aarch64__) || defined(_M_ARM64)
 
@@ -87,6 +90,14 @@
 #elif defined(__linux__)
 
 	#define CRSTL_OS_LINUX
+
+#elif defined(BSD) || defined(_SYSTYPE_BSD)
+
+	#define CRSTL_OS_BSD
+
+#elif defined(sun) || defined(__sun)
+
+	#define CRSTL_OS_SOLARIS
 
 #elif defined(__APPLE__)
 

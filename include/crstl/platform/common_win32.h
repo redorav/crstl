@@ -37,6 +37,24 @@ crstl_warning_unscoped_enum_begin
 #define CRSTL_FILE_ATTRIBUTE_RECALL_ON_OPEN        0x00040000
 #define CRSTL_FILE_ATTRIBUTE_RECALL_ON_DATA_ACCESS 0x00400000
 
+#define CRSTL_FILE_NOTIFY_CHANGE_FILE_NAME    0x00000001   
+#define CRSTL_FILE_NOTIFY_CHANGE_DIR_NAME     0x00000002   
+#define CRSTL_FILE_NOTIFY_CHANGE_ATTRIBUTES   0x00000004   
+#define CRSTL_FILE_NOTIFY_CHANGE_SIZE         0x00000008   
+#define CRSTL_FILE_NOTIFY_CHANGE_LAST_WRITE   0x00000010   
+#define CRSTL_FILE_NOTIFY_CHANGE_LAST_ACCESS  0x00000020   
+#define CRSTL_FILE_NOTIFY_CHANGE_CREATION     0x00000040   
+#define CRSTL_FILE_NOTIFY_CHANGE_SECURITY     0x00000100   
+
+#define CRSTL_FILE_ACTION_ADDED                   0x00000001   
+#define CRSTL_FILE_ACTION_REMOVED                 0x00000002   
+#define CRSTL_FILE_ACTION_MODIFIED                0x00000003   
+#define CRSTL_FILE_ACTION_RENAMED_OLD_NAME        0x00000004   
+#define CRSTL_FILE_ACTION_RENAMED_NEW_NAME        0x00000005   
+
+#define CRSTL_FILE_READ_DATA            ( 0x0001 )    // file & pipe
+#define CRSTL_FILE_LIST_DIRECTORY       ( 0x0001 )    // directory
+
 // Fileapi.h
 #define CRSTL_CREATE_NEW          1
 #define CRSTL_CREATE_ALWAYS       2
@@ -52,6 +70,18 @@ crstl_warning_unscoped_enum_begin
 #define CRSTL_FILE_BEGIN           0
 #define CRSTL_FILE_CURRENT         1
 #define CRSTL_FILE_END             2
+
+#define CRSTL_FILE_FLAG_WRITE_THROUGH         0x80000000
+#define CRSTL_FILE_FLAG_OVERLAPPED            0x40000000
+#define CRSTL_FILE_FLAG_NO_BUFFERING          0x20000000
+#define CRSTL_FILE_FLAG_RANDOM_ACCESS         0x10000000
+#define CRSTL_FILE_FLAG_SEQUENTIAL_SCAN       0x08000000
+#define CRSTL_FILE_FLAG_DELETE_ON_CLOSE       0x04000000
+#define CRSTL_FILE_FLAG_BACKUP_SEMANTICS      0x02000000
+#define CRSTL_FILE_FLAG_POSIX_SEMANTICS       0x01000000
+#define CRSTL_FILE_FLAG_OPEN_REPARSE_POINT    0x00200000
+#define CRSTL_FILE_FLAG_OPEN_NO_RECALL        0x00100000
+#define CRSTL_FILE_FLAG_FIRST_PIPE_INSTANCE   0x00080000
 
 // Winerror.h
 #define CRSTL_ERROR_FILE_NOT_FOUND             2L
@@ -152,18 +182,39 @@ typedef struct _WIN32_FIND_DATAA* LPWIN32_FIND_DATAA;
 typedef struct _WIN32_FIND_DATAW WIN32_FIND_DATAW;
 typedef struct _WIN32_FIND_DATAW* LPWIN32_FIND_DATAW;
 
+typedef struct _FILE_NOTIFY_INFORMATION FILE_NOTIFY_INFORMATION;
+
+typedef struct _SECURITY_ATTRIBUTES SECURITY_ATTRIBUTES;
+
 enum _GET_FILEEX_INFO_LEVELS;
 typedef _GET_FILEEX_INFO_LEVELS GET_FILEEX_INFO_LEVELS;
 
+typedef void (*LPOVERLAPPED_COMPLETION_ROUTINE)(DWORD dwErrorCode, DWORD dwNumberOfBytesTransfered, LPOVERLAPPED lpOverlapped);
+typedef unsigned long(*PTHREAD_START_ROUTINE)(void* lpThreadParameter);
+typedef PTHREAD_START_ROUTINE LPTHREAD_START_ROUTINE;
+
+//void PrintLastWindowsError()
+//{
+//	DWORD error = GetLastError();
+//
+//	LPSTR messageBuffer;
+//	FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+//		NULL, error, MAKELANGID(LANG_NEUTRAL, SUBLANG_ENGLISH_US), (LPSTR)&messageBuffer, 0, NULL);
+//
+//	OutputDebugStringA(messageBuffer);
+//
+//	LocalFree(messageBuffer);
+//}
+
 namespace crstl
 {
+	crstl_warning_anonymous_struct_union_begin
 	typedef struct _filetime
 	{
 		DWORD dwLowDateTime;
 		DWORD dwHighDateTime;
 	} filetime;
 
-	crstl_warning_anonymous_struct_union_begin
 	union large_integer
 	{
 		struct
@@ -174,7 +225,6 @@ namespace crstl
 
 		LONGLONG quad_part;
 	};
-	crstl_warning_anonymous_struct_union_end
 
 	typedef struct _win32_file_attribute_data
 	{
@@ -219,6 +269,33 @@ namespace crstl
 		WCHAR cFileName[260];
 		WCHAR cAlternateFileName[14];
 	} win32_find_dataw;
+
+	typedef struct _file_notify_information
+	{
+		DWORD NextEntryOffset;
+		DWORD Action;
+		DWORD FileNameLength;
+		WCHAR FileName[1];
+	} file_notify_information, *pfile_notify_information;
+
+	typedef struct _overlapped
+	{
+		ULONG_PTR Internal;
+		ULONG_PTR InternalHigh;
+		union
+		{
+			struct
+			{
+				DWORD Offset;
+				DWORD OffsetHigh;
+			};
+			PVOID Pointer;
+		};
+
+		HANDLE hEvent;
+	} overlapped, *lpoverlapped;
+
+	crstl_warning_anonymous_struct_union_end
 };
 
 extern "C"
@@ -252,6 +329,16 @@ extern "C"
 	__declspec(dllimport) DWORD GetLastError(void);
 
 	__declspec(dllimport) UINT GetOEMCP(void);
+
+	// Events
+
+	__declspec(dllimport) HANDLE CreateEventA(SECURITY_ATTRIBUTES* lpEventAttributes, BOOL bManualReset, BOOL bInitialState, LPCSTR lpName);
+
+	__declspec(dllimport) BOOL ResetEvent(HANDLE hEvent);
+
+	__declspec(dllimport) DWORD WaitForSingleObject(HANDLE hHandle, DWORD dwMilliseconds);
+
+	__declspec(dllimport) DWORD WaitForMultipleObjects(DWORD nCount, const HANDLE* lpHandles, BOOL bWaitAll, DWORD dwMilliseconds);
 
 	// Files
 
@@ -308,6 +395,24 @@ extern "C"
 	__declspec(dllimport) BOOL FindNextFileW(HANDLE hFindFile, LPWIN32_FIND_DATAW lpFindFileData);
 
 	__declspec(dllimport) BOOL FindClose(HANDLE hFindFile);
+
+	__declspec(dllimport) BOOL ReadDirectoryChangesW
+	(
+		HANDLE hDirectory,
+		LPVOID lpBuffer,
+		DWORD nBufferLength,
+		BOOL bWatchSubtree,
+		DWORD dwNotifyFilter,
+		LPDWORD lpBytesReturned,
+		LPOVERLAPPED lpOverlapped,
+		LPOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine
+	);
+
+	// Module filename
+
+	__declspec(dllimport) DWORD GetModuleFileNameA(HMODULE hModule, LPSTR lpFilename, DWORD nSize);
+
+	__declspec(dllimport) DWORD GetModuleFileNameW(HMODULE hModule, LPWSTR lpFilename, DWORD nSize);
 };
 
 namespace crstl
@@ -337,6 +442,20 @@ namespace crstl
 				CloseHandle(handle);
 				handle = CRSTL_INVALID_HANDLE_VALUE;
 			}
+		}
+
+		inline int win32_utf8_to_utf16(const CHAR* path, size_t path_length, WCHAR* destination_path, size_t destination_path_length)
+		{
+			int end_position = MultiByteToWideChar(CRSTL_CP_UTF8, 0, path, (int)path_length, destination_path, (int)destination_path_length);
+			destination_path[end_position] = L'\0';
+			return end_position;
+		}
+
+		inline int win32_utf16_to_utf8(const WCHAR* path, size_t path_length, CHAR* destination_path, size_t destination_path_length)
+		{
+			int end_position = WideCharToMultiByte(CRSTL_CP_UTF8, 0, path, (int)path_length, destination_path, (int)destination_path_length, nullptr, nullptr);
+			destination_path[end_position] = '\0';
+			return end_position;
 		}
 	}
 };

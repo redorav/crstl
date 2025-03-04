@@ -123,11 +123,20 @@ namespace crstl
 	template<typename Dummy>
 	struct filesystem_globals
 	{
+		// Path to a directory suitable for temporary files
 		static const path temp_path;
+
+		// Path to the executable, including filename
+		static const path executable_path;
 	};
 
 	template<typename Dummy>
 	const path filesystem_globals<Dummy>::temp_path = detail::compute_temp_path();
+
+	// https://stackoverflow.com/questions/1528298/get-path-of-executable
+	// https://stackoverflow.com/questions/1023306/finding-current-executables-path-without-proc-self-exe
+	template<typename Dummy>
+	const path filesystem_globals<Dummy>::executable_path = detail::compute_executable_path();
 }
 
 crstl_module_export namespace crstl
@@ -135,6 +144,11 @@ crstl_module_export namespace crstl
 	inline const path& temp_directory_path()
 	{
 		return filesystem_globals<void>::temp_path;
+	}
+
+	inline const path& executable_path()
+	{
+		return filesystem_globals<void>::executable_path;
 	}
 
 	// Create directory, including the tree that leads up to it

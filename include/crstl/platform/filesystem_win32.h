@@ -4,23 +4,6 @@
 
 crstl_module_export namespace crstl
 {
-	namespace detail
-	{
-		inline int win32_utf8_to_utf16(const CHAR* path, size_t path_length, WCHAR* destination_path, size_t destination_path_length)
-		{
-			int end_position = MultiByteToWideChar(CRSTL_CP_UTF8, 0, path, (int)path_length, destination_path, (int)destination_path_length);
-			destination_path[end_position] = L'\0';
-			return end_position;
-		}
-
-		inline int win32_utf16_to_utf8(const WCHAR* path, size_t path_length, CHAR* destination_path, size_t destination_path_length)
-		{
-			int end_position = WideCharToMultiByte(CRSTL_CP_UTF8, 0, path, (int)path_length, destination_path, (int)destination_path_length, nullptr, nullptr);
-			destination_path[end_position] = '\0';
-			return end_position;
-		}
-	}
-
 	class file : public file_base
 	{
 	public:
@@ -397,6 +380,28 @@ crstl_module_export namespace crstl
 			}
 
 			return path(temp_path);
+		}
+
+		inline path compute_executable_path()
+		{
+			char buffer[2048];
+			buffer[0] = '\0';
+			DWORD size = 0;
+
+			if (detail::win32_is_utf8())
+			{
+				size = GetModuleFileNameA(nullptr, buffer, sizeof(buffer));
+			}
+			else
+			{
+				wchar_t wbuffer[2048];
+				size = GetModuleFileNameW(nullptr, wbuffer, sizeof(wbuffer));
+				detail::win32_utf16_to_utf8(wbuffer, size, buffer, sizeof(buffer));
+			}
+
+			crstl_assert(size > 0 && size < sizeof(buffer));
+
+			return path(buffer, size);
 		}
 	}
 

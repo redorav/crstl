@@ -6,10 +6,6 @@
 
 #include "crstl/utility/string_length.h"
 
-typedef struct _SECURITY_ATTRIBUTES SECURITY_ATTRIBUTES;
-typedef unsigned long(*PTHREAD_START_ROUTINE)(void* lpThreadParameter);
-typedef PTHREAD_START_ROUTINE LPTHREAD_START_ROUTINE;
-
 extern "C"
 {
 	__declspec(dllimport) void* CreateThread
@@ -35,8 +31,6 @@ extern "C"
 	__declspec(dllimport) HANDLE GetCurrentThread();
 
 	__declspec(dllimport) HRESULT SetThreadDescription(HANDLE hThread, const wchar_t* lpThreadDescription);
-
-	__declspec(dllimport) HANDLE CreateEventA(SECURITY_ATTRIBUTES* lpEventAttributes, BOOL bManualReset, BOOL bInitialState, LPCSTR lpName);
 
 	__declspec(dllimport) void RaiseException(DWORD dwExceptionCode, DWORD dwExceptionFlags, DWORD nNumberOfArguments, const ULONG_PTR* lpArguments);
 
