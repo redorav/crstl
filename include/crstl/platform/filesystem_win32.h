@@ -347,6 +347,8 @@ crstl_module_export namespace crstl
 
 	namespace detail
 	{
+		// https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-gettemppatha
+		// https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getlongpathnamea
 		inline path compute_temp_path()
 		{
 			// Start off null-terminated
