@@ -6,6 +6,7 @@
 
 #include <fcntl.h>
 #include <errno.h>
+#include <sys/stat.h>
 
 #if defined(CRSTL_OS_WINDOWS)
 
@@ -45,6 +46,10 @@ extern "C"
 	__declspec(dllimport) int _access(char const* _FileName, int _AccessMode);
 
 	__declspec(dllimport) int _mkdir(char const* _Path);
+
+	__declspec(dllimport) int _chdir(char const* _Path);
+
+	__declspec(dllimport) char* getcwd(char* _DstBuf, int   _SizeInBytes);
 }
 
 typedef long off_t;
@@ -58,6 +63,31 @@ namespace crstl
 
 	namespace detail
 	{
+		inline int access(const char* path, int mode)
+		{
+			return _access(path, mode);
+		}
+
+		inline int chdir(const char* path)
+		{
+			return _chdir(path);
+		}
+
+		inline int close(int file_handle)
+		{
+			return _close(file_handle);
+		}
+
+		inline int mkdir(const char* path)
+		{
+			return _mkdir(path);
+		}
+
+		inline off_t lseek(int file_handle, off_t offset, int origin)
+		{
+			return _lseek(file_handle, offset, origin);
+		}
+
 		inline int open(const char* file_path, int open_flags)
 		{
 			int file_handle = -1;
@@ -75,34 +105,14 @@ namespace crstl
 			return _read(file_handle, dst_buf, (unsigned int)max_char_count);
 		}
 
-		inline ssize_t write(int file_handle, const void* buf, size_t max_char_count)
-		{
-			return _write(file_handle, buf, (unsigned int)max_char_count);
-		}
-
-		inline int close(int file_handle)
-		{
-			return _close(file_handle);
-		}
-
-		inline off_t lseek(int file_handle, off_t offset, int origin)
-		{
-			return _lseek(file_handle, offset, origin);
-		}
-
 		inline int unlink(const char* path)
 		{
 			return _unlink(path);
 		}
 
-		inline int access(const char* path, int mode)
+		inline ssize_t write(int file_handle, const void* buf, size_t max_char_count)
 		{
-			return _access(path, mode);
-		}
-
-		inline int mkdir(const char* path)
-		{
-			return _mkdir(path);
+			return _write(file_handle, buf, (unsigned int)max_char_count);
 		}
 	}
 }
@@ -110,7 +120,6 @@ namespace crstl
 #else
 
 #include <unistd.h>
-#include <sys/stat.h>
 #include <dirent.h>
 
 #if defined(CRSTL_OS_LINUX)
@@ -127,19 +136,14 @@ namespace crstl
 {
 	namespace detail
 	{
-		inline int open(const char* file_path, int open_flags)
+		inline int access(const char* path, int mode)
 		{
-			return ::open(file_path, open_flags, S_IRUSR | S_IWUSR);
+			return ::access(path, mode);
 		}
 
-		inline ssize_t read(int file_handle, void* dst_buf, size_t max_char_count)
+		inline int chdir(const char* path)
 		{
-			return ::read(file_handle, dst_buf, max_char_count);
-		}
-
-		inline ssize_t write(int file_handle, const void* buf, size_t max_char_count)
-		{
-			return ::write(file_handle, buf, max_char_count);
+			return ::chdir(path);
 		}
 
 		inline int close(int file_handle)
@@ -152,19 +156,29 @@ namespace crstl
 			return ::lseek(file_handle, offset, origin);
 		}
 
+		inline int mkdir(const char* path)
+		{
+			return ::mkdir(path, 0777);
+		}
+
+		inline int open(const char* file_path, int open_flags)
+		{
+			return ::open(file_path, open_flags, S_IRUSR | S_IWUSR);
+		}
+
+		inline ssize_t read(int file_handle, void* dst_buf, size_t max_char_count)
+		{
+			return ::read(file_handle, dst_buf, max_char_count);
+		}
+
 		inline int unlink(const char* path)
 		{
 			return ::unlink(path);
 		}
 
-		inline int access(const char* path, int mode)
+		inline ssize_t write(int file_handle, const void* buf, size_t max_char_count)
 		{
-			return ::access(path, mode);
-		}
-
-		inline int mkdir(const char* path)
-		{
-			return ::mkdir(path, 0777);
+			return ::write(file_handle, buf, max_char_count);
 		}
 	}
 }
@@ -535,13 +549,12 @@ crstl_module_export namespace crstl
 	{
 		char path_buffer[MaxPathLength];
 		path_buffer[0] = '\0';
-		size_t size = sizeof(path_buffer);
 
-		const char* result = getcwd(path_buffer, size);
+		const char* result = getcwd(path_buffer, sizeof(path_buffer));
 
 		if (result)
 		{
-			return path(path_buffer, size);
+			return path(result);
 		}
 		else
 		{
@@ -551,7 +564,7 @@ crstl_module_export namespace crstl
 
 	inline bool current_directory_path(const path& path)
 	{
-		int result = chdir(path.c_str());
+		int result = detail::chdir(path.c_str());
 		return result == 0;
 	}
 
