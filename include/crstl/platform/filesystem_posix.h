@@ -531,6 +531,30 @@ crstl_module_export namespace crstl
 		}
 	}
 
+	inline path current_directory_path()
+	{
+		char path_buffer[MaxPathLength];
+		path_buffer[0] = '\0';
+		size_t size = sizeof(path_buffer);
+
+		const char* result = getcwd(path_buffer, size);
+
+		if (result)
+		{
+			return path(path_buffer, size);
+		}
+		else
+		{
+			return path();
+		}
+	}
+
+	inline bool current_directory_path(const path& path)
+	{
+		int result = chdir(path.c_str());
+		return result == 0;
+	}
+
 	template<typename FileIteratorFunction>
 	void for_each_directory_entry(const char* directory_path, bool recursive, const FileIteratorFunction& function)
 	{

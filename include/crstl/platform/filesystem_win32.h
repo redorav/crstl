@@ -407,7 +407,7 @@ crstl_module_export namespace crstl
 		}
 	}
 
-	inline const path current_directory_path()
+	inline path current_directory_path()
 	{
 		char path_buffer[MaxPathLength];
 		path_buffer[0] = '\0';
