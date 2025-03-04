@@ -617,7 +617,7 @@ crstl_module_export namespace crstl
 
 				if (recursive && continue_iterating && entry.is_directory)
 				{
-					crstl::fixed_path512 sub_path = directory_path;
+					crstl::path_base<crstl::basic_fixed_string<char, MaxPathLength>> sub_path = directory_path;
 					sub_path /= entry.filename;
 					for_each_directory_entry(sub_path.c_str(), recursive, function);
 				}
