@@ -3,6 +3,7 @@
 #include "crstl/config.h"
 #include "crstl/crstldef.h"
 #include "crstl/bit.h"
+#include "crstl/forward_declarations.h"
 #include "crstl/utility/memory_ops.h"
 #include "crstl/utility/constructor_utils.h"
 
