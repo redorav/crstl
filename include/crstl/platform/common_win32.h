@@ -208,94 +208,97 @@ typedef PTHREAD_START_ROUTINE LPTHREAD_START_ROUTINE;
 
 namespace crstl
 {
-	crstl_warning_anonymous_struct_union_begin
-	typedef struct _filetime
+	namespace detail
 	{
-		DWORD dwLowDateTime;
-		DWORD dwHighDateTime;
-	} filetime;
-
-	union large_integer
-	{
-		struct
+		crstl_warning_anonymous_struct_union_begin
+		typedef struct _filetime
 		{
-			DWORD low_part;
-			LONG high_part;
-		};
+			DWORD dwLowDateTime;
+			DWORD dwHighDateTime;
+		} filetime;
 
-		LONGLONG quad_part;
-	};
-
-	typedef struct _win32_file_attribute_data
-	{
-		DWORD dwFileAttributes;
-		filetime ftCreationTime;
-		filetime ftLastAccessTime;
-		filetime ftLastWriteTime;
-		DWORD nFileSizeHigh;
-		DWORD nFileSizeLow;
-	} win32_file_attribute_data, *lpwin32_file_attribute_data;
-
-	typedef enum _get_fileex_info_levels
-	{
-		GetFileExInfoStandard,
-		GetFileExMaxInfoLevel
-	} get_fileex_info_levels;
-
-	typedef struct _win32_find_dataa
-	{
-		DWORD dwFileAttributes;
-		filetime ftCreationTime;
-		filetime ftLastAccessTime;
-		filetime ftLastWriteTime;
-		DWORD nFileSizeHigh;
-		DWORD nFileSizeLow;
-		DWORD dwReserved0;
-		DWORD dwReserved1;
-		CHAR cFileName[260];
-		CHAR cAlternateFileName[14];
-	} win32_find_dataa;
-
-	typedef struct _win32_find_dataw
-	{
-		DWORD dwFileAttributes;
-		filetime ftCreationTime;
-		filetime ftLastAccessTime;
-		filetime ftLastWriteTime;
-		DWORD nFileSizeHigh;
-		DWORD nFileSizeLow;
-		DWORD dwReserved0;
-		DWORD dwReserved1;
-		WCHAR cFileName[260];
-		WCHAR cAlternateFileName[14];
-	} win32_find_dataw;
-
-	typedef struct _file_notify_information
-	{
-		DWORD NextEntryOffset;
-		DWORD Action;
-		DWORD FileNameLength;
-		WCHAR FileName[1];
-	} file_notify_information, *pfile_notify_information;
-
-	typedef struct _overlapped
-	{
-		ULONG_PTR Internal;
-		ULONG_PTR InternalHigh;
-		union
+		union large_integer
 		{
 			struct
 			{
-				DWORD Offset;
-				DWORD OffsetHigh;
+				DWORD low_part;
+				LONG high_part;
 			};
-			PVOID Pointer;
+
+			LONGLONG quad_part;
 		};
 
-		HANDLE hEvent;
-	} overlapped, *lpoverlapped;
+		typedef struct _win32_file_attribute_data
+		{
+			DWORD dwFileAttributes;
+			filetime ftCreationTime;
+			filetime ftLastAccessTime;
+			filetime ftLastWriteTime;
+			DWORD nFileSizeHigh;
+			DWORD nFileSizeLow;
+		} win32_file_attribute_data, *lpwin32_file_attribute_data;
 
-	crstl_warning_anonymous_struct_union_end
+		typedef enum _get_fileex_info_levels
+		{
+			GetFileExInfoStandard,
+			GetFileExMaxInfoLevel
+		} get_fileex_info_levels;
+
+		typedef struct _win32_find_dataa
+		{
+			DWORD dwFileAttributes;
+			filetime ftCreationTime;
+			filetime ftLastAccessTime;
+			filetime ftLastWriteTime;
+			DWORD nFileSizeHigh;
+			DWORD nFileSizeLow;
+			DWORD dwReserved0;
+			DWORD dwReserved1;
+			CHAR cFileName[260];
+			CHAR cAlternateFileName[14];
+		} win32_find_dataa;
+
+		typedef struct _win32_find_dataw
+		{
+			DWORD dwFileAttributes;
+			filetime ftCreationTime;
+			filetime ftLastAccessTime;
+			filetime ftLastWriteTime;
+			DWORD nFileSizeHigh;
+			DWORD nFileSizeLow;
+			DWORD dwReserved0;
+			DWORD dwReserved1;
+			WCHAR cFileName[260];
+			WCHAR cAlternateFileName[14];
+		} win32_find_dataw;
+
+		typedef struct _file_notify_information
+		{
+			DWORD NextEntryOffset;
+			DWORD Action;
+			DWORD FileNameLength;
+			WCHAR FileName[1];
+		} file_notify_information, *pfile_notify_information;
+
+		typedef struct _overlapped
+		{
+			ULONG_PTR Internal;
+			ULONG_PTR InternalHigh;
+			union
+			{
+				struct
+				{
+					DWORD Offset;
+					DWORD OffsetHigh;
+				};
+				PVOID Pointer;
+			};
+
+			HANDLE hEvent;
+		} overlapped, *lpoverlapped;
+
+		crstl_warning_anonymous_struct_union_end
+	}
 };
 
 extern "C"
