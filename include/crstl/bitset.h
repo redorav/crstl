@@ -13,7 +13,7 @@
 
 crstl_module_export namespace crstl
 {
-	template<size_t NumBits, typename WordType = size_t>
+	template<size_t NumBits, typename WordType>
 	class bitset
 	{
 	public:

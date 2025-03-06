@@ -21,7 +21,7 @@ namespace crstl
 	template<typename T, size_t N> class array;
 
 	// bitset.h
-	template<size_t N, typename WordType> class bitset;
+	template<size_t N, typename WordType = size_t> class bitset;
 
 	// deque.h
 	template<typename T, typename Allocator = crstl::allocator, size_t ChunkSize = 16> class deque;
