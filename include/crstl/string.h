@@ -1,20 +1,14 @@
 #pragma once
 
 #include "crstl/config.h"
-
 #include "crstl/allocator.h"
-
 #include "crstl/compressed_pair.h"
-
-#include "crstl/utility/constructor_utils.h"
-
-#include "crstl/utility/string_common.h"
-
-#include "crstl/utility/string_utf.h"
-
-#include "crstl/utility/memory_ops.h"
-
 #include "crstl/forward_declarations.h"
+#include "crstl/string_view.h"
+#include "crstl/utility/constructor_utils.h"
+#include "crstl/utility/string_common.h"
+#include "crstl/utility/string_utf.h"
+#include "crstl/utility/memory_ops.h"
 
 // crstl::string
 //
@@ -214,6 +208,11 @@ crstl_module_export namespace crstl
 				m_layout_allocator.m_first.m_heap.length = length;
 				m_layout_allocator.m_first.m_heap.data[length] = 0;
 			}
+		}
+
+		explicit crstl_constexpr14 basic_string(const basic_string_view<CharT>& view) crstl_noexcept
+		{
+			initialize_string(view.data(), view.length());
 		}
 
 		explicit crstl_constexpr14 basic_string(int value)                crstl_noexcept : basic_string() { append_sprintf("%d", value); }
@@ -1108,6 +1107,24 @@ crstl_module_export namespace crstl
 		}
 
 		crstl_constexpr size_t size() const crstl_noexcept { return is_sso() ? length_sso() : length_heap(); }
+
+		template<typename Function>
+		void split(CharT c, const Function& function)
+		{
+			size_t length = basic_string::length();
+			const_pointer data = basic_string::data();
+			size_t segment_start = 0;
+			for (size_t i = 0; i < length; ++i)
+			{
+				if (data[i] == c)
+				{
+					function(crstl::string_view(data + segment_start, data + i));
+					segment_start = i + 1;
+				}
+			}
+
+			function(crstl::string_view(data + segment_start, data + length));
+		}
 
 		//------------
 		// starts_with
