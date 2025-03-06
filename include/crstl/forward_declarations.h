@@ -43,13 +43,26 @@ namespace crstl
 
 	// fixed_string.h
 	template<typename T, int N> class basic_fixed_string;
-	typedef basic_fixed_string<char, 8>   fixed_string8;
-	typedef basic_fixed_string<char, 16>  fixed_string16;
-	typedef basic_fixed_string<char, 32>  fixed_string32;
-	typedef basic_fixed_string<char, 64>  fixed_string64;
+
+	typedef basic_fixed_string<char, 8> fixed_string8;
+	typedef basic_fixed_string<char, 16> fixed_string16;
+	typedef basic_fixed_string<char, 32> fixed_string32;
+	typedef basic_fixed_string<char, 64> fixed_string64;
 	typedef basic_fixed_string<char, 128> fixed_string128;
 	typedef basic_fixed_string<char, 256> fixed_string256;
 	typedef basic_fixed_string<char, 512> fixed_string512;
+	typedef basic_fixed_string<char, 1024> fixed_string1024;
+	typedef basic_fixed_string<char, 2048> fixed_string2048;
+
+	typedef basic_fixed_string<wchar_t, 8> fixed_wstring8;
+	typedef basic_fixed_string<wchar_t, 16> fixed_wstring16;
+	typedef basic_fixed_string<wchar_t, 32> fixed_wstring32;
+	typedef basic_fixed_string<wchar_t, 64> fixed_wstring64;
+	typedef basic_fixed_string<wchar_t, 128> fixed_wstring128;
+	typedef basic_fixed_string<wchar_t, 256> fixed_wstring256;
+	typedef basic_fixed_string<wchar_t, 512> fixed_wstring512;
+	typedef basic_fixed_string<wchar_t, 1024> fixed_wstring1024;
+	typedef basic_fixed_string<wchar_t, 2048> fixed_wstring2048;
 
 	// fixed_vector.h
 	template<typename T, size_t N> class fixed_vector;
