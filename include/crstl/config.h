@@ -338,6 +338,75 @@
 #endif
 
 #if defined(CRSTL_USE_IN_GLOBAL_NAMESPACE)
-namespace crstl {}
-using namespace crstl;
+
+using crstl::array;
+using crstl::bitset;
+using crstl::deque;
+using crstl::file;
+using crstl::fixed_deque;
+using crstl::fixed_function;
+using crstl::fixed_open_hashmap;
+using crstl::fixed_open_hashset;
+using crstl::fixed_open_multi_hashmap;
+using crstl::fixed_open_multi_hashset;
+
+using crstl::fixed_string8;
+using crstl::fixed_string16;
+using crstl::fixed_string32;
+using crstl::fixed_string64;
+using crstl::fixed_string128;
+using crstl::fixed_string256;
+using crstl::fixed_string512;
+using crstl::fixed_string1024;
+using crstl::fixed_string2048;
+
+using crstl::fixed_wstring8;
+using crstl::fixed_wstring16;
+using crstl::fixed_wstring32;
+using crstl::fixed_wstring64;
+using crstl::fixed_wstring128;
+using crstl::fixed_wstring256;
+using crstl::fixed_wstring512;
+using crstl::fixed_wstring1024;
+using crstl::fixed_wstring2048;
+
+using crstl::fixed_vector;
+using crstl::intrusive_ptr;
+
+using crstl::open_hashmap;
+using crstl::open_hashset;
+using crstl::open_multi_hashmap;
+using crstl::open_multi_hashset;
+
+using crstl::pair;
+
+using crstl::process;
+
+using crstl::span;
+
+using crstl::stack_vector;
+
+using crstl::string;
+using crstl::wstring;
+
+using crstl::string_view;
+using crstl::wstring_view;
+
+using crstl::thread;
+
+using crstl::time;
+using crstl::timer;
+
+using crstl::unique_ptr;
+
+using crstl::vector;
+
+using crstl::path;
+using crstl::fixed_path32;
+using crstl::fixed_path64;
+using crstl::fixed_path128;
+using crstl::fixed_path256;
+using crstl::fixed_path512;
+
+#endif
 #endif
