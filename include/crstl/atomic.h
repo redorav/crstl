@@ -159,7 +159,7 @@ crstl_module_export namespace crstl
 	template<> struct atomic_type<8> { typedef int64_t type; };
 
 	template<typename T>
-	class atomic
+	struct atomic
 	{
 	public:
 
