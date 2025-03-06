@@ -141,7 +141,6 @@ crstl_module_export namespace crstl
 			return crstl_assert(pos < m_length), crstl::string_comparei(m_data + pos, clamp_length(pos, length), sv.m_data + subpos, sv.clamp_length(subpos, sublen));
 		}
 
-		crstl_constexpr14 pointer data() crstl_noexcept { return m_data; }
 		crstl_constexpr const_pointer data() const crstl_noexcept { return m_data; }
 
 		crstl_nodiscard
