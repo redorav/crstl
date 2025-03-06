@@ -336,3 +336,8 @@
 #else
 	#define crstl_has_builtin(x) 0
 #endif
+
+#if defined(CRSTL_USING_NAMESPACE_CRSTL)
+namespace crstl {}
+using namespace crstl;
+#endif
