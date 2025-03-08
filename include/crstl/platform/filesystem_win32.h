@@ -59,7 +59,7 @@ crstl_module_export namespace crstl
 			}
 			else
 			{
-				WCHAR w_file_path[MaxPathLength];
+				WCHAR w_file_path[kMaxPathLength];
 				detail::win32_utf8_to_utf16(file_path, crstl::string_length(file_path), w_file_path, sizeof(w_file_path));
 				m_file_handle = ::CreateFileW(w_file_path, dw_desired_access, dw_share_mode, lp_security_attributes, dw_creation_disposition, dw_flags_and_attributes, h_template_file);
 			}
@@ -215,10 +215,10 @@ crstl_module_export namespace crstl
 		}
 		else
 		{
-			WCHAR w_source_file_path[MaxPathLength];
+			WCHAR w_source_file_path[kMaxPathLength];
 			detail::win32_utf8_to_utf16(source_file_path, crstl::string_length(source_file_path), w_source_file_path, sizeof(w_source_file_path));
 
-			WCHAR w_destination_file_path[MaxPathLength];
+			WCHAR w_destination_file_path[kMaxPathLength];
 			detail::win32_utf8_to_utf16(destination_file_path, crstl::string_length(destination_file_path), w_destination_file_path, sizeof(w_destination_file_path));
 
 			CopyFileW(w_source_file_path, w_destination_file_path, fail_if_exists);
@@ -235,10 +235,10 @@ crstl_module_export namespace crstl
 		}
 		else
 		{
-			WCHAR w_source_file_path[MaxPathLength];
+			WCHAR w_source_file_path[kMaxPathLength];
 			detail::win32_utf8_to_utf16(source_file_path, crstl::string_length(source_file_path), w_source_file_path, sizeof(w_source_file_path));
 
-			WCHAR w_destination_file_path[MaxPathLength];
+			WCHAR w_destination_file_path[kMaxPathLength];
 			detail::win32_utf8_to_utf16(destination_file_path, crstl::string_length(destination_file_path), w_destination_file_path, sizeof(w_destination_file_path));
 
 			/*BOOL result = */MoveFileW(w_source_file_path, w_destination_file_path);
@@ -257,7 +257,7 @@ crstl_module_export namespace crstl
 		}
 		else
 		{
-			WCHAR w_file_path[MaxPathLength];
+			WCHAR w_file_path[kMaxPathLength];
 			detail::win32_utf8_to_utf16(file_path, crstl::string_length(file_path), w_file_path, sizeof(w_file_path));
 			success = DeleteFileW(w_file_path);
 		}
@@ -296,7 +296,7 @@ crstl_module_export namespace crstl
 		}
 		else
 		{
-			WCHAR w_file_path[MaxPathLength];
+			WCHAR w_file_path[kMaxPathLength];
 			detail::win32_utf8_to_utf16(path, crstl::string_length(path), w_file_path, sizeof(w_file_path));
 			success = GetFileAttributesExW(w_file_path, (GET_FILEEX_INFO_LEVELS)detail::GetFileExInfoStandard, &attribute_data);
 		}
@@ -321,7 +321,7 @@ crstl_module_export namespace crstl
 		}
 		else
 		{
-			WCHAR w_directory_path[MaxPathLength];
+			WCHAR w_directory_path[kMaxPathLength];
 			detail::win32_utf8_to_utf16(directory_path, crstl::string_length(directory_path), w_directory_path, sizeof(w_directory_path));
 			success = CreateDirectoryW(w_directory_path, nullptr);
 		}
@@ -352,7 +352,7 @@ crstl_module_export namespace crstl
 		inline path compute_temp_path()
 		{
 			// Start off null-terminated
-			char path_buffer[MaxPathLength];
+			char path_buffer[kMaxPathLength];
 			path_buffer[0] = 0;
 
 			// Note on GetLongPathName reusing the parameter:
@@ -360,20 +360,20 @@ crstl_module_export namespace crstl
 
 			if (win32_is_utf8())
 			{
-				DWORD short_temp_path_length = GetTempPathA(MaxPathLength, path_buffer);
+				DWORD short_temp_path_length = GetTempPathA(kMaxPathLength, path_buffer);
 				if (short_temp_path_length > 0)
 				{
-					GetLongPathNameA(path_buffer, path_buffer, MaxPathLength);
+					GetLongPathNameA(path_buffer, path_buffer, kMaxPathLength);
 				}
 			}
 			else
 			{
 				WCHAR wpath_buffer[2048];
 
-				DWORD short_temp_path_length = GetTempPathW(MaxPathLength, wpath_buffer);
+				DWORD short_temp_path_length = GetTempPathW(kMaxPathLength, wpath_buffer);
 				if (short_temp_path_length > 0)
 				{
-					DWORD long_temp_path_length = GetLongPathNameW(wpath_buffer, wpath_buffer, MaxPathLength);
+					DWORD long_temp_path_length = GetLongPathNameW(wpath_buffer, wpath_buffer, kMaxPathLength);
 					if (long_temp_path_length > 0)
 					{
 						win32_utf16_to_utf8(wpath_buffer, crstl::string_length(wpath_buffer), path_buffer, sizeof(path_buffer));
@@ -386,7 +386,7 @@ crstl_module_export namespace crstl
 
 		inline path compute_executable_path()
 		{
-			char path_buffer[MaxPathLength];
+			char path_buffer[kMaxPathLength];
 			path_buffer[0] = '\0';
 			DWORD size = 0;
 
@@ -396,7 +396,7 @@ crstl_module_export namespace crstl
 			}
 			else
 			{
-				wchar_t wpath_buffer[MaxPathLength];
+				wchar_t wpath_buffer[kMaxPathLength];
 				size = GetModuleFileNameW(nullptr, wpath_buffer, sizeof(wpath_buffer));
 				detail::win32_utf16_to_utf8(wpath_buffer, size, path_buffer, sizeof(path_buffer));
 			}
@@ -409,7 +409,7 @@ crstl_module_export namespace crstl
 
 	inline path current_directory_path()
 	{
-		char path_buffer[MaxPathLength];
+		char path_buffer[kMaxPathLength];
 		path_buffer[0] = '\0';
 		DWORD size = 0;
 
@@ -419,7 +419,7 @@ crstl_module_export namespace crstl
 		}
 		else
 		{
-			wchar_t wpath_buffer[MaxPathLength];
+			wchar_t wpath_buffer[kMaxPathLength];
 			size = GetCurrentDirectoryW(sizeof(wpath_buffer), wpath_buffer);
 			detail::win32_utf16_to_utf8(wpath_buffer, size, path_buffer, sizeof(path_buffer));
 		}
@@ -437,7 +437,7 @@ crstl_module_export namespace crstl
 		}
 		else
 		{
-			wchar_t wpath_buffer[MaxPathLength];
+			wchar_t wpath_buffer[kMaxPathLength];
 			detail::win32_utf8_to_utf16(path.c_str(), path.length(), wpath_buffer, sizeof(wpath_buffer));
 			return SetCurrentDirectoryW(wpath_buffer) != 0;
 		}
@@ -448,7 +448,7 @@ crstl_module_export namespace crstl
 	{
 		HANDLE h_find = nullptr;
 
-		crstl::path_base<crstl::basic_fixed_string<char, MaxPathLength>> directory_path_normalized = directory_path;
+		crstl::path_base<crstl::basic_fixed_string<char, kMaxPathLength>> directory_path_normalized = directory_path;
 		directory_path_normalized /= "*";
 
 		bool continue_iterating = true;
@@ -478,7 +478,7 @@ crstl_module_export namespace crstl
 
 						if (recursive && continue_iterating && entry.is_directory)
 						{
-							crstl::path_base<crstl::basic_fixed_string<char, MaxPathLength>> sub_path = directory_path;
+							crstl::path_base<crstl::basic_fixed_string<char, kMaxPathLength>> sub_path = directory_path;
 							sub_path /= entry.filename;
 							for_each_directory_entry(sub_path.c_str(), recursive, function);
 						}
@@ -492,7 +492,7 @@ crstl_module_export namespace crstl
 		{
 			detail::_win32_find_dataw find_data;
 
-			WCHAR w_directory_path_normalized[MaxPathLength];
+			WCHAR w_directory_path_normalized[kMaxPathLength];
 			detail::win32_utf8_to_utf16(directory_path, crstl::string_length(directory_path), w_directory_path_normalized, sizeof(w_directory_path_normalized));
 
 			h_find = FindFirstFileW(w_directory_path_normalized, (WIN32_FIND_DATAW*)&find_data);
@@ -519,7 +519,7 @@ crstl_module_export namespace crstl
 
 						if (recursive && continue_iterating && entry.is_directory)
 						{
-							crstl::path_base<crstl::basic_fixed_string<char, MaxPathLength>> sub_path = directory_path;
+							crstl::path_base<crstl::basic_fixed_string<char, kMaxPathLength>> sub_path = directory_path;
 							sub_path /= entry.filename;
 							for_each_directory_entry(sub_path.c_str(), recursive, function);
 						}

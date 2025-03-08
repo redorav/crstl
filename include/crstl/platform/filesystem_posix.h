@@ -507,7 +507,7 @@ crstl_module_export namespace crstl
 		// This function is not really POSIX but we'll add it here since most of the other code is common to all the Unix family of OSs
 		inline path compute_executable_path()
 		{
-			char path_buffer[MaxPathLength];
+			char path_buffer[kMaxPathLength];
 			path_buffer[0] = '\0';
 			size_t size = sizeof(path_buffer);
 
@@ -547,7 +547,7 @@ crstl_module_export namespace crstl
 
 	inline path current_directory_path()
 	{
-		char path_buffer[MaxPathLength];
+		char path_buffer[kMaxPathLength];
 		path_buffer[0] = '\0';
 
 		const char* result = getcwd(path_buffer, sizeof(path_buffer));
@@ -617,7 +617,7 @@ crstl_module_export namespace crstl
 
 				if (recursive && continue_iterating && entry.is_directory)
 				{
-					crstl::path_base<crstl::basic_fixed_string<char, MaxPathLength>> sub_path = directory_path;
+					crstl::path_base<crstl::basic_fixed_string<char, kMaxPathLength>> sub_path = directory_path;
 					sub_path /= entry.filename;
 					for_each_directory_entry(sub_path.c_str(), recursive, function);
 				}

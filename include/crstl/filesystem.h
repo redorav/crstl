@@ -1,19 +1,15 @@
 #pragma once
 
 #include "crstl/config.h"
-
 #include "crstl/crstldef.h"
-
 #include "crstl/path.h"
-
 #include "crstl/fixed_path.h"
-
 #include "crstl/move_forward.h"
 
 crstl_module_export namespace crstl
 {
 	// Set a reasonable maximum across all possible OSs
-	static const uint32_t MaxPathLength = 1024;
+	static const uint32_t kMaxPathLength = 1024;
 
 	namespace file_flags
 	{
