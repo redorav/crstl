@@ -105,18 +105,18 @@ crstl_module_export namespace crstl
 
 			if (SetThreadDescriptionFunction)
 			{
-				static const size_t kMaxCharsWstr = 255;
-				wchar_t debug_name_w[kMaxCharsWstr];
+				static const size_t kMaxDescriptionLength = 255;
+				wchar_t wdebug_name[kMaxDescriptionLength];
 				int dw_length = MultiByteToWideChar
 				(
 					0 /*CP_ACP*/, 0,
 					thread_data->parameters.debug_name, (int)crstl::string_length(thread_data->parameters.debug_name),
-					debug_name_w, kMaxCharsWstr
+					wdebug_name, kMaxDescriptionLength
 				);
 
-				debug_name_w[dw_length] = L'\0';
+				wdebug_name[dw_length] = L'\0';
 
-				HRESULT hResult = SetThreadDescriptionFunction(GetCurrentThread(), debug_name_w); crstl_unused(hResult);
+				HRESULT hResult = SetThreadDescriptionFunction(GetCurrentThread(), wdebug_name); crstl_unused(hResult);
 			}
 
 			#endif
