@@ -509,15 +509,16 @@ crstl_module_export namespace crstl
 		{
 			char path_buffer[kMaxPathLength];
 			path_buffer[0] = '\0';
-			size_t size = sizeof(path_buffer);
 
 			const char* path_ptr = path_buffer;
 			bool success = false;
 
 		#if defined(CRSTL_OS_LINUX)
+			size_t size = sizeof(path_buffer);
 			ssize_t result = readlink("/proc/self/exe", path_buffer, size);
 			success = result != -1;
 		#elif defined(CRSTL_OS_OSX)
+			uint32_t size = sizeof(path_buffer);
 			int result = _NSGetExecutablePath(path_buffer, &size);
 			success = result != -1;
 		#elif defined(CRSTL_OS_BSD)
@@ -527,16 +528,24 @@ crstl_module_export namespace crstl
 			mib[1] = KERN_PROC;
 			mib[2] = KERN_PROC_PATHNAME;
 			mib[3] = -1;
+			size_t size = sizeof(path_buffer);
 			int result = sysctl(mib, 4, path_buffer, &size, nullptr, 0);
 			success = result != -1;
 		#elif defined(CRSTL_OS_SOLARIS)
+			size_t size = sizeof(path_buffer);
 			path_ptr = getexecname();
 			success = path_ptr != nullptr;
+			if (success)
+			{
+				size = crstl::string_length(path_ptr);
+			}
+		#else
+			#error Not implemented
 		#endif
 
 			if (success)
 			{
-				return path(path_ptr, size);
+				return path(path_ptr, (size_t)size);
 			}
 			else
 			{
