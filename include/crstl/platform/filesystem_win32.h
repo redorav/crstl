@@ -429,7 +429,7 @@ crstl_module_export namespace crstl
 		return path(path_buffer, size);
 	}
 
-	inline const bool current_directory_path(const path& path)
+	inline bool current_directory_path(const path& path)
 	{
 		if (detail::win32_is_utf8())
 		{
