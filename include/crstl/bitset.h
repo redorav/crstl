@@ -12,16 +12,33 @@
 // Replacement for std::bitset
 //
 
+#define CRSTL_WORD_COUNT(BitCount, WordType) ((BitCount + 8 * sizeof(WordType)) / (8 * sizeof(WordType)))
+
 crstl_module_export namespace crstl
 {
-	template<size_t NumBits, typename WordType>
-	class bitset
+	template<size_t WordCount, typename WordType>
+	class bitset_base
 	{
 	public:
 
-		typedef WordType word_type;
+		typedef WordType                                                    word_type;
 
-		static const word_type kNumBits = NumBits;
+	protected:
+
+		word_type m_data[WordCount];
+	};
+
+	template<size_t BitCount, typename WordType>
+	class bitset : public bitset_base<CRSTL_WORD_COUNT(BitCount, WordType), WordType>
+	{
+	public:
+
+		typedef bitset_base<CRSTL_WORD_COUNT(BitCount, WordType), WordType> base_type;
+		typedef WordType                                                    word_type;
+
+		using base_type::m_data;
+
+		static const word_type kBitCount = BitCount;
 		static const word_type kBitsPerWord = sizeof(word_type) * 8;
 		static const word_type kBitsPerWordMask = kBitsPerWord - 1; // Used as modulo for words
 		static const word_type kBitsPerWordShift =                  // How many bits to shift for this word type
@@ -30,8 +47,8 @@ crstl_module_export namespace crstl
 			(kBitsPerWord == 32) ? 5 :
 			(kBitsPerWord == 64) ? 6 : 7;
 		static const word_type kMaxWordValue = word_type(~word_type(0));                           // Maximum value of this word type
-		static const word_type kNumWords = (NumBits + kBitsPerWord - 1) / kBitsPerWord;            // How many words we need to store the number of bits
-		static const word_type kLastWordBits = kNumBits - (kNumWords - 1) * kBitsPerWord;          // How many bits in the last word
+		static const word_type kWordCount = (BitCount + kBitsPerWord - 1) / kBitsPerWord;            // How many words we need to store the number of bits
+		static const word_type kLastWordBits = kBitCount - (kWordCount - 1) * kBitsPerWord;          // How many bits in the last word
 		static const word_type kLastWordBitMask = kMaxWordValue >> (kBitsPerWord - kLastWordBits); // Mask for those "leftover" bits in the last word
 
 		// Hold reference to a bit, so that we can do the [ ] operator
@@ -97,7 +114,7 @@ crstl_module_export namespace crstl
 			m_data[0] = v;
 
 			// Set bits in last word to 0 if necessary
-			crstl_constexpr_if(kNumBits & kBitsPerWordMask)
+			crstl_constexpr_if(kBitCount & kBitsPerWordMask)
 			{
 				m_data[0] &= kLastWordBitMask;
 			}
@@ -110,7 +127,7 @@ crstl_module_export namespace crstl
 
 		bool any() const
 		{
-			for (size_t w = 0; w < kNumWords; ++w)
+			for (size_t w = 0; w < kWordCount; ++w)
 			{
 				if (m_data[w] != 0)
 				{
@@ -125,7 +142,7 @@ crstl_module_export namespace crstl
 		{
 			size_t n = 0;
 
-			for (size_t w = 0; w < kNumWords; ++w)
+			for (size_t w = 0; w < kWordCount; ++w)
 			{
 				n += crstl::popcount(m_data[w]);
 			}
@@ -135,7 +152,7 @@ crstl_module_export namespace crstl
 
 		bitset& flip(size_t i)
 		{
-			crstl_assert(i < NumBits);
+			crstl_assert(i < BitCount);
 
 			if (m_data[i >> kBitsPerWordShift] & ((word_type)1 << (i & kBitsPerWordMask)))
 			{
@@ -164,9 +181,9 @@ crstl_module_export namespace crstl
 			memory_set(m_data, 0xff, sizeof(m_data));
 			
 			// Set bits in last word to 0 if necessary
-			crstl_constexpr_if(kNumBits & kBitsPerWordMask)
+			crstl_constexpr_if(kBitCount & kBitsPerWordMask)
 			{
-				m_data[kNumWords - 1] &= kLastWordBitMask;
+				m_data[kWordCount - 1] &= kLastWordBitMask;
 			}
 
 			return *this;
@@ -174,7 +191,7 @@ crstl_module_export namespace crstl
 
 		bitset& set(size_t i, bool value = true)
 		{
-			crstl_assert(i < NumBits);
+			crstl_assert(i < BitCount);
 
 			if (value)
 			{
@@ -190,12 +207,12 @@ crstl_module_export namespace crstl
 
 		size_t size() const
 		{
-			return kNumBits;
+			return kBitCount;
 		}
 
 		bool test(size_t i) const
 		{
-			crstl_assert(i < NumBits);
+			crstl_assert(i < BitCount);
 			return (m_data[i >> kBitsPerWordShift] & ((word_type)1 << (i & kBitsPerWordMask))) != 0;
 		}
 
@@ -207,7 +224,7 @@ crstl_module_export namespace crstl
 		{
 			bitset result(ctor_no_initialize);
 
-			for (size_t i = 0; i < kNumWords; ++i)
+			for (size_t i = 0; i < kWordCount; ++i)
 			{
 				result.m_data[i] = m_data[i] & other.m_data[i];
 			}
@@ -219,7 +236,7 @@ crstl_module_export namespace crstl
 		{
 			bitset result(ctor_no_initialize);
 
-			for (size_t i = 0; i < kNumWords; ++i)
+			for (size_t i = 0; i < kWordCount; ++i)
 			{
 				result.m_data[i] = m_data[i] | other.m_data[i];
 			}
@@ -231,7 +248,7 @@ crstl_module_export namespace crstl
 		{
 			bitset result(ctor_no_initialize);
 
-			for (size_t i = 0; i < kNumWords; ++i)
+			for (size_t i = 0; i < kWordCount; ++i)
 			{
 				result.m_data[i] = m_data[i] ^ other.m_data[i];
 			}
@@ -243,7 +260,7 @@ crstl_module_export namespace crstl
 		{
 			bitset result(ctor_no_initialize);
 
-			for (size_t i = 0; i < kNumWords; ++i)
+			for (size_t i = 0; i < kWordCount; ++i)
 			{
 				result.m_data[i] = ~m_data[i];
 			}
@@ -253,7 +270,7 @@ crstl_module_export namespace crstl
 
 		bitset& operator &= (const bitset& other)
 		{
-			for (size_t i = 0; i < kNumWords; ++i)
+			for (size_t i = 0; i < kWordCount; ++i)
 			{
 				m_data[i] &= other.m_data[i];
 			}
@@ -263,7 +280,7 @@ crstl_module_export namespace crstl
 
 		bitset& operator |= (const bitset& other)
 		{
-			for (size_t i = 0; i < kNumWords; ++i)
+			for (size_t i = 0; i < kWordCount; ++i)
 			{
 				m_data[i] |= other.m_data[i];
 			}
@@ -273,7 +290,7 @@ crstl_module_export namespace crstl
 
 		bitset& operator ^= (const bitset& other)
 		{
-			for (size_t i = 0; i < kNumWords; ++i)
+			for (size_t i = 0; i < kWordCount; ++i)
 			{
 				m_data[i] ^= other.m_data[i];
 			}
@@ -287,13 +304,13 @@ crstl_module_export namespace crstl
 
 		bit_reference operator[](size_t i)
 		{
-			crstl_assert(i < NumBits);
+			crstl_assert(i < BitCount);
 			return bit_reference(m_data[i >> kBitsPerWordShift], (i & kBitsPerWordMask));
 		}
 
 		bool operator[](size_t i) const
 		{
-			crstl_assert(i < NumBits);
+			crstl_assert(i < BitCount);
 			return (m_data[i >> kBitsPerWordShift] & ((word_type)1 << i)) != 0;
 		}
 
@@ -303,7 +320,7 @@ crstl_module_export namespace crstl
 
 		bool operator == (const bitset& other) const
 		{
-			for (size_t w = 0; w < kNumWords; ++w)
+			for (size_t w = 0; w < kWordCount; ++w)
 			{
 				if (m_data[w] != other.m_data[w])
 				{
@@ -316,7 +333,7 @@ crstl_module_export namespace crstl
 
 		bool operator != (const bitset& other) const
 		{
-			for (size_t w = 0; w < kNumWords; ++w)
+			for (size_t w = 0; w < kWordCount; ++w)
 			{
 				if (m_data[w] != other.m_data[w])
 				{
@@ -326,9 +343,5 @@ crstl_module_export namespace crstl
 
 			return false;
 		}
-
-	private:
-
-		word_type m_data[kNumWords];
 	};
 };
