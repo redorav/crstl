@@ -11,32 +11,17 @@
 //
 // Replacement for std::bitset
 //
-
-#define CRSTL_WORD_COUNT(BitCount, WordType) ((BitCount + 8 * sizeof(WordType)) / (8 * sizeof(WordType)))
+// Functions like any or equality operators don't attempt to early out or the optimizer isn't able to unroll the common cases of 1 or 2 words
+// If we ever end up using really large bitset we can consider an alternative implementation based on the number of words
 
 crstl_module_export namespace crstl
 {
-	template<size_t WordCount, typename WordType>
-	class bitset_base
-	{
-	public:
-
-		typedef WordType                                                    word_type;
-
-	protected:
-
-		word_type m_data[WordCount];
-	};
-
 	template<size_t BitCount, typename WordType>
-	class bitset : public bitset_base<CRSTL_WORD_COUNT(BitCount, WordType), WordType>
+	class bitset
 	{
 	public:
 
-		typedef bitset_base<CRSTL_WORD_COUNT(BitCount, WordType), WordType> base_type;
-		typedef WordType                                                    word_type;
-
-		using base_type::m_data;
+		typedef WordType word_type;
 
 		static const word_type kBitCount = BitCount;
 		static const word_type kBitsPerWord = sizeof(word_type) * 8;
@@ -47,8 +32,8 @@ crstl_module_export namespace crstl
 			(kBitsPerWord == 32) ? 5 :
 			(kBitsPerWord == 64) ? 6 : 7;
 		static const word_type kMaxWordValue = word_type(~word_type(0));                           // Maximum value of this word type
-		static const word_type kWordCount = (BitCount + kBitsPerWord - 1) / kBitsPerWord;            // How many words we need to store the number of bits
-		static const word_type kLastWordBits = kBitCount - (kWordCount - 1) * kBitsPerWord;          // How many bits in the last word
+		static const word_type kWordCount = (BitCount + kBitsPerWord - 1) / kBitsPerWord;          // How many words we need to store the number of bits
+		static const word_type kLastWordBits = kBitCount - (kWordCount - 1) * kBitsPerWord;        // How many bits in the last word
 		static const word_type kLastWordBitMask = kMaxWordValue >> (kBitsPerWord - kLastWordBits); // Mask for those "leftover" bits in the last word
 
 		// Hold reference to a bit, so that we can do the [ ] operator
@@ -102,14 +87,17 @@ crstl_module_export namespace crstl
 
 		bitset()
 		{
-			memory_set(m_data, 0, sizeof(m_data));
+			reset();
 		}
 
 		bitset(ctor_no_initialize_e) {}
 
 		bitset(word_type v)
 		{
-			memory_set(m_data, 0, sizeof(m_data));
+			crstl_constexpr_if(kWordCount > 1)
+			{
+				memory_set(m_data, 0, sizeof(m_data));
+			}
 
 			m_data[0] = v;
 
@@ -127,15 +115,14 @@ crstl_module_export namespace crstl
 
 		bool any() const
 		{
+			word_type result = 0;
+
 			for (size_t w = 0; w < kWordCount; ++w)
 			{
-				if (m_data[w] != 0)
-				{
-					return true;
-				}
+				result |= m_data[w];
 			}
 
-			return false;
+			return result != 0;
 		}
 
 		size_t count() const
@@ -148,6 +135,16 @@ crstl_module_export namespace crstl
 			}
 
 			return n;
+		}
+
+		bitset& flip()
+		{
+			for (size_t w = 0; w < kWordCount; ++w)
+			{
+				m_data[w] = ~m_data[w];
+			}
+
+			return *this;
 		}
 
 		bitset& flip(size_t i)
@@ -179,13 +176,7 @@ crstl_module_export namespace crstl
 		bitset& set()
 		{
 			memory_set(m_data, 0xff, sizeof(m_data));
-			
-			// Set bits in last word to 0 if necessary
-			crstl_constexpr_if(kBitCount & kBitsPerWordMask)
-			{
-				m_data[kWordCount - 1] &= kLastWordBitMask;
-			}
-
+			trim();
 			return *this;
 		}
 
@@ -320,28 +311,39 @@ crstl_module_export namespace crstl
 
 		bool operator == (const bitset& other) const
 		{
+			bool result = true;
+
 			for (size_t w = 0; w < kWordCount; ++w)
 			{
-				if (m_data[w] != other.m_data[w])
-				{
-					return false;
-				}
+				result &= (m_data[w] == other.m_data[w]);
 			}
 
-			return true;
+			return result;
 		}
 
 		bool operator != (const bitset& other) const
 		{
+			bool result = false;
+
 			for (size_t w = 0; w < kWordCount; ++w)
 			{
-				if (m_data[w] != other.m_data[w])
-				{
-					return true;
-				}
+				result |= (m_data[w] != other.m_data[w]);
 			}
 
-			return false;
+			return result;
 		}
+
+	private:
+
+		void trim()
+		{
+			// Set bits in last word to 0 if necessary
+			crstl_constexpr_if(kBitCount & kBitsPerWordMask)
+			{
+				m_data[kWordCount - 1] &= kLastWordBitMask;
+			}
+		}
+
+		word_type m_data[kWordCount];
 	};
 };
