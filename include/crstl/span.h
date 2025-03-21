@@ -17,8 +17,6 @@ import <initializer_list>;
 
 crstl_module_export namespace crstl
 {
-	static const size_t dynamic_extent = size_t(-1);
-
 	template<typename T, size_t Size>
 	class span_base
 	{
