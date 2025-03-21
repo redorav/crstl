@@ -96,7 +96,7 @@ crstl_module_export namespace crstl
 		{
 			crstl_constexpr_if(kWordCount > 1)
 			{
-				memory_set(m_data, 0, sizeof(m_data));
+				reset();
 			}
 
 			m_data[0] = v;
