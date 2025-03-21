@@ -83,7 +83,8 @@ namespace crstl
 	class process;
 
 	// span.h
-	template<typename T> class span;
+	static const size_t dynamic_extent = size_t(-1);
+	template<typename T, size_t Size = dynamic_extent> class span;
 
 	// stack_vector.h
 	template<typename T> class stack_vector;

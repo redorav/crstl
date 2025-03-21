@@ -7,14 +7,14 @@
 #include "crstl/utility/memory_ops.h"
 #include "crstl/utility/constructor_utils.h"
 
+#include "crstl/vector_base.h"
+#include "crstl/forward_declarations.h"
+
 #if defined(CRSTL_MODULE_DECLARATION)
 import <initializer_list>;
 #elif defined(CRSTL_FEATURE_INITIALIZER_LISTS)
 #include <initializer_list>
 #endif
-
-#include "crstl/vector_base.h"
-#include "crstl/forward_declarations.h"
 
 // crstl::vector
 //
@@ -27,8 +27,6 @@ import <initializer_list>;
 
 crstl_module_export namespace crstl
 {
-	template<typename T> class span;
-
 	template<typename T, typename Allocator>
 	class vector_storage
 	{
@@ -167,6 +165,8 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 vector(this_type&& other) crstl_noexcept
 		{
+			crstl_assert(this != &other);
+
 			// Swap relevant data
 			m_data = other.m_data;
 			m_length = other.m_length;

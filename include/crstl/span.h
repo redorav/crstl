@@ -1,8 +1,8 @@
 #pragma once
 
 #include "crstl/config.h"
-
 #include "crstl/type_utils.h"
+#include "crstl/forward_declarations.h"
 
 #if defined(CRSTL_MODULE_DECLARATION)
 import <initializer_list>;
@@ -17,11 +17,46 @@ import <initializer_list>;
 
 crstl_module_export namespace crstl
 {
+	static const size_t dynamic_extent = size_t(-1);
+
+	template<typename T, size_t Size>
+	class span_base
+	{
+	protected:
+
+		// Use this to allow child class to use m_length as though it was the member variable
+		enum t : size_t
+		{
+			m_length = Size
+		};
+
+		span_base(T* data)
+			: m_data(data)
+		{}
+
+		T* m_data;
+	};
+
 	template<typename T>
-	class span
+	class span_base <T, dynamic_extent>
+	{
+	protected:
+
+		span_base(T* data, size_t length)
+			: m_data(data)
+			, m_length(length)
+		{}
+
+		T* m_data;
+		size_t m_length;
+	};
+
+	template<typename T, size_t Size>
+	class span : public span_base<T, Size>
 	{
 	public:
 
+		typedef span_base<T, Size>           base_type;
 		typedef T                            element_type;
 		typedef typename remove_cv<T>:: type value_type;
 		typedef size_t                       size_type;
@@ -32,13 +67,19 @@ crstl_module_export namespace crstl
 		typedef T*                           iterator;
 		typedef const T*                     const_iterator;
 
-		span() crstl_noexcept : m_data(nullptr), m_length(0) {}
+		using base_type::m_data;
+		using base_type::m_length;
 
-		span(T* data, size_t length) crstl_noexcept : m_data(data), m_length(length) {}
+		template <size_t N = Size, typename = typename crstl::enable_if<(N == crstl::dynamic_extent)>::type>
+		span(T* data, size_t length) crstl_noexcept : base_type(data, length) {}
+		
+		template <size_t N = Size, typename = typename crstl::enable_if<(N != crstl::dynamic_extent)>::type>
+		span(T* data) crstl_noexcept : base_type(data) {}
 
 #if defined(CRSTL_FEATURE_INITIALIZER_LISTS)
 
-		crstl_constexpr14 span(std::initializer_list<T> ilist) crstl_noexcept : m_data(ilist.begin()), m_length(ilist.size()) {}
+		template <size_t N = Size, typename = typename crstl::enable_if<(N == crstl::dynamic_extent)>::type>
+		crstl_constexpr14 span(std::initializer_list<T> ilist) crstl_noexcept : base_type(ilist.begin(), ilist.size()) {}
 
 #endif
 
@@ -82,11 +123,5 @@ crstl_module_export namespace crstl
 		T& operator [] (size_t i) { crstl_assert(i < m_length); return m_data[i]; }
 
 		const T& operator [] (size_t i) const { crstl_assert(i < m_length); return m_data[i]; }
-
-	private:
-
-		T* m_data;
-
-		size_t m_length;
 	};
 };

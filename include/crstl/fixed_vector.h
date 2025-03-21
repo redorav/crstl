@@ -5,6 +5,7 @@
 #include "crstl/utility/fixed_common.h"
 #include "crstl/utility/memory_ops.h"
 #include "crstl/utility/constructor_utils.h"
+#include "crstl/forward_declarations.h"
 
 #if defined(CRSTL_MODULE_DECLARATION)
 import <initializer_list>;
@@ -27,8 +28,6 @@ import <initializer_list>;
 
 crstl_module_export namespace crstl
 {
-	template<typename T> class span;
-
 	template<typename T, size_t NumElements>
 	class fixed_vector_storage
 	{
@@ -219,6 +218,8 @@ crstl_module_export namespace crstl
 			}
 		}
 
+		operator span<T, NumElements>() const;
+
 		operator span<T>() const;
 
 	private:
@@ -230,8 +231,14 @@ crstl_module_export namespace crstl
 	};
 
 	template<typename T, size_t NumElements>
+	fixed_vector<T, NumElements>::operator span<T, NumElements>() const
+	{
+		return span<T, NumElements>((T*)m_data);
+	}
+
+	template<typename T, size_t NumElements>
 	fixed_vector<T, NumElements>::operator span<T>() const
 	{
-		return span<T>((T*)m_data, (size_t)m_length);
+		return span<T>((T*)m_data, m_length);
 	}
 };
