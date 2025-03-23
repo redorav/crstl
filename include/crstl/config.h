@@ -163,10 +163,14 @@
 #if defined(CRSTL_COMPILER_MSVC) && (CRSTL_MSVC_VERSION < CRSTL_MSVC_2015)
 
 	#define crstl_noexcept
+	#define crstl_alignof(x) __alignof(x)
+	#define crstl_alignas(x) __declspec(align(x))
 
 #else
 
 	#define crstl_noexcept noexcept
+	#define crstl_alignof(x) alignof(x)
+	#define crstl_alignas(x) alignas(x)
 
 #endif
 
