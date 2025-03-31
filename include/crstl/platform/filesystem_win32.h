@@ -124,7 +124,7 @@ crstl_module_export namespace crstl
 			// case, GetLastError will return NO_ERROR (0) upon success. Because of this behavior, it is recommended 
 			// that you use GetFileSizeEx instead.
 
-			detail::large_integer file_size;
+			detail::LARGE_INTEGER file_size;
 			GetFileSizeEx(m_file_handle, (PLARGE_INTEGER)&file_size);
 			return (size_t)file_size.quad_part;
 		}
@@ -154,7 +154,7 @@ crstl_module_export namespace crstl
 		{
 			crstl_assert(is_open());
 
-			detail::large_integer li_byte_offset;
+			detail::LARGE_INTEGER li_byte_offset;
 			li_byte_offset.quad_part = byte_offset;
 
 			DWORD dw_move_method = CRSTL_FILE_BEGIN;
@@ -286,7 +286,7 @@ crstl_module_export namespace crstl
 
 	inline bool exists(const char* path)
 	{
-		detail::_win32_file_attribute_data attribute_data;
+		detail::WIN32_FILE_ATTRIBUTE_DATA attribute_data;
 
 		bool success = false;
 
@@ -455,7 +455,7 @@ crstl_module_export namespace crstl
 
 		if (detail::win32_is_utf8())
 		{
-			detail::_win32_find_dataa find_data;
+			detail::WIN32_FIND_DATAA find_data;
 
 			h_find = FindFirstFileA(directory_path_normalized.c_str(), (WIN32_FIND_DATAA*)&find_data);
 
@@ -490,7 +490,7 @@ crstl_module_export namespace crstl
 		}
 		else
 		{
-			detail::_win32_find_dataw find_data;
+			detail::WIN32_FIND_DATAW find_data;
 
 			WCHAR w_directory_path_normalized[kMaxPathLength];
 			detail::win32_utf8_to_utf16(directory_path, crstl::string_length(directory_path), w_directory_path_normalized, sizeof(w_directory_path_normalized));

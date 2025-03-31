@@ -211,13 +211,13 @@ namespace crstl
 	namespace detail
 	{
 		crstl_warning_anonymous_struct_union_begin
-		typedef struct _filetime
+		typedef struct _FILETIME
 		{
 			DWORD dwLowDateTime;
 			DWORD dwHighDateTime;
-		} filetime;
+		} FILETIME;
 
-		union large_integer
+		union LARGE_INTEGER
 		{
 			struct
 			{
@@ -228,59 +228,59 @@ namespace crstl
 			LONGLONG quad_part;
 		};
 
-		typedef struct _win32_file_attribute_data
+		typedef struct _WIN32_FILE_ATTRIBUTE_DATA
 		{
 			DWORD dwFileAttributes;
-			filetime ftCreationTime;
-			filetime ftLastAccessTime;
-			filetime ftLastWriteTime;
+			FILETIME ftCreationTime;
+			FILETIME ftLastAccessTime;
+			FILETIME ftLastWriteTime;
 			DWORD nFileSizeHigh;
 			DWORD nFileSizeLow;
-		} win32_file_attribute_data, *lpwin32_file_attribute_data;
+		} WIN32_FILE_ATTRIBUTE_DATA, *LPWIN32_FILE_ATTRIBUTE_DATA;
 
-		typedef enum _get_fileex_info_levels
+		typedef enum _GET_FILEEX_INFO_LEVELS
 		{
 			GetFileExInfoStandard,
 			GetFileExMaxInfoLevel
-		} get_fileex_info_levels;
+		} GET_FILEEX_INFO_LEVELS;
 
-		typedef struct _win32_find_dataa
+		typedef struct _WIN32_FIND_DATAA
 		{
 			DWORD dwFileAttributes;
-			filetime ftCreationTime;
-			filetime ftLastAccessTime;
-			filetime ftLastWriteTime;
+			FILETIME ftCreationTime;
+			FILETIME ftLastAccessTime;
+			FILETIME ftLastWriteTime;
 			DWORD nFileSizeHigh;
 			DWORD nFileSizeLow;
 			DWORD dwReserved0;
 			DWORD dwReserved1;
 			CHAR cFileName[260];
 			CHAR cAlternateFileName[14];
-		} win32_find_dataa;
+		} WIN32_FIND_DATAA;
 
-		typedef struct _win32_find_dataw
+		typedef struct _WIN32_FIND_DATAW
 		{
 			DWORD dwFileAttributes;
-			filetime ftCreationTime;
-			filetime ftLastAccessTime;
-			filetime ftLastWriteTime;
+			FILETIME ftCreationTime;
+			FILETIME ftLastAccessTime;
+			FILETIME ftLastWriteTime;
 			DWORD nFileSizeHigh;
 			DWORD nFileSizeLow;
 			DWORD dwReserved0;
 			DWORD dwReserved1;
 			WCHAR cFileName[260];
 			WCHAR cAlternateFileName[14];
-		} win32_find_dataw;
+		} WIN32_FIND_DATAW;
 
-		typedef struct _file_notify_information
+		typedef struct _FILE_NOTIFY_INFORMATION
 		{
 			DWORD NextEntryOffset;
 			DWORD Action;
 			DWORD FileNameLength;
 			WCHAR FileName[1];
-		} file_notify_information, *pfile_notify_information;
+		} FILE_NOTIFY_INFORMATION, *PFILE_NOTIFY_INFORMATION;
 
-		typedef struct _overlapped
+		typedef struct _OVERLAPPED
 		{
 			ULONG_PTR Internal;
 			ULONG_PTR InternalHigh;
@@ -295,7 +295,7 @@ namespace crstl
 			};
 
 			HANDLE hEvent;
-		} overlapped, *lpoverlapped;
+		} OVERLAPPED, *LPOVERLAPPED;
 
 		crstl_warning_anonymous_struct_union_end
 	}
