@@ -329,9 +329,13 @@ extern "C"
 
 	__declspec(dllimport) DWORD WaitForSingleObject(HANDLE hHandle, DWORD dwMilliseconds);
 
-	__declspec(dllimport) DWORD GetLastError(void);
+	__declspec(dllimport) DWORD GetLastError();
 
-	__declspec(dllimport) UINT GetOEMCP(void);
+	__declspec(dllimport) UINT GetOEMCP();
+
+	__declspec(dllimport) HANDLE GetCurrentProcess();
+
+	__declspec(dllimport) HANDLE GetCurrentThread();
 
 	// Events
 
