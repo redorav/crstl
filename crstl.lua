@@ -64,7 +64,7 @@ workspace('crstl')
 	
 	vectorextensions ('sse4.1')
 	cppdialect(cppDefaultDialect)
-	flags { 'fatalcompilewarnings' }
+	fatalwarnings { 'all' }
 	
 	if(isMacBuild) then
 	
@@ -284,6 +284,7 @@ project (AndroidProject)
 	removeplatforms('*')
 	platforms { PlatformAndroidARM, PlatformAndroidARM64 }
 	kind('Packaging') -- This type of project builds the apk
+	system('android')
 	links (UnitTestProject) -- Android needs to link to the main project which was built as a dynamic library
 	androidapplibname(UnitTestProject)
 	files
