@@ -3,13 +3,33 @@ name: Compile Corsair Engine
 on: [push]
 
 jobs:
+  windows:
+    name: Windows
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ windows-latest ]
+        config: [ release ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Generate Project Files
+        run: call "Visual Studio 2017.bat" & call "Visual Studio 2019.bat" & call "Visual Studio 2022.bat"
+      - name: MSVC 2017
+        with:
+          vs-version: ${{ matrix.msbuild_version }}
+      - name: MSVC 2017 Release
+        run: msbuild workspace/vs2017/crstl.sln -p:Configuration=Release -p:Platform="MSVC 64" -m
+
   linux:
     name: Linux
     runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
-        os: [ ubuntu-24.04 ]
+        os: [ ubuntu-latest ]
         config: [ release ]
     
     steps:
