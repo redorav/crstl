@@ -1,0 +1,21 @@
+name: Compile Corsair Engine
+
+on: [push]
+
+jobs:
+  linux:
+    name: Linux
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ ubuntu-24.04 ]
+        config: [ release ]
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Generate Project Files
+        run: ./Linux.sh
+      - name: Build
+        run: make config=${{ matrix.config }}_linux64_gcc_c++11 -j$(nproc)
