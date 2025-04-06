@@ -76,7 +76,7 @@ install:
          "Visual Studio 2019.bat"
   - cmd: if %vsversion%==2022
          "Visual Studio 2022.bat"
-  - sh: if [[ $APPVEYOR_BUILD_WORKER_IMAGE = Ubuntu ]]; then ./Linux.sh; fi;
+  - sh: if [[ $APPVEYOR_BUILD_WORKER_IMAGE = Ubuntu2204 ]]; then ./Linux.sh; fi;
   - sh: if [[ $APPVEYOR_BUILD_WORKER_IMAGE = macOS ]]; then ./Xcode.sh; fi;
 
 build_script:
