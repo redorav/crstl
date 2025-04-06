@@ -31,7 +31,7 @@ UnitTestProject = 'unit_tests'
 AndroidProject = 'crstl_android'
 
 isMacBuild = _ACTION == 'xcode4'
-isLinuxBuild = _ACTION == 'gmake2'
+isLinuxBuild = _ACTION == 'gmake'
 isWindowsBuild = not isMacBuild and not isLinuxBuild
 
 supportsARMBuild = _ACTION >= 'vs2017'
