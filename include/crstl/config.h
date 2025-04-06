@@ -257,6 +257,22 @@
 
 #endif
 
+#if defined(CRSTL_COMPILER_GCC)
+
+	#define crstl_warning_char8_t_keyword_begin \
+	__pragma("GCC diagnostic push") \
+	__pragma("GCC diagnostic ignored \"-Wc++20-compat\"")
+
+	#define crstl_warning_char8_t_keyword_end \
+	__pragma("GCC diagnostic pop")
+
+#else
+
+	#define crstl_warning_char8_t_keyword_begin
+	#define crstl_warning_char8_t_keyword_end
+
+#endif
+
 #if CRSTL_CPPVERSION >= CRSTL_CPP11
 
 	#define CRSTL_FEATURE_VARIADIC_TEMPLATES

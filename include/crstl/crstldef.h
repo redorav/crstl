@@ -25,6 +25,8 @@ namespace crstl
 
 #if !defined(CRSTL_CHAR8_TYPE)
 
+crstl_warning_char8_t_keyword_begin
 typedef unsigned char char8_t;
+crstl_warning_char8_t_keyword_end
 
 #endif
