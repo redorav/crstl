@@ -19,7 +19,7 @@ jobs:
         run: ./Linux.sh
       - name: Build
         run: pushd workspace/gmake;
-             make config=${{ matrix.config }}_linux64_clang_c++11 -j$(nproc)
-             make config=${{ matrix.config }}_linux64_clang_c++14 -j$(nproc)
-             make config=${{ matrix.config }}_linux64_gcc_c++11 -j$(nproc)
-             make config=${{ matrix.config }}_linux64_gcc_c++14 -j$(nproc)
+             make config=${{ matrix.config }}_linux64_clang_c++11 -j$(nproc);
+             make config=${{ matrix.config }}_linux64_clang_c++14 -j$(nproc);
+             make config=${{ matrix.config }}_linux64_gcc_c++11 -j$(nproc);
+             make config=${{ matrix.config }}_linux64_gcc_c++14 -j$(nproc);
