@@ -18,8 +18,9 @@ jobs:
       - name: Generate Project Files
         run: call "Visual Studio 2017.bat" & call "Visual Studio 2019.bat" & call "Visual Studio 2022.bat"
       - name: MSVC 2017
+        uses: microsoft/setup-msbuild@v1.3
         with:
-          vs-version: ${{ matrix.msbuild_version }}
+          vs-version: vs2017
       - name: MSVC 2017 Release
         run: msbuild workspace/vs2017/crstl.sln -p:Configuration=Release -p:Platform="MSVC 64" -m
 
