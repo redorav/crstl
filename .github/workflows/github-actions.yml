@@ -31,7 +31,8 @@ jobs:
         with:
           vs-version: 15.0
       - name: MSVC 2017 Release
-        run: msbuild workspace/vs2017/crstl.sln -p:Configuration=Release -p:Platform="MSVC 64" -m
+        run: |
+          'C:/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/MSBuild/15.0/Bin/MSBuild.exe' workspace/vs2017/crstl.sln -p:Configuration=Release -p:Platform="MSVC 64" -m
 
   linux:
     name: Linux
