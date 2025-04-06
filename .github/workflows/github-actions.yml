@@ -18,4 +18,4 @@ jobs:
       - name: Generate Project Files
         run: ./Linux.sh
       - name: Build
-        run: pushd workspace/gmake2; make config=${{ matrix.config }}_linux64_gcc_c++11 -j$(nproc)
+        run: pushd workspace/gmake; make config=${{ matrix.config }}_linux64_gcc_c++11 -j$(nproc)
