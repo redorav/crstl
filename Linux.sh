@@ -1,1 +1,1 @@
-./premake/linux/premake5 --file=crstl.lua gmake2
+./premake/linux/premake5 --file=crstl.lua gmake
