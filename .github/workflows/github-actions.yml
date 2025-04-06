@@ -17,6 +17,8 @@ jobs:
         uses: actions/checkout@v2
       - name: Chocolatey
         uses: crazy-max/ghaction-chocolatey@v3.3.0
+        with:
+          args: -h
       - name: Install 2017 Build Tools
         run: choco install visualstudio2019buildtools -y
       - name: Generate Project Files
