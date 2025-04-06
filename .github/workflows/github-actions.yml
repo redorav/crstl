@@ -18,7 +18,7 @@ jobs:
       - name: Generate Project Files
         run: ./'Visual Studio 2017.bat'
       - name: MSVC 2017
-        uses: microsoft/setup-msbuild@v1.3
+        uses: microsoft/setup-msbuild@v2
         with:
           vs-version: 15.0
       - name: MSVC 2017 Release
