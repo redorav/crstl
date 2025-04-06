@@ -260,11 +260,11 @@
 #if defined(CRSTL_COMPILER_GCC)
 
 	#define crstl_warning_char8_t_keyword_begin \
-	__pragma("GCC diagnostic push") \
-	__pragma("GCC diagnostic ignored \"-Wc++20-compat\"")
+	_Pragma("GCC diagnostic push") \
+	_Pragma("GCC diagnostic ignored \"-Wc++20-compat\"")
 
 	#define crstl_warning_char8_t_keyword_end \
-	__pragma("GCC diagnostic pop")
+	_Pragma("GCC diagnostic pop")
 
 #else
 
