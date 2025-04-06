@@ -16,10 +16,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Generate Project Files
-        run: ./Linux.sh
-      - name: Build
-        run: pushd workspace/gmake;
-             make config=${{ matrix.config }}_linux64_clang_c++11 -j$(nproc);
-             make config=${{ matrix.config }}_linux64_clang_c++14 -j$(nproc);
-             make config=${{ matrix.config }}_linux64_gcc_c++11 -j$(nproc);
-             make config=${{ matrix.config }}_linux64_gcc_c++14 -j$(nproc);
+        run: ./Linux.sh; pushd workspace/gmake;
+      - name: Linux Clang C++11
+        run: make config=${{ matrix.config }}_linux64_clang_c++11 -j$(nproc);
+      - name: Linux Clang C++14
+        run: make config=${{ matrix.config }}_linux64_clang_c++14 -j$(nproc);
+      - name: Linux GCC C++11
+        run: make config=${{ matrix.config }}_linux64_gcc_c++11 -j$(nproc);
+      - name: Linux GCC C++14
+        run: make config=${{ matrix.config }}_linux64_gcc_c++14 -j$(nproc);
