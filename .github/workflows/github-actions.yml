@@ -16,7 +16,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Generate Project Files
-        run: "Visual Studio 2017.bat"
+        run: ./"Visual Studio 2017.bat"
       - name: MSVC 2017
         uses: microsoft/setup-msbuild@v1.3
         with:
