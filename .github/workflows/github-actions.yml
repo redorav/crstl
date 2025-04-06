@@ -20,7 +20,7 @@ jobs:
       - name: MSVC 2017
         uses: microsoft/setup-msbuild@v1.3
         with:
-          vs-version: vs2017
+          vs-version: 15.0
       - name: MSVC 2017 Release
         run: msbuild workspace/vs2017/crstl.sln -p:Configuration=Release -p:Platform="MSVC 64" -m
 
