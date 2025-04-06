@@ -37,8 +37,17 @@ namespace crstl
 		crstl_constexpr14 T& at(size_t i) { return crstl_assert(i < m_length), m_data[i]; }
 		crstl_constexpr const T& at(size_t i) const { return crstl_assert(i < m_length), m_data[i]; }
 
-		crstl_constexpr14 T& back() { return crstl_assert(m_length > 0), m_data[m_length - 1]; }
-		crstl_constexpr const T& back() const { return crstl_assert(m_length > 0), m_data[m_length - 1]; }
+		crstl_constexpr14 T& back()
+		{
+			crstl_assert(m_length > 0);
+			return m_data[m_length - 1];
+		}
+
+		crstl_constexpr14 const T& back() const
+		{
+			crstl_assert(m_length > 0);
+			return m_data[m_length - 1];
+		}
 
 		crstl_constexpr14 iterator begin() { return &m_data[0]; }
 		crstl_constexpr const_iterator begin() const { return &m_data[0]; }
