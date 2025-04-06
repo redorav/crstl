@@ -15,14 +15,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Chocolatey
-        uses: crazy-max/ghaction-chocolatey@v3.3.0
-        with:
-          args: -h
-      - name: Install 2017 Build Tools
-        run: choco install visualstudio2017buildtools -y
-      - name: Install 2019 Build Tools
-        run: choco install visualstudio2019buildtools -y
+      - name: Download 2017 Build Tools
+        run: |
+        Invoke-WebRequest -Uri "https://aka.ms/vs/15/release/vs_buildtools.exe" -OutFile "vs_buildtools.exe"
       - name: Generate Project Files
         run: ./'Visual Studio 2017.bat'
       - name: MSVC 2017
