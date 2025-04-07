@@ -88,26 +88,14 @@ build_script:
          msbuild "C:\projects\crstl\workspace\vs2019\crstl.sln" /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
   - cmd: if %vsversion%==2022
          msbuild "C:\projects\crstl\workspace\vs2022\crstl.sln" /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-  - sh: if [[ $platform = "Linux64 GCC C++11" ]]; then 
-        pushd workspace/gmake;
-        set -e;
-        make all config=release_linux64_gcc_c++11;
-        popd; fi;
-        if [[ $platform = "Linux64 Clang C++11" ]]; then 
-        pushd workspace/gmake;
-        set -e;
-        make all config=release_linux64_clang_c++11;
-        popd; fi;
+  - sh: if [[ $platform = "Linux64 GCC C++11" ]]; then
+        make -C workspace/gmake all config=release_linux64_gcc_c++11;
+        if [[ $platform = "Linux64 Clang C++11" ]]; then
+        make -C workspace/gmake all config=release_linux64_clang_c++11;
         if [[ $platform = "Linux64 GCC C++14" ]]; then 
-        pushd workspace/gmake;
-        set -e;
-        make all config=release_linux64_gcc_c++14;
-        popd; fi;
+        make -C workspace/gmake all config=release_linux64_gcc_c++14;
         if [[ $platform = "Linux64 Clang C++14" ]]; then 
-        pushd workspace/gmake;
-        set -e;
-        make all config=release_linux64_clang_c++14;
-        popd; fi;
+        make -C workspace/gmake all config=release_linux64_clang_c++14;
         if [[ $platform = "OSX64 Clang C++11" ]] || [[ $platform = "OSX64 Clang C++14" ]]; then 
         pushd workspace/xcode4;
         set -e;
