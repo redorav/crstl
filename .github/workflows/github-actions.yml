@@ -27,6 +27,16 @@ jobs:
         uses: microsoft/setup-msbuild@v2
         with:
           vs-version: 15.0
+      - name: Check Build Tools Directory
+        run: |
+          if (Test-Path "C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\") {
+            Write-Host "VS2017 Build Tools directory exists."
+            dir "C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\"
+          } else {
+            Write-Host "VS2017 Build Tools directory not found!"
+            exit 1
+          }
+        shell: powershell
       - name: MSVC 2017 Release
         run: |
           & "C:/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/MSBuild/15.0/Bin/MSBuild.exe" workspace/vs2017/crstl.sln -p:Configuration=Release -p:Platform="MSVC 64" -m
