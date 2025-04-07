@@ -40,12 +40,14 @@ namespace crstl
 		crstl_constexpr14 T& back()
 		{
 			crstl_assert(m_length > 0);
+			crstl_assume(m_length > 0);
 			return m_data[m_length - 1];
 		}
 
 		crstl_constexpr14 const T& back() const
 		{
 			crstl_assert(m_length > 0);
+			crstl_assume(m_length > 0);
 			return m_data[m_length - 1];
 		}
 
