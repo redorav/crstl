@@ -20,7 +20,7 @@ jobs:
           Invoke-WebRequest -Uri "https://aka.ms/vs/15/release/vs_buildtools.exe" -OutFile "vs_buildtools_2017.exe"
       - name: Install VS2017 Build Tools
         run: |
-          .\vs_buildtools_2017.exe --quiet --wait --norestart --nocache --add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended
+          .\vs_buildtools_2017.exe --wait --quiet --norestart --nocache --add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended
       - name: Generate Project Files
         run: ./'Visual Studio 2017.bat'
       - name: MSVC 2017
