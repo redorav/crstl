@@ -6,7 +6,7 @@ An alternative or complementary STL that focuses on fast compile times and runti
 
 - No RTTI
 - No exceptions
-- Fast to compile: minimal dependencies on external headers, and C++20 module provided when available
+- Fast to compile: minimal dependencies on external headers, a forward declarations file and C++20 module provided when available
 - Fast debug code. Avoid deep function nesting so that unoptimized code runs fast
 - Containers that don't do heap allocations (**fixed_**)
 - Containers that only use the stack (**stack_**)
@@ -20,7 +20,7 @@ An alternative or complementary STL that focuses on fast compile times and runti
 - Codebases get more bloated every day, and compilation in some popular codebases can take hours. This codebase tries as much as possible to avoid external dependencies
 - Debug performance is important. Some codebases and the STL itself have deep, nested callstacks that make debug performance much worse than desirable. To that end this codebase will manually expand code or use macros as necessary
 - Fixed containers should be used in many circumstances if the requirements allow it. They will not access the heap at any point and can take advantage of the knowledge of the length to save memory. They impose an upper bound on certain operations so make sure requirements are clear from the beginning
-- The STL, Boost and other libraries aim to be as generic as possible and offer a wide range of functionality. Their codebases are large and complicated to try to achieve that. CRSTL does not have that aim. Instead, it uses as little template code as it can get away with, and tries to use simple constructs to achieve it
+- The STL or Boost aim to be as generic as possible, the codebases large and complicated. CRSTL does not have that aim. Instead, it uses as little template code as necessary, and tries to use simple constructs to achieve it
 - The STL is tied to C++ revisions, which makes upgrading the language and accesing STL features the same operation. CRSTL aims to offer functionality available in later C++ revisions to older compilers. This means codebases can upgrade without upgrading their C++ version
 - Modern language features such as constexpr, inline variables or modules can be very useful in certain scenarios. CRSTL doesn't shy away from using them as appropriate while providing fallbacks
 

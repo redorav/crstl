@@ -493,7 +493,7 @@ crstl_module_export namespace crstl
 			detail::WIN32_FIND_DATAW find_data;
 
 			WCHAR w_directory_path_normalized[kMaxPathLength];
-			detail::win32_utf8_to_utf16(directory_path, crstl::string_length(directory_path), w_directory_path_normalized, sizeof(w_directory_path_normalized));
+			detail::win32_utf8_to_utf16(directory_path_normalized.c_str(), directory_path_normalized.length(), w_directory_path_normalized, sizeof(w_directory_path_normalized));
 
 			h_find = FindFirstFileW(w_directory_path_normalized, (WIN32_FIND_DATAW*)&find_data);
 
