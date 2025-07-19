@@ -28,6 +28,7 @@ crstl_module_export namespace crstl
 		}
 
 		directory_watcher(const char* directory_path, const directory_watcher_parameters& parameters)
+			: m_watch_id(-1)
 		{
 			(void)parameters;
 		
