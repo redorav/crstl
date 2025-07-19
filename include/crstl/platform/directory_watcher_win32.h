@@ -118,7 +118,7 @@ crstl_module_export namespace crstl
 						filename[filename_length] = '\0';
 
 						// Replace all backslashes with forward slashes
-						for (size_t i = 0; i < filename_length; ++i)
+						for (int i = 0; i < filename_length; ++i)
 						{
 							if (filename[i] == '\\')
 							{
