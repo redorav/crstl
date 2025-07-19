@@ -4,6 +4,7 @@
 import crstl;
 #else
 #include "crstl/filesystem.h"
+#include "crstl/directory_watcher.h"
 #include "crstl/utility/string_length.h"
 #endif
 
@@ -54,6 +55,55 @@ void RunUnitTestsFilesystem()
 		if (!crstl::exists("C:/temp/temp_file.txt"))
 		{
 
+		}
+	}
+	end_test();
+
+	begin_test("directory_watcher");
+	{
+		crstl::path temp_path = crstl::temp_directory_path() / "crstl_directory_watcher_temp";
+		crstl::create_directories(temp_path.c_str());
+
+		crstl::path dummy_file_path = temp_path / "my_file.txt";
+
+		// Ensure file doesn't exist before we start the file watching process
+		crstl::delete_file(dummy_file_path.c_str());
+
+		crstl::directory_watcher_parameters parameters;
+		parameters.watch_subtree = true;
+		crstl::directory_watcher my_watcher(temp_path.c_str(), parameters);
+
+		uint32_t operations = 0;
+
+		while (operations < 2)
+		{
+			if (operations == 0)
+			{
+				crstl::file my_file(dummy_file_path.c_str(), crstl::file_flags::create);
+			}
+			else if (operations == 1)
+			{
+				crstl::delete_file(dummy_file_path.c_str());
+			}
+
+			my_watcher.update_sync([&operations](const crstl::directory_modified_entry& entry)
+			{
+				const char* operationText = "";
+				switch (entry.action)
+				{
+					case crstl::directory_watcher_action::file_created: operationText = "created"; break;
+					case crstl::directory_watcher_action::file_modified: operationText = "modified"; break;
+					case crstl::directory_watcher_action::file_deleted: operationText = "deleted"; break;
+					case crstl::directory_watcher_action::file_renamed_new_name: operationText = "renamed new name"; break;
+					case crstl::directory_watcher_action::file_renamed_old_name: operationText = "renamed old name"; break;
+				}
+
+				printf("Entry %s was %s\n", entry.filename, operationText);
+
+				operations++;
+			});
+
+			crstl::this_thread::sleep_for(1000);
 		}
 	}
 	end_test();
