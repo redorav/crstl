@@ -20,6 +20,7 @@ void RunUnitTestsFilesystem()
 	begin_test("filesystem");
 	{
 		crstl::path temp_path = crstl::temp_directory_path() / "crstl_temp";
+		crstl::create_directories(temp_path.c_str());
 
 		crstl::path temp_file_path = temp_path / "temp_file.txt";
 		crstl::path temp_file_copy_path = temp_path / "temp_file_copy.txt";
