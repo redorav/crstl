@@ -5,6 +5,7 @@ import crstl;
 #else
 #include "crstl/filesystem.h"
 #include "crstl/directory_watcher.h"
+#include "crstl/thread.h"
 #include "crstl/utility/string_length.h"
 #endif
 
@@ -96,6 +97,7 @@ void RunUnitTestsFilesystem()
 					case crstl::directory_watcher_action::file_deleted: operationText = "deleted"; break;
 					case crstl::directory_watcher_action::file_renamed_new_name: operationText = "renamed new name"; break;
 					case crstl::directory_watcher_action::file_renamed_old_name: operationText = "renamed old name"; break;
+					default: break;
 				}
 
 				printf("Entry %s was %s\n", entry.filename, operationText);
