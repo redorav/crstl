@@ -9,7 +9,7 @@ namespace crstl
 	struct inotify_globals
 	{
 		static const int inotify_fd;
-	}
+	};
 
 	template<typename Dummy>
 	const int inotify_globals<Dummy>::inotify_fd = inotify_init();
@@ -29,6 +29,8 @@ crstl_module_export namespace crstl
 
 		directory_watcher(const char* directory_path, const directory_watcher_parameters& parameters)
 		{
+			(void)parameters;
+		
 			int inotify_fd = inotify_globals<Dummy>::inotify_fd;
 
 			if (inotify_fd != -1)
@@ -58,7 +60,7 @@ crstl_module_export namespace crstl
 		{
 			if (is_watching())
 			{
-				const size_t buffer_length = 1024 * (sizeof(struct inotify_event) + FILENAME_MAX);
+				static const size_t buffer_length = 1024 * (sizeof(struct inotify_event) + kMaxPathLength);
 
 				char buffer[buffer_length];
 
