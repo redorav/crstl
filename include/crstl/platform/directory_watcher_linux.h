@@ -68,10 +68,11 @@ crstl_module_export namespace crstl
 
 				if (length > 0)
 				{
-					int i = 0;
-					while (i < length)
+					int event_index = 0;
+					while (event_index < length)
 					{
-						struct inotify_event* event = (struct inotify_event*)&buffer[i];
+						struct inotify_event* event = (struct inotify_event*)&buffer[event_index];
+						
 						if (event->len)
 						{
 							directory_watcher_action watcher_action = directory_watcher_action::none;
@@ -106,7 +107,7 @@ crstl_module_export namespace crstl
 							}
 						}
 
-						i += sizeof(struct inotify_event) + event->len;
+						event_index += sizeof(struct inotify_event) + event->len;
 					}
 				}
 			}
