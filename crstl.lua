@@ -30,12 +30,12 @@ PlatformAndroidARM64 	= 'Android ARM64'
 UnitTestProject = 'unit_tests'
 AndroidProject = 'crstl_android'
 
-isMacBuild = _ACTION == 'xcode4'
-isLinuxBuild = _ACTION == 'gmake'
-isWindowsBuild = not isMacBuild and not isLinuxBuild
+isMacBuild          = _ACTION == 'xcode4'
+isLinuxBuild        = _ACTION == 'gmake'
+isVisualStudioBuild = string.find(_ACTION, "vs") ~= nil
 
-supportsARMBuild = _ACTION >= 'vs2017'
-supportsModules = _ACTION >= 'vs2022'
+supportsARMBuild = isVisualStudioBuild and (_ACTION >= "vs2017")
+supportsModules = isVisualStudioBuild and _ACTION >= 'vs2022'
 
 cppDefaultDialect = 'C++11'
 
