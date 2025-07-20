@@ -249,9 +249,9 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 basic_string& append(const_pointer string, size_t length)
 		{
-			append_function(length, [string, length](CharT* begin, CharT* /*end*/)
+			append_function(length, [string, length](CharT* begin, size_t append_length)
 			{
-				memory_copy(begin, string, length * kCharSize);
+				memory_copy(begin, string, append_length * kCharSize);
 			});
 
 			return *this;
@@ -289,12 +289,11 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 basic_string& append(size_t n, CharT c) crstl_noexcept
 		{
-			append_function(n, [c](CharT* begin, CharT* end)
+			append_function(n, [c](CharT* begin, size_t append_length)
 			{
-				while (begin != end)
+				for (size_t i = 0; i < append_length; ++i)
 				{
-					*begin = c;
-					++begin;
+					begin[i] = c;
 				}
 			});
 
@@ -1045,15 +1044,14 @@ crstl_module_export namespace crstl
 		{
 			size_t current_length = basic_string::length();
 
-			// If length is larger than current length, initialize new characters to 0
+			// If length is larger than current length, initialize new characters to c
 			if (current_length < length)
 			{
-				append_function(length, [c](CharT* begin, CharT* end)
+				append_function(length, [c](CharT* begin, size_t append_length)
 				{
-					while (begin != end)
+					for (size_t i = 0; i < append_length; ++i)
 					{
-						*begin = c;
-						++begin;
+						begin[i] = c;
 					}
 				});
 			}
@@ -1289,8 +1287,9 @@ crstl_module_export namespace crstl
 			if (target_length < kSSOCapacity)
 			{
 				crstl_assume(target_length < kSSOCapacity);
+				crstl_assume(length < kSSOCapacity);
 				CharT* begin = m_layout_allocator.m_first.m_sso.data + current_length;
-				function(begin, begin + length);
+				function(begin, length);
 				m_layout_allocator.m_first.m_sso.remaining_length.value -= (unsigned char)length;
 				m_layout_allocator.m_first.m_sso.data[target_length] = 0;
 			}
@@ -1306,7 +1305,7 @@ crstl_module_export namespace crstl
 				}
 
 				CharT* begin = m_layout_allocator.m_first.m_heap.data + current_length;
-				function(begin, begin + length);
+				function(begin, length);
 				m_layout_allocator.m_first.m_heap.length = target_length;
 				m_layout_allocator.m_first.m_heap.data[target_length] = 0;
 			}
