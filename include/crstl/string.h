@@ -249,7 +249,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 basic_string& append(const_pointer string, size_t length)
 		{
-			append_function(length, [string, length](CharT* begin, size_t append_length)
+			append_function(length, [string](CharT* begin, size_t append_length)
 			{
 				memory_copy(begin, string, append_length * kCharSize);
 			});
