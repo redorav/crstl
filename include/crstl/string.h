@@ -1288,6 +1288,7 @@ crstl_module_export namespace crstl
 
 			if (target_length < kSSOCapacity)
 			{
+				crstl_assume(target_length < kSSOCapacity);
 				CharT* begin = m_layout_allocator.m_first.m_sso.data + current_length;
 				function(begin, begin + length);
 				m_layout_allocator.m_first.m_sso.remaining_length.value -= (unsigned char)length;
