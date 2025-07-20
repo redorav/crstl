@@ -42,6 +42,8 @@ crstl_module_export namespace crstl
 
 		~directory_watcher()
 		{
+			inotify_rm_watch(inotify_globals<Dummy>::inotify_fd, m_watch_id);
+
 			close(m_watch_id);
 		}
 
