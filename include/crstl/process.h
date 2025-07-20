@@ -104,6 +104,6 @@ crstl_module_export namespace crstl
 
 #if defined(CRSTL_OS_WINDOWS)
 #include "crstl/platform/process_win32.h"
-#elif defined(CRSTL_OS_LINUX) || defined(CRSTL_OS_OSX)
+#elif defined(CRSTL_OS_LINUX) || defined(CRSTL_OS_MACOS)
 #include "crstl/platform/process_posix.h"
 #endif

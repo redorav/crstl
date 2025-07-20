@@ -101,7 +101,7 @@
 
 #elif defined(__APPLE__)
 
-	#define CRSTL_OS_OSX
+	#define CRSTL_OS_MACOS
 
 #endif
 

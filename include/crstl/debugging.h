@@ -11,7 +11,7 @@ extern "C"
 
 	__declspec(dllimport) BOOL IsDebuggerPresent();
 };
-#elif defined(CRSTL_OS_OSX)
+#elif defined(CRSTL_OS_MACOS)
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/sysctl.h>
@@ -44,7 +44,7 @@ crstl_module_export namespace crstl
 	{
 #if defined(CRSTL_COMPILER_MSVC)
 		return IsDebuggerPresent();
-#elif defined(CRSTL_OS_OSX)
+#elif defined(CRSTL_OS_MACOS)
 		// https://developer.apple.com/library/archive/qa/qa1361/_index.html
 
 		// Initialize the flags so that, if sysctl fails for some reason, we get a predictable result

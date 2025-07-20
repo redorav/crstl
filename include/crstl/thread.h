@@ -114,7 +114,7 @@ crstl_module_export namespace crstl
 
 #if defined(CRSTL_OS_WINDOWS)
 #include "crstl/platform/thread_win32.h"
-#elif defined(CRSTL_OS_LINUX) || defined(CRSTL_OS_ANDROID) || defined(CRSTL_OS_OSX)
+#elif defined(CRSTL_OS_LINUX) || defined(CRSTL_OS_ANDROID) || defined(CRSTL_OS_MACOS)
 #include "crstl/platform/thread_posix.h"
 #endif
 

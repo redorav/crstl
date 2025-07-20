@@ -9,7 +9,7 @@
 #include <unistd.h>
 
 // https://www.gnu.org/software/gnulib/manual/html_node/environ.html
-#if defined(CRSTL_OS_OSX)
+#if defined(CRSTL_OS_MACOS)
 #include <crt_externs.h>
 #define environ (*_NSGetEnviron())
 #endif

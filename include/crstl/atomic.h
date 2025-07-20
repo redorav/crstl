@@ -8,7 +8,7 @@
 #include "crstl/platform/atomic_win32.h"
 #elif defined(CRSTL_ARCH_ARM)
 #include "crstl/platform/atomic_arm.h"
-#elif defined(CRSTL_OS_LINUX) || defined(CRSTL_OS_OSX)
+#elif defined(CRSTL_OS_LINUX) || defined(CRSTL_OS_MACOS)
 #include "crstl/platform/atomic_clang_gcc.h"
 #endif
 
