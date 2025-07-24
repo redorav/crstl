@@ -51,4 +51,6 @@ crstl_module_export namespace crstl
 #include "crstl/platform/directory_watcher_win32.h"
 #elif defined(CRSTL_OS_LINUX) || defined(CRSTL_OS_ANDROID)
 #include "crstl/platform/directory_watcher_linux.h"
+#elif defined(CRSTL_OS_MACOS)
+#include "crstl/platform/directory_watcher_macos.h"
 #endif
