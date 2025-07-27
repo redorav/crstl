@@ -73,6 +73,11 @@ workspace('crstl')
 		architecture('x64')
 		
 		linkoptions { '-stdlib=libc++' }
+		links
+		{
+			'CoreFoundation.framework',
+			'CoreServices.framework'
+		}
 		
 		filter { 'platforms:'..PlatformOSX64Cpp11 }
 			buildoptions { '-std=c++11' }
