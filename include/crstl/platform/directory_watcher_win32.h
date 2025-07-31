@@ -3,6 +3,8 @@
 // References
 // https://gist.github.com/nickav/a57009d4fcc3b527ed0f5c9cf30618f8
 
+#include "crstl/type_array.h"
+
 #include "crstl/platform/common_win32.h"
 
 crstl_module_export namespace crstl
@@ -47,7 +49,7 @@ crstl_module_export namespace crstl
 			else
 			{
 				WCHAR w_file_path[kMaxPathLength];
-				detail::win32_utf8_to_utf16(directory_path, crstl::string_length(directory_path), w_file_path, sizeof(w_file_path));
+				detail::win32_utf8_to_utf16(directory_path, crstl::string_length(directory_path), w_file_path, crstl::array_size(w_file_path));
 				m_directory_handle = CreateFileW
 				(
 					w_file_path,
@@ -114,7 +116,7 @@ crstl_module_export namespace crstl
 						notify_info = (detail::FILE_NOTIFY_INFORMATION*)(m_buffer + current_offset);
 
 						char filename[kMaxPathLength];
-						int filename_length = detail::win32_utf16_to_utf8(notify_info->FileName, notify_info->FileNameLength / 2, filename, sizeof(filename));
+						int filename_length = detail::win32_utf16_to_utf8(notify_info->FileName, notify_info->FileNameLength / 2, filename, crstl::array_size(filename));
 						filename[filename_length] = '\0';
 
 						// Replace all backslashes with forward slashes
