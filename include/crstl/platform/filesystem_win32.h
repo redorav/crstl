@@ -1,5 +1,7 @@
 #pragma once
 
+#include "crstl/type_array.h"
+
 #include "common_win32.h"
 
 crstl_module_export namespace crstl
@@ -60,7 +62,7 @@ crstl_module_export namespace crstl
 			else
 			{
 				WCHAR w_file_path[kMaxPathLength];
-				detail::win32_utf8_to_utf16(file_path, crstl::string_length(file_path), w_file_path, sizeof(w_file_path));
+				detail::win32_utf8_to_utf16(file_path, crstl::string_length(file_path), w_file_path, crstl::array_size(w_file_path));
 				m_file_handle = ::CreateFileW(w_file_path, dw_desired_access, dw_share_mode, lp_security_attributes, dw_creation_disposition, dw_flags_and_attributes, h_template_file);
 			}
 
@@ -216,10 +218,10 @@ crstl_module_export namespace crstl
 		else
 		{
 			WCHAR w_source_file_path[kMaxPathLength];
-			detail::win32_utf8_to_utf16(source_file_path, crstl::string_length(source_file_path), w_source_file_path, sizeof(w_source_file_path));
+			detail::win32_utf8_to_utf16(source_file_path, crstl::string_length(source_file_path), w_source_file_path, crstl::array_size(w_source_file_path));
 
 			WCHAR w_destination_file_path[kMaxPathLength];
-			detail::win32_utf8_to_utf16(destination_file_path, crstl::string_length(destination_file_path), w_destination_file_path, sizeof(w_destination_file_path));
+			detail::win32_utf8_to_utf16(destination_file_path, crstl::string_length(destination_file_path), w_destination_file_path, crstl::array_size(w_destination_file_path));
 
 			CopyFileW(w_source_file_path, w_destination_file_path, fail_if_exists);
 		}
@@ -236,10 +238,10 @@ crstl_module_export namespace crstl
 		else
 		{
 			WCHAR w_source_file_path[kMaxPathLength];
-			detail::win32_utf8_to_utf16(source_file_path, crstl::string_length(source_file_path), w_source_file_path, sizeof(w_source_file_path));
+			detail::win32_utf8_to_utf16(source_file_path, crstl::string_length(source_file_path), w_source_file_path, crstl::array_size(w_source_file_path));
 
 			WCHAR w_destination_file_path[kMaxPathLength];
-			detail::win32_utf8_to_utf16(destination_file_path, crstl::string_length(destination_file_path), w_destination_file_path, sizeof(w_destination_file_path));
+			detail::win32_utf8_to_utf16(destination_file_path, crstl::string_length(destination_file_path), w_destination_file_path, crstl::array_size(w_destination_file_path));
 
 			/*BOOL result = */MoveFileW(w_source_file_path, w_destination_file_path);
 		}
@@ -258,7 +260,7 @@ crstl_module_export namespace crstl
 		else
 		{
 			WCHAR w_file_path[kMaxPathLength];
-			detail::win32_utf8_to_utf16(file_path, crstl::string_length(file_path), w_file_path, sizeof(w_file_path));
+			detail::win32_utf8_to_utf16(file_path, crstl::string_length(file_path), w_file_path, crstl::array_size(w_file_path));
 			success = DeleteFileW(w_file_path);
 		}
 
@@ -297,7 +299,7 @@ crstl_module_export namespace crstl
 		else
 		{
 			WCHAR w_file_path[kMaxPathLength];
-			detail::win32_utf8_to_utf16(path, crstl::string_length(path), w_file_path, sizeof(w_file_path));
+			detail::win32_utf8_to_utf16(path, crstl::string_length(path), w_file_path, crstl::array_size(w_file_path));
 			success = GetFileAttributesExW(w_file_path, (GET_FILEEX_INFO_LEVELS)detail::GetFileExInfoStandard, &attribute_data);
 		}
 
@@ -322,7 +324,7 @@ crstl_module_export namespace crstl
 		else
 		{
 			WCHAR w_directory_path[kMaxPathLength];
-			detail::win32_utf8_to_utf16(directory_path, crstl::string_length(directory_path), w_directory_path, sizeof(w_directory_path));
+			detail::win32_utf8_to_utf16(directory_path, crstl::string_length(directory_path), w_directory_path, crstl::array_size(w_directory_path));
 			success = CreateDirectoryW(w_directory_path, nullptr);
 		}
 
@@ -376,7 +378,7 @@ crstl_module_export namespace crstl
 					DWORD long_temp_path_length = GetLongPathNameW(wpath_buffer, wpath_buffer, kMaxPathLength);
 					if (long_temp_path_length > 0)
 					{
-						win32_utf16_to_utf8(wpath_buffer, crstl::string_length(wpath_buffer), path_buffer, sizeof(path_buffer));
+						win32_utf16_to_utf8(wpath_buffer, crstl::string_length(wpath_buffer), path_buffer, crstl::array_size(path_buffer));
 					}
 				}
 			}
@@ -392,16 +394,16 @@ crstl_module_export namespace crstl
 
 			if (detail::win32_is_utf8())
 			{
-				size = GetModuleFileNameA(nullptr, path_buffer, sizeof(path_buffer));
+				size = GetModuleFileNameA(nullptr, path_buffer, crstl::array_size(path_buffer));
 			}
 			else
 			{
 				wchar_t wpath_buffer[kMaxPathLength];
-				size = GetModuleFileNameW(nullptr, wpath_buffer, sizeof(wpath_buffer));
-				detail::win32_utf16_to_utf8(wpath_buffer, size, path_buffer, sizeof(path_buffer));
+				size = GetModuleFileNameW(nullptr, wpath_buffer, crstl::array_size(wpath_buffer));
+				detail::win32_utf16_to_utf8(wpath_buffer, size, path_buffer, crstl::array_size(path_buffer));
 			}
 
-			crstl_assert(size > 0 && size < sizeof(path_buffer));
+			crstl_assert(size > 0 && size < crstl::array_size(path_buffer));
 
 			return path(path_buffer, size);
 		}
@@ -415,16 +417,16 @@ crstl_module_export namespace crstl
 
 		if (detail::win32_is_utf8())
 		{
-			size = GetCurrentDirectoryA(sizeof(path_buffer), path_buffer);
+			size = GetCurrentDirectoryA(crstl::array_size(path_buffer), path_buffer);
 		}
 		else
 		{
 			wchar_t wpath_buffer[kMaxPathLength];
-			size = GetCurrentDirectoryW(sizeof(wpath_buffer), wpath_buffer);
-			detail::win32_utf16_to_utf8(wpath_buffer, size, path_buffer, sizeof(path_buffer));
+			size = GetCurrentDirectoryW(crstl::array_size(wpath_buffer), wpath_buffer);
+			detail::win32_utf16_to_utf8(wpath_buffer, size, path_buffer, crstl::array_size(path_buffer));
 		}
 
-		crstl_assert(size > 0 && size < sizeof(path_buffer));
+		crstl_assert(size > 0 && size < crstl::array_size(path_buffer));
 
 		return path(path_buffer, size);
 	}
@@ -438,7 +440,7 @@ crstl_module_export namespace crstl
 		else
 		{
 			wchar_t wpath_buffer[kMaxPathLength];
-			detail::win32_utf8_to_utf16(path.c_str(), path.length(), wpath_buffer, sizeof(wpath_buffer));
+			detail::win32_utf8_to_utf16(path.c_str(), path.length(), wpath_buffer, crstl::array_size(wpath_buffer));
 			return SetCurrentDirectoryW(wpath_buffer) != 0;
 		}
 	}
@@ -493,7 +495,7 @@ crstl_module_export namespace crstl
 			detail::WIN32_FIND_DATAW find_data;
 
 			WCHAR w_directory_path_normalized[kMaxPathLength];
-			detail::win32_utf8_to_utf16(directory_path_normalized.c_str(), directory_path_normalized.length(), w_directory_path_normalized, sizeof(w_directory_path_normalized));
+			detail::win32_utf8_to_utf16(directory_path_normalized.c_str(), directory_path_normalized.length(), w_directory_path_normalized, crstl::array_size(w_directory_path_normalized));
 
 			h_find = FindFirstFileW(w_directory_path_normalized, (WIN32_FIND_DATAW*)&find_data);
 
@@ -508,7 +510,7 @@ crstl_module_export namespace crstl
 					if (!is_dot && !is_double_dot)
 					{
 						char filename[128];
-						detail::win32_utf16_to_utf8(find_data.cFileName, crstl::string_length(find_data.cFileName), filename, sizeof(filename));
+						detail::win32_utf16_to_utf8(find_data.cFileName, crstl::string_length(find_data.cFileName), filename, crstl::array_size(filename));
 
 						directory_entry entry;
 						entry.directory = directory_path;
