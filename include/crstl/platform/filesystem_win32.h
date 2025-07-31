@@ -362,20 +362,20 @@ crstl_module_export namespace crstl
 
 			if (win32_is_utf8())
 			{
-				DWORD short_temp_path_length = GetTempPathA(kMaxPathLength, path_buffer);
+				DWORD short_temp_path_length = GetTempPathA((DWORD)crstl::array_size(path_buffer), path_buffer);
 				if (short_temp_path_length > 0)
 				{
-					GetLongPathNameA(path_buffer, path_buffer, kMaxPathLength);
+					GetLongPathNameA(path_buffer, path_buffer, (DWORD)crstl::array_size(path_buffer));
 				}
 			}
 			else
 			{
-				WCHAR wpath_buffer[2048];
+				WCHAR wpath_buffer[kMaxPathLength];
 
-				DWORD short_temp_path_length = GetTempPathW(kMaxPathLength, wpath_buffer);
+				DWORD short_temp_path_length = GetTempPathW((DWORD)crstl::array_size(wpath_buffer), wpath_buffer);
 				if (short_temp_path_length > 0)
 				{
-					DWORD long_temp_path_length = GetLongPathNameW(wpath_buffer, wpath_buffer, kMaxPathLength);
+					DWORD long_temp_path_length = GetLongPathNameW(wpath_buffer, wpath_buffer, (DWORD)crstl::array_size(wpath_buffer));
 					if (long_temp_path_length > 0)
 					{
 						win32_utf16_to_utf8(wpath_buffer, crstl::string_length(wpath_buffer), path_buffer, crstl::array_size(path_buffer));
@@ -394,12 +394,12 @@ crstl_module_export namespace crstl
 
 			if (detail::win32_is_utf8())
 			{
-				size = GetModuleFileNameA(nullptr, path_buffer, crstl::array_size(path_buffer));
+				size = GetModuleFileNameA(nullptr, path_buffer, (DWORD)crstl::array_size(path_buffer));
 			}
 			else
 			{
 				wchar_t wpath_buffer[kMaxPathLength];
-				size = GetModuleFileNameW(nullptr, wpath_buffer, crstl::array_size(wpath_buffer));
+				size = GetModuleFileNameW(nullptr, wpath_buffer, (DWORD)crstl::array_size(wpath_buffer));
 				detail::win32_utf16_to_utf8(wpath_buffer, size, path_buffer, crstl::array_size(path_buffer));
 			}
 
@@ -417,12 +417,12 @@ crstl_module_export namespace crstl
 
 		if (detail::win32_is_utf8())
 		{
-			size = GetCurrentDirectoryA(crstl::array_size(path_buffer), path_buffer);
+			size = GetCurrentDirectoryA((DWORD)crstl::array_size(path_buffer), path_buffer);
 		}
 		else
 		{
 			wchar_t wpath_buffer[kMaxPathLength];
-			size = GetCurrentDirectoryW(crstl::array_size(wpath_buffer), wpath_buffer);
+			size = GetCurrentDirectoryW((DWORD)crstl::array_size(wpath_buffer), wpath_buffer);
 			detail::win32_utf16_to_utf8(wpath_buffer, size, path_buffer, crstl::array_size(path_buffer));
 		}
 
