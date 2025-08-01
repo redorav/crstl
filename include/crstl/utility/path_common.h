@@ -63,6 +63,9 @@ crstl_module_export namespace crstl
 			return m_path_string.comparei(s);
 		}
 
+		crstl_constexpr14 char* data() crstl_noexcept { return m_path_string.data(); }
+		crstl_constexpr const char* data() const crstl_noexcept { return m_path_string.data(); }
+
 		bool empty() const crstl_noexcept
 		{
 			return m_path_string.empty();
