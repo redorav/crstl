@@ -46,6 +46,11 @@ crstl_module_export namespace crstl
 			m_path_string.append_convert(other); return *this;
 		}
 
+		crstl_constexpr size_t capacity() const crstl_noexcept
+		{
+			return m_path_string.capacity();
+		}
+
 		const char* c_str() const { return m_path_string.c_str(); }
 
 		int compare(const char* s) const crstl_noexcept
