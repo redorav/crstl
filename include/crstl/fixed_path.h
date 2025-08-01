@@ -12,4 +12,5 @@ crstl_module_export namespace crstl
 	typedef path_base<fixed_string128> fixed_path128;
 	typedef path_base<fixed_string256> fixed_path256;
 	typedef path_base<fixed_string512> fixed_path512;
+	typedef path_base<fixed_string1024> fixed_path1024;
 };
