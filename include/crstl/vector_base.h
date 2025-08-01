@@ -15,6 +15,7 @@
 // - resize_uninitialized(length): resizes vector to have specified length but does not initialize the contents of the objects. Use with care as
 //   objects with assignment operators accessing member variables assumed to be initialized can crash
 // - size_bytes(): return size of vector in bytes
+// - erase_fast(): disturb the order of the vector in order to make erasing very fast, by moving objects from the end to fill in the spaces in the middle
 
 namespace crstl
 {
@@ -85,6 +86,37 @@ namespace crstl
 		crstl_constexpr14 iterator end() { return &m_data[0] + m_length; }
 		crstl_constexpr const_iterator end() const { return &m_data[0] + m_length; }
 		crstl_constexpr const_iterator cend() const { return &m_data[0] + m_length; }
+
+		// The standard version of erase takes iterators but having to pass in begin belonging to the right vector is a recipe for error
+		// Our version takes indices instead, which are always relative to the vector
+
+		crstl_constexpr void erase_fast(size_t begin, size_t end)
+		{
+			crstl_assert(end >= begin);
+			crstl_assert(begin >= 0 && end <= m_length);
+		
+			size_t erase_count = end - begin;
+		
+			for (size_t i = 0; i < erase_count; ++i)
+			{
+				// Call destructor if necessary
+				crstl_constexpr_if(!crstl_is_trivially_destructible(T))
+				{
+					m_data[begin + i].~T();
+				}
+		
+				// Bring in new data from the end of the vector
+				m_data[begin + i] = crstl_move(m_data[end + i]);
+			}
+		
+			// Adjust length of the vector
+			m_length -= (length_type)erase_count;
+		}
+
+		crstl_constexpr void erase_fast(size_t begin)
+		{
+			erase_fast(begin, m_length);
+		}
 
 		crstl_constexpr14 T& front() { return m_data[0]; }
 		crstl_constexpr const T& front() const { return m_data[0]; }
