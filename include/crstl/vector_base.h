@@ -95,8 +95,11 @@ namespace crstl
 			crstl_assert(end >= begin);
 			crstl_assert(begin >= 0 && end <= m_length);
 		
-			size_t erase_count = end - begin;
-		
+			size_t erase_count     = end - begin;    // How many we need to erase
+			size_t available_count = m_length - end; // How many we have available at the end
+			size_t restore_count   = erase_count < available_count ? erase_count : available_count;
+			size_t restore_offset  = m_length - restore_count;
+			
 			for (size_t i = 0; i < erase_count; ++i)
 			{
 				// Call destructor if necessary
@@ -104,18 +107,45 @@ namespace crstl
 				{
 					m_data[begin + i].~T();
 				}
-		
-				// Bring in new data from the end of the vector
-				m_data[begin + i] = crstl_move(m_data[end + i]);
 			}
-		
+			
+			for (size_t i = 0; i < restore_count; ++i)
+			{
+				// Bring in new data from the end of the vector
+				m_data[begin + i] = crstl_move(m_data[restore_offset + i]);
+
+				// Destroy the copied/moved data
+				crstl_constexpr_if(!crstl_is_trivially_destructible(T))
+				{
+					m_data[restore_offset + i].~T();
+				}
+			}
+			
 			// Adjust length of the vector
 			m_length -= (length_type)erase_count;
 		}
 
-		crstl_constexpr void erase_fast(size_t begin)
+		crstl_constexpr void erase_fast(size_t i)
 		{
-			erase_fast(begin, m_length);
+			crstl_assert(i >= 0 && i < m_length);
+
+			// Call destructor if necessary
+			crstl_constexpr_if(!crstl_is_trivially_destructible(T))
+			{
+				m_data[i].~T();
+			}
+
+			// Bring in new data from the end of the vector
+			m_data[i] = crstl_move(m_data[m_length - 1]);
+
+			// Destroy data
+			crstl_constexpr_if(!crstl_is_trivially_destructible(T))
+			{
+				m_data[m_length - 1].~T();
+			}
+
+			// Adjust length
+			m_length--;
 		}
 
 		crstl_constexpr14 T& front() { return m_data[0]; }
