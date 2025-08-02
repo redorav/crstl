@@ -90,6 +90,32 @@ crstl_module_export namespace crstl
 			return path_base(*this, lastSeparator + 1, m_path_string.length() - (lastSeparator + 1));
 		}
 
+		//-----
+		// find
+		//-----
+
+		// Find a character
+		crstl_constexpr14 size_t find(CharT c, size_t pos = 0) const crstl_noexcept
+		{
+			return m_path_string.find(c, pos);
+		}
+
+		// Find a const char* string with an offset and a length
+		crstl_constexpr14 size_t find(const_pointer needle_string, size_t pos, size_t needle_length) const crstl_noexcept
+		{
+			return m_path_string.find(needle_string, pos, needle_length);
+		}
+
+		crstl_constexpr14 size_t find(const_pointer needle_string, size_t pos = 0) const crstl_noexcept
+		{
+			return m_path_string.find(needle_string, pos);
+		}
+
+		crstl_constexpr14 size_t find(const StringInterface& needle_string, size_t pos = 0) const crstl_noexcept
+		{
+			return m_path_string.find(needle_string, pos);
+		}
+
 		//--------------
 		// find_first_of
 		//--------------
