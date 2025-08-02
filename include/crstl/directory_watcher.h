@@ -43,7 +43,7 @@ crstl_module_export namespace crstl
 	struct directory_modified_entry
 	{
 		directory_watcher_action action;
-		char* filename;
+		const char* filename;
 	};
 }
 
