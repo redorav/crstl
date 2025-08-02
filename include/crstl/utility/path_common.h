@@ -138,6 +138,11 @@ crstl_module_export namespace crstl
 			return m_path_string.rfind(c, pos);
 		}
 
+		crstl_constexpr14 void force_length(size_t length)
+		{
+			m_path_string.force_length(length);
+		}
+
 		bool has_extension() const
 		{
 			size_t lastDot;
