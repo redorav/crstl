@@ -90,7 +90,7 @@ namespace crstl
 		// The standard version of erase takes iterators but having to pass in begin belonging to the right vector is a recipe for error
 		// Our version takes indices instead, which are always relative to the vector
 
-		crstl_constexpr void erase_fast(size_t begin, size_t end)
+		crstl_constexpr14 void erase_fast(size_t begin, size_t end)
 		{
 			crstl_assert(end >= begin);
 			crstl_assert(begin >= 0 && end <= m_length);
@@ -125,7 +125,7 @@ namespace crstl
 			m_length -= (length_type)erase_count;
 		}
 
-		crstl_constexpr void erase_fast(size_t i)
+		crstl_constexpr14 void erase_fast(size_t i)
 		{
 			crstl_assert(i >= 0 && i < m_length);
 
