@@ -184,7 +184,7 @@ crstl_module_export namespace crstl
 		template<typename T>
 		unsigned long bitscan_forward(const T x)
 		{
-			unsigned long index;
+			unsigned long index = 0;
 			crstl_constexpr_if(bit_width<T>() <= 32)
 			{
 				_BitScanForward(&index, static_cast<DWORD>(x));
@@ -200,7 +200,7 @@ crstl_module_export namespace crstl
 		template<typename T>
 		unsigned long bitscan_reverse(const T x)
 		{
-			unsigned long index;
+			unsigned long index = 0;
 			crstl_constexpr_if(bit_width<T>() <= 32)
 			{
 				_BitScanReverse(&index, static_cast<DWORD>(x));
