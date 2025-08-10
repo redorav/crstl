@@ -2,9 +2,11 @@
 
 #include "common_win32.h"
 
-#include "sdkddkver.h"
+#include "crstl/utility/cast.h"
 
 #include "crstl/utility/string_length.h"
+
+#include "sdkddkver.h"
 
 extern "C"
 {
@@ -100,8 +102,7 @@ crstl_module_export namespace crstl
 			// https://learn.microsoft.com/en-us/visualstudio/debugger/how-to-set-a-thread-name-in-native-code?view=vs-2022
 			#if WINVER >= _WIN32_WINNT_WIN10
 
-			HRESULT(*SetThreadDescriptionFunction)(HANDLE, PCWSTR) =
-				reinterpret_cast<HRESULT(*)(HANDLE, PCWSTR)>(GetProcAddress(GetModuleHandleA("Kernel32.dll"), "SetThreadDescription"));
+			HRESULT(*SetThreadDescriptionFunction)(HANDLE, PCWSTR) = union_cast<HRESULT(*)(HANDLE, PCWSTR)>(GetProcAddress(GetModuleHandleA("Kernel32.dll"), "SetThreadDescription"));
 
 			if (SetThreadDescriptionFunction)
 			{
