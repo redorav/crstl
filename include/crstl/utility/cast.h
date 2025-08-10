@@ -1,13 +1,17 @@
 #pragma once
 
 template<typename To, typename From>
-To union_cast(const From& from)
+inline To union_cast(const From& from)
 {
-	union
+	static_assert(sizeof(To) == sizeof(From), "union_cast size mismatch");
+
+	union cast_union
 	{
-		From from;
-		To to;
+		const From* from;
+		const To* to;
 	} cast;
 
-	return cast.to;
+	cast.from = &from;
+
+	return *cast.to;
 }
