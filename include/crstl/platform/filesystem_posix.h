@@ -257,14 +257,13 @@ crstl_module_export namespace crstl
 				open_flags_posix |= O_RDONLY;
 			}
 
-			if (open_flags & file_flags::append)
-			{
-				open_flags_posix |= O_APPEND;
-			}
-
 			if (open_flags & file_flags::create)
 			{
 				open_flags_posix |= O_CREAT;
+			}
+			else if (open_flags & file_flags::force_create)
+			{
+				open_flags_posix |= O_CREAT | O_TRUNC;
 			}
 
 			m_file_handle = detail::open(file_path, open_flags_posix);
@@ -272,6 +271,11 @@ crstl_module_export namespace crstl
 			if (is_open())
 			{
 				m_path = file_path;
+
+				if (open_flags & file_flags::append)
+				{
+					seek(file_seek_origin::end, 0);
+				}
 
 				//stat stat_struct;
 				//fstat(m_file_handle, )
@@ -363,15 +367,15 @@ crstl_module_export namespace crstl
 
 			switch (seek_origin)
 			{
-			case file_seek_origin::begin:
-				fseek_origin = CRSTL_SEEK_SET;
-				break;
-			case file_seek_origin::current:
-				fseek_origin = CRSTL_SEEK_CUR;
-				break;
-			case file_seek_origin::end:
-				fseek_origin = CRSTL_SEEK_END;
-				break;
+				case file_seek_origin::begin:
+					fseek_origin = CRSTL_SEEK_SET;
+					break;
+				case file_seek_origin::current:
+					fseek_origin = CRSTL_SEEK_CUR;
+					break;
+				case file_seek_origin::end:
+					fseek_origin = CRSTL_SEEK_END;
+					break;
 			}
 
 			detail::lseek(m_file_handle, (long)byte_offset, fseek_origin);
