@@ -356,6 +356,7 @@ crstl_module_export namespace crstl
 			}
 		}
 	}
+
 	// Map sort to quick_sort
 	template<typename T>
 	void sort(T* begin, T* end)
