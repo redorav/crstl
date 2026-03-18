@@ -102,7 +102,7 @@ crstl_module_export namespace crstl
 			m_data[0] = v;
 
 			// Set bits in last word to 0 if necessary
-			crstl_constexpr_if(kBitCount & kBitsPerWordMask)
+			crstl_constexpr_if((kBitCount & kBitsPerWordMask) != 0)
 			{
 				m_data[0] &= kLastWordBitMask;
 			}
@@ -338,7 +338,7 @@ crstl_module_export namespace crstl
 		void trim()
 		{
 			// Set bits in last word to 0 if necessary
-			crstl_constexpr_if(kBitCount & kBitsPerWordMask)
+			crstl_constexpr_if((kBitCount & kBitsPerWordMask) != 0)
 			{
 				m_data[kWordCount - 1] &= kLastWordBitMask;
 			}
