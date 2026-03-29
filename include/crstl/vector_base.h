@@ -206,7 +206,7 @@ namespace crstl
 			{
 				reallocate_if_length_greater_than_capacity(length);
 
-				default_initialize_or_memset_zero(m_data, length);
+				default_initialize_or_memset_zero(&m_data[m_length], length - m_length);
 			}
 			else if ((size_t)m_length > length)
 			{
