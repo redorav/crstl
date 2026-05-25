@@ -97,8 +97,7 @@
 	</Type>
 
 	<Type Name="crstl::basic_string_view&lt;*&gt;">
-		<DisplayString>{m_data} [{m_length}]</DisplayString>
-
+		<DisplayString>{m_data,[m_length]} [{m_length}]</DisplayString>
 		<Expand>
 			<ArrayItems>
 				<Size>m_length</Size>
