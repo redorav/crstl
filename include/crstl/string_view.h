@@ -277,11 +277,6 @@ crstl_module_export namespace crstl
 		// Operators
 		//----------
 
-		crstl_constexpr14 CharT& operator [](size_type i)
-		{
-			return crstl_assert(i < m_length), m_data[i];
-		}
-
 		crstl_constexpr const CharT& operator [](size_type i) const crstl_noexcept
 		{
 			return crstl_assert(i < m_length), m_data[i];
