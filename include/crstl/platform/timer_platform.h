@@ -95,7 +95,8 @@ namespace crstl
 
 extern "C"
 {
-	void __dmb(unsigned int _Type);
+	// Data memory barrier 
+	void __dmb(unsigned int);
 };
 
 #endif
