@@ -213,7 +213,12 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 basic_fixed_string& append(size_t n, CharT c) crstl_noexcept
 		{
 			crstl_assert(m_length + n < kCharacterCapacityWithZero);
-			crstl::fill_char(&m_data[m_length], n, c);
+			if (n > 0)
+			{
+				crstl::fill_char(&m_data[m_length], n, c);
+				m_length += (length_type)n;
+				m_data[m_length] = '\0';
+			}
 			return *this;
 		}
 
