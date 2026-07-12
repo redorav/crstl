@@ -1190,6 +1190,12 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
+		crstl_constexpr14 basic_string& operator += (CharT c) crstl_noexcept
+		{
+			append(1, c);
+			return *this;
+		}
+
 		// operator +
 
 		friend basic_string operator + (const basic_string& string1, const basic_string& string2)

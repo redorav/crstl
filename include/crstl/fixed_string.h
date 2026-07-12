@@ -895,6 +895,12 @@ crstl_module_export namespace crstl
 			return *this;
 		}
 
+		crstl_constexpr14 basic_fixed_string& operator += (CharT c) crstl_noexcept
+		{
+			append(1, c);
+			return *this;
+		}
+
 		crstl_constexpr bool operator == (const_pointer string) const crstl_noexcept { return compare(string) == 0; }
 		crstl_constexpr bool operator != (const_pointer string) const crstl_noexcept { return compare(string) != 0; }
 		crstl_constexpr bool operator <  (const_pointer string) const crstl_noexcept { return compare(string) <  0; }
