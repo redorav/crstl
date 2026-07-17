@@ -16,6 +16,11 @@
 
 #endif
 
+#define CRSTL_CPP11 201103L
+#define CRSTL_CPP14 201402L
+#define CRSTL_CPP17 201703L
+#define CRSTL_CPP20 202002L
+
 // Compiler
 
 // Clang can define the GNU flags but not the other way around, so we enforce this ordering
@@ -114,11 +119,6 @@
 	#define crstl_forceinline inline __attribute__((always_inline))
 
 #endif
-
-#define CRSTL_CPP11 201103L
-#define CRSTL_CPP14 201402L
-#define CRSTL_CPP17 201703L
-#define CRSTL_CPP20 202002L
 
 #if defined(__cpp_constexpr)
 
