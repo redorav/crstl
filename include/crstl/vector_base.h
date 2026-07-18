@@ -10,12 +10,14 @@
 
 // Non-standard functions
 // 
+// - erase_fast(): disturb the order of the vector in order to make erasing very fast, by moving objects from the end to fill in the spaces in the middle
+// - force_size(): Force sets the length of the vector if, for example, it was populated via some external means like a memory copy.
+//   This is an advanced operation and should be used with utmost care
 // - push_back(): push back an empty default object
 // - push_back_uninitialized(): push back an uninitialized object
 // - resize_uninitialized(length): resizes vector to have specified length but does not initialize the contents of the objects. Use with care as
 //   objects with assignment operators accessing member variables assumed to be initialized can crash
 // - size_bytes(): return size of vector in bytes
-// - erase_fast(): disturb the order of the vector in order to make erasing very fast, by moving objects from the end to fill in the spaces in the middle
 
 namespace crstl
 {
@@ -146,6 +148,12 @@ namespace crstl
 
 			// Adjust length
 			m_length--;
+		}
+
+		crstl_constexpr14 void force_size(size_t length)
+		{
+			crstl_assert(length <= get_capacity());
+			m_length = (length_type)length;
 		}
 
 		crstl_constexpr14 T& front() { return m_data[0]; }
