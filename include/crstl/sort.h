@@ -80,7 +80,9 @@ crstl_module_export namespace crstl
 	template<typename T, typename Compare>
 	void insertion_sort(T* begin, T* end, Compare compare)
 	{
-		const size_t size = end - begin;
+		crstl_assert(end >= begin);
+
+		const size_t size = (size_t)(end - begin);
 
 		for (size_t i = 1; i < size; ++i)
 		{
@@ -139,7 +141,7 @@ crstl_module_export namespace crstl
 	{
 		crstl_assert(end >= begin);
 
-		const size_t size = end - begin;
+		const size_t size = (size_t)(end - begin);
 
 		if (size > kQuicksortInsertionLimit)
 		{
@@ -150,7 +152,7 @@ crstl_module_export namespace crstl
 			// Distribute items for this range. Start from the left and start swapping with the elements at the end
 			// when items are on the wrong side of the pivot
 			int64_t left_index = -1;
-			int64_t right_index = size;
+			int64_t right_index = (int64_t)size;
 
 			while (true)
 			{
@@ -244,9 +246,11 @@ crstl_module_export namespace crstl
 	template<typename T>
 	void radix_sort(T* begin, T* end, T* temp_buffer = nullptr)
 	{
+		crstl_assert(end >= begin);
+
 		typedef typename radix_sort_key<T>::radix_type radix_type;
 
-		const size_t size = end - begin;
+		const size_t size = (size_t)(end - begin);
 
 		if (size > 1)
 		{
