@@ -47,22 +47,25 @@ crstl_module_export namespace crstl
 	template<typename T, typename Compare>
 	void bubble_sort(T* begin, T* end, Compare compare)
 	{
-		crstl_assert(begin < end);
+		crstl_assert(end >= begin);
 
-		const size_t size = end - begin;
+		const size_t size = (size_t)(end - begin);
 
-		bool swapped = true;
-
-		while (swapped)
+		if (size > 1)
 		{
-			swapped = false;
+			bool swapped = true;
 
-			for (size_t i = 0; i < size - 1; ++i)
+			while (swapped)
 			{
-				if (compare(begin[i + 1], begin[i]))
+				swapped = false;
+
+				for (size_t i = 0; i < size - 1; ++i)
 				{
-					swap(begin[i], begin[i + 1]);
-					swapped = true;
+					if (compare(begin[i + 1], begin[i]))
+					{
+						swap(begin[i], begin[i + 1]);
+						swapped = true;
+					}
 				}
 			}
 		}
