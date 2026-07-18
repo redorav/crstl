@@ -137,7 +137,7 @@ crstl_module_export namespace crstl
 	template<typename T, typename Compare>
 	void quick_sort(T* begin, T* end, Compare compare)
 	{
-		crstl_assert(begin <= end);
+		crstl_assert(end >= begin);
 
 		const size_t size = end - begin;
 

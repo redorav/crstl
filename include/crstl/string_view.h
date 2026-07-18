@@ -35,7 +35,11 @@ crstl_module_export namespace crstl
 
 		basic_string_view(const_pointer ptr, size_type size) : m_data(ptr), m_length(size) {}
 
-		basic_string_view(const_pointer begin, const_pointer end) : m_data(begin), m_length(end - begin) {}
+		basic_string_view(const_pointer begin, const_pointer end) : m_data(begin)
+		{
+			crstl_assert(end >= begin);
+			m_length = (size_type)(end - begin);
+		}
 
 		crstl_constexpr14 CharT& at(size_type i) crstl_noexcept
 		{
