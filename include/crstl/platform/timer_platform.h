@@ -168,7 +168,7 @@ crstl_module_export namespace crstl
 
 #elif defined(CRSTL_OS_LINUX) || defined(CRSTL_OS_ANDROID)
 
-	crstl_constexpr double ticks_to_seconds()
+	inline double ticks_to_seconds()
 	{
 		return 1.0 / 1000000000.0;
 	}

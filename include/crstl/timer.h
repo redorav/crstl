@@ -38,7 +38,8 @@ crstl_module_export namespace crstl
 
 		static time now()
 		{
-			return time(current_ticks());
+			crstl::serializing_instruction();
+			return time((int64_t)current_ticks());
 		}
 
 		// Return ticks as seconds

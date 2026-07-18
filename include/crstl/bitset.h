@@ -131,7 +131,7 @@ crstl_module_export namespace crstl
 
 			for (size_t w = 0; w < kWordCount; ++w)
 			{
-				n += crstl::popcount(m_data[w]);
+				n += (size_t)crstl::popcount(m_data[w]);
 			}
 
 			return n;

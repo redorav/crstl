@@ -224,7 +224,7 @@ crstl_module_export namespace crstl
 		static uint32_t extract(float item)
 		{
 			uint32_t u_item = union_cast<uint32_t>(item);
-			uint32_t mask = -int32_t(u_item >> 31) | 0x80000000;
+			uint32_t mask = (uint32_t)(-int32_t(u_item >> 31) | 0x80000000);
 			return u_item ^ mask;
 		}
 	};
@@ -236,7 +236,7 @@ crstl_module_export namespace crstl
 		static uint64_t extract(double item)
 		{
 			uint64_t u_item = union_cast<uint64_t>(item);
-			uint64_t mask = -int64_t(u_item >> 63) | 0x8000000000000000;
+			uint64_t mask = (uint64_t)(-int64_t(u_item >> 63) | 0x8000000000000000);
 			return u_item ^ mask;
 		}
 	};
