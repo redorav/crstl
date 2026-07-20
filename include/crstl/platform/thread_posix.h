@@ -36,15 +36,15 @@ crstl_module_export namespace crstl
 		return nullptr;
 	}
 
-	class thread final : thread_base
+	class crstl_nodiscard thread final : thread_base
 	{
 	public:
 
 		#define crstl_thread_invalid_handle 0
 
-		thread() crstl_nodiscard : m_delayed_start(false), m_pthread(crstl_thread_invalid_handle) {}
+		thread() : m_delayed_start(false), m_pthread(crstl_thread_invalid_handle) {}
 
-		thread(thread&& other) crstl_nodiscard
+		thread(thread&& other) crstl_noexcept
 		{
 			m_pthread = other.m_pthread;
 			m_delayed_start = other.m_delayed_start;
@@ -65,7 +65,7 @@ crstl_module_export namespace crstl
 		}
 
 		template<typename Function, typename ... Args>
-		thread(const thread_parameters& parameters, Function&& func, Args&& ... args) crstl_nodiscard
+		thread(const thread_parameters& parameters, Function&& func, Args&& ... args)
 		{
 			pthread_attr_t attr;
 			pthread_attr_init(&attr);

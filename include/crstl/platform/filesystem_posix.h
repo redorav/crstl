@@ -195,7 +195,7 @@ namespace crstl
 			struct stat s_stat = {};
 			off_t total_bytes_copied = 0;
 			fstat(src_file_handle, &s_stat);
-			return sendfile(dst_file_handle, src_file_handle, &total_bytes_copied, s_stat.st_size);
+			return sendfile(dst_file_handle, src_file_handle, &total_bytes_copied, (size_t)s_stat.st_size);
 #else
 			static const size_t tmp_data_size = 4096;
 			char tmp_data[tmp_data_size];
