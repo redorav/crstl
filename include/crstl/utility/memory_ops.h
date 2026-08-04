@@ -14,7 +14,9 @@ extern "C"
 {
 #if defined(CRSTL_COMPILER_MSVC)
 	void* memcpy(void* destination, void const* source, size_t size);
-	crstl_2015_dllimport void* memmove(void* destination, const void* source, size_t size);
+
+	crstl_2015_dllimport
+	void* memmove(void* destination, const void* source, size_t size);
 
 	void* memset(void* dst, int val, size_t size);
 
@@ -25,9 +27,9 @@ extern "C"
 };
 
 #if defined(CRSTL_COMPILER_MSVC)
-#define crstl_alloca(size) (_alloca(size))
+#define crstl_alloca(size) _alloca(size)
 #else
-#define crstl_alloca(size) (__builtin_alloca(size))
+#define crstl_alloca(size) __builtin_alloca(size)
 #endif
 
 #define crstl_alloca_t(T, capacity) crstl::transient_memory_t<T>((T*)crstl_alloca((capacity) * sizeof(T)), (capacity))

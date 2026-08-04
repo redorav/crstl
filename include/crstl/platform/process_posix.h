@@ -164,7 +164,7 @@ crstl_module_export namespace crstl
 
 				if (bytes_read >= 0)
 				{
-					return process_size(bytes_read);
+					return process_size((size_t)bytes_read);
 				}
 			}
 

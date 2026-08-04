@@ -8,7 +8,14 @@
 #include "crstl/utility/placement_new.h"
 #include "crstl/utility/hashmap_common.h"
 
-#include "crstl/debugging.h"
+// Base for the open_hash and fixed_open_hash tables
+//
+// - Open addressing
+// - Linear memory
+// - No tombstones
+// - Linear search in case of collisions
+// - at(key) returns a pointer to the underlying data. If the node is not found, returns nullptr
+// - [key] returns pointer to the underlying data. If the node is not found, returns nullptr
 
 namespace crstl
 {
@@ -118,6 +125,10 @@ namespace crstl
 		typedef typename HashmapStorage::const_iterator const_iterator;
 		typedef typename HashmapStorage::node_type      node_type;
 
+		// at and [] return pointer types instead of references because they aren't guaranteed to be present in the table
+		// A table can store references as their value type to the pointer points to the original object
+		typedef typename crstl::remove_reference<value_type>::type* value_ptr_type;
+
 		using storage_type::m_data;
 		using storage_type::m_length;
 
@@ -125,6 +136,20 @@ namespace crstl
 		using storage_type::get_bucket_count;
 		using storage_type::reallocate_rehash_if_length_above_load_factor;
 		using storage_type::reallocate_rehash_if_length_above_capacity;
+
+		template<typename KeyType>
+		crstl_constexpr14 value_ptr_type at(const KeyType& key)
+		{
+			node_type* found_node = find_impl(key);
+			return (found_node == (m_data + get_bucket_count())) ? nullptr : &found_node->key_value.second;
+		}
+
+		template<typename KeyType>
+		crstl_constexpr14 const value_ptr_type at(const KeyType& key) const
+		{
+			node_type* found_node = find_impl(key);
+			return (found_node == (m_data + get_bucket_count())) ? nullptr : &found_node->key_value.second;
+		}
 
 		crstl_nodiscard
 		crstl_constexpr14 iterator begin() crstl_noexcept
@@ -378,6 +403,20 @@ namespace crstl
 
 		crstl_nodiscard
 		size_t size() const { return m_length; }
+
+		template<typename KeyType>
+		crstl_constexpr14 value_ptr_type operator [] (const KeyType& key)
+		{
+			node_type* found_node = find_impl(key);
+			return (found_node == (m_data + get_bucket_count())) ? nullptr : &found_node->key_value.second;
+		}
+
+		template<typename KeyType>
+		crstl_constexpr14 value_ptr_type operator [] (const KeyType& key) const
+		{
+			node_type* found_node = find_impl(key);
+			return (found_node == (m_data + get_bucket_count())) ? nullptr : &found_node->key_value.second;
+		}
 
 	protected:
 

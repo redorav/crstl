@@ -247,7 +247,7 @@ project ('crstl')
 	language('c++')
 	files
 	{
-		includeDir..'/**.h',
+		includeDir..'/crstl/**.h',
 		includeDir..'/*.natvis'
 	}
 	

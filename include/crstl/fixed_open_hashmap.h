@@ -10,6 +10,13 @@ import <initializer_list>;
 #include <initializer_list>
 #endif
 
+// crstl::fixed_open_hashmap
+// crstl::fixed_open_hashset
+// crstl::fixed_open_multi_hashmap
+// crstl::fixed_open_multi_hashset
+//
+// Fixed replacement for std::unordered_map, std::unordered_set, std::unordered_multimap, and std::unordered_multiset
+
 crstl_module_export namespace crstl
 {
 	template<typename Key, typename T, size_t NodeCount, typename Hasher>
