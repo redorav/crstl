@@ -116,7 +116,15 @@ crstl_module_export namespace crstl
 		template<int N>
 		crstl_constexpr14 basic_string(const CharT(&string_literal)[N]) crstl_noexcept
 		{
-			initialize_string(string_literal, string_length(string_literal, N - 1));
+			initialize_string(string_literal, N - 1);
+		}
+
+		template<int N>
+		crstl_constexpr14 basic_string(CharT(&string_literal)[N]) crstl_noexcept
+		{
+			// Non-const string literals may lack null terminators, but we know the maximum length here and can ensure string_length never reads out of bounds
+			string_literal[N - 1] = '\0';
+			initialize_string(string_literal, string_length(string_literal));
 		}
 
 		template<typename Q>
@@ -260,7 +268,14 @@ crstl_module_export namespace crstl
 		template<int N>
 		crstl_constexpr14 basic_string& append(const CharT(&string_literal)[N]) crstl_noexcept
 		{
-			append(string_literal, string_length(string_literal, N - 1)); return *this;
+			append(string_literal, N - 1); return *this;
+		}
+
+		template<int N>
+		crstl_constexpr14 basic_string& append(CharT(&string_literal)[N]) crstl_noexcept
+		{
+			string_literal[N - 1] = '\0';
+			append(string_literal, string_length(string_literal)); return *this;
 		}
 
 		template<typename Q>
@@ -390,7 +405,14 @@ crstl_module_export namespace crstl
 		template<typename OtherCharT, int N>
 		crstl_constexpr14 basic_string& append_convert(const OtherCharT(&string_literal)[N]) crstl_noexcept
 		{
-			append_convert(string_literal, string_length(string_literal, N - 1)); return *this;
+			append_convert(string_literal, N - 1); return *this;
+		}
+
+		template<typename OtherCharT, int N>
+		crstl_constexpr14 basic_string& append_convert(OtherCharT(&string_literal)[N]) crstl_noexcept
+		{
+			string_literal[N - 1] = '\0';
+			append_convert(string_literal, string_length(string_literal)); return *this;
 		}
 
 		template<typename OtherCharQ>

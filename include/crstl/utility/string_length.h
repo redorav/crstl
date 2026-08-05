@@ -36,12 +36,6 @@ crstl_module_export namespace crstl
 #endif
 	}
 
-	inline size_t string_length(const char* str, size_t max_length)
-	{
-		size_t length = string_length(str);
-		return length < max_length ? length : max_length;
-	}
-
 	inline size_t string_length(const wchar_t* str)
 	{
 #if defined(CRSTL_BUILTIN_WCSLEN)
@@ -51,20 +45,8 @@ crstl_module_export namespace crstl
 #endif
 	}
 
-	inline size_t string_length(const wchar_t* str, size_t max_length)
-	{
-		size_t length = string_length(str);
-		return length < max_length ? length : max_length;
-	}
-
 	inline size_t string_length(const char8_t* str)
 	{
 		return string_length((const char*)str);
-	}
-
-	inline size_t string_length(const char8_t* str, size_t max_length)
-	{
-		size_t length = string_length((const char*)str);
-		return length < max_length ? length : max_length;
 	}
 };
