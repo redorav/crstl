@@ -128,6 +128,7 @@ namespace crstl
 		// at and [] return pointer types instead of references because they aren't guaranteed to be present in the table
 		// A table can store references as their value type to the pointer points to the original object
 		typedef typename crstl::remove_reference<value_type>::type* value_ptr_type;
+		typedef const typename crstl::remove_reference<value_type>::type* const_value_ptr_type;
 
 		using storage_type::m_data;
 		using storage_type::m_length;
@@ -145,7 +146,7 @@ namespace crstl
 		}
 
 		template<typename KeyType>
-		crstl_constexpr14 const value_ptr_type at(const KeyType& key) const
+		crstl_constexpr14 const_value_ptr_type at(const KeyType& key) const
 		{
 			node_type* found_node = find_impl(key);
 			return (found_node == (m_data + get_bucket_count())) ? nullptr : &found_node->key_value.second;
@@ -412,7 +413,7 @@ namespace crstl
 		}
 
 		template<typename KeyType>
-		crstl_constexpr14 value_ptr_type operator [] (const KeyType& key) const
+		crstl_constexpr14 const_value_ptr_type operator [] (const KeyType& key) const
 		{
 			node_type* found_node = find_impl(key);
 			return (found_node == (m_data + get_bucket_count())) ? nullptr : &found_node->key_value.second;
