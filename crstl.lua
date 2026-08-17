@@ -241,15 +241,6 @@ workspace('crstl')
 		defines { 'NDEBUG' }
 		inlining('auto')
 		optimize('speed')
-
-project ('crstl')
-	kind('utility')
-	language('c++')
-	files
-	{
-		includeDir..'/crstl/**.h',
-		includeDir..'/*.natvis'
-	}
 	
 project (UnitTestProject)
 	kind('consoleapp')
@@ -258,6 +249,12 @@ project (UnitTestProject)
 	{
 		srcDir..'/*.cpp',
 		srcDir..'/*.h',
+	}
+	
+	files
+	{
+		includeDir..'/crstl/**.h',
+		includeDir..'/*.natvis'
 	}
 	
 	-- Add module as compilation target for any platform that supports modules
