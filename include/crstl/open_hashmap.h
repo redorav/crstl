@@ -39,13 +39,11 @@ crstl_module_export namespace crstl
 		static const size_t kNodeSize = sizeof(node_type);
 
 		crstl_constexpr14 open_hashmap_storage() crstl_noexcept
-			: m_data(&m_dummy)
+			: m_data(nullptr)
 			, m_length(0)
-			, m_bucket_count(1) // Need this to work with m_dummy
+			, m_bucket_count(0)
 			, m_capacity_allocator()
-		{
-			m_dummy.set_empty();
-		}
+		{}
 
 		~open_hashmap_storage() {}
 
@@ -60,6 +58,8 @@ crstl_module_export namespace crstl
 		{
 			return m_bucket_count;
 		}
+
+		crstl_forceinline crstl_constexpr14 bool has_valid_data() const { return m_data != nullptr; }
 
 		template<typename RehashFunction>
 		crstl_forceinline crstl_constexpr14 void reallocate_rehash_if_length_above_capacity(size_t length, RehashFunction rehash_function)
@@ -116,10 +116,7 @@ crstl_module_export namespace crstl
 
 		void deallocate(node_type* data, size_t capacity)
 		{
-			if (data != &m_dummy)
-			{
-				m_capacity_allocator.second().deallocate(data, capacity * kNodeSize);
-			}
+			m_capacity_allocator.second().deallocate(data, capacity * kNodeSize);
 		}
 
 		crstl_nodiscard
@@ -137,8 +134,8 @@ crstl_module_export namespace crstl
 		{
 			deallocate(m_data, m_capacity_allocator.m_first);
 			m_capacity_allocator.m_first = 0;
-			m_data = &m_dummy;
-			m_bucket_count = 1;
+			m_data = nullptr;
+			m_bucket_count = 0;
 		}
 
 		crstl_constexpr14 size_t compute_new_capacity(size_t old_capacity) const
@@ -147,15 +144,6 @@ crstl_module_export namespace crstl
 		}
 
 		node_type* m_data;
-
-		// Use this dummy value to avoid having to check for m_data == nullptr during find and erase
-		// We just initialize this to be an always-empty node
-		crstl_warning_anonymous_struct_union_begin
-		union
-		{
-			struct { node_type m_dummy; };
-		};
-		crstl_warning_anonymous_struct_union_end
 
 		size_t m_length;
 
@@ -255,27 +243,27 @@ crstl_module_export namespace crstl
 
 			destructor();
 
-			m_data = other.m_data == &other.m_dummy ? &m_dummy : other.m_data;
+			m_data = other.m_data;
 			m_length = other.m_length;
 			m_capacity_allocator = other.m_capacity_allocator;
 			m_bucket_count = other.m_bucket_count;
 
-			other.m_data = &other.m_dummy;
+			other.m_data = nullptr;
 			other.m_length = 0;
 			other.m_capacity_allocator.m_first = 0;
-			other.m_bucket_count = 1;
+			other.m_bucket_count = 0;
 
 			return *this;
 		}
 
 		static void swap(open_hashtable& hashmap1, open_hashtable& hashmap2)
 		{
-			node_type* data = hashmap2.m_data == &hashmap2.m_dummy ? &hashmap1.m_dummy : hashmap2.m_data;
+			node_type* data = hashmap2.m_data;
 			size_t length = hashmap2.m_length;
 			compressed_pair<size_t, Allocator> capacity_allocator = hashmap2.m_capacity_allocator;
 			size_t bucket_count = hashmap2.m_bucket_count;
 
-			hashmap2.m_data = hashmap1.m_data == &hashmap1.m_dummy ? &hashmap2.m_dummy : hashmap1.m_data;
+			hashmap2.m_data = hashmap1.m_data;
 			hashmap2.m_length = hashmap1.m_length;
 			hashmap2.m_capacity_allocator = hashmap1.m_capacity_allocator;
 			hashmap2.m_bucket_count = hashmap1.m_bucket_count;
@@ -307,7 +295,6 @@ crstl_module_export namespace crstl
 		using base_type::insert_empty_impl;
 
 		using base_type::m_data;
-		using base_type::m_dummy;
 		using base_type::m_length;
 		using base_type::m_capacity_allocator;
 		using base_type::m_bucket_count;

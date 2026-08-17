@@ -57,6 +57,9 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 size_t get_bucket_count() const { return NodeCount; }
 
+		// Fixed containers always have valid data, whereas standard containers create it on first use
+		crstl_forceinline crstl_constexpr14 bool has_valid_data() const { return true; }
+
 	protected:
 
 		crstl_warning_anonymous_struct_union_begin

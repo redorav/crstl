@@ -135,6 +135,7 @@ namespace crstl
 
 		using storage_type::compute_bucket;
 		using storage_type::get_bucket_count;
+		using storage_type::has_valid_data;
 		using storage_type::reallocate_rehash_if_length_above_load_factor;
 		using storage_type::reallocate_rehash_if_length_above_capacity;
 
@@ -142,14 +143,14 @@ namespace crstl
 		crstl_constexpr14 value_ptr_type at(const KeyType& key)
 		{
 			node_type* found_node = find_impl(key);
-			return (found_node == (m_data + get_bucket_count())) ? nullptr : &found_node->key_value.second;
+			return found_node ? &found_node->key_value.second : nullptr;
 		}
 
 		template<typename KeyType>
 		crstl_constexpr14 const_value_ptr_type at(const KeyType& key) const
 		{
 			node_type* found_node = find_impl(key);
-			return (found_node == (m_data + get_bucket_count())) ? nullptr : &found_node->key_value.second;
+			return found_node ? &found_node->key_value.second : nullptr;
 		}
 
 		crstl_nodiscard
@@ -206,33 +207,40 @@ namespace crstl
 		template<typename KeyType>
 		size_t count(const KeyType& key) const
 		{
-			const size_t bucket_count = get_bucket_count();
-			const size_t hash_value   = compute_hash_value(key);
-			const size_t bucket_index = compute_bucket(hash_value);
-
-			node_type* const data = m_data;
-			node_type* const start_node = data + bucket_index;
-			node_type* const end_node = data + bucket_count;
-			node_type* crstl_restrict current_node = start_node;
-
-			size_t count = 0;
-
-			do
+			if (has_valid_data())
 			{
-				if (current_node->is_empty())
-				{
-					break;
-				}
-				else if (current_node->get_key() == key)
-				{
-					++count;
-				}
+				const size_t bucket_count = get_bucket_count();
+				const size_t hash_value   = compute_hash_value(key);
+				const size_t bucket_index = compute_bucket(hash_value);
 
-				current_node++;
-				current_node = (current_node == end_node) ? data : current_node;
-			} while (current_node != start_node);
+				node_type* const data = m_data;
+				node_type* const start_node = data + bucket_index;
+				node_type* const end_node = data + bucket_count;
+				node_type* crstl_restrict current_node = start_node;
 
-			return count;
+				size_t count = 0;
+
+				do
+				{
+					if (current_node->is_empty())
+					{
+						break;
+					}
+					else if (current_node->get_key() == key)
+					{
+						++count;
+					}
+
+					current_node++;
+					current_node = (current_node == end_node) ? data : current_node;
+				} while (current_node != start_node);
+
+				return count;
+			}
+			else
+			{
+				return 0;
+			}
 		}
 
 #if defined(CRSTL_FEATURE_VARIADIC_TEMPLATES)
@@ -290,32 +298,35 @@ namespace crstl
 		template<typename KeyType>
 		crstl_constexpr14 size_t erase(KeyType&& key)
 		{
-			const size_t bucket_count = get_bucket_count();
-			const size_t hash_value   = compute_hash_value(key);
-			const size_t bucket_index = compute_bucket(hash_value);
-
-			node_type* const data = m_data;
-			node_type* const start_node = data + bucket_index;
-			node_type* const end_node = data + bucket_count;
-			node_type* crstl_restrict current_node = start_node;
-
-			do
+			if (has_valid_data())
 			{
-				// If this is the last node, we've finished our search
-				if (current_node->is_empty())
-				{
-					return 0;
-				}
-				else if (current_node->get_key() == key)
-				{
-					erase_iter_impl(current_node);
-					return 1;
-				}
+				const size_t bucket_count = get_bucket_count();
+				const size_t hash_value   = compute_hash_value(key);
+				const size_t bucket_index = compute_bucket(hash_value);
 
-				// Otherwise, look for the next node
-				current_node++;
-				current_node = (current_node == end_node) ? data : current_node;
-			} while (current_node != start_node);
+				node_type* const data = m_data;
+				node_type* const start_node = data + bucket_index;
+				node_type* const end_node = data + bucket_count;
+				node_type* crstl_restrict current_node = start_node;
+
+				do
+				{
+					// If this is the last node, we've finished our search
+					if (current_node->is_empty())
+					{
+						return 0;
+					}
+					else if (current_node->get_key() == key)
+					{
+						erase_iter_impl(current_node);
+						return 1;
+					}
+
+					// Otherwise, look for the next node
+					current_node++;
+					current_node = (current_node == end_node) ? data : current_node;
+				} while (current_node != start_node);
+			}
 
 			return 0;
 		}
@@ -337,37 +348,40 @@ namespace crstl
 		template<typename KeyType, typename Function>
 		void for_each(KeyType&& key, Function&& function)
 		{
-			const size_t hash_value = compute_hash_value(key);
-			const size_t bucket_index = compute_bucket(hash_value);
-			crstl_assert(bucket_index <= get_bucket_count());
-
-			node_type* const data = m_data;
-			node_type* const start_node = m_data + bucket_index;
-			node_type* const end_node = m_data + get_bucket_count();
-			node_type* crstl_restrict current_node = start_node;
-
-			do
+			if (has_valid_data())
 			{
-				if (current_node->is_empty())
-				{
-					return;
-				}
-				else if (current_node->get_key() == key)
-				{
-					// Call function on every value we find
-					function(current_node->get_value());
+				const size_t hash_value   = compute_hash_value(key);
+				const size_t bucket_index = compute_bucket(hash_value);
+				crstl_assert(bucket_index <= get_bucket_count());
 
-					// Return early if we're not a multiple value hashmap. It'd be wasted effort
-					// to iterate until we find an empty node
-					crstl_constexpr_if(!IsMultipleValue)
+				node_type* const data = m_data;
+				node_type* const start_node = m_data + bucket_index;
+				node_type* const end_node = m_data + get_bucket_count();
+				node_type* crstl_restrict current_node = start_node;
+
+				do
+				{
+					if (current_node->is_empty())
 					{
 						return;
 					}
-				}
+					else if (current_node->get_key() == key)
+					{
+						// Call function on every value we find
+						function(current_node->get_value());
 
-				current_node++;
-				current_node = (current_node == end_node) ? data : current_node;
-			} while (current_node != start_node);
+						// Return early if we're not a multiple value hashmap. It'd be wasted effort
+						// to iterate until we find an empty node
+						crstl_constexpr_if(!IsMultipleValue)
+						{
+							return;
+						}
+					}
+
+					current_node++;
+					current_node = (current_node == end_node) ? data : current_node;
+				} while (current_node != start_node);
+			}
 		}
 
 		template<typename... ValueType>
@@ -455,6 +469,9 @@ namespace crstl
 		template<typename KeyValueType>
 		inline crstl_constexpr14 void insert_empty_impl(KeyValueType&& key_value)
 		{
+			// We need to have valid data to insert elements
+			crstl_assert(has_valid_data());
+
 			const size_t hash_value = compute_hash_value(get_key(key_value));
 			const size_t bucket_index = compute_bucket(hash_value);
 			crstl_assert(bucket_index <= get_bucket_count());
@@ -485,6 +502,9 @@ namespace crstl
 		template<exists_behavior::t Behavior, insert_emplace::t InsertEmplace, typename KeyType, typename... InsertEmplaceArgs>
 		crstl_forceinline crstl_constexpr14 pair<iterator, bool> find_create_impl(KeyType&& key, InsertEmplaceArgs&&... insert_emplace_args)
 		{
+			// We need to have valid data to use this function, as it can insert
+			crstl_assert(has_valid_data());
+
 			// A hashset uses a value_type of void to indicate we want to only store the key. Therefore, trying to insert a value is an error
 			static_assert(crstl::is_void<value_type>::value ? sizeof...(InsertEmplaceArgs) == 0 : true, "Error: hashset does not store a value");
 
@@ -543,35 +563,45 @@ namespace crstl
 		template<typename KeyType>
 		crstl_forceinline node_type* find_impl(const KeyType& key) const
 		{
-			const size_t hash_value = compute_hash_value(key);
-			const size_t bucket_index = compute_bucket(hash_value);
-
-			node_type* const data = (node_type*)m_data;
-			node_type* const end_node = data + get_bucket_count();
-			node_type* const start_node = data + bucket_index;
-			node_type* crstl_restrict current_node = start_node;
-
-			do
+			if (has_valid_data())
 			{
-				if (current_node->is_empty())
+				const size_t hash_value = compute_hash_value(key);
+				const size_t bucket_index = compute_bucket(hash_value);
+
+				node_type* const data = (node_type*)m_data;
+				node_type* const end_node = data + get_bucket_count();
+				node_type* const start_node = data + bucket_index;
+				node_type* crstl_restrict current_node = start_node;
+
+				do
 				{
-					return end_node;
-				}
+					if (current_node->is_empty())
+					{
+						return end_node;
+					}
 
-				if (current_node->get_key() == key)
-				{
-					return current_node;
-				}
+					if (current_node->get_key() == key)
+					{
+						return current_node;
+					}
 
-				current_node++;
-				current_node = (current_node == end_node) ? data : current_node;
-			} while(current_node != start_node);
+					current_node++;
+					current_node = (current_node == end_node) ? data : current_node;
+				} while (current_node != start_node);
 
-			return end_node;
+				return end_node;
+			}
+			else
+			{
+				return nullptr;
+			}
 		}
 
 		crstl_forceinline crstl_constexpr14 bool erase_iter_impl(node_type* node_to_erase)
 		{
+			// This is probably redundant but doesn't hurt to check to avoid introducing a bug
+			crstl_assert(has_valid_data());
+
 			size_t const bucket_count = get_bucket_count();
 			node_type* const data     = m_data;
 			node_type* const end_node = data + bucket_count;
@@ -671,7 +701,7 @@ namespace crstl
 			}
 		}
 
-		static crstl_constexpr14 size_t compute_hash_value(const key_type& key)
+		static crstl_forceinline crstl_constexpr14 size_t compute_hash_value(const key_type& key)
 		{
 			size_t hash_value = hasher()(key);
 			return hash_value;
