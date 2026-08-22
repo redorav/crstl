@@ -84,10 +84,10 @@ crstl_module_export namespace crstl
 		typedef typename base_type::pointer         pointer;
 		typedef typename base_type::const_pointer   const_pointer;
 
+		using typename base_type::value_type;
+
 		using base_type::clear;
 		using base_type::push_back;
-
-		using base_type::value_type;
 
 		enum
 		{

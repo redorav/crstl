@@ -73,9 +73,9 @@ crstl_module_export namespace crstl
 		typedef typename base_type::pointer         pointer;
 		typedef typename base_type::const_pointer   const_pointer;
 
-		using base_type::clear;
+		using typename base_type::value_type;
 
-		using base_type::value_type;
+		using base_type::clear;
 
 		crstl_constexpr14 stack_vector(transient_memory_t<T> init)
 		{
