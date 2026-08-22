@@ -28,6 +28,7 @@ namespace crstl
 
 		typedef VectorStorage base_type;
 		typedef vector_base   this_type;
+		typedef T             value_type;
 		typedef T*            iterator;
 		typedef const T*      const_iterator;
 		typedef T*            pointer;

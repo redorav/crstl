@@ -87,6 +87,8 @@ crstl_module_export namespace crstl
 		using base_type::clear;
 		using base_type::push_back;
 
+		using base_type::value_type;
+
 		enum
 		{
 			kMaxStack = 4096,

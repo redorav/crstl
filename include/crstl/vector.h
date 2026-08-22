@@ -132,6 +132,8 @@ crstl_module_export namespace crstl
 		using base_type::clear;
 		using base_type::push_back;
 
+		using base_type::value_type;
+
 		static const size_t kDataSize = sizeof(T);
 
 		crstl_constexpr vector() crstl_noexcept : base_type() {}

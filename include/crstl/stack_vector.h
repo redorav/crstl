@@ -75,6 +75,8 @@ crstl_module_export namespace crstl
 
 		using base_type::clear;
 
+		using base_type::value_type;
+
 		crstl_constexpr14 stack_vector(transient_memory_t<T> init)
 		{
 			m_data = (T*)init.memory;
