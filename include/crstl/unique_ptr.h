@@ -10,9 +10,8 @@
 
 // crstl::unique_ptr
 //
-// Replacement for std::unique_ptr, functionally the same
-// but with a very small compile time footprint
-// The move-only semantics remain the same
+// Replacement for std::unique_ptr, with a very small compile time footprint
+// Move-only semantics remain the same
 //
 // - unique_ptr doesn't allocate memory, the pointer is supplied externally
 //   but it does deallocate memory, so care has to be take to allocate and 
@@ -48,6 +47,9 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 unique_ptr_base& operator = (unique_ptr_base&& uptr) crstl_noexcept
 		{
+			crstl_assert(this != &uptr);
+
+			static_cast<UniquePtr&>(*this).reset(nullptr);
 			m_ptr = uptr.m_ptr;
 			uptr.m_ptr = nullptr;
 			return *this;
@@ -63,11 +65,6 @@ crstl_module_export namespace crstl
 			return (m_ptr == nullptr);
 		}
 
-		~unique_ptr_base() crstl_noexcept
-		{
-			static_cast<UniquePtr&>(*this).reset(nullptr);
-		}
-
 		typedef T* (unique_ptr_base<UniquePtr, T>::* boolean)() const;
 
 		operator boolean() const crstl_noexcept
@@ -76,7 +73,7 @@ crstl_module_export namespace crstl
 			return m_ptr ? &unique_ptr_base<UniquePtr, T>::get : nullptr;
 		}
 
-		T* get() const
+		T* get() const crstl_noexcept
 		{
 			return m_ptr;
 		}
@@ -97,10 +94,6 @@ crstl_module_export namespace crstl
 
 		bool operator == (nullptr_t) const { return m_ptr == nullptr; }
 		bool operator != (nullptr_t) const { return m_ptr != nullptr; }
-		bool operator <  (nullptr_t) const { return m_ptr <  nullptr; }
-		bool operator <= (nullptr_t) const { return m_ptr <= nullptr; }
-		bool operator >  (nullptr_t) const { return m_ptr >  nullptr; }
-		bool operator >= (nullptr_t) const { return m_ptr >= nullptr; }
 
 	protected:
 
@@ -142,8 +135,14 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 void reset(typename base::pointer ptr = base::pointer()) crstl_noexcept
 		{
+			crstl_assert(base::m_ptr != ptr);
 			delete base::m_ptr;
 			base::m_ptr = ptr;
+		}
+
+		~unique_ptr() crstl_noexcept
+		{
+			delete base::m_ptr;
 		}
 	};
 
@@ -168,6 +167,11 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 unique_ptr& operator = (unique_ptr&& uptr) crstl_noexcept { base::operator = (crstl_move(uptr)); return *this; }
 
+		crstl_constexpr14 T& operator[](size_t index) const crstl_noexcept
+		{
+			return base::m_ptr[index];
+		}
+
 		crstl_constexpr14 void reset(nullptr_t) crstl_noexcept
 		{
 			delete[] base::m_ptr;
@@ -176,8 +180,14 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr14 void reset(typename base::pointer ptr = base::pointer()) crstl_noexcept
 		{
+			crstl_assert(base::m_ptr != ptr);
 			delete[] base::m_ptr;
 			base::m_ptr = ptr;
+		}
+
+		~unique_ptr() crstl_noexcept
+		{
+			delete[] base::m_ptr;
 		}
 	};
 
@@ -207,6 +217,6 @@ crstl_module_export namespace crstl
 	crstl_nodiscard crstl_constexpr unique_ptr<T> make_unique_uninitialized(const size_t size)
 	{
 		using TNoExtents = typename remove_extent<T>::type;
-		return unique_ptr<T>(new TNoExtents[size]());
+		return unique_ptr<T>(new TNoExtents[size]);
 	}
 };
