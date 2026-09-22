@@ -75,6 +75,8 @@ crstl_module_export namespace crstl
 
 		using base_type::clear;
 
+		static const size_t kDataSize = sizeof(T);
+
 		crstl_constexpr14 stack_vector(transient_memory_t<T> init)
 		{
 			m_data = (T*)init.memory;

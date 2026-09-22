@@ -199,11 +199,12 @@
 	</Type>
 
 	<Type Name="crstl::fixed_vector&lt;*,*&gt;">
-		<DisplayString>[size = { (int)m_length }]</DisplayString>
+		<DisplayString>[size = { (int)m_length } / { $T2 }] [bytes = { m_length * kDataSize } / { $T2 * kDataSize }]</DisplayString>
 
 		<Expand>
 			<Item Name="[capacity]">$T2</Item>
-			<Item Name="[size]">(int)m_length</Item>
+			<Item Name="[size]">(size_t)m_length</Item>
+			<Item Name="[element bytes]">kDataSize</Item>
 			<ArrayItems>
 				<Size>m_length</Size>
 				<ValuePointer>m_data</ValuePointer>
@@ -258,11 +259,12 @@
 	</Type>
 
 	<Type Name="crstl::stack_vector&lt;*&gt;">
-		<DisplayString>[size = {m_length}]</DisplayString>
+		<DisplayString>[size = { m_length } / { m_capacity }] [bytes = { m_length * kDataSize } / { m_capacity * kDataSize }]</DisplayString>
 
 		<Expand>
 			<Item Name="[capacity]">m_capacity</Item>
 			<Item Name="[size]">m_length</Item>
+			<Item Name="[element bytes]">kDataSize</Item>
 			<ArrayItems>
 				<Size>m_length</Size>
 				<ValuePointer>m_data</ValuePointer>
@@ -289,11 +291,12 @@
 	</Type>
 
 	<Type Name="crstl::vector&lt;*,*&gt;">
-		<DisplayString>[size = {m_length}]</DisplayString>
+		<DisplayString>[size = { (size_t)m_length } / { m_capacity_allocator.m_first }] [bytes = { m_length * kDataSize } / { m_capacity_allocator.m_first * kDataSize }]</DisplayString>
 
 		<Expand>
 			<Item Name="[capacity]">m_capacity_allocator.m_first</Item>
 			<Item Name="[size]">m_length</Item>
+			<Item Name="[element bytes]">kDataSize</Item>
 			<ArrayItems>
 				<Size>m_length</Size>
 				<ValuePointer>m_data</ValuePointer>
