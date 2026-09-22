@@ -178,7 +178,7 @@ crstl_module_export namespace crstl
 		template<int N>
 		crstl_constexpr14 basic_fixed_string& append(const CharT(&string_literal)[N]) crstl_noexcept
 		{
-			append(string_literal, N - 1);
+			append(string_literal, string_length(string_literal));
 			return *this;
 		}
 

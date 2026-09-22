@@ -116,7 +116,7 @@ crstl_module_export namespace crstl
 		template<int N>
 		crstl_constexpr14 basic_string(const CharT(&string_literal)[N]) crstl_noexcept
 		{
-			initialize_string(string_literal, N - 1);
+			initialize_string(string_literal, string_length(string_literal));
 		}
 
 		template<int N>
@@ -268,7 +268,7 @@ crstl_module_export namespace crstl
 		template<int N>
 		crstl_constexpr14 basic_string& append(const CharT(&string_literal)[N]) crstl_noexcept
 		{
-			append(string_literal, N - 1); return *this;
+			append(string_literal, string_length(string_literal)); return *this;
 		}
 
 		template<int N>
