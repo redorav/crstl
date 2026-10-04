@@ -452,7 +452,8 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 basic_string& append_sprintf(const_pointer format, ...) crstl_noexcept
 		{
 			size_t current_length = length();
-			size_t remaining_length = capacity() - current_length;
+			size_t current_capacity = capacity();
+			size_t remaining_length = current_capacity - current_length;
 
 			CharT* data = basic_string::data();
 
@@ -469,12 +470,14 @@ crstl_module_export namespace crstl
 
 			size_t char_count = (size_t)snprintf_return;
 
+			size_t new_length = current_length + char_count;
+
 			// If the number of characters we would have written is greater than what we had available, 
 			// we need to heap reallocate to have enough space, then try again. We would actually like
 			// this to continue where it left off but that's not possible with format specifiers
 			if (char_count > remaining_length)
 			{
-				reallocate_heap_larger(current_length + char_count); // When we reallocate, we always take the null terminator into account
+				reallocate_heap_larger(new_length); // When we reallocate, we always take the null terminator into account
 				va_start(va_arguments, format);
 
 				// We need to pass in char_count + 1 as it will try to leave space for the null terminator and we'd end up with one less character
@@ -488,11 +491,11 @@ crstl_module_export namespace crstl
 
 			if (is_sso())
 			{
-				m_layout_allocator.m_first.m_sso.remaining_length.value = (unsigned char)(kSSOCapacity - char_count);
+				m_layout_allocator.m_first.m_sso.remaining_length.value = (unsigned char)(kSSOCapacity - new_length);
 			}
 			else
 			{
-				m_layout_allocator.m_first.m_heap.length = char_count;
+				m_layout_allocator.m_first.m_heap.length = new_length;
 			}
 
 			return *this;
@@ -599,7 +602,7 @@ crstl_module_export namespace crstl
 
 		crstl_constexpr size_t capacity() const
 		{
-			return (is_sso() ? kSSOCapacity : get_capacity_heap()) - 1;
+			return is_sso() ? kSSOCapacity : get_capacity_heap();
 		}
 
 		crstl_constexpr const_iterator cbegin() const crstl_noexcept { return is_sso() ? m_layout_allocator.m_first.m_sso.data : m_layout_allocator.m_first.m_heap.data; }
@@ -1280,6 +1283,7 @@ crstl_module_export namespace crstl
 			// and larger than the existing heap capacity too
 			crstl_assert(new_capacity > capacity());
 
+			// Allocate an extra kCharSize for the null terminator
 			CharT* temp = (CharT*)m_layout_allocator.second().allocate(new_capacity * kCharSize + kCharSize);
 			size_t length = 0;
 
