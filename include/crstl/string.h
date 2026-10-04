@@ -85,6 +85,7 @@ crstl_module_export namespace crstl
 
 		static const crstl_constexpr size_t kCharSize = sizeof(CharT);
 
+		// Useful capacity, i.e. the length without taking the null terminator into account
 		static const crstl_constexpr size_t kSSOCapacity = sizeof(sso_view) / sizeof(CharT) - 1;
 
 		// This is valid for little endian machines, where the remaining_length and capacity
@@ -1362,10 +1363,11 @@ crstl_module_export namespace crstl
 			}
 		}
 
+		// Helper function to calculate the memory that needs moving, reallocate heap and set the null terminator, but does not write out the replacement string,
+		// as we might fill in with chars or copy over some other string, etc
 		crstl_constexpr14 CharT* replace_common(size_t current_length, size_t needle_pos, size_t needle_length, size_t replace_length)
 		{
 			size_t current_capacity = basic_string::capacity();
-			size_t replace_difference = (replace_length - needle_length);
 			size_t target_length = current_length + replace_length - needle_length;
 
 			if (target_length > current_capacity)
@@ -1376,7 +1378,7 @@ crstl_module_export namespace crstl
 			CharT* data = nullptr;
 			size_t dst_offset = needle_pos + replace_length;
 			size_t src_offset = needle_pos + needle_length;
-			size_t chars_to_move = current_length - (needle_pos + needle_length) + 1;
+			size_t chars_to_move = current_length - (needle_pos + needle_length);
 			size_t bytes_to_move = chars_to_move * kCharSize;
 
 			// Move the parts that would be stomped or leave gaps via memory_move, including the null terminator
@@ -1384,7 +1386,7 @@ crstl_module_export namespace crstl
 			{
 				data = m_layout_allocator.m_first.m_sso.data;
 
-				if (replace_difference != 0)
+				if (bytes_to_move > 0 && src_offset != dst_offset)
 				{
 					crstl_assert(dst_offset < kSSOCapacity);
 					crstl_assume(dst_offset < kSSOCapacity);
@@ -1398,7 +1400,7 @@ crstl_module_export namespace crstl
 			{
 				data = m_layout_allocator.m_first.m_heap.data;
 
-				if (replace_difference != 0)
+				if (bytes_to_move > 0 && src_offset != dst_offset)
 				{
 					memory_move(&data[dst_offset], &data[src_offset], bytes_to_move);
 				}
