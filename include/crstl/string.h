@@ -63,12 +63,21 @@ crstl_module_export namespace crstl
 			unsigned char value;
 		};
 
+		static const crstl_constexpr size_t kSSOBufferSize = sizeof(heap_view) / sizeof(CharT);
+
 		// View of string acting as small-string optimization
-		struct sso_view
+		crstl_warning_anonymous_struct_union_begin
+		union sso_view
 		{
-			CharT data[sizeof(heap_view) / sizeof(CharT) - 1];
-			sso_size remaining_length;
+			struct
+			{
+				CharT data_minus_length[kSSOBufferSize - 1];
+				sso_size remaining_length;
+			};
+			
+			CharT data[kSSOBufferSize];
 		};
+		crstl_warning_anonymous_struct_union_end
 
 		struct layout
 		{
@@ -76,11 +85,9 @@ crstl_module_export namespace crstl
 			{
 				heap_view m_heap;
 				sso_view m_sso;
-				CharT m_sso_string[sizeof(heap_view) / sizeof(CharT)];
 			};
 
 			static_assert(sizeof(m_heap) == sizeof(m_sso), "Size mismatch");
-			static_assert(sizeof(m_sso) == sizeof(m_sso_string), "Size mismatch");
 		};
 
 		static const crstl_constexpr size_t kCharSize = sizeof(CharT);

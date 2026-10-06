@@ -35,17 +35,17 @@
 	
 	<Type Name="crstl::basic_string&lt;char,*&gt;">
 
-		<DisplayString Condition="!(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)"> {m_layout_allocator.m_first.m_sso_string, s8} [{kSSOCapacity - m_layout_allocator.m_first.m_sso.remaining_length.value}] [sso] </DisplayString>
+		<DisplayString Condition="!(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)"> {m_layout_allocator.m_first.m_sso.data, s8} [{kSSOCapacity - m_layout_allocator.m_first.m_sso.remaining_length.value}] [sso] </DisplayString>
 		<DisplayString Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)"> {m_layout_allocator.m_first.m_heap.data, s8} [{m_layout_allocator.m_first.m_heap.length}] [heap] </DisplayString>
 
-		<StringView Condition="!(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)">m_layout_allocator.m_first.m_sso_string, s8</StringView>
+		<StringView Condition="!(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)">m_layout_allocator.m_first.m_sso.data, s8</StringView>
 		<StringView Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)">m_layout_allocator.m_first.m_heap.data, s8</StringView>
 
 		<Expand>
 			<Item Condition="!(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[length]">kSSOCapacity - m_layout_allocator.m_first.m_sso.remaining_length.value</Item>
 			<Item Condition="!(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[capacity]">kSSOCapacity</Item>
-			<Item Condition="!(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[utf-8]">m_layout_allocator.m_first.m_sso_string, s8</Item>
-			<Item Condition="!(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[ansi]">m_layout_allocator.m_first.m_sso_string, s</Item>
+			<Item Condition="!(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[utf-8]">m_layout_allocator.m_first.m_sso.data, s8</Item>
+			<Item Condition="!(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[ansi]">m_layout_allocator.m_first.m_sso.data, s</Item>
 			<Item Condition="!(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[heap]">false</Item>
 
 			<Item Condition="(m_layout_allocator.m_first.m_sso.remaining_length.value &amp; kSSOMask)" Name="[length]">m_layout_allocator.m_first.m_heap.length</Item>
