@@ -1401,6 +1401,9 @@ crstl_module_export namespace crstl
 				}
 
 				set_length_sso(target_length);
+
+				crstl_assert(target_length < kSSOBufferSize);
+				crstl_assume(target_length < kSSOBufferSize);
 				m_layout_allocator.m_first.m_sso.data[target_length] = 0;
 			}
 			else
