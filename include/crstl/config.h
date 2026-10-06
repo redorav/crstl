@@ -323,6 +323,8 @@
 
 #endif
 
+#define crstl_assert_assume(x) crstl_assert(x); crstl_assume(x)
+
 #if defined(CRSTL_MODULE_DECLARATION)
 
 	#define crstl_module_export export

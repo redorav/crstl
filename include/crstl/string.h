@@ -1328,8 +1328,8 @@ crstl_module_export namespace crstl
 
 			if (target_length < kSSOCapacity)
 			{
-				crstl_assume(target_length < kSSOCapacity);
-				crstl_assume(length < kSSOCapacity);
+				crstl_assert_assume(target_length < kSSOCapacity);
+				crstl_assert_assume(length < kSSOCapacity);
 				CharT* begin = m_layout_allocator.m_first.m_sso.data + current_length;
 				function(begin, length);
 				m_layout_allocator.m_first.m_sso.remaining_length.value -= (unsigned char)length;
@@ -1395,15 +1395,13 @@ crstl_module_export namespace crstl
 
 				if (bytes_to_move > 0 && src_offset != dst_offset)
 				{
-					crstl_assert(dst_offset < kSSOCapacity);
-					crstl_assume(dst_offset < kSSOCapacity);
+					crstl_assert_assume(dst_offset < kSSOCapacity);
 					memory_move(&data[dst_offset], &data[src_offset], bytes_to_move);
 				}
 
 				set_length_sso(target_length);
 
-				crstl_assert(target_length < kSSOBufferSize);
-				crstl_assume(target_length < kSSOBufferSize);
+				crstl_assert_assume(target_length < kSSOBufferSize);
 				m_layout_allocator.m_first.m_sso.data[target_length] = 0;
 			}
 			else
@@ -1462,8 +1460,7 @@ crstl_module_export namespace crstl
 		{
 			if (is_sso())
 			{
-				crstl_assert(length < kSSOCapacity);
-				crstl_assume(length < kSSOCapacity);
+				crstl_assert_assume(length < kSSOCapacity);
 				set_length_sso(length);
 				m_layout_allocator.m_first.m_sso.data[length] = 0;
 			}
