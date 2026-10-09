@@ -72,10 +72,10 @@ crstl_module_export namespace crstl
 
 			T* temp = (T*)m_capacity_allocator.second().allocate(new_capacity * kDataSize);
 
-			// Copy existing data
-			copy_initialize_or_memcpy(temp, m_data, m_length);
+			// Move (or copy) existing data
+			move_initialize_or_memcpy(temp, m_data, m_length);
 
-			// Destroy existing data
+			// Destroy (or ignore) existing data
 			destruct_or_ignore(m_data, m_length);
 
 			m_capacity_allocator.second().deallocate(m_data, m_capacity_allocator.m_first * kDataSize);
@@ -269,8 +269,11 @@ crstl_module_export namespace crstl
 			{
 				T* temp = (T*)m_capacity_allocator.second().allocate(m_length * kDataSize);
 				
-				// Copy existing data
-				copy_initialize_or_memcpy(temp, m_data, m_length);
+				// Move (or copy)existing data
+				move_initialize_or_memcpy(temp, m_data, m_length);
+
+				// Destruct (or ignore) existing data)
+				destruct_or_ignore(m_data, m_length);
 
 				m_capacity_allocator.second().deallocate(m_data, m_capacity_allocator.m_first * kDataSize);
 				m_data = temp;

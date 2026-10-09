@@ -242,6 +242,37 @@ crstl_module_export namespace crstl
 		copy_initialize_or_memcpy_select<T, crstl_is_trivially_copyable(T)>::copy_initialize_or_memcpy(destination, source, count);
 	}
 
+	//-----------------------------------------------------------------------------------
+	// Move Initialization: Move entire range of memory (or copy if not possible to move)
+	//-----------------------------------------------------------------------------------
+
+	template<typename T, bool CanMemcpy = false>
+	struct move_initialize_or_memcpy_select
+	{
+		crstl_constexpr14 static void move_initialize_or_memcpy(T* crstl_restrict destination, T* crstl_restrict source, size_t count)
+		{
+			for (size_t i = 0; i < count; ++i)
+			{
+				crstl_placement_new((void*)&destination[i]) T(crstl_move(source[i]));
+			}
+		}
+	};
+
+	template<typename T>
+	struct move_initialize_or_memcpy_select<T, true>
+	{
+		crstl_constexpr14 static void move_initialize_or_memcpy(T* crstl_restrict destination, T* crstl_restrict source, size_t count)
+		{
+			memory_copy(destination, source, sizeof(T) * count);
+		}
+	};
+
+	template<typename T>
+	crstl_constexpr14 void move_initialize_or_memcpy(T* crstl_restrict destination, T* crstl_restrict source, size_t count)
+	{
+		move_initialize_or_memcpy_select<T, crstl_is_trivially_copyable(T)>::move_initialize_or_memcpy(destination, source, count);
+	}
+
 	//-----------------------------------------------------
 	// Object Destruction: Destruct entire range of objects
 	//-----------------------------------------------------
