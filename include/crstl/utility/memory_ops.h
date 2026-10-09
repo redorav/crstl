@@ -10,6 +10,8 @@
 
 #include "crstl/utility/placement_new.h"
 
+#include "crstl/move_forward.h"
+
 extern "C"
 {
 #if defined(CRSTL_COMPILER_MSVC)
