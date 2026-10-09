@@ -60,8 +60,8 @@ crstl_module_export namespace crstl
 	public:
 
 		tuple_leaf() : m_value() {}
-		template <typename ValueU>
-		tuple_leaf(ValueU&& value) : m_value(crstl_forward(ValueU, value)) {}
+		tuple_leaf(const ValueT& value) : m_value(value) {}
+		tuple_leaf(ValueT&& value) : m_value(crstl_forward(ValueT, value)) {}
 		tuple_leaf(const tuple_leaf& other) : m_value(other.m_value) {}
 
 		template<typename OtherValueT>
@@ -96,7 +96,7 @@ crstl_module_export namespace crstl
 		tuple_leaf(const tuple_leaf& other) : ValueT(other.get()) {}
 
 		template <typename OtherValueT>
-		explicit tuple_leaf(OtherValueT&& t) : ValueT(forward<OtherValueT>(t)) {}
+		explicit tuple_leaf(OtherValueT&& t) : ValueT(crstl_forward(OtherValueT, t)) {}
 
 		template <typename OtherValueT>
 		explicit tuple_leaf(const tuple_leaf<Index, OtherValueT>& t) : ValueT(t.get()) {}
@@ -104,7 +104,7 @@ crstl_module_export namespace crstl
 		template <typename OtherValueT>
 		tuple_leaf& operator = (OtherValueT&& t)
 		{
-			ValueT::operator = (forward<OtherValueT>(t));
+			ValueT::operator = (crstl_forward(OtherValueT, t));
 			return *this;
 		}
 
@@ -148,8 +148,9 @@ crstl_module_export namespace crstl
 	
 		crstl_constexpr tuple() crstl_constructor_default;
 	
-		template <typename U, typename... Us>
-		tuple(U&& arg1, Us&&... args) : m_implementation(make_integer_sequence<size_t, sizeof...(Ts) + 1>{}, crstl_forward(U, arg1), crstl_forward(Us, args)...) {}
+		tuple(T&& arg1, Ts&& ... args) : m_implementation(make_integer_sequence<size_t, sizeof...(Ts) + 1>{}, crstl_forward(T, arg1), crstl_forward(Ts, args)...) {}
+
+		tuple(const T& arg1, const Ts& ... args) : m_implementation(make_integer_sequence<size_t, sizeof...(Ts) + 1>{}, arg1, args...) {}
 
 		// This does not conform to the standard but is a lot more convenient than the free get<>() function
 		template<int Index>
