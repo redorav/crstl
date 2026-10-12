@@ -18,7 +18,7 @@ crstl_module_export namespace crstl
 
 	// An index sequence is integer_sequence with T as size_t
 
-#if defined(CRSTL_COMPILER_CLANG) || defined(CRSTL_COMPILER_MSVC)
+#if defined(CRSTL_COMPILER_CLANG) || (defined(CRSTL_COMPILER_MSVC) && CRSTL_MSVC_VERSION > CRSTL_MSVC_2015)
 	template <typename T, T N>
 	using make_integer_sequence = __make_integer_seq<integer_sequence, T, N>; 
 #elif defined(CRSTL_COMPILER_GCC)

@@ -43,7 +43,7 @@ crstl_module_export namespace crstl
 	inline bool is_debugger_present() crstl_noexcept
 	{
 #if defined(CRSTL_COMPILER_MSVC)
-		return IsDebuggerPresent();
+		return IsDebuggerPresent() != 0;
 #elif defined(CRSTL_OS_MACOS)
 		// https://developer.apple.com/library/archive/qa/qa1361/_index.html
 

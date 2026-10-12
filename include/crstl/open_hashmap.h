@@ -27,14 +27,14 @@ crstl_module_export namespace crstl
 	{
 	protected:
 
-		typedef Key                                                  key_type;
-		typedef T                                                    value_type;
-		typedef size_t                                               size_type;
-		typedef Hasher                                               hasher;
-		typedef open_iterator<key_type, value_type, false>           iterator;
-		typedef open_iterator<key_type, value_type, true>            const_iterator;
-		typedef open_node<key_type, value_type>                      node_type;
-		typedef decltype(open_node<key_type, value_type>::key_value) key_value_type;
+		typedef Key                                        key_type;
+		typedef T                                          value_type;
+		typedef size_t                                     size_type;
+		typedef Hasher                                     hasher;
+		typedef open_iterator<key_type, value_type, false> iterator;
+		typedef open_iterator<key_type, value_type, true>  const_iterator;
+		typedef open_node<key_type, value_type>            node_type;
+		typedef decltype(node_type::key_value)             key_value_type;
 
 		static const size_t kNodeSize = sizeof(node_type);
 
@@ -283,6 +283,7 @@ crstl_module_export namespace crstl
 			{
 				for (const key_value_type& iter : *this)
 				{
+					crstl_unused(iter); // Fix for pre-VS2015
 					iter.~key_value_type();
 				}
 			}

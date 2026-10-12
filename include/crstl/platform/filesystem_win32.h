@@ -251,7 +251,7 @@ crstl_module_export namespace crstl
 
 	inline filesystem_result delete_file(const char* file_path)
 	{
-		bool success = false;
+		BOOL success = 0;
 
 		if (detail::win32_is_utf8())
 		{
@@ -290,7 +290,7 @@ crstl_module_export namespace crstl
 	{
 		detail::WIN32_FILE_ATTRIBUTE_DATA attribute_data;
 
-		bool success = false;
+		BOOL success = 0;
 
 		if (detail::win32_is_utf8())
 		{
@@ -315,7 +315,7 @@ crstl_module_export namespace crstl
 
 	inline filesystem_result create_directory(const char* directory_path)
 	{
-		bool success = false;
+		BOOL success = 0;
 
 		if (detail::win32_is_utf8())
 		{

@@ -165,7 +165,7 @@ crstl_module_export namespace crstl
 
 			detail::PROCESS_INFORMATION process_info = {};
 
-			bool createprocess_result = CreateProcessW
+			BOOL createprocess_result = CreateProcessW
 			(
 				nullptr,
 				&commandline_w[0],
@@ -285,7 +285,7 @@ crstl_module_export namespace crstl
 				while (true)
 				{
 					DWORD bytes_read = 0;
-					bool success = ReadFile(m_stdout_read_handle, buffer + total_bytes_read, (DWORD)(buffer_size - 1 - total_bytes_read), &bytes_read, nullptr);
+					BOOL success = ReadFile(m_stdout_read_handle, buffer + total_bytes_read, (DWORD)(buffer_size - 1 - total_bytes_read), &bytes_read, nullptr);
 					total_bytes_read += bytes_read;
 
 					if (!success || bytes_read == 0 || total_bytes_read >= buffer_size - 1)

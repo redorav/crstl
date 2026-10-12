@@ -328,7 +328,7 @@ crstl_module_export namespace crstl
 			for (size_t pass_index = 0; pass_index < kPassCount; ++pass_index)
 			{
 				size_t pass_shift = pass_index * kBitsPerPass;
-				bool all_buckets_equal = bucket_allequal[pass_index];
+				bool all_buckets_equal = bucket_allequal[pass_index] != 0;
 				if (!all_buckets_equal)
 				{
 					for (size_t i = 0; i < size; ++i)

@@ -43,7 +43,8 @@ crstl_module_export namespace crstl
 	struct tuple_element
 	{
 		typedef detail::parameter_pack_indexer<index_sequence_for<Ts...>, Ts...> indexer_type;
-		typedef typename decltype(detail::parameter_pack_select<Index>(indexer_type {}))::type type;
+		typedef decltype(detail::parameter_pack_select<Index>(indexer_type{})) selected_type;
+		typedef typename selected_type::type type;
 	};
 
 #endif

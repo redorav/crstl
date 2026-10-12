@@ -86,9 +86,9 @@ crstl_module_export namespace crstl
 				heap_view m_heap;
 				sso_view m_sso;
 			};
-
-			static_assert(sizeof(m_heap) == sizeof(m_sso), "Size mismatch");
 		};
+
+		static_assert(sizeof(heap_view) == sizeof(sso_view), "Size mismatch");
 
 		static const crstl_constexpr size_t kCharSize = sizeof(CharT);
 
