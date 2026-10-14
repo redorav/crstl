@@ -18,6 +18,7 @@ int ThreadFunctionWithParams(int a, int b, int c)
 {
 	int sum = a + b + c;
 	printf("ThreadFunctionWithParams %i\n", sum);
+
 	return sum;
 }
 
@@ -33,17 +34,17 @@ void RunUnitTestsThread()
 	crstl::tuple<int, float, char> crTupleConstructorMove(2, 3.0f, 'a');
 
 	crstl::tuple<int, float, char> crTupleConstructorConstRef(2, 3.0f, c); crstl_unused(crTupleConstructorConstRef);
-
+	
 	crstl::tuple<int, float, char> crTupleBracketsMove = { 2, 3.0f, 'a' }; crstl_unused(crTupleBracketsMove);
-
+	
 	crstl::tuple<int, float, char> crTupleBracketsConstRef = { a, b, 'l' }; crstl_unused(crTupleBracketsConstRef);
 	
 	crstl::tuple<int, float, char> crTupleCopy(crTupleConstructorMove);
 
 	size_t tuple_size = crTupleConstructorMove.size(); crstl_unused(tuple_size);
-
+	
 	float f_get = crstl::get<1>(crTupleBracketsMove); crstl_unused(f_get);
-
+	
 	char c_get = crstl::get<2>(crTupleBracketsConstRef); crstl_unused(c_get);
 	
 	int i_get = crTupleCopy.get<0>(); crstl_unused(i_get);
@@ -74,6 +75,19 @@ void RunUnitTestsThread()
 	crstl::thread crThread4(params, &ThreadFunctionWithParams, 1, 2, 3);
 
 	crstl::thread crThread5 = crstl::thread(params, &ThreadFunctionWithParams, 1, 2, 3);
+
+	struct StructForThread
+	{
+		int a;
+	};
+
+	auto threadFunctionWithStruct = [](const StructForThread& value)
+	{
+		crstl_unused(value);
+	};
+
+	StructForThread structForThread;
+	crstl::thread crThread6 = crstl::thread(params, threadFunctionWithStruct, structForThread);
 
 	crstl::timer yieldTimer(true);
 	crstl::this_thread::yield();

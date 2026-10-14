@@ -5,6 +5,7 @@
 #include "crstl/move_forward.h"
 
 #include "crstl/type_builtins.h"
+#include "crstl/type_utils.h"
 
 #include "crstl/utility/sequence.h"
 
@@ -63,10 +64,11 @@ crstl_module_export namespace crstl
 		tuple_leaf() : m_value() {}
 		tuple_leaf(const ValueT& value) : m_value(value) {}
 		tuple_leaf(ValueT&& value) : m_value(crstl_forward(ValueT, value)) {}
+
 		tuple_leaf(const tuple_leaf& other) : m_value(other.m_value) {}
 
 		template<typename OtherValueT>
-		explicit tuple_leaf(const tuple_leaf<Index, OtherValueT>& other) : m_value(other.value) {}
+		explicit tuple_leaf(const tuple_leaf<Index, OtherValueT>& other) : m_value(other.get()) {}
 
 		template <typename OtherValueT>
 		tuple_leaf& operator = (OtherValueT&& t)
@@ -85,6 +87,35 @@ crstl_module_export namespace crstl
 		ValueT m_value;
 	};
 
+	// References have a separate implementation. ValueT&& and const ValueT& collapse to the same parameter type when ValueT is T&
+	template<size_t Index, typename ValueT>
+	class tuple_leaf<Index, ValueT&, false>
+	{
+	public:
+
+		explicit tuple_leaf(ValueT& value) : m_value(value) {}
+		tuple_leaf(const tuple_leaf& other) : m_value(other.m_value) {}
+
+		template<typename OtherValueT>
+		explicit tuple_leaf(const tuple_leaf<Index, OtherValueT>& other) : m_value(other.get()) {}
+
+		template <typename OtherValueT>
+		tuple_leaf& operator = (OtherValueT&& value)
+		{
+			m_value = crstl_forward(OtherValueT, value);
+			return *this;
+		}
+
+		ValueT& get() { return m_value; }
+		ValueT& get() const { return m_value; }
+
+	private:
+
+		tuple_leaf& operator = (const tuple_leaf& other) crstl_constructor_delete;
+
+		ValueT& m_value;
+	};
+
 	// Empty base class specialization for tuple_leaf
 	template <size_t Index, typename ValueT>
 	class tuple_leaf<Index, ValueT, true> : private ValueT
@@ -95,9 +126,6 @@ crstl_module_export namespace crstl
 		tuple_leaf(const ValueT& value) { crstl_unused(value); }
 		tuple_leaf(ValueT&& value) { crstl_unused(value); }
 		tuple_leaf(const tuple_leaf& other) : ValueT(other.get()) {}
-
-		template <typename OtherValueT>
-		explicit tuple_leaf(OtherValueT&& t) : ValueT(crstl_forward(OtherValueT, t)) {}
 
 		template <typename OtherValueT>
 		explicit tuple_leaf(const tuple_leaf<Index, OtherValueT>& t) : ValueT(t.get()) {}
@@ -132,9 +160,6 @@ crstl_module_export namespace crstl
 
 		template <typename... ValueTs>
 		explicit tuple_implementation(integer_sequence<size_t, Indices...>, ValueTs&&... values) : tuple_leaf<Indices, Ts>(crstl_forward(ValueTs, values))... {}
-
-		template <typename... ValueTs>
-		explicit tuple_implementation(integer_sequence<size_t, Indices...>, const ValueTs&... values) : tuple_leaf<Indices, Ts>(values)... {}
 	};
 
 	template <typename... Ts> class tuple;
@@ -149,9 +174,14 @@ crstl_module_export namespace crstl
 	
 		crstl_constexpr tuple() crstl_constructor_default;
 	
-		tuple(T&& arg1, Ts&& ... args) : m_implementation(make_integer_sequence<size_t, sizeof...(Ts) + 1>{}, crstl_forward(T, arg1), crstl_forward(Ts, args)...) {}
-
-		tuple(const T& arg1, const Ts& ... args) : m_implementation(make_integer_sequence<size_t, sizeof...(Ts) + 1>{}, arg1, args...) {}
+		template<typename U, typename... Us,
+			typename crstl::enable_if
+			<
+				(sizeof...(Us) == sizeof...(Ts)) && // The size of the arguments and the size of the type of the tuple must be the same
+				!crstl::is_same<typename crstl::remove_cv<typename crstl::remove_reference<U>::type>::type, tuple>::value // Don't accept our own type for a copy constructor
+			>::type* = nullptr>
+		tuple(U&& arg1, Us&&... args) : m_implementation(make_integer_sequence<size_t, sizeof...(Ts) + 1>{}, crstl_forward(U, arg1), crstl_forward(Us, args)...)
+		{}
 
 		// This does not conform to the standard but is a lot more convenient than the free get<>() function
 		template<int Index>
