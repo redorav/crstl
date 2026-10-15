@@ -14,6 +14,8 @@
 #define environ (*_NSGetEnviron())
 #endif
 
+// https://www.jeremymorgan.com/tutorials/c-programming/how-to-capture-the-output-of-a-linux-command-in-c/
+
 crstl_module_export namespace crstl
 {
 	class process : public process_base
