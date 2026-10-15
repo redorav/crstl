@@ -71,6 +71,57 @@ crstl_module_export namespace crstl
 			return m_path_string.empty();
 		}
 
+		bool is_absolute() const
+		{
+#if defined(CRSTL_OS_WINDOWS)
+			
+			// https://learn.microsoft.com/en-us/dotnet/standard/io/file-path-formats
+
+			const size_t path_length = m_path_string.length();
+			if (path_length >= 3)
+			{
+				// If the path starts with a drive letter such as C:/
+				const CharT drive_letter = m_path_string[0] | 0x20;
+				if (drive_letter >= 'a' && drive_letter <= 'z' && m_path_string[1] == ':' && m_path_string[2] == '/')
+				{
+					return true;
+				}
+
+				// All paths below begin with two slashes
+				// 1) //./
+				// 2) //?/
+				// 3) //server
+				if (m_path_string[0] == '/' && m_path_string[1] == '/')
+				{
+					// UNC paths start with two separators. The next character needs to be the network name, which is anything other than a slash
+					if (m_path_string[2] != '/')
+					{
+						return true;
+					}
+
+					// DOS device paths //?/ and //./
+					if (path_length >= 4)
+					{
+						if (m_path_string[2] == '?' && m_path_string[3] == '/')
+						{
+							return true;
+						}
+
+						if (m_path_string[2] == '.' && m_path_string[3] == '/')
+						{
+							return true;
+						}
+					}
+				}
+			}
+
+			return false;
+#else
+			// The only absolute paths in UNIX start with a slash
+			return !m_path_string.empty() && m_path_string[0] == '/';
+#endif
+		}
+
 		path_base extension() const
 		{
 			size_t lastDot;

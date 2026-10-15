@@ -24,7 +24,7 @@ void RunUnitTestsPath()
 
 	crstl::fixed_path512 fixedPath;
 
-	crstl::string examplePaths[] =
+	const char* examplePaths[] =
 	{
 		"",
 		".",
@@ -41,11 +41,11 @@ void RunUnitTestsPath()
 
 	for (size_t i = 0; i < sizeof(examplePaths) / sizeof(examplePaths[0]); ++i)
 	{
-		const crstl::string& examplePath = examplePaths[i];
+		const char* examplePath = examplePaths[i];
 
-		std::filesystem::path stdPath = examplePath.c_str();
-		crstl::fixed_path512 crFixedPath = examplePath.c_str();
-		crstl::path crPath = examplePath.c_str();
+		std::filesystem::path stdPath = examplePath;
+		crstl::fixed_path512 crFixedPath = examplePath;
+		crstl::path crPath = examplePath;
 
 		// Check empty path concatenation
 		{
@@ -96,5 +96,46 @@ void RunUnitTestsPath()
 		crstl_check(stdPath.has_extension() == crFixedPath.has_extension());
 		crstl_check(stdPath.has_extension() == crPath.has_extension());
 	}
+
+#if defined(CRSTL_OS_WINDOWS)
+	const struct
+	{
+		const char* path;
+		bool is_absolute;
+	} absolutePathTests[] =
+	{
+		{ "C:\\", true },
+		{ "C:\\foo\\bar.txt", true },
+		{ "c:/foo/bar.txt", true },
+		{ "\\\\server\\share\\foo.txt", true },
+		{ "//server/share/foo.txt", true },
+		{ "\\\\server", true },
+		{ "\\\\\\", false },
+		{ "\\\\", false },
+		{ "\\\\.\\", true },
+		{ "\\\\?\\", true },
+		{ "//", false },
+		{ "C:", false },
+		{ "C:foo", false },
+		{ "\\foo", false },
+		{ "foo", false },
+		{ "", false },
+		{ "/", false },
+	};
+
+	for (size_t i = 0; i < sizeof(absolutePathTests) / sizeof(absolutePathTests[0]); ++i)
+	{
+		std::filesystem::path stdPath = absolutePathTests[i].path;
+		crstl::path crPath = absolutePathTests[i].path;
+		crstl::fixed_path512 crFixedPath = absolutePathTests[i].path;
+
+		bool stdPathIsAbsolute = stdPath.is_absolute();
+
+		crstl_check(stdPathIsAbsolute == absolutePathTests[i].is_absolute);
+		crstl_check(crPath.is_absolute() == absolutePathTests[i].is_absolute);
+		crstl_check(crFixedPath.is_absolute() == absolutePathTests[i].is_absolute);
+	}
+#endif
+
 #endif
 }
