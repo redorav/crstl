@@ -275,6 +275,7 @@ crstl_module_export namespace crstl
 
 		process_size read_stdout(char* buffer, size_t buffer_size)
 		{
+			crstl_assert_msg(m_stdout_read_handle != CRSTL_INVALID_HANDLE_VALUE, "Invalid read handle");
 			crstl_assert_msg(buffer != nullptr, "Buffer is null");
 			crstl_assert_msg(buffer_size > 0, "Invalid size");
 
