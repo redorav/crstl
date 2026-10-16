@@ -185,6 +185,9 @@ crstl_module_export namespace crstl
 			return false;
 		}
 
+		template<typename FunctionT>
+		process_size drain_stdout(const FunctionT& function);
+
 	private:
 
 		pid_t m_child_pid;

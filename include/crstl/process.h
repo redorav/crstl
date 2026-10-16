@@ -107,3 +107,28 @@ crstl_module_export namespace crstl
 #elif defined(CRSTL_OS_LINUX) || defined(CRSTL_OS_MACOS)
 #include "crstl/platform/process_posix.h"
 #endif
+
+crstl_module_export namespace crstl
+{
+	template<typename FunctionT>
+	process_size process::drain_stdout(const FunctionT& function)
+	{
+		size_t bytes_read = 0;
+		while (true)
+		{
+			char temp_data[2048];
+			bytes_read = read_stdout(temp_data, 2048).size();
+			
+			if (bytes_read > 0)
+			{
+				function(temp_data, bytes_read);
+			}
+			else
+			{
+				break;
+			}
+		}
+
+		return process_size(bytes_read);
+	}
+}

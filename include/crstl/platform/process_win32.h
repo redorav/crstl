@@ -318,6 +318,9 @@ crstl_module_export namespace crstl
 			return false;
 		}
 
+		template<typename FunctionT>
+		process_size drain_stdout(const FunctionT& function);
+
 	private:
 
 		HANDLE m_process_handle;
