@@ -22,7 +22,18 @@
 	<Type Name="crstl::atomic&lt;*&gt;">
 		<DisplayString>{ m_value }</DisplayString>
 	</Type>
-	
+
+	<Type Name="crstl::basic_fixed_string&lt;char&gt;">
+		<DisplayString>{ m_data, s8 } [length = {m_length}]</DisplayString>
+
+		<Expand>
+			<Item Name="[length]">m_length</Item>
+			<Item Name="[capacity]">$T2</Item>
+			<Item Name="[utf-8]">m_data, s8</Item>
+			<Item Name="[ansi]">m_data, s</Item>
+		</Expand>
+	</Type>
+
 	<Type Name="crstl::basic_fixed_string&lt;*&gt;">
 		<DisplayString>{ m_data } [length = {m_length}]</DisplayString>
 
@@ -98,9 +109,24 @@
 		</Expand>
 	</Type>
 
+	<Type Name="crstl::basic_string_view&lt;char&gt;">
+		<DisplayString>{m_data, [m_length] s8} [{m_length}]</DisplayString>
+		<Expand>
+			<Item Name="[length]">m_length</Item>
+			<Item Name="[utf-8]">m_data, [m_length] s8</Item>
+			<Item Name="[ansi]">m_data, [m_length] s</Item>
+			<ArrayItems>
+				<Size>m_length</Size>
+				<ValuePointer>m_data</ValuePointer>
+			</ArrayItems>
+		</Expand>
+	</Type>
+
 	<Type Name="crstl::basic_string_view&lt;*&gt;">
 		<DisplayString>{m_data,[m_length]} [{m_length}]</DisplayString>
 		<Expand>
+			<Item Name="[length]">m_length</Item>
+			<Item Name="[value]">m_data, [m_length]</Item>
 			<ArrayItems>
 				<Size>m_length</Size>
 				<ValuePointer>m_data</ValuePointer>
