@@ -29,13 +29,13 @@ crstl_module_export namespace crstl
 
 		static const crstl_constexpr size_type npos = (size_type)-1;
 
-		basic_string_view() crstl_noexcept : m_data(nullptr), m_length(0) {}
+		crstl_constexpr14 basic_string_view() crstl_noexcept : m_data(nullptr), m_length(0) {}
 
-		basic_string_view(const_pointer ptr) crstl_noexcept : m_data(ptr), m_length(string_length(ptr)) {}
+		crstl_constexpr14 basic_string_view(const_pointer ptr) crstl_noexcept : m_data(ptr), m_length(string_length(ptr)) {}
 
-		basic_string_view(const_pointer ptr, size_type size) : m_data(ptr), m_length(size) {}
+		crstl_constexpr14 basic_string_view(const_pointer ptr, size_type size) : m_data(ptr), m_length(size) {}
 
-		basic_string_view(const_pointer begin, const_pointer end) : m_data(begin)
+		crstl_constexpr14 basic_string_view(const_pointer begin, const_pointer end) : m_data(begin)
 		{
 			crstl_assert(end >= begin);
 			m_length = (size_type)(end - begin);
