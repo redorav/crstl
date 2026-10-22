@@ -213,7 +213,7 @@ void RunUnitTestsString()
 
 		// string_view
 
-		crstl::string_view crStringViewEmpty;
+		crstl::string_view crStringViewEmpty; crstl_unused(crStringViewEmpty);
 
 		crstl::string_view crStringViewConstChar("String View");
 
