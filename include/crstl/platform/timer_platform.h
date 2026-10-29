@@ -4,7 +4,7 @@
 
 #include "crstl/crstldef.h"
 
-#if defined(CRSTL_OS_MACOS)
+#if defined(CRSTL_OS_APPLE)
 #include <mach/mach_time.h>
 #elif defined(CRSTL_OS_LINUX) || defined(CRSTL_OS_ANDROID)
 #include <time.h>
@@ -105,7 +105,7 @@ crstl_module_export namespace crstl
 {
 	inline uint64_t get_cycle_count()
 	{
-#if defined(CRSTL_OS_MACOS)
+#if defined(CRSTL_OS_APPLE)
 		return mach_absolute_time();
 #elif defined(CRSTL_COMPILER_MSVC)
 
@@ -180,7 +180,7 @@ crstl_module_export namespace crstl
 		return (uint64_t)(time.tv_sec * 1000000000LL + time.tv_nsec);
 	}
 
-#elif defined(CRSTL_OS_MACOS)
+#elif defined(CRSTL_OS_APPLE)
 
 	// https://stackoverflow.com/questions/5167269/clock-gettime-alternative-in-mac-os-x
 

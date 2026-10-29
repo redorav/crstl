@@ -124,7 +124,7 @@ namespace crstl
 
 #if defined(CRSTL_OS_LINUX)
 #include <sys/sendfile.h>
-#elif defined(CRSTL_OS_MACOS)
+#elif defined(CRSTL_OS_APPLE)
 #include <mach-o/dyld.h>
 #elif defined(CRSTL_OS_BSD)
 #include <sys/sysctl.h>
@@ -521,7 +521,7 @@ crstl_module_export namespace crstl
 			size_t size = sizeof(path_buffer);
 			ssize_t result = readlink("/proc/self/exe", path_buffer, size);
 			success = result != -1;
-		#elif defined(CRSTL_OS_MACOS)
+		#elif defined(CRSTL_OS_APPLE)
 			uint32_t size = sizeof(path_buffer);
 			int result = _NSGetExecutablePath(path_buffer, &size);
 			success = result != -1;
