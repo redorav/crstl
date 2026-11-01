@@ -378,7 +378,7 @@ crstl_module_export namespace crstl
 		}
 	}
 
-	inline crstl_constexpr14 void fill_char(wchar_t* destination, size_t n, char c)
+	inline crstl_constexpr14 void fill_char(wchar_t* destination, size_t n, wchar_t c)
 	{
 		if (n)
 		{
