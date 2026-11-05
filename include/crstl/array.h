@@ -36,6 +36,7 @@ crstl_module_export namespace crstl
 		crstl_nodiscard
 		crstl_constexpr bool empty() const { return N == 0; }
 
+		crstl_constexpr size_t capacity() const { return N; }
 		crstl_constexpr size_t size() const { return N; }
 		crstl_constexpr size_t max_size() const { return N; }
 
@@ -48,7 +49,15 @@ crstl_module_export namespace crstl
 		crstl_constexpr14 T& at(size_t i) { return crstl_assert(i < N), m_data[i]; }
 		crstl_constexpr const T& at(size_t i) const { return crstl_assert(i < N), m_data[i]; }
 
+		operator span<T>() const;
+
 		// Public to allow braced initialization
 		T m_data[N ? N : 1];
 	};
+
+	template<typename T, size_t N>
+	array<T, N>::operator span<T>() const
+	{
+		return span<T>((T*)m_data, (size_t)N);
+	}
 }

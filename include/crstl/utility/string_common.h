@@ -96,7 +96,7 @@ crstl_module_export namespace crstl
 	}
 
 	template<typename T>
-	inline crstl_constexpr14 int string_comparei(const T* string1, size_t length1, const T* string2, size_t length2)
+	inline crstl_constexpr14 int string_comparei(const T* string1, size_t length1, const T* string2, size_t length2) crstl_noexcept
 	{
 		if (length1 == length2)
 		{
@@ -121,9 +121,9 @@ crstl_module_export namespace crstl
 		}
 	}
 
-	crstl_forceinline size_t string_clamp_length(size_t maxLength, size_t pos, size_t length)
+	crstl_forceinline size_t string_clamp_length(size_t max_length, size_t pos, size_t length)
 	{
-		return length > maxLength - pos ? maxLength - pos : length;
+		return length > max_length - pos ? max_length - pos : length;
 	}
 
 	template<typename T>

@@ -27,7 +27,7 @@ extern "C"
 
 crstl_module_export namespace crstl
 {
-	inline size_t string_length(const char* str)
+	inline size_t string_length(const char* str) crstl_noexcept
 	{
 #if defined(CRSTL_BUILTIN_STRLEN)
 		return __builtin_strlen(str);
@@ -36,7 +36,7 @@ crstl_module_export namespace crstl
 #endif
 	}
 
-	inline size_t string_length(const wchar_t* str)
+	inline size_t string_length(const wchar_t* str) crstl_noexcept
 	{
 #if defined(CRSTL_BUILTIN_WCSLEN)
 		return __builtin_wcslen(str);
@@ -45,7 +45,7 @@ crstl_module_export namespace crstl
 #endif
 	}
 
-	inline size_t string_length(const char8_t* str)
+	inline size_t string_length(const char8_t* str) crstl_noexcept
 	{
 		return string_length((const char*)str);
 	}

@@ -11,11 +11,11 @@
 #if defined(CRSTL_OS_WINDOWS)
 
 // corecrt_share.h
-#define CRSTL_SH_DENYRW 0x10    // deny read/write mode
-#define CRSTL_SH_DENYWR 0x20    // deny write mode
-#define CRSTL_SH_DENYRD 0x30    // deny read mode
-#define CRSTL_SH_DENYNO 0x40    // deny none mode
-#define CRSTL_SH_SECURE 0x80    // secure mode
+#define CRSTL_SH_DENYRW 0x10 // deny read/write mode
+#define CRSTL_SH_DENYWR 0x20 // deny write mode
+#define CRSTL_SH_DENYRD 0x30 // deny read mode
+#define CRSTL_SH_DENYNO 0x40 // deny none mode
+#define CRSTL_SH_SECURE 0x80 // secure mode
 
 // stat.h
 #define CRSTL_S_IFMT   0xF000 // File type mask
