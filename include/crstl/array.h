@@ -4,6 +4,8 @@
 
 #include "crstl/crstldef.h"
 
+#include "crstl/forward_declarations.h"
+
 // crstl::array
 //
 // Replacement for std::array
@@ -51,6 +53,8 @@ crstl_module_export namespace crstl
 
 		operator span<T>() const;
 
+		operator span<T, N>() const;
+
 		// Public to allow braced initialization
 		T m_data[N ? N : 1];
 	};
@@ -59,5 +63,11 @@ crstl_module_export namespace crstl
 	array<T, N>::operator span<T>() const
 	{
 		return span<T>((T*)m_data, (size_t)N);
+	}
+
+	template<typename T, size_t N>
+	array<T, N>::operator span<T, N>() const
+	{
+		return span<T, N>((T*)m_data);
 	}
 }
