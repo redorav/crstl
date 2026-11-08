@@ -7,127 +7,161 @@
 // Use this as you would a pointer, but with bound checks. Allows pointer arithmetic, dereferencing, taking the address of it,
 // comparison, implicit casting to a pointer, etc
 
-template<typename T>
-class range_ptr
+crstl_module_export namespace crstl
 {
-public:
-
-	range_ptr(T* data, size_t length)
-		: m_current(data)
-		, m_begin(data)
-		, m_length(length)
+	template<typename T>
+	class range_ptr
 	{
-		crstl_assert(uintptr_t(m_begin) < uintptr_t(size_t(-1)) - length);
-	}
+	public:
 
-	// Address operator
-	T** operator & ()
-	{
-		return &m_current;
-	}
+		range_ptr(T* data, size_t length) crstl_noexcept
+			: m_current(data)
+			, m_begin(data)
+			, m_length(length)
+		{
+			crstl_assert(uintptr_t(m_begin) < uintptr_t(size_t(-1)) - length);
+		}
 
-	const T* operator&() const
-	{
-		return m_current;
-	}
+		// Address of
 
-	// Dereference operator
-	T& operator*() const
-	{
-		return *m_current;
-	}
+		crstl_constexpr14 T** operator & ()
+		{
+			return &m_current;
+		}
 
-	// Preincrement
-	range_ptr& operator ++ ()
-	{
-		crstl_assert(m_current < m_begin + m_length);
-		m_current++;
-		return *this;
-	}
+		crstl_constexpr const T** operator & () const
+		{
+			return &m_current;
+		}
 
-	// Postincrement
-	range_ptr operator ++ (int)
-	{
-		crstl_assert(m_current < m_begin + m_length);
-		range_ptr temp(*this);
-		m_current++;
-		return temp;
-	}
+		// Dereference
 
-	// Predecrement
-	range_ptr& operator -- ()
-	{
-		crstl_assert(m_current > m_begin);
-		m_current--;
-		return *this;
-	}
+		crstl_constexpr14 T& operator * ()
+		{
+			return *m_current;
+		}
 
-	// Postdecrement
-	range_ptr operator -- (int)
-	{
-		crstl_assert(m_current > m_begin);
-		range_ptr temp(*this);
-		m_current--;
-		return temp;
-	}
+		crstl_constexpr const T& operator * () const
+		{
+			return *m_current;
+		}
 
-	// General arithmetic
-	range_ptr& operator += (size_t increment)
-	{
-		crstl_assert(m_current < m_begin + increment + m_length);
-		m_current += increment;
-		return *this;
-	}
+		// Preincrement
 
-	range_ptr& operator -= (size_t increment)
-	{
-		crstl_assert(m_current > m_begin + increment);
-		m_current -= increment;
-		return *this;
-	}
+		crstl_constexpr14 range_ptr& operator ++ ()
+		{
+			crstl_assert(m_current < m_begin + m_length);
+			m_current++;
+			return *this;
+		}
 
-	// Implicit cast to pointer
-	operator T* ()
-	{
-		return m_current;
-	}
+		// Postincrement
 
-	// Comparison operators
-	bool operator == (T* ptr)
-	{
-		return m_current == ptr;
-	}
+		crstl_constexpr14 range_ptr operator ++ (int)
+		{
+			crstl_assert(m_current < m_begin + m_length);
+			range_ptr temp(*this);
+			m_current++;
+			return temp;
+		}
 
-	bool operator != (T* ptr)
-	{
-		return m_current != ptr;
-	}
+		// Predecrement
 
-	bool operator > (T * ptr)
-	{
-		return m_current > ptr;
-	}
+		crstl_constexpr14 range_ptr& operator -- ()
+		{
+			crstl_assert(m_current > m_begin);
+			m_current--;
+			return *this;
+		}
 
-	bool operator >= (T* ptr)
-	{
-		return m_current >= ptr;
-	}
+		// Postdecrement
 
-	bool operator < (T* ptr)
-	{
-		return m_current < ptr;
-	}
+		crstl_constexpr14 range_ptr operator -- (int)
+		{
+			crstl_assert(m_current > m_begin);
+			range_ptr temp(*this);
+			m_current--;
+			return temp;
+		}
 
-	bool operator <= (T* ptr)
-	{
-		return m_current <= ptr;
-	}
+		// General arithmetic
 
-private:
+		crstl_constexpr14 range_ptr& operator += (size_t increment)
+		{
+			crstl_assert(m_current < m_begin + increment + m_length);
+			m_current += increment;
+			return *this;
+		}
 
-	T* m_current;
+		crstl_constexpr14 range_ptr& operator -= (size_t increment)
+		{
+			crstl_assert(m_current >= m_begin + increment);
+			m_current -= increment;
+			return *this;
+		}
 
-	T* m_begin;
+		// Implicit cast to pointer
 
-	size_t m_length;
-};
+		crstl_constexpr14 operator T* ()
+		{
+			return m_current;
+		}
+
+		crstl_constexpr operator T* () const
+		{
+			return m_current;
+		}
+
+		// Comparison operators
+
+		crstl_constexpr bool operator == (T* ptr) const
+		{
+			return m_current == ptr;
+		}
+
+		crstl_constexpr bool operator != (T* ptr) const
+		{
+			return m_current != ptr;
+		}
+
+		crstl_constexpr bool operator > (T* ptr) const
+		{
+			return m_current > ptr;
+		}
+
+		crstl_constexpr bool operator >= (T* ptr) const
+		{
+			return m_current >= ptr;
+		}
+
+		crstl_constexpr bool operator < (T* ptr) const
+		{
+			return m_current < ptr;
+		}
+
+		crstl_constexpr bool operator <= (T* ptr) const
+		{
+			return m_current <= ptr;
+		}
+
+		// Array
+
+		crstl_constexpr14 T& operator[] (size_t i)
+		{
+			return crstl_assert(m_current + i < m_begin + m_length), m_current[i];
+		}
+
+		crstl_constexpr const T& operator[](size_t i) const
+		{
+			return crstl_assert(m_current + i < m_begin + m_length), m_current[i];
+		}
+
+	private:
+
+		T* m_current;
+
+		T* m_begin;
+
+		size_t m_length;
+	};
+}

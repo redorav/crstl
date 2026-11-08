@@ -5,6 +5,7 @@ import crstl;
 #else
 #include "crstl/unique_ptr.h"
 #include "crstl/intrusive_ptr.h"
+#include "crstl/range_ptr.h"
 #endif
 
 #include <vector>
@@ -53,6 +54,30 @@ void RunUnitTestsSmartPtr()
 	crstl::intrusive_ptr<RefCountDummy> objectHandle = new RefCountDummy();
 
 	if (objectHandle)
+	{
+
+	}
+
+	// Range Pointer
+
+	int* intArray = new int[64];
+
+	crstl::range_ptr<int> crRangePtr(intArray, 64);
+
+	crRangePtr++;
+	++crRangePtr;
+
+	crRangePtr--;
+	--crRangePtr;
+
+	crRangePtr += 2;
+	crRangePtr -= 2;
+
+	int** crRangePtrAddress = &crRangePtr; crstl_unused(crRangePtrAddress);
+
+	int a = crRangePtr[4]; crstl_unused(a);
+
+	if (crRangePtr)
 	{
 
 	}

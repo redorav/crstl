@@ -136,7 +136,6 @@
 
 	<Type Name="crstl::bitset&lt;*,*&gt;">
 		<DisplayString>[size = {$T1}]</DisplayString>
-		<DisplayString Condition="$T2 == 0">[{$T2}] {{}}</DisplayString>
 		<Expand>
 			<IndexListItems>
 				<Size>$T1</Size>
@@ -270,6 +269,18 @@
 
 	<Type Name="crstl::pair&lt;*,*&gt;">
 		<DisplayString>({ first }, { second })</DisplayString>
+	</Type>
+
+	<Type Name="crstl::range_ptr&lt;*&gt;">
+		<DisplayString>{ m_current } [size = { m_length }]</DisplayString>
+		<Expand>
+			<Item Name="[current]">m_current</Item>
+			<Item Name="[size]">m_length</Item>
+			<ArrayItems>
+				<Size>m_length</Size>
+				<ValuePointer>m_begin</ValuePointer>
+			</ArrayItems>
+		</Expand>
 	</Type>
 
 	<Type Name="crstl::span&lt;*&gt;">

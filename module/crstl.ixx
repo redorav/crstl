@@ -22,6 +22,7 @@ export module crstl;
 #include "crstl/pair.h"
 #include "crstl/path.h"
 #include "crstl/process.h"
+#include "crstl/range_ptr.h"
 #include "crstl/span.h"
 #include "crstl/stack_vector.h"
 #include "crstl/string.h"
